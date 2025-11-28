@@ -1,0 +1,69 @@
+<style>
+  .footer {
+    background: var(--color-background-alt);
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-xl) 0 var(--spacing-md);
+  }
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+  }
+  .footer-sections {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+  }
+  .footer-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-primary);
+  }
+  .footer-links a {
+    color: var(--color-text-light);
+    text-decoration: none;
+    display: block;
+    padding: var(--spacing-xs) 0;
+  }
+  .footer-links a:hover {
+    color: var(--color-primary);
+  }
+</style>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-sections">
+      <div class="footer-section">
+        <h3>About {{ shop.name }}</h3>
+        <p>Transform your hair care routine with premium curl products.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Shop</h3>
+        <div class="footer-links">
+          {% for link in linklists.footer.links %}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Support</h3>
+        <div class="footer-links">
+          <a href="/pages/contact">Contact Us</a>
+          <a href="/pages/shipping">Shipping Info</a>
+          <a href="/pages/returns">Returns</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Newsletter</h3>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Your email" class="form-input">
+          <button type="submit" class="btn btn-primary">Join</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; {{ "now" | date: "%Y" }} {{ shop.name }}. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
