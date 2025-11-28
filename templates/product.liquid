@@ -1,1 +1,47 @@
+<div class="product-page">
+  <div class="container">
+    <div class="product-layout">
+      <div class="product-gallery">
+        <div class="gallery-main">
+          <img src="{{ product.featured_image | img_url: '800x' }}" alt="{{ product.title }}" id="main-image">
+        </div>
+        {% if product.images.size > 1 %}
+        <div class="gallery-thumbs">
+          {% for image in product.images %}
+          <div class="thumb-item {% if forloop.first %}active{% endif %}" data-image="{{ image | img_url: '800x' }}">
+            <img src="{{ image | img_url: '200x' }}" alt="{{ image.alt }}">
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
 
+      <div class="product-info">
+        <h1 class="product-title">{{ product.title }}</h1>
+        <div class="product-price">{{ product.price | money }}</div>
+        <div class="product-description">{{ product.description }}</div>
+        
+        <form action="/cart/add" method="post" class="product-form">
+          <button type="submit" class="btn btn-primary add-to-cart-btn">
+            Add to Cart - {{ product.price | money }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const thumbItems = document.querySelectorAll('.thumb-item');
+  const mainImage = document.getElementById('main-image');
+  
+  thumbItems.forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      thumbItems.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      mainImage.src = this.getAttribute('data-image');
+    });
+  });
+});
+</script>
