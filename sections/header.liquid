@@ -1,1 +1,64 @@
-# Section file
+<style>
+  .header {
+    background: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+  }
+  .logo a {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--color-primary);
+  }
+  .nav-main {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+  .nav-main a {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  .nav-main a:hover {
+    color: var(--color-primary);
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+</style>
+
+<header class="header">
+  <div class="header-container">
+    <div class="header-inner">
+      <div class="logo">
+        <a href="/">{{ shop.name }}</a>
+      </div>
+      <nav class="nav-main">
+        {% for link in linklists.main-menu.links %}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {% endfor %}
+      </nav>
+      <div class="header-actions">
+        <a href="/search">🔍</a>
+        <a href="/account">👤</a>
+        <a href="/cart">🛒 <span class="cart-count">{{ cart.item_count }}</span></a>
+      </div>
+    </div>
+  </div>
+</header>
