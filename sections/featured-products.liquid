@@ -1,0 +1,69 @@
+<style>
+  .featured-products {
+    padding: var(--spacing-xl) 0;
+  }
+  .products-carousel {
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    padding: 0 var(--spacing-sm) var(--spacing-md);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .product-card {
+    flex: 0 0 300px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+  .product-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+  .carousel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto var(--spacing-lg);
+    padding: 0 var(--spacing-sm);
+  }
+</style>
+
+<section class="featured-products">
+  <div class="carousel-header">
+    <div class="section-header">
+      <h2 class="section-title">Best Sellers</h2>
+      <p class="section-description">Most loved by our curl community</p>
+    </div>
+  </div>
+
+  <div class="products-carousel">
+    {% assign featured_collection = collections.all %}
+    {% for product in featured_collection.products limit: 6 %}
+      <div class="product-card">
+        <img src="{{ product.featured_image | img_url: '400x400' }}" alt="{{ product.title }}" class="product-image">
+        <div class="product-card-info">
+          <h3 class="product-card-title">{{ product.title }}</h3>
+          <div class="product-card-price">{{ product.price | money }}</div>
+          <a href="{{ product.url }}" class="btn btn-primary">View Product</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best Sellers"
+    }
+  ]
+}
+{% endschema %}
