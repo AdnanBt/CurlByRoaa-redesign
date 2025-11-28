@@ -1,0 +1,38 @@
+<style>
+  .ugc-gallery {
+    padding: var(--spacing-xl) 0;
+    background: var(--color-background-alt);
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-sm);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+  }
+  .gallery-item {
+    aspect-ratio: 1;
+    background: var(--color-secondary);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-light);
+  }
+</style>
+
+<section class="ugc-gallery">
+  <div class="section-header">
+    <h2 class="section-title">#CurlsByRoaa Transformations</h2>
+    <p class="section-description">Real results from our amazing community</p>
+  </div>
+
+  <div class="gallery-grid">
+    {% for i in (1..8) %}
+      <div class="gallery-item">
+        📸 Instagram {{ i }}
+      </div>
+    {% endfor %}
+  </div>
+</section>
