@@ -6,26 +6,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="canonical" href="{{ canonical_url }}">
   
-  <!-- Preload critical resources -->
-  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
-  
-  <!-- CSS -->
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
-
   {{ content_for_header }}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
 </head>
 
-<body class="template-{{ request.page_type | handle }}">
+<body>
   {% section 'announcement-bar' %}
   {% section 'header' %}
   
-  <main id="MainContent" class="content-for-layout">
+  <main>
     {{ content_for_layout }}
   </main>
 
   {% section 'footer' %}
-
-  <!-- JavaScript -->
-  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  
+  {{ 'theme.js' | asset_url | script_tag }}
 </body>
 </html>
