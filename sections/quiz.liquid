@@ -1,0 +1,85 @@
+<style>
+  .hair-quiz {
+    padding: var(--spacing-xl) 0;
+    background: var(--color-background);
+  }
+  .quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+  }
+  .quiz-step {
+    display: none;
+  }
+  .quiz-step.active {
+    display: block;
+  }
+  .quiz-question {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+  }
+  .quiz-options {
+    display: grid;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+  }
+  .quiz-option {
+    padding: var(--spacing-md);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    text-align: center;
+  }
+  .quiz-option.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: white;
+  }
+</style>
+
+<section class="hair-quiz">
+  <div class="quiz-container">
+    <div class="quiz-step active" data-step="1">
+      <h2 class="quiz-question">What's your curl pattern?</h2>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="wavy">Wavy (2A-2C)</div>
+        <div class="quiz-option" data-value="curly">Curly (3A-3C)</div>
+        <div class="quiz-option" data-value="coily">Coily (4A-4C)</div>
+      </div>
+      <div class="quiz-navigation">
+        <button class="btn btn-primary next-btn">Next</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const quizOptions = document.querySelectorAll('.quiz-option');
+  
+  quizOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      quizOptions.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Hair Quiz",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Find Your Perfect Routine"
+    }
+  ]
+}
+{% endschema %}
