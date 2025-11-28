@@ -1,0 +1,58 @@
+<style>
+  .hero {
+    position: relative;
+    height: 90vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    background: var(--color-background-alt);
+  }
+  .hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+    text-align: center;
+  }
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+  }
+  .hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-lg);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+  }
+</style>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Discover Your Perfect Curl Routine</h1>
+    <p class="hero-subtitle">Professional hair care solutions for every curl type. Transform your hair with our scientifically formulated products.</p>
+    <div class="hero-actions">
+      <a href="/collections/all" class="btn btn-primary">Shop Now</a>
+      <a href="/pages/quiz" class="btn btn-outline">Find Your Routine</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Discover Your Perfect Curl Routine"
+    }
+  ]
+}
+{% endschema %}
