@@ -1,1 +1,17 @@
-{}
+{
+  "general": {
+    "search": {
+      "no_results": "No results found"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable"
+    }
+  },
+  "accessibility": {
+    "skip_to_text": "Skip to content"
+  }
+}
