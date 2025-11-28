@@ -1,1 +1,27 @@
+<div class="collection-page">
+  <div class="container">
+    <div class="collection-header">
+      <h1 class="collection-title">{{ collection.title }}</h1>
+      {% if collection.description %}
+        <div class="collection-description">{{ collection.description }}</div>
+      {% endif %}
+    </div>
 
+    <div class="products-grid">
+      {% for product in collection.products %}
+        <div class="product-card">
+          <a href="{{ product.url }}">
+            <img src="{{ product.featured_image | img_url: '400x400' }}" alt="{{ product.title }}" class="product-image">
+          </a>
+          <div class="product-card-info">
+            <h3 class="product-card-title">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+            <div class="product-card-price">{{ product.price | money }}</div>
+            <a href="{{ product.url }}" class="btn btn-primary">View Product</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
