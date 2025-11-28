@@ -5,14 +5,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="canonical" href="{{ canonical_url }}">
-  {{ content_for_header }}
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+  
+  <!-- CSS -->
   {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  {{ content_for_header }}
 </head>
-<body>
+
+<body class="template-{{ request.page_type | handle }}">
   {% section 'announcement-bar' %}
   {% section 'header' %}
-  <main id="MainContent">{{ content_for_layout }}</main>
+  
+  <main id="MainContent" class="content-for-layout">
+    {{ content_for_layout }}
+  </main>
+
   {% section 'footer' %}
-  {{ 'theme.js' | asset_url | script_tag }}
+
+  <!-- JavaScript -->
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
 </body>
 </html>
