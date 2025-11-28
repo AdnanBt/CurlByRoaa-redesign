@@ -1,0 +1,43 @@
+<style>
+  .search-section {
+    padding: var(--spacing-xl) 0;
+  }
+  .search-form {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto var(--spacing-xl);
+  }
+  .search-input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 2px solid var(--color-border);
+    border-radius: 50px;
+    font-size: 1.1rem;
+  }
+  .search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+  }
+</style>
+
+<section class="search-section">
+  <div class="container">
+    <div class="search-header">
+      <h1 class="section-title">Search Products</h1>
+    </div>
+
+    <form action="/search" method="get" class="search-form">
+      <input type="search" name="q" placeholder="Search for products..." class="search-input">
+      <button type="submit" class="search-button">🔍</button>
+    </form>
+  </div>
+</section>
