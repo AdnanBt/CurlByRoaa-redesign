@@ -1,47 +1,739 @@
+<style>
+  .product-page {
+    padding: 120px 0 80px;
+    background: #FAF8F6;
+  }
+
+  .product-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* Product Gallery Styles */
+  .product-gallery {
+    position: sticky;
+    top: 100px;
+  }
+
+  .gallery-main {
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .gallery-main img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .gallery-main:hover img {
+    transform: scale(1.02);
+  }
+
+  .gallery-thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .thumb-item {
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .thumb-item.active {
+    border-color: #E8C4B8;
+  }
+
+  .thumb-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .thumb-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+  }
+
+  /* Product Info Styles */
+  .product-info {
+    padding: 40px 0;
+  }
+
+  .product-breadcrumb {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .product-breadcrumb a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .product-breadcrumb a:hover {
+    color: #E8C4B8;
+  }
+
+  .product-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2D2D2D;
+    line-height: 1.2;
+  }
+
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .current-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2D2D2D;
+  }
+
+  .original-price {
+    font-size: 1.3rem;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .sale-badge {
+    background: #E8C4B8;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stars {
+    color: #FFD700;
+    font-size: 1.1rem;
+  }
+
+  .rating-count {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .product-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #666;
+    margin-bottom: 32px;
+  }
+
+  /* Variant Selector */
+  .variant-selector {
+    margin-bottom: 24px;
+  }
+
+  .variant-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #2D2D2D;
+  }
+
+  .variant-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .variant-option {
+    padding: 12px 20px;
+    border: 2px solid #F0F0F0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    font-weight: 500;
+  }
+
+  .variant-option.selected {
+    border-color: #E8C4B8;
+    background: #FFF8F6;
+    color: #E8C4B8;
+  }
+
+  .variant-option:hover:not(.selected) {
+    border-color: #E8C4B8;
+  }
+
+  /* Quantity Selector */
+  .quantity-selector {
+    margin-bottom: 24px;
+  }
+
+  .quantity-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #2D2D2D;
+  }
+
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .qty-btn {
+    width: 44px;
+    height: 44px;
+    border: 2px solid #F0F0F0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qty-btn:hover {
+    border-color: #E8C4B8;
+    color: #E8C4B8;
+  }
+
+  .qty-input {
+    width: 80px;
+    height: 44px;
+    border: 2px solid #F0F0F0;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /* Add to Cart */
+  .add-to-cart-container {
+    margin-bottom: 32px;
+  }
+
+  .add-to-cart-btn {
+    width: 100%;
+    padding: 18px;
+    background: #2D2D2D;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .add-to-cart-btn:hover {
+    background: #E8C4B8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(232, 196, 184, 0.4);
+  }
+
+  .add-to-cart-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Product Features */
+  .product-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .feature-icon {
+    width: 20px;
+    height: 20px;
+    color: #E8C4B8;
+  }
+
+  /* Product Tabs */
+  .product-tabs {
+    margin-top: 60px;
+  }
+
+  .tabs-header {
+    display: flex;
+    border-bottom: 2px solid #F0F0F0;
+    margin-bottom: 32px;
+  }
+
+  .tab-btn {
+    padding: 16px 32px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s ease;
+  }
+
+  .tab-btn.active {
+    color: #E8C4B8;
+    border-bottom-color: #E8C4B8;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .ingredients-list, .how-to-use {
+    line-height: 1.8;
+    color: #666;
+  }
+
+  .ingredients-list ul, .how-to-use ol {
+    padding-left: 20px;
+  }
+
+  .ingredients-list li, .how-to-use li {
+    margin-bottom: 8px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .product-page {
+      padding: 100px 0 40px;
+    }
+
+    .product-layout {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .product-gallery {
+      position: static;
+    }
+
+    .gallery-main img {
+      height: 400px;
+    }
+
+    .gallery-thumbs {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .thumb-item img {
+      height: 80px;
+    }
+
+    .product-title {
+      font-size: 2rem;
+    }
+
+    .product-features {
+      grid-template-columns: 1fr;
+    }
+
+    .tabs-header {
+      flex-direction: column;
+    }
+
+    .tab-btn {
+      text-align: left;
+      border-bottom: 1px solid #F0F0F0;
+    }
+  }
+</style>
+
 <div class="product-page">
-  <div class="container">
+  <div class="product-container">
     <div class="product-layout">
+      <!-- Product Gallery -->
       <div class="product-gallery">
         <div class="gallery-main">
-          <img src="{{ product.featured_image | img_url: '800x' }}" alt="{{ product.title }}" id="main-image">
+          <img 
+            src="{{ product.featured_image | img_url: '800x' }}" 
+            alt="{{ product.title }}"
+            id="main-image"
+            loading="eager"
+          >
         </div>
+        
         {% if product.images.size > 1 %}
         <div class="gallery-thumbs">
           {% for image in product.images %}
-          <div class="thumb-item {% if forloop.first %}active{% endif %}" data-image="{{ image | img_url: '800x' }}">
-            <img src="{{ image | img_url: '200x' }}" alt="{{ image.alt }}">
+          <div class="thumb-item {% if forloop.first %}active{% endif %}" 
+               data-image="{{ image | img_url: '800x' }}"
+               data-alt="{{ image.alt }}">
+            <img 
+              src="{{ image | img_url: '200x' }}" 
+              alt="{{ image.alt }}"
+              loading="lazy"
+            >
           </div>
           {% endfor %}
         </div>
         {% endif %}
       </div>
 
+      <!-- Product Info -->
       <div class="product-info">
+        <div class="product-breadcrumb">
+          <a href="{{ routes.root_url }}">Home</a> / 
+          <a href="{{ routes.all_products_collection_url }}">Products</a> / 
+          <span>{{ product.title }}</span>
+        </div>
+
         <h1 class="product-title">{{ product.title }}</h1>
-        <div class="product-price">{{ product.price | money }}</div>
-        <div class="product-description">{{ product.description }}</div>
-        
-        <form action="/cart/add" method="post" class="product-form">
-          <button type="submit" class="btn btn-primary add-to-cart-btn">
-            Add to Cart - {{ product.price | money }}
-          </button>
+
+        <div class="product-price">
+          <span class="current-price">{{ product.price | money }}</span>
+          {% if product.compare_at_price > product.price %}
+            <span class="original-price">{{ product.compare_at_price | money }}</span>
+            <span class="sale-badge">Save {{ product.compare_at_price | minus: product.price | money }}</span>
+          {% endif %}
+        </div>
+
+        <div class="product-rating">
+          <div class="stars">★★★★★</div>
+          <span class="rating-count">(128 Reviews)</span>
+        </div>
+
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+
+        <form action="{{ routes.cart_add_url }}" method="post" class="product-form" id="product-form">
+          <!-- Variant Selector -->
+          {% if product.variants.size > 1 %}
+          <div class="variant-selector">
+            <label class="variant-label">Select Option:</label>
+            <div class="variant-options">
+              {% for variant in product.variants %}
+              <div class="variant-option {% if forloop.first %}selected{% endif %}" 
+                   data-variant-id="{{ variant.id }}"
+                   data-variant-price="{{ variant.price | money }}">
+                {{ variant.title }}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Quantity Selector -->
+          <div class="quantity-selector">
+            <label class="quantity-label">Quantity:</label>
+            <div class="quantity-controls">
+              <button type="button" class="qty-btn minus">-</button>
+              <input type="number" name="quantity" value="1" min="1" class="qty-input" id="quantity-input">
+              <button type="button" class="qty-btn plus">+</button>
+            </div>
+          </div>
+
+          <!-- Add to Cart -->
+          <div class="add-to-cart-container">
+            <button type="submit" class="add-to-cart-btn" id="add-to-cart-btn">
+              Add to Cart - {{ product.price | money }}
+            </button>
+          </div>
         </form>
+
+        <!-- Product Features -->
+        <div class="product-features">
+          <div class="feature-item">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Free Shipping Over $50
+          </div>
+          <div class="feature-item">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            Cruelty Free
+          </div>
+          <div class="feature-item">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            30-Day Money Back
+          </div>
+          <div class="feature-item">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            Secure Checkout
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Tabs -->
+    <div class="product-tabs">
+      <div class="tabs-header">
+        <button class="tab-btn active" data-tab="description">Description</button>
+        <button class="tab-btn" data-tab="ingredients">Ingredients</button>
+        <button class="tab-btn" data-tab="how-to-use">How To Use</button>
+        <button class="tab-btn" data-tab="reviews">Reviews</button>
+      </div>
+
+      <div class="tab-content active" id="description">
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+      </div>
+
+      <div class="tab-content" id="ingredients">
+        <div class="ingredients-list">
+          <h3>Key Ingredients</h3>
+          <ul>
+            <li><strong>Argan Oil:</strong> Rich in vitamin E and antioxidants, provides intense moisture and shine</li>
+            <li><strong>Shea Butter:</strong> Deep conditioning properties for soft, manageable curls</li>
+            <li><strong>Aloe Vera:</strong> Soothes scalp and adds lightweight hydration</li>
+            <li><strong>Vitamin E:</strong> Protects hair from environmental damage and promotes growth</li>
+            <li><strong>Jojoba Oil:</strong> Mimics natural scalp oils for balanced moisture</li>
+          </ul>
+          <p><em>All ingredients are 100% natural, cruelty-free, and sustainably sourced.</em></p>
+        </div>
+      </div>
+
+      <div class="tab-content" id="how-to-use">
+        <div class="how-to-use">
+          <h3>For Best Results</h3>
+          <ol>
+            <li>Apply to clean, damp hair after shampooing and conditioning</li>
+            <li>Take a small amount and distribute evenly through curls from roots to ends</li>
+            <li>Style as desired using your preferred techniques (scrunching, raking, or praying hands)</li>
+            <li>Air dry or diffuse for enhanced volume and definition</li>
+            <li>For extra hold, layer with our defining gel or mousse</li>
+          </ol>
+          <p><strong>Tip:</strong> Start with a small amount and add more as needed to avoid weighing down curls.</p>
+        </div>
+      </div>
+
+      <div class="tab-content" id="reviews">
+        <div class="reviews-section">
+          <div class="review-summary">
+            <h3>Customer Reviews</h3>
+            <div class="overall-rating">
+              <div class="stars">★★★★★</div>
+              <span>4.9 out of 5 stars (128 reviews)</span>
+            </div>
+          </div>
+          
+          <div class="review-list">
+            <div class="review-item">
+              <div class="review-header">
+                <div class="stars">★★★★★</div>
+                <span class="reviewer">Sarah M.</span>
+              </div>
+              <p>"This product transformed my curls! The definition is incredible and it smells amazing. My hair has never been happier!"</p>
+            </div>
+            
+            <div class="review-item">
+              <div class="review-header">
+                <div class="stars">★★★★★</div>
+                <span class="reviewer">Jessica T.</span>
+              </div>
+              <p>"Finally found a product that doesn't weigh down my fine curls. The moisture retention is unbelievable!"</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const thumbItems = document.querySelectorAll('.thumb-item');
-  const mainImage = document.getElementById('main-image');
-  
-  thumbItems.forEach(thumb => {
-    thumb.addEventListener('click', function() {
-      thumbItems.forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      mainImage.src = this.getAttribute('data-image');
+class ProductPage {
+  constructor() {
+    this.currentVariantId = {{ product.variants.first.id }};
+    this.init();
+  }
+
+  init() {
+    this.setupImageGallery();
+    this.setupVariantSelection();
+    this.setupQuantitySelector();
+    this.setupTabs();
+    this.setupAddToCart();
+  }
+
+  setupImageGallery() {
+    const thumbItems = document.querySelectorAll('.thumb-item');
+    const mainImage = document.getElementById('main-image');
+
+    thumbItems.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        // Remove active class from all thumbs
+        thumbItems.forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked thumb
+        thumb.classList.add('active');
+        
+        // Update main image
+        const newSrc = thumb.getAttribute('data-image');
+        const newAlt = thumb.getAttribute('data-alt');
+        
+        mainImage.style.opacity = '0';
+        setTimeout(() => {
+          mainImage.src = newSrc;
+          mainImage.alt = newAlt;
+          mainImage.style.opacity = '1';
+        }, 200);
+      });
     });
-  });
+  }
+
+  setupVariantSelection() {
+    const variantOptions = document.querySelectorAll('.variant-option');
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+
+    variantOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove selected class from all options
+        variantOptions.forEach(opt => opt.classList.remove('selected'));
+        
+        // Add selected class to clicked option
+        option.classList.add('selected');
+        
+        // Update variant ID and price
+        this.currentVariantId = option.getAttribute('data-variant-id');
+        const newPrice = option.getAttribute('data-variant-price');
+        
+        addToCartBtn.textContent = `Add to Cart - ${newPrice}`;
+      });
+    });
+  }
+
+  setupQuantitySelector() {
+    const minusBtn = document.querySelector('.qty-btn.minus');
+    const plusBtn = document.querySelector('.qty-btn.plus');
+    const qtyInput = document.getElementById('quantity-input');
+
+    minusBtn.addEventListener('click', () => {
+      const currentVal = parseInt(qtyInput.value);
+      if (currentVal > 1) {
+        qtyInput.value = currentVal - 1;
+      }
+    });
+
+    plusBtn.addEventListener('click', () => {
+      const currentVal = parseInt(qtyInput.value);
+      qtyInput.value = currentVal + 1;
+    });
+  }
+
+  setupTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+        
+        // Update active tab button
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Show active tab content
+        tabContents.forEach(content => {
+          content.classList.remove('active');
+          if (content.id === tabId) {
+            content.classList.add('active');
+          }
+        });
+      });
+    });
+  }
+
+  setupAddToCart() {
+    const form = document.getElementById('product-form');
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const originalText = addToCartBtn.textContent;
+      addToCartBtn.textContent = 'Adding...';
+      addToCartBtn.disabled = true;
+
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Success
+        addToCartBtn.textContent = 'Added! ✓';
+        
+        // Open cart drawer if available
+        if (window.cartDrawer) {
+          window.cartDrawer.openCart();
+        }
+        
+        // Reset after delay
+        setTimeout(() => {
+          addToCartBtn.textContent = originalText;
+          addToCartBtn.disabled = false;
+        }, 2000);
+        
+      } catch (error) {
+        addToCartBtn.textContent = 'Error - Try Again';
+        setTimeout(() => {
+          addToCartBtn.textContent = originalText;
+          addToCartBtn.disabled = false;
+        }, 2000);
+      }
+    });
+  }
+}
+
+// Initialize product page
+document.addEventListener('DOMContentLoaded', () => {
+  new ProductPage();
 });
 </script>
