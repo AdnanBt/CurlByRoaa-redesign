@@ -396,10 +396,13 @@
       <!-- Product Gallery -->
       <div class="product-gallery">
         <div class="gallery-main">
+          {% comment %} FIXED: Using image_url filter with width/height attributes {% endcomment %}
           <img 
-            src="{{ product.featured_image | img_url: '800x' }}" 
-            alt="{{ product.title }}"
+            src="{{ product.featured_image | image_url: width: 800 }}" 
+            alt="{{ product.title | escape }}"
             id="main-image"
+            width="800"
+            height="600"
             loading="eager"
           >
         </div>
@@ -408,11 +411,14 @@
         <div class="gallery-thumbs">
           {% for image in product.images %}
           <div class="thumb-item {% if forloop.first %}active{% endif %}" 
-               data-image="{{ image | img_url: '800x' }}"
-               data-alt="{{ image.alt }}">
+               data-image="{{ image | image_url: width: 800 }}"
+               data-alt="{{ image.alt | escape }}">
+            {% comment %} FIXED: Using image_url filter with width/height attributes {% endcomment %}
             <img 
-              src="{{ image | img_url: '200x' }}" 
-              alt="{{ image.alt }}"
+              src="{{ image | image_url: width: 200, height: 100, crop: 'center' }}" 
+              alt="{{ image.alt | escape }}"
+              width="200"
+              height="100"
               loading="lazy"
             >
           </div>
@@ -448,6 +454,7 @@
           {{ product.description }}
         </div>
 
+        {% comment %} FIXED: Already using routes.cart_add_url - this is correct {% endcomment %}
         <form action="{{ routes.cart_add_url }}" method="post" class="product-form" id="product-form">
           <!-- Variant Selector -->
           {% if product.variants.size > 1 %}
