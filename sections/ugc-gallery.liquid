@@ -42,10 +42,11 @@
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: #f8f8f8;
+    border: 1px solid #f0f0f0;
   }
 
   .gallery-item:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-8px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 
@@ -54,6 +55,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
   }
 
   .gallery-item:hover .gallery-image {
@@ -67,12 +69,7 @@
     right: 0;
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
     color: white;
-    padding: 24px;
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .gallery-item:hover .gallery-overlay {
+    padding: 20px;
     transform: translateY(0);
   }
 
@@ -86,10 +83,6 @@
     font-size: 0.8rem;
     opacity: 0.9;
     line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 
   .gallery-cta {
@@ -104,126 +97,26 @@
     margin-bottom: 20px;
   }
 
-  /* Lightbox Modal */
-  .gallery-lightbox {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-  }
-
-  .gallery-lightbox.active {
-    display: flex;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .lightbox-content {
-    position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-    display: flex;
-    gap: 40px;
-    align-items: center;
-  }
-
-  .lightbox-image {
-    max-width: 600px;
-    max-height: 80vh;
-    border-radius: 16px;
-    object-fit: contain;
-    width: 100%;
-    height: auto;
-  }
-
-  .lightbox-info {
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #E8C4B8;
     color: white;
-    max-width: 300px;
-  }
-
-  .lightbox-handle {
-    font-size: 1.2rem;
+    text-decoration: none;
+    border-radius: 8px;
     font-weight: 600;
-    margin-bottom: 16px;
+    transition: all 0.3s ease;
   }
 
-  .lightbox-caption {
-    font-size: 1rem;
-    line-height: 1.6;
-    opacity: 0.9;
-    margin-bottom: 24px;
-  }
-
-  .lightbox-close {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 8px;
-    transition: opacity 0.3s ease;
-  }
-
-  .lightbox-close:hover {
-    opacity: 0.7;
-  }
-
-  .lightbox-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: background 0.3s ease;
-    backdrop-filter: blur(10px);
-  }
-
-  .lightbox-nav:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .lightbox-prev {
-    left: 20px;
-  }
-
-  .lightbox-next {
-    right: 20px;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  .btn:hover {
+    background: #D4A59A;
+    transform: translateY(-2px);
   }
 
   /* Mobile Styles */
   @media (max-width: 1024px) {
     .gallery-grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .lightbox-content {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .lightbox-info {
-      max-width: 100%;
     }
   }
 
@@ -238,24 +131,7 @@
 
     .gallery-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
       padding: 0 16px;
-    }
-
-    .gallery-overlay {
-      padding: 16px;
-      transform: translateY(0);
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-    }
-
-    .lightbox-content {
-      padding: 20px;
-    }
-
-    .lightbox-nav {
-      width: 40px;
-      height: 40px;
-      font-size: 1rem;
     }
   }
 
@@ -268,25 +144,22 @@
 
 <section class="ugc-gallery">
   <div class="gallery-header">
-    <h2 class="gallery-title">{{ section.settings.title | default: "#CurlsByRoaa Transformations" }}</h2>
-    <p class="gallery-subtitle">{{ section.settings.subtitle | default: "Real results from our amazing community. Share your journey with #CurlsByRoaa" }}</p>
+    <h2 class="gallery-title">#CurlsByRoaa Transformations</h2>
+    <p class="gallery-subtitle">Real results from our amazing community. Share your journey with #CurlsByRoaa</p>
   </div>
 
   <div class="gallery-grid">
     <!-- UGC Item 1 -->
-    <div class="gallery-item" data-index="0">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1625.webp?v=1763920347" 
-        alt="Customer hair transformation showing defined curls"
+        alt="Customer hair transformation"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSAxPC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        📸
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@curlenthusiast</div>
         <div class="instagram-caption">"My curls have never been happier! The definition is incredible!"</div>
@@ -294,19 +167,16 @@
     </div>
 
     <!-- UGC Item 2 -->
-    <div class="gallery-item" data-index="1">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1318.jpg?v=1763119832" 
-        alt="Before and after hair results showing improved curl pattern"
+        alt="Hair transformation results"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSAyPC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A8D8EA, #78C2DC); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        ✨
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@wavyhairdiaries</div>
         <div class="instagram-caption">"Finally found products that don't weigh down my fine waves!"</div>
@@ -314,19 +184,16 @@
     </div>
 
     <!-- UGC Item 3 -->
-    <div class="gallery-item" data-index="2">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1316.jpg?v=1763119724" 
-        alt="Healthy shiny curls with great definition"
+        alt="Healthy shiny curls"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSAzPC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #F8B500, #FCE38A); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        🌟
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@curlygirlmethod</div>
         <div class="instagram-caption">"The moisture retention is unbelievable. 3 days and still going strong!"</div>
@@ -334,19 +201,16 @@
     </div>
 
     <!-- UGC Item 4 -->
-    <div class="gallery-item" data-index="3">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1315.jpg?v=1763119627" 
-        alt="Natural hair journey progress showing reduced frizz"
+        alt="Natural hair journey"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSA0PC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #95E1D3, #6DCFB7); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        💫
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@naturalhairjourney</div>
         <div class="instagram-caption">"From frizz to fabulous! This routine changed everything."</div>
@@ -354,19 +218,16 @@
     </div>
 
     <!-- UGC Item 5 -->
-    <div class="gallery-item" data-index="4">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg?v=1763119533" 
-        alt="Soft defined curls with natural shine"
+        alt="Soft defined curls"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSA1PC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        🎀
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@curlsandcoffee</div>
         <div class="instagram-caption">"The shine and softness is everything I've been looking for!"</div>
@@ -374,19 +235,16 @@
     </div>
 
     <!-- UGC Item 6 -->
-    <div class="gallery-item" data-index="5">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg?v=1763119533" 
-        alt="Confident curly hair styling results"
+        alt="Confident curly hair"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSA2PC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A3A1F6, #8A87E3); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        🌈
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@curlconfidence</div>
         <div class="instagram-caption">"My curls have never looked better. Thank you CurlsByRoaa!"</div>
@@ -394,19 +252,16 @@
     </div>
 
     <!-- UGC Item 7 -->
-    <div class="gallery-item" data-index="6">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1311.jpg?v=1763119457" 
-        alt="Perfect curl definition and hold"
+        alt="Perfect curl definition"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSA3PC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FFD3B6, #FFAAA5); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        🌸
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@hairaddict</div>
         <div class="instagram-caption">"The perfect balance of hold and moisture. Absolutely love it!"</div>
@@ -414,19 +269,16 @@
     </div>
 
     <!-- UGC Item 8 -->
-    <div class="gallery-item" data-index="7">
+    <div class="gallery-item">
       <img 
         src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/3B488469-481D-4B83-BB18-021D2815511F.jpg?v=1763119220" 
-        alt="Organic hair care results with natural ingredients"
+        alt="Organic hair care results"
         class="gallery-image"
         width="400"
         height="400"
         loading="lazy"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjhGOEY4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjNjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiPlVHQyBJbWFnZSA4PC90ZXh0Pgo8L3N2Zz4K'"
       >
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #98DDCA, #6AC4B5); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
-        🍃
-      </div>
       <div class="gallery-overlay">
         <div class="instagram-handle">@organicbeauty</div>
         <div class="instagram-caption">"Natural ingredients that actually work! My curls are thriving."</div>
@@ -435,142 +287,41 @@
   </div>
 
   <div class="gallery-cta">
-    <div class="gallery-hashtag">{{ section.settings.hashtag | default: "#CurlsByRoaa" }}</div>
-    <a href="https://instagram.com" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+    <div class="gallery-hashtag">#CurlsByRoaa</div>
+    <a href="https://instagram.com" class="btn" target="_blank" rel="noopener noreferrer">
       Share Your Transformation
     </a>
   </div>
 </section>
 
-<!-- Lightbox Modal -->
-<div class="gallery-lightbox" id="gallery-lightbox">
-  <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">✕</button>
-  <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous image">‹</button>
-  <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next image">›</button>
-  
-  <div class="lightbox-content" id="lightbox-content">
-    <img class="lightbox-image" id="lightbox-image" src="" alt="" width="600" height="600">
-    <div class="lightbox-info">
-      <div class="lightbox-handle" id="lightbox-handle"></div>
-      <div class="lightbox-caption" id="lightbox-caption"></div>
-      <a href="https://instagram.com" class="btn btn-outline" style="color: white; border-color: white;" target="_blank" rel="noopener noreferrer">
-        View on Instagram
-      </a>
-    </div>
-  </div>
-</div>
-
 <script>
-class UGCGallery {
-  constructor() {
-    this.currentIndex = 0;
-    this.items = [];
-    this.images = [
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1625.webp?v=1763920347",
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1318.jpg?v=1763119832",
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1316.jpg?v=1763119724",
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1315.jpg?v=1763119627",
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg?v=1763119533",
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg?v=1763119533",
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1311.jpg?v=1763119457",
-      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/3B488469-481D-4B83-BB18-021D2815511F.jpg?v=1763119220"
-    ];
-    this.init();
-  }
-
-  init() {
-    this.items = Array.from(document.querySelectorAll('.gallery-item'));
-    this.bindEvents();
-    this.preloadImages();
-  }
-
-  preloadImages() {
-    // Preload images for better performance
-    this.images.forEach(src => {
-      const img = new Image();
-      img.src = src;
-    });
-  }
-
-  bindEvents() {
-    // Gallery item clicks
-    this.items.forEach((item, index) => {
-      item.addEventListener('click', () => {
-        this.openLightbox(index);
-      });
-    });
-
-    // Lightbox controls
-    document.getElementById('lightbox-close').addEventListener('click', () => this.closeLightbox());
-    document.getElementById('lightbox-prev').addEventListener('click', () => this.prevImage());
-    document.getElementById('lightbox-next').addEventListener('click', () => this.nextImage());
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (!document.getElementById('gallery-lightbox').classList.contains('active')) return;
+// Simple gallery functionality
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('UGC Gallery loaded');
+  
+  const galleryItems = document.querySelectorAll('.gallery-item');
+  
+  galleryItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const img = this.querySelector('.gallery-image');
+      const handle = this.querySelector('.instagram-handle').textContent;
+      const caption = this.querySelector('.instagram-caption').textContent;
       
-      switch(e.key) {
-        case 'Escape':
-          this.closeLightbox();
-          break;
-        case 'ArrowLeft':
-          this.prevImage();
-          break;
-        case 'ArrowRight':
-          this.nextImage();
-          break;
-      }
+      console.log('Clicked gallery item:', handle);
+      alert('Gallery item clicked: ' + handle + '\n\n' + caption + '\n\n(Lightbox functionality would open here)');
     });
-
-    // Close on overlay click
-    document.getElementById('gallery-lightbox').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('gallery-lightbox')) {
-        this.closeLightbox();
-      }
+  });
+  
+  // Check if images are loading
+  const images = document.querySelectorAll('.gallery-image');
+  images.forEach((img, index) => {
+    img.addEventListener('load', function() {
+      console.log('Image ' + (index + 1) + ' loaded successfully');
     });
-  }
-
-  openLightbox(index) {
-    this.currentIndex = index;
-    this.updateLightbox();
-    document.getElementById('gallery-lightbox').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  closeLightbox() {
-    document.getElementById('gallery-lightbox').classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  prevImage() {
-    this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.items.length - 1;
-    this.updateLightbox();
-  }
-
-  nextImage() {
-    this.currentIndex = this.currentIndex < this.items.length - 1 ? this.currentIndex + 1 : 0;
-    this.updateLightbox();
-  }
-
-  updateLightbox() {
-    const currentItem = this.items[this.currentIndex];
-    const overlay = currentItem.querySelector('.gallery-overlay');
-    const handle = overlay.querySelector('.instagram-handle').textContent;
-    const caption = overlay.querySelector('.instagram-caption').textContent;
-
-    document.getElementById('lightbox-handle').textContent = handle;
-    document.getElementById('lightbox-caption').textContent = caption;
-    
-    // Set the actual image source
-    const lightboxImage = document.getElementById('lightbox-image');
-    lightboxImage.src = this.images[this.currentIndex];
-    lightboxImage.alt = handle + ' - ' + caption;
-  }
-}
-
-// Initialize gallery
-document.addEventListener('DOMContentLoaded', () => {
-  new UGCGallery();
+    img.addEventListener('error', function() {
+      console.log('Image ' + (index + 1) + ' failed to load');
+    });
+  });
 });
 </script>
 
