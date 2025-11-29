@@ -13,6 +13,50 @@ class Theme {
     this.setupAnimations();
   }
 
+  class ImageOptimizer {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    this.lazyLoadImages();
+    this.preloadCriticalImages();
+  }
+
+  lazyLoadImages() {
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+    
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src || img.src;
+          img.classList.remove('lazy');
+          imageObserver.unobserve(img);
+        }
+      });
+    });
+
+    lazyImages.forEach(img => imageObserver.observe(img));
+  }
+
+  preloadCriticalImages() {
+    // Preload hero video and first product images
+    const criticalImages = [
+      'https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849',
+      'https://cdn.shopify.com/videos/c/o/v/1f8218940a0d4c5bbd92cb24c024b184.mp4'
+    ];
+
+    criticalImages.forEach(src => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = src.includes('.mp4') ? 'video' : 'image';
+      link.href = src;
+      document.head.appendChild(link);
+    });
+  }
+}
+
   // Mobile Menu Functionality
   setupMobileMenu() {
     const menuBtn = document.querySelector('.mobile-menu-btn');
