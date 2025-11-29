@@ -1,38 +1,511 @@
 <style>
   .ugc-gallery {
-    padding: var(--spacing-xl) 0;
-    background: var(--color-background-alt);
+    padding: 100px 0;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FAF8F6 100%);
   }
+
+  .gallery-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .gallery-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2D2D2D;
+    letter-spacing: -0.02em;
+  }
+
+  .gallery-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-sm);
+    gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--spacing-sm);
+    padding: 0 20px;
   }
+
   .gallery-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
     aspect-ratio: 1;
-    background: var(--color-secondary);
-    border-radius: var(--border-radius);
-    display: flex;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gallery-item:hover .gallery-image {
+    transform: scale(1.1);
+  }
+
+  .gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    padding: 24px;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+  }
+
+  .instagram-handle {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .instagram-caption {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .gallery-cta {
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .gallery-hashtag {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #E8C4B8;
+    margin-bottom: 20px;
+  }
+
+  /* Lightbox Modal */
+  .gallery-lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
     align-items: center;
     justify-content: center;
-    color: var(--color-text-light);
+    padding: 40px;
+  }
+
+  .gallery-lightbox.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .lightbox-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .lightbox-image {
+    max-width: 600px;
+    max-height: 80vh;
+    border-radius: 16px;
+    object-fit: contain;
+  }
+
+  .lightbox-info {
+    color: white;
+    max-width: 300px;
+  }
+
+  .lightbox-handle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .lightbox-caption {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin-bottom: 24px;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 8px;
+    transition: opacity 0.3s ease;
+  }
+
+  .lightbox-close:hover {
+    opacity: 0.7;
+  }
+
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox-prev {
+    left: 20px;
+  }
+
+  .lightbox-next {
+    right: 20px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .lightbox-content {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .lightbox-info {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ugc-gallery {
+      padding: 60px 0;
+    }
+
+    .gallery-title {
+      font-size: 2rem;
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 16px;
+    }
+
+    .gallery-overlay {
+      padding: 16px;
+      transform: translateY(0);
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    }
+
+    .lightbox-content {
+      padding: 20px;
+    }
+
+    .lightbox-nav {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
 <section class="ugc-gallery">
-  <div class="section-header">
-    <h2 class="section-title">#CurlsByRoaa Transformations</h2>
-    <p class="section-description">Real results from our amazing community</p>
+  <div class="gallery-header">
+    <h2 class="gallery-title">#CurlsByRoaa Transformations</h2>
+    <p class="gallery-subtitle">Real results from our amazing community. Share your journey with #CurlsByRoaa</p>
   </div>
 
   <div class="gallery-grid">
-    {% for i in (1..8) %}
-      <div class="gallery-item">
-        📸 Instagram {{ i }}
+    <!-- UGC Item 1 -->
+    <div class="gallery-item" data-index="0">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        📸
       </div>
-    {% endfor %}
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@curlenthusiast</div>
+        <div class="instagram-caption">"My curls have never been happier! The definition is incredible!"</div>
+      </div>
+    </div>
+
+    <!-- UGC Item 2 -->
+    <div class="gallery-item" data-index="1">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A8D8EA, #78C2DC); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        ✨
+      </div>
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@wavyhairdiaries</div>
+        <div class="instagram-caption">"Finally found products that don't weigh down my fine waves!"</div>
+      </div>
+    </div>
+
+    <!-- UGC Item 3 -->
+    <div class="gallery-item" data-index="2">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #F8B500, #FCE38A); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        🌟
+      </div>
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@curlygirlmethod</div>
+        <div class="instagram-caption">"The moisture retention is unbelievable. 3 days and still going strong!"</div>
+      </div>
+    </div>
+
+    <!-- UGC Item 4 -->
+    <div class="gallery-item" data-index="3">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #95E1D3, #6DCFB7); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        💫
+      </div>
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@naturalhairjourney</div>
+        <div class="instagram-caption">"From frizz to fabulous! This routine changed everything."</div>
+      </div>
+    </div>
+
+    <!-- UGC Item 5 -->
+    <div class="gallery-item" data-index="4">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        🎀
+      </div>
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@curlsandcoffee</div>
+        <div class="instagram-caption">"The shine and softness is everything I've been looking for!"</div>
+      </div>
+    </div>
+
+    <!-- UGC Item 6 -->
+    <div class="gallery-item" data-index="5">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A3A1F6, #8A87E3); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        🌈
+      </div>
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@curlconfidence</div>
+        <div class="instagram-caption">"My curls have never looked better. Thank you CurlsByRoaa!"</div>
+      </div>
+    </div>
+
+    <!-- UGC Item 7 -->
+    <div class="gallery-item" data-index="6">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FFD3B6, #FFAAA5); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        🌸
+      </div>
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@hairaddict</div>
+        <div class="instagram-caption">"The perfect balance of hold and moisture. Absolutely love it!"</div>
+      </div>
+    </div>
+
+    <!-- UGC Item 8 -->
+    <div class="gallery-item" data-index="7">
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #98DDCA, #6AC4B5); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+        🍃
+      </div>
+      <div class="gallery-overlay">
+        <div class="instagram-handle">@organicbeauty</div>
+        <div class="instagram-caption">"Natural ingredients that actually work! My curls are thriving."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-cta">
+    <div class="gallery-hashtag">#CurlsByRoaa</div>
+    <a href="https://instagram.com" class="btn btn-primary" target="_blank" rel="noopener">
+      Share Your Transformation
+    </a>
   </div>
 </section>
+
+<!-- Lightbox Modal -->
+<div class="gallery-lightbox" id="gallery-lightbox">
+  <button class="lightbox-close" id="lightbox-close">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightbox-prev">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lightbox-next">›</button>
+  
+  <div class="lightbox-content" id="lightbox-content">
+    <img class="lightbox-image" id="lightbox-image" src="" alt="">
+    <div class="lightbox-info">
+      <div class="lightbox-handle" id="lightbox-handle"></div>
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+      <a href="https://instagram.com" class="btn btn-outline" style="color: white; border-color: white;" target="_blank" rel="noopener">
+        View on Instagram
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+class UGCGallery {
+  constructor() {
+    this.currentIndex = 0;
+    this.items = [];
+    this.init();
+  }
+
+  init() {
+    this.items = Array.from(document.querySelectorAll('.gallery-item'));
+    this.bindEvents();
+  }
+
+  bindEvents() {
+    // Gallery item clicks
+    this.items.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        this.openLightbox(index);
+      });
+    });
+
+    // Lightbox controls
+    document.getElementById('lightbox-close').addEventListener('click', () => this.closeLightbox());
+    document.getElementById('lightbox-prev').addEventListener('click', () => this.prevImage());
+    document.getElementById('lightbox-next').addEventListener('click', () => this.nextImage());
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('gallery-lightbox').classList.contains('active')) return;
+      
+      switch(e.key) {
+        case 'Escape':
+          this.closeLightbox();
+          break;
+        case 'ArrowLeft':
+          this.prevImage();
+          break;
+        case 'ArrowRight':
+          this.nextImage();
+          break;
+      }
+    });
+
+    // Close on overlay click
+    document.getElementById('gallery-lightbox').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('gallery-lightbox')) {
+        this.closeLightbox();
+      }
+    });
+  }
+
+  openLightbox(index) {
+    this.currentIndex = index;
+    this.updateLightbox();
+    document.getElementById('gallery-lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeLightbox() {
+    document.getElementById('gallery-lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  prevImage() {
+    this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.items.length - 1;
+    this.updateLightbox();
+  }
+
+  nextImage() {
+    this.currentIndex = this.currentIndex < this.items.length - 1 ? this.currentIndex + 1 : 0;
+    this.updateLightbox();
+  }
+
+  updateLightbox() {
+    const currentItem = this.items[this.currentIndex];
+    const overlay = currentItem.querySelector('.gallery-overlay');
+    const handle = overlay.querySelector('.instagram-handle').textContent;
+    const caption = overlay.querySelector('.instagram-caption').textContent;
+
+    document.getElementById('lightbox-handle').textContent = handle;
+    document.getElementById('lightbox-caption').textContent = caption;
+    
+    // In a real implementation, you would set the actual image source
+    // document.getElementById('lightbox-image').src = currentItem.dataset.imageSrc;
+  }
+}
+
+// Initialize gallery
+document.addEventListener('DOMContentLoaded', () => {
+  new UGCGallery();
+});
+</script>
+
+{% schema %}
+{
+  "name": "UGC Gallery",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "#CurlsByRoaa Transformations"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Real results from our amazing community"
+    },
+    {
+      "type": "text",
+      "id": "hashtag",
+      "label": "Hashtag",
+      "default": "#CurlsByRoaa"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Numberc Style UGC Gallery",
+      "category": "Homepage"
+    }
+  ]
+}
+{% endschema %}
