@@ -1,47 +1,305 @@
 <style>
   .hero {
     position: relative;
-    height: 90vh;
-    min-height: 600px;
+    height: 100vh;
+    min-height: 800px;
     display: flex;
     align-items: center;
-    background: var(--color-background-alt);
+    justify-content: center;
+    overflow: hidden;
+    background: #000;
+    margin-top: 80px; /* For fixed header */
   }
+
+  .hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+  }
+
+  .hero-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(232, 196, 184, 0.3) 0%,
+      rgba(45, 45, 45, 0.6) 100%
+    );
+  }
+
   .hero-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-sm);
+    position: relative;
+    z-index: 2;
     text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 0 20px;
   }
+
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 4.5rem;
     font-weight: 700;
-    margin-bottom: var(--spacing-md);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease 0.3s forwards;
   }
+
   .hero-subtitle {
-    font-size: 1.25rem;
-    margin-bottom: var(--spacing-lg);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease 0.6s forwards;
   }
+
   .hero-actions {
     display: flex;
-    gap: var(--spacing-sm);
+    gap: 16px;
     justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease 0.9s forwards;
+  }
+
+  .hero-btn {
+    padding: 16px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-btn-primary {
+    background: #E8C4B8;
+    color: #2D2D2D;
+    border: 2px solid #E8C4B8;
+  }
+
+  .hero-btn-primary:hover {
+    background: transparent;
+    color: #E8C4B8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(232, 196, 184, 0.3);
+  }
+
+  .hero-btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .hero-btn-secondary:hover {
+    background: white;
+    color: #2D2D2D;
+    transform: translateY(-2px);
+    border-color: white;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    animation: fadeIn 1s ease 1.2s forwards;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    display: block;
+    color: #E8C4B8;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    40% {
+      transform: translateX(-50%) translateY(-10px);
+    }
+    60% {
+      transform: translateX(-50%) translateY(-5px);
+    }
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .hero {
+      min-height: 700px;
+      height: 100vh;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-btn {
+      width: 200px;
+    }
+
+    .hero-stats {
+      flex-direction: column;
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.125rem;
+    }
   }
 </style>
 
 <section class="hero">
+  <!-- Video Background -->
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="https://cdn.shopify.com/s/files/1/0819/2037/9778/files/hero-video-placeholder.mp4?v=1694567890" type="video/mp4">
+    <!-- Fallback image if video doesn't load -->
+    <img src="{{ section.settings.fallback_image | img_url: '2000x' }}" alt="Hero background" style="width: 100%; height: 100%; object-fit: cover;">
+  </video>
+  
+  <div class="hero-video-overlay"></div>
+
   <div class="hero-content">
-    <h1 class="hero-title">Discover Your Perfect Curl Routine</h1>
-    <p class="hero-subtitle">Professional hair care solutions for every curl type. Transform your hair with our scientifically formulated products.</p>
+    <h1 class="hero-title">
+      {{ section.settings.heading | default: "Discover Your Perfect Curl Journey" }}
+    </h1>
+    
+    <p class="hero-subtitle">
+      {{ section.settings.subheading | default: "Professional-grade hair care solutions tailored to your unique curl pattern. Transform your routine with scientifically formulated products." }}
+    </p>
+    
     <div class="hero-actions">
-      <a href="/collections/all" class="btn btn-primary">Shop Now</a>
-      <a href="/pages/quiz" class="btn btn-outline">Find Your Routine</a>
+      <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="hero-btn hero-btn-primary">
+        {{ section.settings.cta_text | default: 'Shop The Collection' }}
+      </a>
+      <a href="{{ section.settings.secondary_cta_url | default: '/pages/quiz' }}" class="hero-btn hero-btn-secondary">
+        {{ section.settings.secondary_cta_text | default: 'Find Your Routine' }}
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-number">10K+</span>
+        <span class="stat-label">Happy Customers</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">4.9★</span>
+        <span class="stat-label">Average Rating</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Natural Ingredients</span>
+      </div>
     </div>
   </div>
+
+  <div class="hero-scroll-indicator">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add scroll functionality to the indicator
+  const scrollIndicator = document.querySelector('.hero-scroll-indicator');
+  if (scrollIndicator) {
+    scrollIndicator.addEventListener('click', function() {
+      window.scrollTo({
+        top: window.innerHeight,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+  // Video fallback handling
+  const heroVideo = document.querySelector('.hero-video');
+  if (heroVideo) {
+    heroVideo.addEventListener('error', function() {
+      // If video fails to load, ensure fallback image is visible
+      const fallbackImg = this.querySelector('img');
+      if (fallbackImg) {
+        fallbackImg.style.display = 'block';
+      }
+    });
+  }
+});
+</script>
 
 {% schema %}
 {
@@ -51,7 +309,47 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Discover Your Perfect Curl Routine"
+      "default": "Discover Your Perfect Curl Journey"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Professional-grade hair care solutions tailored to your unique curl pattern"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Primary Button Text",
+      "default": "Shop The Collection"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary Button Text",
+      "default": "Find Your Routine"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_url",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback Image",
+      "info": "Displayed if video fails to load"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Numberc Style Hero",
+      "category": "Homepage"
     }
   ]
 }
