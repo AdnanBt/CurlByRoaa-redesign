@@ -80,6 +80,7 @@
     position: relative;
     height: 280px;
     overflow: hidden;
+    background: #f8f8f8;
   }
 
   .product-image {
@@ -337,6 +338,8 @@
   <div class="products-carousel-container">
     <div class="products-carousel" id="products-carousel">
       {% assign featured_collection = collections[section.settings.collection] | default: collections.all %}
+      
+      {% comment %} Simple approach - use real product images when available {% endcomment %}
       {% for product in featured_collection.products limit: 8 %}
         <div class="product-card">
           {% if product.tags contains 'bestseller' %}
@@ -346,95 +349,38 @@
           {% endif %}
 
           <div class="product-image-container">
-            {% comment %} Real product images with proper attributes {% endcomment %}
-            {% if forloop.index == 1 %}
+            {% comment %} Use actual product image if available, otherwise use placeholder {% endcomment %}
+            {% if product.featured_image %}
               <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266" 
-                alt="Keune Care Derma Activate Thickening Spray"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-            {% elsif forloop.index == 2 %}
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401" 
-                alt="Keune Derma Activate Lotion"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-            {% elsif forloop.index == 3 %}
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511" 
-                alt="Style Klibansky No44 Soft Mousse"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-            {% elsif forloop.index == 4 %}
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27479-Keune-Style-Relaunch-Shine-Therapy-Packshot-200ml-768x768_5f158c1e-9935-4bce-97c7-1c9ea4dab5ea.jpg?v=1763061510" 
-                alt="Keune Style Relaunch Shine Therapy"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-            {% elsif forloop.index == 5 %}
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27455-Style-Klibansky-No38-Shaping-Fibers-Comp-125ml-online-768x768_68d511df-15fa-4f97-b530-2fd098724c7e.png?v=1763061510" 
-                alt="Style Klibansky No38 Shaping Fibers"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-            {% elsif forloop.index == 6 %}
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27464-Keune-Style-Relaunch-RushHour-Packshot-200ml-768x768_d7b6e364-3d99-4319-880c-5f8d52829412.jpg?v=1763061509" 
-                alt="Keune Style Relaunch RushHour"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-            {% elsif forloop.index == 7 %}
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27430-Style-Klibansky-No75-Root-Volumizer-300ml-scaled-768x768_63358ae4-2757-4052-9e51-6fca320e7c4f.jpg?v=1763061508" 
-                alt="Style Klibansky No75 Root Volumizer"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-            {% elsif forloop.index == 8 %}
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27478-Keune-Style-Relaunch-Restyler-Packshot-100ml-768x768_534d3b1d-5417-462c-83fd-ddf83598b6eb.jpg?v=1763061508" 
-                alt="Keune Style Relaunch Restyler"
+                src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                alt="{{ product.title | escape }}"
                 class="product-image"
                 width="400"
                 height="400"
                 loading="lazy"
               >
             {% else %}
-              {% comment %} Fallback to Shopify product image with modern filter {% endcomment %}
-              {% if product.featured_image %}
-                <img 
-                  src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
-                  alt="{{ product.title | escape }}"
-                  class="product-image"
-                  width="400"
-                  height="400"
-                  loading="lazy"
-                >
-              {% else %}
-                <div class="product-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #666;">
-                  No Image
-                </div>
-              {% endif %}
+              {% comment %} Use placeholder images for demo {% endcomment %}
+              {% assign placeholder_images = "
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266|
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401|
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511|
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27479-Keune-Style-Relaunch-Shine-Therapy-Packshot-200ml-768x768_5f158c1e-9935-4bce-97c7-1c9ea4dab5ea.jpg?v=1763061510|
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27455-Style-Klibansky-No38-Shaping-Fibers-Comp-125ml-online-768x768_68d511df-15fa-4f97-b530-2fd098724c7e.png?v=1763061510|
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27464-Keune-Style-Relaunch-RushHour-Packshot-200ml-768x768_d7b6e364-3d99-4319-880c-5f8d52829412.jpg?v=1763061509|
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27430-Style-Klibansky-No75-Root-Volumizer-300ml-scaled-768x768_63358ae4-2757-4052-9e51-6fca320e7c4f.jpg?v=1763061508|
+                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27478-Keune-Style-Relaunch-Restyler-Packshot-100ml-768x768_534d3b1d-5417-462c-83fd-ddf83598b6eb.jpg?v=1763061508
+              " | split: "|" %}
+              
+              {% assign image_index = forloop.index0 | modulo: placeholder_images.size %}
+              <img 
+                src="{{ placeholder_images[image_index] }}" 
+                alt="{{ product.title | escape }}"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
             {% endif %}
             
             <button class="product-quick-view" data-product-handle="{{ product.handle }}">
@@ -468,7 +414,6 @@
             </div>
 
             <div class="product-actions">
-              {% comment %} Fixed: Using routes object instead of hardcoded URL {% endcomment %}
               <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
                 <input type="hidden" name="id" value="{{ product.variants.first.id }}">
                 <input type="hidden" name="quantity" value="1">
@@ -483,20 +428,56 @@
           </div>
         </div>
       {% else %}
-        {% comment %} Fallback if no products {% endcomment %}
+        {% comment %} Fallback if no products in collection {% endcomment %}
+        {% assign placeholder_products = "
+          Keune Care Derma Activate Thickening Spray|
+          Keune Derma Activate Lotion|
+          Style Klibansky No44 Soft Mousse|
+          Keune Style Relaunch Shine Therapy|
+          Style Klibansky No38 Shaping Fibers|
+          Keune Style Relaunch RushHour|
+          Style Klibansky No75 Root Volumizer|
+          Keune Style Relaunch Restyler
+        " | split: "|" %}
+        
+        {% assign placeholder_images = "
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266|
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401|
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511|
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27479-Keune-Style-Relaunch-Shine-Therapy-Packshot-200ml-768x768_5f158c1e-9935-4bce-97c7-1c9ea4dab5ea.jpg?v=1763061510|
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27455-Style-Klibansky-No38-Shaping-Fibers-Comp-125ml-online-768x768_68d511df-15fa-4f97-b530-2fd098724c7e.png?v=1763061510|
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27464-Keune-Style-Relaunch-RushHour-Packshot-200ml-768x768_d7b6e364-3d99-4319-880c-5f8d52829412.jpg?v=1763061509|
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27430-Style-Klibansky-No75-Root-Volumizer-300ml-scaled-768x768_63358ae4-2757-4052-9e51-6fca320e7c4f.jpg?v=1763061508|
+          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27478-Keune-Style-Relaunch-Restyler-Packshot-100ml-768x768_534d3b1d-5417-462c-83fd-ddf83598b6eb.jpg?v=1763061508
+        " | split: "|" %}
+        
         {% for i in (1..4) %}
           <div class="product-card">
             <div class="product-image-container">
-              <div class="product-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #666;">
-                Product {{ i }}
-              </div>
+              <img 
+                src="{{ placeholder_images[i] }}" 
+                alt="{{ placeholder_products[i] }}"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+              <button class="product-quick-view" data-product-handle="product-{{ i }}">
+                Quick View
+              </button>
             </div>
             <div class="product-info">
               <div class="product-category">Hair Care</div>
-              <h3 class="product-title">Sample Product {{ i }}</h3>
-              <p class="product-description">This is a sample product description.</p>
+              <h3 class="product-title">
+                <a href="#">{{ placeholder_products[i] }}</a>
+              </h3>
+              <p class="product-description">Professional hair care product designed for optimal results and healthy hair.</p>
               <div class="product-price">
                 <span class="current-price">$29.99</span>
+              </div>
+              <div class="product-rating">
+                <div class="stars">★★★★★</div>
+                <span class="rating-count">(24)</span>
               </div>
               <div class="product-actions">
                 <button class="add-to-cart-btn">Add to Cart</button>
@@ -531,7 +512,11 @@ class ProductCarousel {
     this.carousel = document.getElementById('products-carousel');
     this.prevBtn = document.getElementById('carousel-prev');
     this.nextBtn = document.getElementById('carousel-next');
-    this.cardWidth = 320 + 30; // card width + gap
+    if (this.carousel) {
+      this.cardWidth = this.carousel.querySelector('.product-card')?.offsetWidth + 30 || 350;
+    } else {
+      this.cardWidth = 350;
+    }
     this.init();
   }
 
@@ -581,63 +566,12 @@ class ProductCarousel {
         this.updateButtonStates();
       });
     }
-
-    // Add to cart forms
-    document.querySelectorAll('.product-form').forEach(form => {
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitBtn = form.querySelector('.add-to-cart-btn');
-        const originalText = submitBtn.textContent;
-        
-        // Show loading state
-        submitBtn.textContent = 'Adding...';
-        submitBtn.disabled = true;
-
-        try {
-          // Using Fetch API for better handling
-          const formData = new FormData(form);
-          const response = await fetch('{{ routes.cart_add_url }}', {
-            method: 'POST',
-            body: formData
-          });
-
-          if (response.ok) {
-            // Success state
-            submitBtn.textContent = 'Added! ✓';
-            
-            // Update cart count if available
-            this.updateCartCount();
-            
-            // Open cart drawer if available
-            if (window.cartDrawer) {
-              window.cartDrawer.openCart();
-            }
-            
-            // Reset after delay
-            setTimeout(() => {
-              submitBtn.textContent = originalText;
-              submitBtn.disabled = false;
-            }, 2000);
-          } else {
-            throw new Error('Failed to add to cart');
-          }
-          
-        } catch (error) {
-          console.error('Error adding to cart:', error);
-          submitBtn.textContent = 'Error - Try Again';
-          setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-          }, 2000);
-        }
-      });
-    });
   }
 
   scroll(direction) {
     if (!this.carousel) return;
     
-    const scrollAmount = this.cardWidth * 2; // Scroll 2 cards at a time
+    const scrollAmount = this.cardWidth * 2;
     const newScrollLeft = direction === 'next' 
       ? this.carousel.scrollLeft + scrollAmount
       : this.carousel.scrollLeft - scrollAmount;
@@ -657,20 +591,8 @@ class ProductCarousel {
     this.nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - 10;
   }
 
-  updateCartCount() {
-    // This would typically fetch the updated cart count from Shopify
-    const cartCounts = document.querySelectorAll('.cart-count');
-    cartCounts.forEach(count => {
-      const current = parseInt(count.textContent) || 0;
-      count.textContent = current + 1;
-    });
-  }
-
   openQuickView(productHandle) {
-    // In a real implementation, this would fetch product data and show a modal
     console.log('Opening quick view for:', productHandle);
-    // You would typically make an AJAX request to get product data
-    // and display it in a modal with more details and image gallery
   }
 }
 
