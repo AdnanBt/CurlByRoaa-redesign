@@ -41,7 +41,7 @@
     letter-spacing: -0.5px;
   }
 
-  /* Numberc-style Navigation */
+  /* Numberc-style Navigation with Dropdowns */
   .nav-main {
     display: flex;
     gap: 40px;
@@ -62,28 +62,103 @@
     padding: 12px 0;
     transition: color 0.3s ease;
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-link::after {
+    content: '›';
+    font-size: 16px;
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+  }
+
+  .nav-item:hover .nav-link::after {
+    transform: rotate(-90deg);
   }
 
   .nav-link:hover {
     color: #E8C4B8;
   }
 
-  .nav-link::after {
-    content: '';
+  /* Mega Dropdown Styles */
+  .mega-dropdown {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #E8C4B8;
-    transition: width 0.3s ease;
+    top: 100%;
+    left: -100px;
+    width: 800px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    padding: 40px;
   }
 
-  .nav-link:hover::after {
+  .nav-item:hover .mega-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .dropdown-column h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2D2D2D;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .dropdown-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dropdown-link {
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+  }
+
+  .dropdown-link:hover {
+    color: #E8C4B8;
+    border-bottom-color: #E8C4B8;
+    transform: translateX(8px);
+  }
+
+  .dropdown-image {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  .dropdown-image img {
     width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
   }
 
-  /* Header Actions - Numberc Style */
+  .dropdown-image:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Header Actions */
   .header-actions {
     display: flex;
     align-items: center;
@@ -140,7 +215,38 @@
     background: rgba(232, 196, 184, 0.1);
   }
 
+  /* Mobile Dropdown Styles */
+  .mobile-dropdown {
+    display: none;
+    padding-left: 20px;
+    margin-top: 10px;
+  }
+
+  .mobile-dropdown.active {
+    display: block;
+  }
+
+  .mobile-dropdown-link {
+    display: block;
+    padding: 12px 0;
+    text-decoration: none;
+    color: #666;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+  }
+
+  .mobile-dropdown-link:last-child {
+    border-bottom: none;
+  }
+
   /* Mobile Styles */
+  @media (max-width: 1024px) {
+    .mega-dropdown {
+      width: 600px;
+      left: -50px;
+    }
+  }
+
   @media (max-width: 768px) {
     .header {
       position: fixed;
@@ -159,6 +265,8 @@
       padding: 20px;
       gap: 0;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .nav-main.active {
@@ -170,18 +278,45 @@
     }
 
     .nav-link {
-      display: block;
+      display: flex;
+      justify-content: space-between;
       padding: 16px 0;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       font-size: 16px;
+      text-transform: none;
+    }
+
+    .nav-link::after {
+      transform: rotate(0deg);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-link.active::after {
+      transform: rotate(180deg);
     }
 
     .nav-link:last-child {
       border-bottom: none;
     }
 
-    .nav-link::after {
+    .mega-dropdown {
       display: none;
+      position: static;
+      width: 100%;
+      box-shadow: none;
+      padding: 20px 0;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+
+    .nav-item:hover .mega-dropdown {
+      transform: none;
+    }
+
+    .dropdown-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
 
     .mobile-menu-btn {
@@ -209,19 +344,138 @@
         </a>
       </div>
 
-      <!-- Main Navigation -->
+      <!-- Main Navigation with Mega Dropdowns -->
       <nav class="nav-main" id="main-nav">
+        <!-- Shop Dropdown -->
         <div class="nav-item">
           <a href="/collections/all" class="nav-link">Shop</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>By Product Type</h4>
+                <div class="dropdown-links">
+                  <a href="/collections/shampoo" class="dropdown-link">Shampoo & Cleansers</a>
+                  <a href="/collections/conditioner" class="dropdown-link">Conditioners</a>
+                  <a href="/collections/curl-cream" class="dropdown-link">Curl Defining Creams</a>
+                  <a href="/collections/hair-oil" class="dropdown-link">Hair Oils & Serums</a>
+                  <a href="/collections/styling" class="dropdown-link">Styling Products</a>
+                  <a href="/collections/treatments" class="dropdown-link">Hair Treatments</a>
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>By Curl Type</h4>
+                <div class="dropdown-links">
+                  <a href="/collections/wavy-hair" class="dropdown-link">Wavy Hair (2A-2C)</a>
+                  <a href="/collections/curly-hair" class="dropdown-link">Curly Hair (3A-3C)</a>
+                  <a href="/collections/coily-hair" class="dropdown-link">Coily Hair (4A-4C)</a>
+                  <a href="/collections/fine-hair" class="dropdown-link">Fine & Thin Hair</a>
+                  <a href="/collections/thick-hair" class="dropdown-link">Thick & Dense Hair</a>
+                  <a href="/collections/damaged-hair" class="dropdown-link">Damaged & Dry Hair</a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <div style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600;">
+                Shop The Full Collection
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Hair Quiz Dropdown -->
         <div class="nav-item">
           <a href="/pages/quiz" class="nav-link">Hair Quiz</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>Find Your Routine</h4>
+                <div class="dropdown-links">
+                  <a href="/pages/curl-pattern-quiz" class="dropdown-link">Curl Pattern Analysis</a>
+                  <a href="/pages/hair-concerns-quiz" class="dropdown-link">Hair Concerns Assessment</a>
+                  <a href="/pages/product-recommendations" class="dropdown-link">Product Recommendations</a>
+                  <a href="/pages/routine-builder" class="dropdown-link">Custom Routine Builder</a>
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>Quick Guides</h4>
+                <div class="dropdown-links">
+                  <a href="/pages/curl-type-guide" class="dropdown-link">Curl Type Identification</a>
+                  <a href="/pages/porosity-test" class="dropdown-link">Hair Porosity Test</a>
+                  <a href="/pages/density-guide" class="dropdown-link">Hair Density Guide</a>
+                  <a href="/pages/ingredients-guide" class="dropdown-link">Key Ingredients</a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <div style="background: linear-gradient(135deg, #A8D8EA, #78C2DC); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600;">
+                Start Your Hair Journey
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Our Story Dropdown -->
         <div class="nav-item">
           <a href="/pages/about" class="nav-link">Our Story</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>About Us</h4>
+                <div class="dropdown-links">
+                  <a href="/pages/our-mission" class="dropdown-link">Our Mission</a>
+                  <a href="/pages/our-story" class="dropdown-link">Brand Story</a>
+                  <a href="/pages/ingredients" class="dropdown-link">Ingredient Philosophy</a>
+                  <a href="/pages/sustainability" class="dropdown-link">Sustainability</a>
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>Community</h4>
+                <div class="dropdown-links">
+                  <a href="/pages/curl-community" class="dropdown-link">Curl Community</a>
+                  <a href="/pages/education" class="dropdown-link">Hair Education</a>
+                  <a href="/pages/events" class="dropdown-link">Events & Workshops</a>
+                  <a href="/pages/testimonials" class="dropdown-link">Success Stories</a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <div style="background: linear-gradient(135deg, #95E1D3, #6DCFB7); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600;">
+                Join Our Community
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Guides Dropdown -->
         <div class="nav-item">
           <a href="/blogs/guides" class="nav-link">Guides</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>Hair Care Guides</h4>
+                <div class="dropdown-links">
+                  <a href="/blogs/guides/wash-day-routine" class="dropdown-link">Wash Day Routine</a>
+                  <a href="/blogs/guides/styling-techniques" class="dropdown-link">Styling Techniques</a>
+                  <a href="/blogs/guides/night-time-routine" class="dropdown-link">Night Time Routine</a>
+                  <a href="/blogs/guides/seasonal-care" class="dropdown-link">Seasonal Hair Care</a>
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>Expert Advice</h4>
+                <div class="dropdown-links">
+                  <a href="/blogs/guides/common-mistakes" class="dropdown-link">Common Mistakes</a>
+                  <a href="/blogs/guides/product-application" class="dropdown-link">Product Application</a>
+                  <a href="/blogs/guides/troubleshooting" class="dropdown-link">Troubleshooting Guide</a>
+                  <a href="/blogs/guides/pro-tips" class="dropdown-link">Professional Tips</a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <div style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600;">
+                Learn & Grow
+              </div>
+            </div>
+          </div>
         </div>
       </nav>
 
@@ -249,34 +503,99 @@
 </header>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const header = document.getElementById('main-header');
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const mainNav = document.getElementById('main-nav');
+class HeaderWithDropdowns {
+  constructor() {
+    this.header = document.getElementById('main-header');
+    this.mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    this.mainNav = document.getElementById('main-nav');
+    this.navItems = document.querySelectorAll('.nav-item');
+    this.init();
+  }
 
-  // Scroll effect
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 100) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+  init() {
+    this.bindEvents();
+    this.setupScrollEffect();
+  }
+
+  bindEvents() {
+    // Mobile menu toggle
+    if (this.mobileMenuBtn && this.mainNav) {
+      this.mobileMenuBtn.addEventListener('click', () => {
+        this.mainNav.classList.toggle('active');
+        this.mobileMenuBtn.textContent = this.mainNav.classList.contains('active') ? '✕' : '☰';
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.header') && this.mainNav.classList.contains('active')) {
+          this.closeMobileMenu();
+        }
+      });
+
+      // Mobile dropdown toggle
+      this.navItems.forEach(item => {
+        const navLink = item.querySelector('.nav-link');
+        navLink.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            navLink.classList.toggle('active');
+          }
+        });
+      });
     }
-  });
 
-  // Mobile menu toggle
-  if (mobileMenuBtn && mainNav) {
-    mobileMenuBtn.addEventListener('click', function() {
-      mainNav.classList.toggle('active');
-      this.textContent = mainNav.classList.contains('active') ? '✕' : '☰';
+    // Close dropdowns when clicking elsewhere (desktop)
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth > 768 && !e.target.closest('.nav-item')) {
+        this.closeAllDropdowns();
+      }
     });
 
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.header') && mainNav.classList.contains('active')) {
-        mainNav.classList.remove('active');
-        mobileMenuBtn.textContent = '☰';
+    // Escape key to close dropdowns
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeAllDropdowns();
+        this.closeMobileMenu();
       }
     });
   }
+
+  setupScrollEffect() {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        this.header.classList.add('scrolled');
+      } else {
+        this.header.classList.remove('scrolled');
+      }
+    });
+  }
+
+  closeAllDropdowns() {
+    this.navItems.forEach(item => {
+      const dropdown = item.querySelector('.mega-dropdown');
+      if (dropdown) {
+        dropdown.style.opacity = '0';
+        dropdown.style.visibility = 'hidden';
+      }
+    });
+  }
+
+  closeMobileMenu() {
+    if (this.mainNav) {
+      this.mainNav.classList.remove('active');
+      this.mobileMenuBtn.textContent = '☰';
+    }
+    
+    // Close mobile dropdowns
+    this.navItems.forEach(item => {
+      const navLink = item.querySelector('.nav-link');
+      navLink.classList.remove('active');
+    });
+  }
+}
+
+// Initialize header
+document.addEventListener('DOMContentLoaded', () => {
+  new HeaderWithDropdowns();
 });
 </script>
