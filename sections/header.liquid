@@ -1,78 +1,96 @@
 <style>
   .header {
-    background: var(--color-background);
-    border-bottom: 1px solid var(--color-border);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+
+  .header.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
 
   .header-container {
-    max-width: var(--container-wide);
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 var(--spacing-sm);
+    padding: 0 20px;
   }
 
   .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--header-height);
-    transition: var(--transition);
+    height: 80px;
+  }
+
+  .logo {
+    flex-shrink: 0;
   }
 
   .logo a {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 700;
     text-decoration: none;
-    color: var(--color-primary);
-    letter-spacing: -0.02em;
+    color: #2D2D2D;
+    letter-spacing: -0.5px;
   }
 
+  /* Numberc-style Navigation */
   .nav-main {
     display: flex;
-    gap: var(--spacing-md);
+    gap: 40px;
     align-items: center;
   }
 
-  .nav-main a {
-    text-decoration: none;
-    color: var(--color-text);
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: var(--transition);
+  .nav-item {
     position: relative;
-    padding: var(--spacing-xs) 0;
   }
 
-  .nav-main a:hover {
-    color: var(--color-primary);
+  .nav-link {
+    text-decoration: none;
+    color: #2D2D2D;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 12px 0;
+    transition: color 0.3s ease;
+    position: relative;
   }
 
-  .nav-main a::after {
+  .nav-link:hover {
+    color: #E8C4B8;
+  }
+
+  .nav-link::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--color-primary);
-    transition: var(--transition);
+    background: #E8C4B8;
+    transition: width 0.3s ease;
   }
 
-  .nav-main a:hover::after {
+  .nav-link:hover::after {
     width: 100%;
   }
 
+  /* Header Actions - Numberc Style */
   .header-actions {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 16px;
   }
 
-  .header-actions a {
+  .header-action {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,23 +98,23 @@
     height: 40px;
     border-radius: 50%;
     text-decoration: none;
-    color: var(--color-text);
-    transition: var(--transition);
+    color: #2D2D2D;
+    transition: all 0.3s ease;
     position: relative;
   }
 
-  .header-actions a:hover {
-    background: var(--color-background-alt);
-    color: var(--color-primary);
+  .header-action:hover {
+    background: rgba(232, 196, 184, 0.1);
+    color: #E8C4B8;
   }
 
   .cart-count {
-    background: var(--color-accent);
+    background: #E8C4B8;
     color: white;
     border-radius: 50%;
     width: 18px;
     height: 18px;
-    font-size: 0.7rem;
+    font-size: 11px;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -106,105 +124,122 @@
     right: -2px;
   }
 
+  /* Mobile Menu */
   .mobile-menu-btn {
     display: none;
     background: none;
     border: none;
-    font-size: 1.25rem;
+    font-size: 20px;
     cursor: pointer;
-    padding: var(--spacing-xs);
-    border-radius: var(--border-radius);
-    transition: var(--transition);
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
   }
 
   .mobile-menu-btn:hover {
-    background: var(--color-background-alt);
+    background: rgba(232, 196, 184, 0.1);
   }
 
   /* Mobile Styles */
   @media (max-width: 768px) {
+    .header {
+      position: fixed;
+      background: white;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
     .nav-main {
       display: none;
       position: absolute;
       top: 100%;
       left: 0;
       right: 0;
-      background: var(--color-background);
+      background: white;
       flex-direction: column;
-      padding: var(--spacing-md);
-      border-top: 1px solid var(--color-border);
-      box-shadow: var(--shadow-lg);
+      padding: 20px;
       gap: 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .nav-main.active {
       display: flex;
     }
 
-    .nav-main a {
-      padding: var(--spacing-sm);
-      border-bottom: 1px solid var(--color-border);
+    .nav-item {
       width: 100%;
     }
 
-    .nav-main a:last-child {
+    .nav-link {
+      display: block;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 16px;
+    }
+
+    .nav-link:last-child {
       border-bottom: none;
     }
 
-    .nav-main a::after {
+    .nav-link::after {
       display: none;
     }
 
     .mobile-menu-btn {
       display: block;
     }
+
+    .header-actions {
+      gap: 12px;
+    }
   }
 </style>
 
-<header class="header">
+<header class="header" id="main-header">
   <div class="header-container">
     <div class="header-inner">
       <!-- Mobile Menu Button -->
-      <button class="mobile-menu-btn" aria-label="Toggle menu">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
         ☰
       </button>
 
       <!-- Logo -->
       <div class="logo">
         <a href="{{ routes.root_url }}">
-          {% if settings.logo %}
-            <img src="{{ settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" style="height: 30px;">
-          {% else %}
-            {{ shop.name }}
-          {% endif %}
+          {{ shop.name }}
         </a>
       </div>
 
       <!-- Main Navigation -->
-      <nav class="nav-main" role="navigation">
-        {% for link in linklists.main-menu.links %}
-          <a href="{{ link.url }}" class="nav-link">
-            {{ link.title }}
-          </a>
-        {% endfor %}
+      <nav class="nav-main" id="main-nav">
+        <div class="nav-item">
+          <a href="/collections/all" class="nav-link">Shop</a>
+        </div>
+        <div class="nav-item">
+          <a href="/pages/quiz" class="nav-link">Hair Quiz</a>
+        </div>
+        <div class="nav-item">
+          <a href="/pages/about" class="nav-link">Our Story</a>
+        </div>
+        <div class="nav-item">
+          <a href="/blogs/guides" class="nav-link">Guides</a>
+        </div>
       </nav>
 
       <!-- Header Actions -->
       <div class="header-actions">
-        <a href="{{ routes.search_url }}" class="search-btn" aria-label="Search">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M19 19L13 13M15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <a href="{{ routes.search_url }}" class="header-action search-btn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
           </svg>
         </a>
-        <a href="{{ routes.account_login_url }}" class="account-btn" aria-label="Account">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="2"/>
-            <path d="M4 19C4 19 3 19 3 18C3 17 4 14 12 14C20 14 21 17 21 18C21 19 20 19 20 19H4Z" stroke="currentColor" stroke-width="2"/>
+        <a href="{{ routes.account_login_url }}" class="header-action account-btn" aria-label="Account">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
           </svg>
         </a>
-        <a href="{{ routes.cart_url }}" class="cart-btn" aria-label="Cart">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M1 1H3L3.4 3M5 11H15L19 3H3.4M5 11L3.4 3M5 11L2.70711 13.2929C2.07714 13.9229 2.52331 15 3.41421 15H15M15 15C13.8954 15 13 15.8954 13 17C13 18.1046 13.8954 19 15 19C16.1046 19 17 18.1046 17 17C17 15.8954 16.1046 15 15 15ZM7 17C7 18.1046 6.10457 19 5 19C3.89543 19 3 18.1046 3 17C3 15.8954 3.89543 15 5 15C6.10457 15 7 15.8954 7 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
           </svg>
           <span class="cart-count">{{ cart.item_count }}</span>
         </a>
@@ -212,3 +247,36 @@
     </div>
   </div>
 </header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const header = document.getElementById('main-header');
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mainNav = document.getElementById('main-nav');
+
+  // Scroll effect
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 100) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  // Mobile menu toggle
+  if (mobileMenuBtn && mainNav) {
+    mobileMenuBtn.addEventListener('click', function() {
+      mainNav.classList.toggle('active');
+      this.textContent = mainNav.classList.contains('active') ? '✕' : '☰';
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.header') && mainNav.classList.contains('active')) {
+        mainNav.classList.remove('active');
+        mobileMenuBtn.textContent = '☰';
+      }
+    });
+  }
+});
+</script>
