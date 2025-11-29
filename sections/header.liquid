@@ -348,29 +348,29 @@
       <nav class="nav-main" id="main-nav">
         <!-- Shop Dropdown -->
         <div class="nav-item">
-          <a href="/collections/all" class="nav-link">Shop</a>
+          <a href="{{ routes.all_products_collection_url }}" class="nav-link">Shop</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
                 <h4>By Product Type</h4>
                 <div class="dropdown-links">
-                  <a href="/collections/shampoo" class="dropdown-link">Shampoo & Cleansers</a>
-                  <a href="/collections/conditioner" class="dropdown-link">Conditioners</a>
-                  <a href="/collections/curl-cream" class="dropdown-link">Curl Defining Creams</a>
-                  <a href="/collections/hair-oil" class="dropdown-link">Hair Oils & Serums</a>
-                  <a href="/collections/styling" class="dropdown-link">Styling Products</a>
-                  <a href="/collections/treatments" class="dropdown-link">Hair Treatments</a>
+                  <a href="{{ routes.collections_url }}/shampoo" class="dropdown-link">Shampoo & Cleansers</a>
+                  <a href="{{ routes.collections_url }}/conditioner" class="dropdown-link">Conditioners</a>
+                  <a href="{{ routes.collections_url }}/curl-cream" class="dropdown-link">Curl Defining Creams</a>
+                  <a href="{{ routes.collections_url }}/hair-oil" class="dropdown-link">Hair Oils & Serums</a>
+                  <a href="{{ routes.collections_url }}/styling" class="dropdown-link">Styling Products</a>
+                  <a href="{{ routes.collections_url }}/treatments" class="dropdown-link">Hair Treatments</a>
                 </div>
               </div>
               <div class="dropdown-column">
                 <h4>By Curl Type</h4>
                 <div class="dropdown-links">
-                  <a href="/collections/wavy-hair" class="dropdown-link">Wavy Hair (2A-2C)</a>
-                  <a href="/collections/curly-hair" class="dropdown-link">Curly Hair (3A-3C)</a>
-                  <a href="/collections/coily-hair" class="dropdown-link">Coily Hair (4A-4C)</a>
-                  <a href="/collections/fine-hair" class="dropdown-link">Fine & Thin Hair</a>
-                  <a href="/collections/thick-hair" class="dropdown-link">Thick & Dense Hair</a>
-                  <a href="/collections/damaged-hair" class="dropdown-link">Damaged & Dry Hair</a>
+                  <a href="{{ routes.collections_url }}/wavy-hair" class="dropdown-link">Wavy Hair (2A-2C)</a>
+                  <a href="{{ routes.collections_url }}/curly-hair" class="dropdown-link">Curly Hair (3A-3C)</a>
+                  <a href="{{ routes.collections_url }}/coily-hair" class="dropdown-link">Coily Hair (4A-4C)</a>
+                  <a href="{{ routes.collections_url }}/fine-hair" class="dropdown-link">Fine & Thin Hair</a>
+                  <a href="{{ routes.collections_url }}/thick-hair" class="dropdown-link">Thick & Dense Hair</a>
+                  <a href="{{ routes.collections_url }}/damaged-hair" class="dropdown-link">Damaged & Dry Hair</a>
                 </div>
               </div>
             </div>
@@ -384,25 +384,25 @@
 
         <!-- Hair Quiz Dropdown -->
         <div class="nav-item">
-          <a href="/pages/quiz" class="nav-link">Hair Quiz</a>
+          <a href="{{ pages['quiz'].url | default: '#' }}" class="nav-link">Hair Quiz</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
                 <h4>Find Your Routine</h4>
                 <div class="dropdown-links">
-                  <a href="/pages/curl-pattern-quiz" class="dropdown-link">Curl Pattern Analysis</a>
-                  <a href="/pages/hair-concerns-quiz" class="dropdown-link">Hair Concerns Assessment</a>
-                  <a href="/pages/product-recommendations" class="dropdown-link">Product Recommendations</a>
-                  <a href="/pages/routine-builder" class="dropdown-link">Custom Routine Builder</a>
+                  <a href="{{ pages['curl-pattern-quiz'].url | default: '#' }}" class="dropdown-link">Curl Pattern Analysis</a>
+                  <a href="{{ pages['hair-concerns-quiz'].url | default: '#' }}" class="dropdown-link">Hair Concerns Assessment</a>
+                  <a href="{{ pages['product-recommendations'].url | default: '#' }}" class="dropdown-link">Product Recommendations</a>
+                  <a href="{{ pages['routine-builder'].url | default: '#' }}" class="dropdown-link">Custom Routine Builder</a>
                 </div>
               </div>
               <div class="dropdown-column">
                 <h4>Quick Guides</h4>
                 <div class="dropdown-links">
-                  <a href="/pages/curl-type-guide" class="dropdown-link">Curl Type Identification</a>
-                  <a href="/pages/porosity-test" class="dropdown-link">Hair Porosity Test</a>
-                  <a href="/pages/density-guide" class="dropdown-link">Hair Density Guide</a>
-                  <a href="/pages/ingredients-guide" class="dropdown-link">Key Ingredients</a>
+                  <a href="{{ pages['curl-type-guide'].url | default: '#' }}" class="dropdown-link">Curl Type Identification</a>
+                  <a href="{{ pages['porosity-test'].url | default: '#' }}" class="dropdown-link">Hair Porosity Test</a>
+                  <a href="{{ pages['density-guide'].url | default: '#' }}" class="dropdown-link">Hair Density Guide</a>
+                  <a href="{{ pages['ingredients-guide'].url | default: '#' }}" class="dropdown-link">Key Ingredients</a>
                 </div>
               </div>
             </div>
@@ -416,25 +416,25 @@
 
         <!-- Our Story Dropdown -->
         <div class="nav-item">
-          <a href="/pages/about" class="nav-link">Our Story</a>
+          <a href="{{ pages['about'].url | default: '#' }}" class="nav-link">Our Story</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
                 <h4>About Us</h4>
                 <div class="dropdown-links">
-                  <a href="/pages/our-mission" class="dropdown-link">Our Mission</a>
-                  <a href="/pages/our-story" class="dropdown-link">Brand Story</a>
-                  <a href="/pages/ingredients" class="dropdown-link">Ingredient Philosophy</a>
-                  <a href="/pages/sustainability" class="dropdown-link">Sustainability</a>
+                  <a href="{{ pages['our-mission'].url | default: '#' }}" class="dropdown-link">Our Mission</a>
+                  <a href="{{ pages['our-story'].url | default: '#' }}" class="dropdown-link">Brand Story</a>
+                  <a href="{{ pages['ingredients'].url | default: '#' }}" class="dropdown-link">Ingredient Philosophy</a>
+                  <a href="{{ pages['sustainability'].url | default: '#' }}" class="dropdown-link">Sustainability</a>
                 </div>
               </div>
               <div class="dropdown-column">
                 <h4>Community</h4>
                 <div class="dropdown-links">
-                  <a href="/pages/curl-community" class="dropdown-link">Curl Community</a>
-                  <a href="/pages/education" class="dropdown-link">Hair Education</a>
-                  <a href="/pages/events" class="dropdown-link">Events & Workshops</a>
-                  <a href="/pages/testimonials" class="dropdown-link">Success Stories</a>
+                  <a href="{{ pages['curl-community'].url | default: '#' }}" class="dropdown-link">Curl Community</a>
+                  <a href="{{ pages['education'].url | default: '#' }}" class="dropdown-link">Hair Education</a>
+                  <a href="{{ pages['events'].url | default: '#' }}" class="dropdown-link">Events & Workshops</a>
+                  <a href="{{ pages['testimonials'].url | default: '#' }}" class="dropdown-link">Success Stories</a>
                 </div>
               </div>
             </div>
@@ -448,25 +448,25 @@
 
         <!-- Guides Dropdown -->
         <div class="nav-item">
-          <a href="/blogs/guides" class="nav-link">Guides</a>
+          <a href="{{ blogs['guides'].url | default: '#' }}" class="nav-link">Guides</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
                 <h4>Hair Care Guides</h4>
                 <div class="dropdown-links">
-                  <a href="/blogs/guides/wash-day-routine" class="dropdown-link">Wash Day Routine</a>
-                  <a href="/blogs/guides/styling-techniques" class="dropdown-link">Styling Techniques</a>
-                  <a href="/blogs/guides/night-time-routine" class="dropdown-link">Night Time Routine</a>
-                  <a href="/blogs/guides/seasonal-care" class="dropdown-link">Seasonal Hair Care</a>
+                  <a href="{{ articles['wash-day-routine'].url | default: '#' }}" class="dropdown-link">Wash Day Routine</a>
+                  <a href="{{ articles['styling-techniques'].url | default: '#' }}" class="dropdown-link">Styling Techniques</a>
+                  <a href="{{ articles['night-time-routine'].url | default: '#' }}" class="dropdown-link">Night Time Routine</a>
+                  <a href="{{ articles['seasonal-care'].url | default: '#' }}" class="dropdown-link">Seasonal Hair Care</a>
                 </div>
               </div>
               <div class="dropdown-column">
                 <h4>Expert Advice</h4>
                 <div class="dropdown-links">
-                  <a href="/blogs/guides/common-mistakes" class="dropdown-link">Common Mistakes</a>
-                  <a href="/blogs/guides/product-application" class="dropdown-link">Product Application</a>
-                  <a href="/blogs/guides/troubleshooting" class="dropdown-link">Troubleshooting Guide</a>
-                  <a href="/blogs/guides/pro-tips" class="dropdown-link">Professional Tips</a>
+                  <a href="{{ articles['common-mistakes'].url | default: '#' }}" class="dropdown-link">Common Mistakes</a>
+                  <a href="{{ articles['product-application'].url | default: '#' }}" class="dropdown-link">Product Application</a>
+                  <a href="{{ articles['troubleshooting'].url | default: '#' }}" class="dropdown-link">Troubleshooting Guide</a>
+                  <a href="{{ articles['pro-tips'].url | default: '#' }}" class="dropdown-link">Professional Tips</a>
                 </div>
               </div>
             </div>
