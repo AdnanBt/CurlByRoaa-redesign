@@ -296,6 +296,22 @@
     margin-top: 60px;
   }
 
+  .btn-outline {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 2px solid #2D2D2D;
+    color: #2D2D2D;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline:hover {
+    background: #2D2D2D;
+    color: white;
+  }
+
   /* Mobile Styles */
   @media (max-width: 768px) {
     .featured-products {
@@ -339,7 +355,6 @@
     <div class="products-carousel" id="products-carousel">
       {% assign featured_collection = collections[section.settings.collection] | default: collections.all %}
       
-      {% comment %} Simple approach - use real product images when available {% endcomment %}
       {% for product in featured_collection.products limit: 8 %}
         <div class="product-card">
           {% if product.tags contains 'bestseller' %}
@@ -349,8 +364,8 @@
           {% endif %}
 
           <div class="product-image-container">
-            {% comment %} Use actual product image if available, otherwise use placeholder {% endcomment %}
             {% if product.featured_image %}
+              {% comment %} Using image_url filter instead of img_url {% endcomment %}
               <img 
                 src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
                 alt="{{ product.title | escape }}"
@@ -360,27 +375,10 @@
                 loading="lazy"
               >
             {% else %}
-              {% comment %} Use placeholder images for demo {% endcomment %}
-              {% assign placeholder_images = "
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266|
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401|
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511|
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27479-Keune-Style-Relaunch-Shine-Therapy-Packshot-200ml-768x768_5f158c1e-9935-4bce-97c7-1c9ea4dab5ea.jpg?v=1763061510|
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27455-Style-Klibansky-No38-Shaping-Fibers-Comp-125ml-online-768x768_68d511df-15fa-4f97-b530-2fd098724c7e.png?v=1763061510|
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27464-Keune-Style-Relaunch-RushHour-Packshot-200ml-768x768_d7b6e364-3d99-4319-880c-5f8d52829412.jpg?v=1763061509|
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27430-Style-Klibansky-No75-Root-Volumizer-300ml-scaled-768x768_63358ae4-2757-4052-9e51-6fca320e7c4f.jpg?v=1763061508|
-                https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27478-Keune-Style-Relaunch-Restyler-Packshot-100ml-768x768_534d3b1d-5417-462c-83fd-ddf83598b6eb.jpg?v=1763061508
-              " | split: "|" %}
-              
-              {% assign image_index = forloop.index0 | modulo: placeholder_images.size %}
-              <img 
-                src="{{ placeholder_images[image_index] }}" 
-                alt="{{ product.title | escape }}"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
+              {% comment %} Fallback placeholder {% endcomment %}
+              <div class="product-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #666; font-size: 1.5rem;">
+                Product Image
+              </div>
             {% endif %}
             
             <button class="product-quick-view" data-product-handle="{{ product.handle }}">
@@ -414,6 +412,7 @@
             </div>
 
             <div class="product-actions">
+              {% comment %} Using routes.cart_add_url instead of hardcoded URL {% endcomment %}
               <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
                 <input type="hidden" name="id" value="{{ product.variants.first.id }}">
                 <input type="hidden" name="quantity" value="1">
@@ -428,50 +427,23 @@
           </div>
         </div>
       {% else %}
-        {% comment %} Fallback if no products in collection {% endcomment %}
-        {% assign placeholder_products = "
-          Keune Care Derma Activate Thickening Spray|
-          Keune Derma Activate Lotion|
-          Style Klibansky No44 Soft Mousse|
-          Keune Style Relaunch Shine Therapy|
-          Style Klibansky No38 Shaping Fibers|
-          Keune Style Relaunch RushHour|
-          Style Klibansky No75 Root Volumizer|
-          Keune Style Relaunch Restyler
-        " | split: "|" %}
-        
-        {% assign placeholder_images = "
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266|
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401|
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511|
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27479-Keune-Style-Relaunch-Shine-Therapy-Packshot-200ml-768x768_5f158c1e-9935-4bce-97c7-1c9ea4dab5ea.jpg?v=1763061510|
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27455-Style-Klibansky-No38-Shaping-Fibers-Comp-125ml-online-768x768_68d511df-15fa-4f97-b530-2fd098724c7e.png?v=1763061510|
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27464-Keune-Style-Relaunch-RushHour-Packshot-200ml-768x768_d7b6e364-3d99-4319-880c-5f8d52829412.jpg?v=1763061509|
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27430-Style-Klibansky-No75-Root-Volumizer-300ml-scaled-768x768_63358ae4-2757-4052-9e51-6fca320e7c4f.jpg?v=1763061508|
-          https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27478-Keune-Style-Relaunch-Restyler-Packshot-100ml-768x768_534d3b1d-5417-462c-83fd-ddf83598b6eb.jpg?v=1763061508
-        " | split: "|" %}
-        
+        {% comment %} Fallback demo products {% endcomment %}
         {% for i in (1..4) %}
           <div class="product-card">
             <div class="product-image-container">
-              <img 
-                src="{{ placeholder_images[i] }}" 
-                alt="{{ placeholder_products[i] }}"
-                class="product-image"
-                width="400"
-                height="400"
-                loading="lazy"
-              >
-              <button class="product-quick-view" data-product-handle="product-{{ i }}">
+              <div class="product-image" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                Product {{ i }}
+              </div>
+              <button class="product-quick-view" data-product-handle="demo-{{ i }}">
                 Quick View
               </button>
             </div>
             <div class="product-info">
               <div class="product-category">Hair Care</div>
               <h3 class="product-title">
-                <a href="#">{{ placeholder_products[i] }}</a>
+                <a href="#">Demo Product {{ i }}</a>
               </h3>
-              <p class="product-description">Professional hair care product designed for optimal results and healthy hair.</p>
+              <p class="product-description">Professional hair care product for beautiful curls.</p>
               <div class="product-price">
                 <span class="current-price">$29.99</span>
               </div>
@@ -500,7 +472,7 @@
   </div>
 
   <div class="view-all-container">
-    <a href="{{ section.settings.collection_url | default: routes.all_products_collection_url }}" class="btn btn-outline">
+    <a href="{{ section.settings.collection_url | default: routes.all_products_collection_url }}" class="btn-outline">
       View All Products
     </a>
   </div>
