@@ -345,18 +345,42 @@
             <div class="product-card-badge">New</div>
           {% endif %}
 
-          <div class="product-image-container">
-            <img 
-              src="{{ product.featured_image | img_url: '400x400' }}" 
-              alt="{{ product.title }}"
-              class="product-image"
-              loading="lazy"
-            >
-            <button class="product-quick-view" data-product-handle="{{ product.handle }}">
-              Quick View
-            </button>
-          </div>
-
+          <!-- In the product loop, replace the featured_image with actual product images -->
+<div class="product-image-container">
+  {% if forloop.index == 1 %}
+    <img 
+      src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266" 
+      alt="Thickening Spray"
+      class="product-image"
+      loading="lazy"
+    >
+  {% elsif forloop.index == 2 %}
+    <img 
+      src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401" 
+      alt="Derma Activate Lotion"
+      class="product-image"
+      loading="lazy"
+    >
+  {% elsif forloop.index == 3 %}
+    <img 
+      src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511" 
+      alt="Soft Mousse"
+      class="product-image"
+      loading="lazy"
+    >
+  {% else %}
+    <!-- Continue with other product images -->
+    <img 
+      src="{{ product.featured_image | img_url: '400x400' }}" 
+      alt="{{ product.title }}"
+      class="product-image"
+      loading="lazy"
+    >
+  {% endif %}
+  <button class="product-quick-view" data-product-handle="{{ product.handle }}">
+    Quick View
+  </button>
+</div>
           <div class="product-info">
             <div class="product-category">
               {{ product.type | default: 'Hair Care' }}
