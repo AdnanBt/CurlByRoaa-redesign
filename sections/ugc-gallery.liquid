@@ -275,9 +275,8 @@
   <div class="gallery-grid">
     <!-- UGC Item 1 -->
     <div class="gallery-item" data-index="0">
-      {% comment %} Using asset_url for better performance {% endcomment %}
       <img 
-        src="{{ 'IMG-1625.webp' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1625.webp?v=1763920347" 
         alt="Customer hair transformation showing defined curls"
         class="gallery-image"
         width="400"
@@ -297,7 +296,7 @@
     <!-- UGC Item 2 -->
     <div class="gallery-item" data-index="1">
       <img 
-        src="{{ 'IMG-1318.jpg' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1318.jpg?v=1763119832" 
         alt="Before and after hair results showing improved curl pattern"
         class="gallery-image"
         width="400"
@@ -317,7 +316,7 @@
     <!-- UGC Item 3 -->
     <div class="gallery-item" data-index="2">
       <img 
-        src="{{ 'IMG-1316.jpg' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1316.jpg?v=1763119724" 
         alt="Healthy shiny curls with great definition"
         class="gallery-image"
         width="400"
@@ -337,7 +336,7 @@
     <!-- UGC Item 4 -->
     <div class="gallery-item" data-index="3">
       <img 
-        src="{{ 'IMG-1315.jpg' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1315.jpg?v=1763119627" 
         alt="Natural hair journey progress showing reduced frizz"
         class="gallery-image"
         width="400"
@@ -357,7 +356,7 @@
     <!-- UGC Item 5 -->
     <div class="gallery-item" data-index="4">
       <img 
-        src="{{ '1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg?v=1763119533" 
         alt="Soft defined curls with natural shine"
         class="gallery-image"
         width="400"
@@ -377,7 +376,7 @@
     <!-- UGC Item 6 -->
     <div class="gallery-item" data-index="5">
       <img 
-        src="{{ '2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg?v=1763119533" 
         alt="Confident curly hair styling results"
         class="gallery-image"
         width="400"
@@ -397,7 +396,7 @@
     <!-- UGC Item 7 -->
     <div class="gallery-item" data-index="6">
       <img 
-        src="{{ 'IMG-1311.jpg' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1311.jpg?v=1763119457" 
         alt="Perfect curl definition and hold"
         class="gallery-image"
         width="400"
@@ -417,7 +416,7 @@
     <!-- UGC Item 8 -->
     <div class="gallery-item" data-index="7">
       <img 
-        src="{{ '3B488469-481D-4B83-BB18-021D2815511F.jpg' | asset_url }}" 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/3B488469-481D-4B83-BB18-021D2815511F.jpg?v=1763119220" 
         alt="Organic hair care results with natural ingredients"
         class="gallery-image"
         width="400"
@@ -467,14 +466,14 @@ class UGCGallery {
     this.currentIndex = 0;
     this.items = [];
     this.images = [
-      "{{ 'IMG-1625.webp' | asset_url }}",
-      "{{ 'IMG-1318.jpg' | asset_url }}", 
-      "{{ 'IMG-1316.jpg' | asset_url }}",
-      "{{ 'IMG-1315.jpg' | asset_url }}",
-      "{{ '1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg' | asset_url }}",
-      "{{ '2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg' | asset_url }}",
-      "{{ 'IMG-1311.jpg' | asset_url }}",
-      "{{ '3B488469-481D-4B83-BB18-021D2815511F.jpg' | asset_url }}"
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1625.webp?v=1763920347",
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1318.jpg?v=1763119832",
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1316.jpg?v=1763119724",
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1315.jpg?v=1763119627",
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg?v=1763119533",
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg?v=1763119533",
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/IMG-1311.jpg?v=1763119457",
+      "https://cdn.shopify.com/s/files/1/0567/4172/4316/files/3B488469-481D-4B83-BB18-021D2815511F.jpg?v=1763119220"
     ];
     this.init();
   }
