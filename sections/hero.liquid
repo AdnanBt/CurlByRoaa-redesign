@@ -224,12 +224,12 @@
 </style>
 
 <section class="hero">
-  <!-- Video Background -->
-  <video class="hero-video" autoplay muted loop playsinline>
-    <source src="https://cdn.shopify.com/s/files/1/0819/2037/9778/files/hero-video-placeholder.mp4?v=1694567890" type="video/mp4">
-    <!-- Fallback image if video doesn't load -->
-    <img src="{{ section.settings.fallback_image | img_url: '2000x' }}" alt="Hero background" style="width: 100%; height: 100%; object-fit: cover;">
-  </video>
+  <!-- Replace the video section in hero.liquid -->
+<video class="hero-video" autoplay muted loop playsinline>
+  <source src="https://cdn.shopify.com/videos/c/o/v/1f8218940a0d4c5bbd92cb24c024b184.mp4" type="video/mp4">
+  <!-- Fallback to the webp image -->
+  <img src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2211B086-44F7-40E0-BE64-96D504EAE7F9.webp?v=1763925101" alt="Hero background" style="width: 100%; height: 100%; object-fit: cover;">
+</video>
   
   <div class="hero-video-overlay"></div>
 
