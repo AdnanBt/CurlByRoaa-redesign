@@ -1,72 +1,535 @@
 <style>
   .hair-quiz {
-    padding: var(--spacing-xl) 0;
-    background: var(--color-background);
+    padding: 100px 0;
+    background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
+    position: relative;
+    overflow: hidden;
   }
+
   .quiz-container {
     max-width: 800px;
     margin: 0 auto;
     background: white;
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-xl);
-    box-shadow: var(--shadow-sm);
+    border-radius: 24px;
+    padding: 60px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    position: relative;
   }
+
+  .quiz-progress {
+    margin-bottom: 40px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .progress-text {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: #F0F0F0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #E8C4B8, #D4A59A);
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
   .quiz-step {
     display: none;
   }
+
   .quiz-step.active {
     display: block;
+    animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .quiz-question {
-    font-size: 1.5rem;
-    margin-bottom: var(--spacing-lg);
+    font-size: 2rem;
+    font-weight: 700;
     text-align: center;
+    margin-bottom: 40px;
+    color: #2D2D2D;
+    line-height: 1.2;
   }
+
   .quiz-options {
     display: grid;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
+    gap: 16px;
+    margin-bottom: 40px;
   }
+
   .quiz-option {
-    padding: var(--spacing-md);
-    border: 2px solid var(--color-border);
-    border-radius: var(--border-radius);
+    padding: 24px;
+    border: 2px solid #F0F0F0;
+    border-radius: 16px;
     cursor: pointer;
-    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    position: relative;
+    overflow: hidden;
   }
+
+  .quiz-option:hover {
+    border-color: #E8C4B8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(232, 196, 184, 0.15);
+  }
+
   .quiz-option.selected {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
+    border-color: #E8C4B8;
+    background: linear-gradient(135deg, #FFF8F6, #FFFFFF);
+    box-shadow: 0 8px 25px rgba(232, 196, 184, 0.2);
+  }
+
+  .quiz-option.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 24px;
+    height: 24px;
+    background: #E8C4B8;
     color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .option-image {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: #FAF8F6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  .option-text {
+    text-align: center;
+    font-weight: 600;
+    color: #2D2D2D;
+    font-size: 1.1rem;
+  }
+
+  .option-description {
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  .quiz-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .quiz-btn {
+    padding: 16px 32px;
+    border: 2px solid #E8C4B8;
+    border-radius: 50px;
+    background: white;
+    color: #E8C4B8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+  }
+
+  .quiz-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .quiz-btn.prev:hover:not(:disabled) {
+    background: #FAF8F6;
+    transform: translateX(-2px);
+  }
+
+  .quiz-btn.next {
+    background: #E8C4B8;
+    color: white;
+  }
+
+  .quiz-btn.next:hover:not(:disabled) {
+    background: #D4A59A;
+    transform: translateX(2px);
+    box-shadow: 0 8px 20px rgba(232, 196, 184, 0.4);
+  }
+
+  .quiz-results {
+    text-align: center;
+    display: none;
+  }
+
+  .quiz-results.active {
+    display: block;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .results-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2D2D2D;
+  }
+
+  .results-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .recommended-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin: 40px 0;
+  }
+
+  .recommended-product {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease;
+  }
+
+  .recommended-product:hover {
+    transform: translateY(-4px);
+  }
+
+  .product-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+  }
+
+  .product-name {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2D2D2D;
+  }
+
+  .product-description {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hair-quiz {
+      padding: 60px 20px;
+    }
+
+    .quiz-container {
+      padding: 40px 24px;
+    }
+
+    .quiz-question {
+      font-size: 1.5rem;
+    }
+
+    .quiz-options {
+      grid-template-columns: 1fr;
+    }
+
+    .quiz-navigation {
+      flex-direction: column;
+    }
+
+    .recommended-products {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
 <section class="hair-quiz">
   <div class="quiz-container">
+    <div class="quiz-progress">
+      <div class="progress-header">
+        <span class="progress-text">Find Your Routine</span>
+        <span class="progress-text"><span id="current-step">1</span>/3</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="quiz-progress"></div>
+      </div>
+    </div>
+
+    <!-- Step 1: Curl Type -->
     <div class="quiz-step active" data-step="1">
-      <h2 class="quiz-question">What's your curl pattern?</h2>
+      <h2 class="quiz-question">What's your natural curl pattern?</h2>
       <div class="quiz-options">
-        <div class="quiz-option" data-value="wavy">Wavy (2A-2C)</div>
-        <div class="quiz-option" data-value="curly">Curly (3A-3C)</div>
-        <div class="quiz-option" data-value="coily">Coily (4A-4C)</div>
+        <div class="quiz-option" data-value="wavy">
+          <div class="option-image">🌊</div>
+          <div class="option-text">Wavy Hair</div>
+          <div class="option-description">Loose S-shaped curls (2A-2C)</div>
+        </div>
+        <div class="quiz-option" data-value="curly">
+          <div class="option-image">🌀</div>
+          <div class="option-text">Curly Hair</div>
+          <div class="option-description">Defined spiral curls (3A-3C)</div>
+        </div>
+        <div class="quiz-option" data-value="coily">
+          <div class="option-image">✨</div>
+          <div class="option-text">Coily Hair</div>
+          <div class="option-description">Tight zig-zag pattern (4A-4C)</div>
+        </div>
       </div>
       <div class="quiz-navigation">
-        <button class="btn btn-primary next-btn">Next</button>
+        <button class="quiz-btn prev" disabled>Back</button>
+        <button class="quiz-btn next" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Hair Concerns -->
+    <div class="quiz-step" data-step="2">
+      <h2 class="quiz-question">What's your biggest hair concern?</h2>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="frizz">
+          <div class="option-text">Frizz & Flyaways</div>
+          <div class="option-description">Struggling with humidity and dryness</div>
+        </div>
+        <div class="quiz-option" data-value="moisture">
+          <div class="option-text">Dryness & Moisture</div>
+          <div class="option-description">Constantly thirsty, brittle curls</div>
+        </div>
+        <div class="quiz-option" data-value="definition">
+          <div class="option-text">Curl Definition</div>
+          <div class="option-description">Want more defined, bouncy curls</div>
+        </div>
+        <div class="quiz-option" data-value="volume">
+          <div class="option-text">Volume & Lift</div>
+          <div class="option-description">Flat roots, need more body</div>
+        </div>
+      </div>
+      <div class="quiz-navigation">
+        <button class="quiz-btn prev">Back</button>
+        <button class="quiz-btn next" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Hair Density -->
+    <div class="quiz-step" data-step="3">
+      <h2 class="quiz-question">How dense is your hair?</h2>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="fine">
+          <div class="option-text">Fine & Less Dense</div>
+          <div class="option-description">Can see scalp easily, gets weighed down</div>
+        </div>
+        <div class="quiz-option" data-value="medium">
+          <div class="option-text">Medium Density</div>
+          <div class="option-description">Balanced coverage, versatile styling</div>
+        </div>
+        <div class="quiz-option" data-value="thick">
+          <div class="option-text">Thick & Very Dense</div>
+          <div class="option-description">Full coverage, needs strong hold</div>
+        </div>
+      </div>
+      <div class="quiz-navigation">
+        <button class="quiz-btn prev">Back</button>
+        <button class="quiz-btn next" disabled>See My Routine</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="quiz-step quiz-results" data-step="results">
+      <h2 class="results-title">Your Perfect Routine! 🎉</h2>
+      <p class="results-subtitle">Based on your answers, we've curated this personalized routine for your curl type and concerns.</p>
+      
+      <div class="recommended-products">
+        <div class="recommended-product">
+          <div class="product-icon">🧴</div>
+          <div class="product-name">Hydrating Shampoo</div>
+          <div class="product-description">Gentle cleansing without stripping natural oils</div>
+        </div>
+        <div class="recommended-product">
+          <div class="product-icon">💫</div>
+          <div class="product-name">Curl Defining Cream</div>
+          <div class="product-description">Perfect hold and definition for your pattern</div>
+        </div>
+        <div class="recommended-product">
+          <div class="product-icon">🔒</div>
+          <div class="product-name">Moisture Lock Oil</div>
+          <div class="product-description">Seals in hydration for days of softness</div>
+        </div>
+      </div>
+      
+      <div class="quiz-navigation">
+        <button class="quiz-btn" onclick="window.location.href='/collections/all'">Shop Recommended Products</button>
+        <button class="quiz-btn next" onclick="restartQuiz()">Take Quiz Again</button>
       </div>
     </div>
   </div>
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const quizOptions = document.querySelectorAll('.quiz-option');
-  
-  quizOptions.forEach(option => {
-    option.addEventListener('click', function() {
-      quizOptions.forEach(opt => opt.classList.remove('selected'));
-      this.classList.add('selected');
+class HairQuiz {
+  constructor() {
+    this.currentStep = 1;
+    this.totalSteps = 3;
+    this.answers = {};
+    this.init();
+  }
+
+  init() {
+    this.bindEvents();
+    this.updateProgress();
+  }
+
+  bindEvents() {
+    // Option selection
+    document.querySelectorAll('.quiz-option').forEach(option => {
+      option.addEventListener('click', (e) => {
+        const step = this.currentStep;
+        const value = e.currentTarget.getAttribute('data-value');
+        
+        // Remove selected class from siblings
+        e.currentTarget.parentElement.querySelectorAll('.quiz-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        
+        // Add selected class to current
+        e.currentTarget.classList.add('selected');
+        
+        // Store answer
+        this.answers[`step${step}`] = value;
+        
+        // Enable next button
+        document.querySelector('.quiz-btn.next').disabled = false;
+      });
     });
-  });
+
+    // Navigation
+    document.querySelectorAll('.quiz-btn.next').forEach(btn => {
+      btn.addEventListener('click', () => this.nextStep());
+    });
+
+    document.querySelectorAll('.quiz-btn.prev').forEach(btn => {
+      btn.addEventListener('click', () => this.prevStep());
+    });
+  }
+
+  nextStep() {
+    if (this.currentStep < this.totalSteps) {
+      this.hideStep(this.currentStep);
+      this.currentStep++;
+      this.showStep(this.currentStep);
+    } else {
+      this.showResults();
+    }
+    this.updateProgress();
+  }
+
+  prevStep() {
+    if (this.currentStep > 1) {
+      this.hideStep(this.currentStep);
+      this.currentStep--;
+      this.showStep(this.currentStep);
+    }
+    this.updateProgress();
+  }
+
+  hideStep(step) {
+    const stepElement = document.querySelector(`[data-step="${step}"]`);
+    stepElement.style.animation = 'slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) reverse';
+    setTimeout(() => {
+      stepElement.classList.remove('active');
+      stepElement.style.animation = '';
+    }, 300);
+  }
+
+  showStep(step) {
+    const stepElement = document.querySelector(`[data-step="${step}"]`);
+    stepElement.classList.add('active');
+    
+    // Update button states
+    const prevBtn = document.querySelector('.quiz-btn.prev');
+    const nextBtn = document.querySelector('.quiz-btn.next');
+    
+    prevBtn.disabled = step === 1;
+    nextBtn.textContent = step === this.totalSteps ? 'See My Routine' : 'Continue';
+    nextBtn.disabled = !this.answers[`step${step}`];
+
+    // Update step counter
+    document.getElementById('current-step').textContent = step;
+  }
+
+  showResults() {
+    this.hideStep(this.currentStep);
+    setTimeout(() => {
+      document.querySelector('.quiz-results').classList.add('active');
+    }, 300);
+  }
+
+  updateProgress() {
+    const progress = (this.currentStep - 1) / this.totalSteps * 100;
+    document.getElementById('quiz-progress').style.width = `${progress}%`;
+  }
+}
+
+function restartQuiz() {
+  window.location.reload();
+}
+
+// Initialize quiz
+document.addEventListener('DOMContentLoaded', () => {
+  new HairQuiz();
 });
 </script>
 
@@ -77,8 +540,14 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       "type": "text",
       "id": "title",
-      "label": "Title",
+      "label": "Section Title",
       "default": "Find Your Perfect Routine"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Numberc Style Quiz",
+      "category": "Homepage"
     }
   ]
 }
