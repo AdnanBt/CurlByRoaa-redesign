@@ -41,11 +41,6 @@
     -ms-overflow-style: none;
     padding: 20px 10px;
     scroll-snap-type: x mandatory;
-    cursor: grab;
-  }
-
-  .products-carousel:active {
-    cursor: grabbing;
   }
 
   .products-carousel::-webkit-scrollbar {
@@ -163,7 +158,7 @@
     line-height: 1.5;
     margin-bottom: 16px;
     display: -webkit-box;
-    -webkit-line-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -393,23 +388,21 @@
           {% endif %}
 
           <div class="product-image-container">
+            {% comment %} SIMPLE IMAGE FIX - Use basic product image {% endcomment %}
             {% if product.featured_image %}
-              {% comment %} FIXED: Using proper image_url with width/height {% endcomment %}
               <img 
-                src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" 
                 alt="{{ product.title | escape }}"
                 class="product-image"
                 width="400"
                 height="400"
                 loading="lazy"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
               >
+            {% else %}
+              <div class="product-image" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                {{ product.title | truncate: 15 }}
+              </div>
             {% endif %}
-            
-            {% comment %} Fallback placeholder {% endcomment %}
-            <div class="product-image" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: {% if product.featured_image %}none{% else %}flex{% endif %}; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
-              {{ product.title | truncate: 15 }}
-            </div>
             
             <button class="product-quick-view" data-product-handle="{{ product.handle }}">
               Quick View
@@ -520,12 +513,9 @@ class ProductCarousel {
     this.prevBtn = document.getElementById('carousel-prev');
     this.nextBtn = document.getElementById('carousel-next');
     this.dotsContainer = document.getElementById('carousel-dots');
-    this.isDragging = false;
-    this.startX = 0;
-    this.scrollLeft = 0;
     
     if (this.carousel) {
-      this.cardWidth = this.carousel.querySelector('.product-card')?.offsetWidth + 30 || 350;
+      this.cardWidth = 320 + 30; // card width + gap
       this.totalCards = this.carousel.querySelectorAll('.product-card').length;
       this.cardsPerView = Math.floor(this.carousel.offsetWidth / this.cardWidth);
       this.totalDots = Math.ceil(this.totalCards / this.cardsPerView);
@@ -537,33 +527,31 @@ class ProductCarousel {
     }
     
     this.currentIndex = 0;
+    this.autoScrollInterval = null;
     this.init();
   }
 
   init() {
+    console.log('Initializing carousel with', this.totalCards, 'cards');
     this.bindEvents();
     this.createDots();
     this.updateNavigation();
+    this.startAutoScroll();
   }
 
   bindEvents() {
     // Carousel navigation
     if (this.prevBtn && this.nextBtn) {
-      this.prevBtn.addEventListener('click', () => this.scroll('prev'));
-      this.nextBtn.addEventListener('click', () => this.scroll('next'));
-    }
-
-    // Drag to scroll
-    if (this.carousel) {
-      this.carousel.addEventListener('mousedown', this.startDrag.bind(this));
-      this.carousel.addEventListener('touchstart', this.startDrag.bind(this));
-      
-      this.carousel.addEventListener('mousemove', this.drag.bind(this));
-      this.carousel.addEventListener('touchmove', this.drag.bind(this));
-      
-      this.carousel.addEventListener('mouseup', this.endDrag.bind(this));
-      this.carousel.addEventListener('touchend', this.endDrag.bind(this));
-      this.carousel.addEventListener('mouseleave', this.endDrag.bind(this));
+      this.prevBtn.addEventListener('click', () => {
+        this.stopAutoScroll();
+        this.scroll('prev');
+        this.startAutoScroll();
+      });
+      this.nextBtn.addEventListener('click', () => {
+        this.stopAutoScroll();
+        this.scroll('next');
+        this.startAutoScroll();
+      });
     }
 
     // Update on scroll
@@ -572,6 +560,12 @@ class ProductCarousel {
         this.updateNavigation();
         this.updateDots();
       });
+    }
+
+    // Pause auto-scroll on hover
+    if (this.carousel) {
+      this.carousel.addEventListener('mouseenter', () => this.stopAutoScroll());
+      this.carousel.addEventListener('mouseleave', () => this.startAutoScroll());
     }
 
     // Wishlist buttons
@@ -602,28 +596,6 @@ class ProductCarousel {
     });
   }
 
-  startDrag(e) {
-    this.isDragging = true;
-    this.startX = (e.pageX || e.touches[0].pageX) - this.carousel.offsetLeft;
-    this.scrollLeft = this.carousel.scrollLeft;
-    this.carousel.style.cursor = 'grabbing';
-    this.carousel.style.scrollBehavior = 'auto';
-  }
-
-  drag(e) {
-    if (!this.isDragging) return;
-    e.preventDefault();
-    const x = (e.pageX || e.touches[0].pageX) - this.carousel.offsetLeft;
-    const walk = (x - this.startX) * 2;
-    this.carousel.scrollLeft = this.scrollLeft - walk;
-  }
-
-  endDrag() {
-    this.isDragging = false;
-    this.carousel.style.cursor = 'grab';
-    this.carousel.style.scrollBehavior = 'smooth';
-  }
-
   scroll(direction) {
     if (!this.carousel) return;
     
@@ -644,6 +616,28 @@ class ProductCarousel {
     });
   }
 
+  startAutoScroll() {
+    // Auto scroll every 4 seconds (like Numberc.com)
+    this.autoScrollInterval = setInterval(() => {
+      if (this.currentIndex >= this.totalDots - 1) {
+        this.currentIndex = 0;
+        this.carousel.scrollTo({
+          left: 0,
+          behavior: 'smooth'
+        });
+      } else {
+        this.scroll('next');
+      }
+    }, 4000);
+  }
+
+  stopAutoScroll() {
+    if (this.autoScrollInterval) {
+      clearInterval(this.autoScrollInterval);
+      this.autoScrollInterval = null;
+    }
+  }
+
   createDots() {
     if (!this.dotsContainer || this.totalDots <= 1) return;
     
@@ -651,7 +645,11 @@ class ProductCarousel {
     for (let i = 0; i < this.totalDots; i++) {
       const dot = document.createElement('button');
       dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
-      dot.addEventListener('click', () => this.goToSlide(i));
+      dot.addEventListener('click', () => {
+        this.stopAutoScroll();
+        this.goToSlide(i);
+        this.startAutoScroll();
+      });
       this.dotsContainer.appendChild(dot);
     }
   }
@@ -694,13 +692,15 @@ class ProductCarousel {
 
   openQuickView(productHandle) {
     console.log('Opening quick view for:', productHandle);
-    // In production, this would open a modal with product details
   }
 }
 
-// Initialize carousel
-document.addEventListener('DOMContentLoaded', () => {
-  new ProductCarousel();
+// Initialize carousel when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing carousel...');
+  setTimeout(() => {
+    new ProductCarousel();
+  }, 100);
 });
 </script>
 
