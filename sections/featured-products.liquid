@@ -330,8 +330,8 @@
 
 <section class="featured-products">
   <div class="section-header">
-    <h2 class="section-title">Best Sellers</h2>
-    <p class="section-description">Most loved by our curl community. Formulated to transform your hair routine.</p>
+    <h2 class="section-title">{{ section.settings.title | default: "Best Sellers" }}</h2>
+    <p class="section-description">{{ section.settings.description | default: "Most loved by our curl community. Formulated to transform your hair routine." }}</p>
   </div>
 
   <div class="products-carousel-container">
@@ -345,42 +345,103 @@
             <div class="product-card-badge">New</div>
           {% endif %}
 
-          <!-- In the product loop, replace the featured_image with actual product images -->
-<div class="product-image-container">
-  {% if forloop.index == 1 %}
-    <img 
-      src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266" 
-      alt="Thickening Spray"
-      class="product-image"
-      loading="lazy"
-    >
-  {% elsif forloop.index == 2 %}
-    <img 
-      src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401" 
-      alt="Derma Activate Lotion"
-      class="product-image"
-      loading="lazy"
-    >
-  {% elsif forloop.index == 3 %}
-    <img 
-      src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511" 
-      alt="Soft Mousse"
-      class="product-image"
-      loading="lazy"
-    >
-  {% else %}
-    <!-- Continue with other product images -->
-    <img 
-      src="{{ product.featured_image | img_url: '400x400' }}" 
-      alt="{{ product.title }}"
-      class="product-image"
-      loading="lazy"
-    >
-  {% endif %}
-  <button class="product-quick-view" data-product-handle="{{ product.handle }}">
-    Quick View
-  </button>
-</div>
+          <div class="product-image-container">
+            {% comment %} Real product images with proper attributes {% endcomment %}
+            {% if forloop.index == 1 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Care_Derma_Activate_Thickening_Spray_bottle.webp?v=1764275266" 
+                alt="Keune Care Derma Activate Thickening Spray"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% elsif forloop.index == 2 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/Keune_Derma_Activate_Lotion_bottle.jpg?v=1764275401" 
+                alt="Keune Derma Activate Lotion"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% elsif forloop.index == 3 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27422-Style-Klibansky-No44-Soft-Mousse-200ml-scaled-768x768_ad007548-4fb4-4367-9515-59acba488c3d.jpg?v=1763061511" 
+                alt="Style Klibansky No44 Soft Mousse"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% elsif forloop.index == 4 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27479-Keune-Style-Relaunch-Shine-Therapy-Packshot-200ml-768x768_5f158c1e-9935-4bce-97c7-1c9ea4dab5ea.jpg?v=1763061510" 
+                alt="Keune Style Relaunch Shine Therapy"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% elsif forloop.index == 5 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27455-Style-Klibansky-No38-Shaping-Fibers-Comp-125ml-online-768x768_68d511df-15fa-4f97-b530-2fd098724c7e.png?v=1763061510" 
+                alt="Style Klibansky No38 Shaping Fibers"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% elsif forloop.index == 6 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27464-Keune-Style-Relaunch-RushHour-Packshot-200ml-768x768_d7b6e364-3d99-4319-880c-5f8d52829412.jpg?v=1763061509" 
+                alt="Keune Style Relaunch RushHour"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% elsif forloop.index == 7 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27430-Style-Klibansky-No75-Root-Volumizer-300ml-scaled-768x768_63358ae4-2757-4052-9e51-6fca320e7c4f.jpg?v=1763061508" 
+                alt="Style Klibansky No75 Root Volumizer"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% elsif forloop.index == 8 %}
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/27478-Keune-Style-Relaunch-Restyler-Packshot-100ml-768x768_534d3b1d-5417-462c-83fd-ddf83598b6eb.jpg?v=1763061508" 
+                alt="Keune Style Relaunch Restyler"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% else %}
+              {% comment %} Fallback to Shopify product image with modern filter {% endcomment %}
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                  alt="{{ product.title | escape }}"
+                  class="product-image"
+                  width="400"
+                  height="400"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="product-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #666;">
+                  No Image
+                </div>
+              {% endif %}
+            {% endif %}
+            
+            <button class="product-quick-view" data-product-handle="{{ product.handle }}">
+              Quick View
+            </button>
+          </div>
+
           <div class="product-info">
             <div class="product-category">
               {{ product.type | default: 'Hair Care' }}
@@ -407,9 +468,11 @@
             </div>
 
             <div class="product-actions">
-              <form action="/cart/add" method="post" class="product-form">
+              {% comment %} Fixed: Using routes object instead of hardcoded URL {% endcomment %}
+              <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
                 <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-                <button type="submit" class="add-to-cart-btn">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="add-to-cart-btn" name="add">
                   Add to Cart
                 </button>
               </form>
@@ -419,6 +482,29 @@
             </div>
           </div>
         </div>
+      {% else %}
+        {% comment %} Fallback if no products {% endcomment %}
+        {% for i in (1..4) %}
+          <div class="product-card">
+            <div class="product-image-container">
+              <div class="product-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #666;">
+                Product {{ i }}
+              </div>
+            </div>
+            <div class="product-info">
+              <div class="product-category">Hair Care</div>
+              <h3 class="product-title">Sample Product {{ i }}</h3>
+              <p class="product-description">This is a sample product description.</p>
+              <div class="product-price">
+                <span class="current-price">$29.99</span>
+              </div>
+              <div class="product-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+                <button class="wishlist-btn">♡</button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
       {% endfor %}
     </div>
 
@@ -433,7 +519,7 @@
   </div>
 
   <div class="view-all-container">
-    <a href="{{ section.settings.collection_url | default: '/collections/all' }}" class="btn btn-outline">
+    <a href="{{ section.settings.collection_url | default: routes.all_products_collection_url }}" class="btn btn-outline">
       View All Products
     </a>
   </div>
@@ -456,8 +542,10 @@ class ProductCarousel {
 
   bindEvents() {
     // Carousel navigation
-    this.prevBtn.addEventListener('click', () => this.scroll('prev'));
-    this.nextBtn.addEventListener('click', () => this.scroll('next'));
+    if (this.prevBtn && this.nextBtn) {
+      this.prevBtn.addEventListener('click', () => this.scroll('prev'));
+      this.nextBtn.addEventListener('click', () => this.scroll('next'));
+    }
 
     // Wishlist buttons
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
@@ -488,12 +576,67 @@ class ProductCarousel {
     });
 
     // Update button states on scroll
-    this.carousel.addEventListener('scroll', () => {
-      this.updateButtonStates();
+    if (this.carousel) {
+      this.carousel.addEventListener('scroll', () => {
+        this.updateButtonStates();
+      });
+    }
+
+    // Add to cart forms
+    document.querySelectorAll('.product-form').forEach(form => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = form.querySelector('.add-to-cart-btn');
+        const originalText = submitBtn.textContent;
+        
+        // Show loading state
+        submitBtn.textContent = 'Adding...';
+        submitBtn.disabled = true;
+
+        try {
+          // Using Fetch API for better handling
+          const formData = new FormData(form);
+          const response = await fetch('{{ routes.cart_add_url }}', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (response.ok) {
+            // Success state
+            submitBtn.textContent = 'Added! ✓';
+            
+            // Update cart count if available
+            this.updateCartCount();
+            
+            // Open cart drawer if available
+            if (window.cartDrawer) {
+              window.cartDrawer.openCart();
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+              submitBtn.textContent = originalText;
+              submitBtn.disabled = false;
+            }, 2000);
+          } else {
+            throw new Error('Failed to add to cart');
+          }
+          
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+          submitBtn.textContent = 'Error - Try Again';
+          setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+          }, 2000);
+        }
+      });
     });
   }
 
   scroll(direction) {
+    if (!this.carousel) return;
+    
     const scrollAmount = this.cardWidth * 2; // Scroll 2 cards at a time
     const newScrollLeft = direction === 'next' 
       ? this.carousel.scrollLeft + scrollAmount
@@ -506,10 +649,21 @@ class ProductCarousel {
   }
 
   updateButtonStates() {
+    if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
+    
     const { scrollLeft, scrollWidth, clientWidth } = this.carousel;
     
     this.prevBtn.disabled = scrollLeft <= 0;
     this.nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - 10;
+  }
+
+  updateCartCount() {
+    // This would typically fetch the updated cart count from Shopify
+    const cartCounts = document.querySelectorAll('.cart-count');
+    cartCounts.forEach(count => {
+      const current = parseInt(count.textContent) || 0;
+      count.textContent = current + 1;
+    });
   }
 
   openQuickView(productHandle) {
