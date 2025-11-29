@@ -1,94 +1,741 @@
 <style>
-  .featured-collections {
-    padding: var(--spacing-xl) 0;
+  .featured-products {
+    padding: 100px 0;
+    background: white;
   }
+
   .section-header {
     text-align: center;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 60px;
   }
+
   .section-title {
-    font-size: 2.5rem;
-    margin-bottom: var(--spacing-sm);
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2D2D2D;
+    letter-spacing: -0.02em;
   }
-  .collections-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-md);
-    max-width: 1200px;
+
+  .section-description {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 0 var(--spacing-sm);
+    line-height: 1.6;
   }
-  .collection-card {
+
+  .products-carousel-container {
     position: relative;
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    aspect-ratio: 3/4;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 80px;
   }
-  .collection-image {
+
+  .products-carousel {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 20px 10px;
+    scroll-snap-type: x mandatory;
+    cursor: grab;
+  }
+
+  .products-carousel:active {
+    cursor: grabbing;
+  }
+
+  .products-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-card {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .product-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  }
+
+  .product-card-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: #E8C4B8;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 2;
+  }
+
+  .product-image-container {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background: #f8f8f8;
+  }
+
+  .product-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .collection-content {
+
+  .product-card:hover .product-image {
+    transform: scale(1.1);
+  }
+
+  .product-quick-view {
     position: absolute;
-    bottom: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    color: #2D2D2D;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+  }
+
+  .product-card:hover .product-quick-view {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .product-quick-view:hover {
+    background: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .product-info {
+    padding: 24px;
+  }
+
+  .product-category {
+    font-size: 0.8rem;
+    color: #E8C4B8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .product-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #2D2D2D;
+    line-height: 1.3;
+  }
+
+  .product-title a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
+  .product-title a:hover {
+    color: #E8C4B8;
+  }
+
+  .product-description {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .current-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2D2D2D;
+  }
+
+  .original-price {
+    font-size: 1rem;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .stars {
+    color: #FFD700;
+    font-size: 0.9rem;
+  }
+
+  .rating-count {
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .add-to-cart-btn {
+    flex: 1;
+    background: #2D2D2D;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+  }
+
+  .add-to-cart-btn:hover {
+    background: #E8C4B8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(232, 196, 184, 0.4);
+  }
+
+  .wishlist-btn {
+    background: white;
+    border: 2px solid #F0F0F0;
+    color: #666;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .wishlist-btn:hover {
+    border-color: #E8C4B8;
+    color: #E8C4B8;
+    transform: translateY(-2px);
+  }
+
+  .wishlist-btn.active {
+    background: #E8C4B8;
+    border-color: #E8C4B8;
+    color: white;
+  }
+
+  /* Carousel Navigation */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
     left: 0;
     right: 0;
-    padding: var(--spacing-lg);
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .carousel-btn {
+    background: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: all;
+    font-size: 1.2rem;
+    color: #2D2D2D;
+  }
+
+  .carousel-btn:hover {
+    background: #E8C4B8;
     color: white;
+    transform: scale(1.1);
+  }
+
+  .carousel-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+  }
+
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #E0E0E0;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .carousel-dot.active {
+    background: #E8C4B8;
+    transform: scale(1.2);
+  }
+
+  .view-all-container {
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .btn-outline {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 2px solid #2D2D2D;
+    color: #2D2D2D;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline:hover {
+    background: #2D2D2D;
+    color: white;
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .featured-products {
+      padding: 60px 0;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .products-carousel-container {
+      padding: 0 20px;
+    }
+
+    .product-card {
+      flex: 0 0 280px;
+    }
+
+    .carousel-nav {
+      display: none;
+    }
+
+    .product-actions {
+      flex-direction: column;
+    }
+
+    .wishlist-btn {
+      width: 100%;
+      height: 48px;
+    }
   }
 </style>
 
-<section class="featured-collections">
+<section class="featured-products">
   <div class="section-header">
-    <h2 class="section-title">Shop By Collection</h2>
-    <p class="section-description">Find the perfect products for your unique curl pattern</p>
+    <h2 class="section-title">{{ section.settings.title | default: "Best Sellers" }}</h2>
+    <p class="section-description">{{ section.settings.description | default: "Most loved by our curl community. Formulated to transform your hair routine." }}</p>
   </div>
 
-  <div class="collections-grid">
-    {% for block in section.blocks limit: 3 %}
-      {% assign collection = collections[block.settings.collection] %}
-      <div class="collection-card">
-        {% if collection.image %}
-          <img src="{{ collection.image | img_url: '600x800' }}" alt="{{ collection.title }}" class="collection-image">
-        {% else %}
-          <div class="collection-image" style="background: var(--color-secondary);"></div>
-        {% endif %}
-        <div class="collection-content">
-          <h3 class="collection-title">{{ collection.title | default: 'Collection' }}</h3>
-          <a href="{{ collection.url }}" class="btn btn-outline" style="color: white; border-color: white;">Shop Now</a>
+  <div class="products-carousel-container">
+    <div class="products-carousel" id="products-carousel">
+      {% assign featured_collection = collections[section.settings.collection] | default: collections.all %}
+      
+      {% for product in featured_collection.products limit: 8 %}
+        <div class="product-card">
+          {% if product.tags contains 'bestseller' %}
+            <div class="product-card-badge">Best Seller</div>
+          {% elsif product.tags contains 'new' %}
+            <div class="product-card-badge">New</div>
+          {% endif %}
+
+          <div class="product-image-container">
+            {% if product.featured_image %}
+              {% comment %} FIXED: Using proper image_url with width/height {% endcomment %}
+              <img 
+                src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                alt="{{ product.title | escape }}"
+                class="product-image"
+                width="400"
+                height="400"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              >
+            {% endif %}
+            
+            {% comment %} Fallback placeholder {% endcomment %}
+            <div class="product-image" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: {% if product.featured_image %}none{% else %}flex{% endif %}; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+              {{ product.title | truncate: 15 }}
+            </div>
+            
+            <button class="product-quick-view" data-product-handle="{{ product.handle }}">
+              Quick View
+            </button>
+          </div>
+
+          <div class="product-info">
+            <div class="product-category">
+              {{ product.type | default: 'Hair Care' }}
+            </div>
+            
+            <h3 class="product-title">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+            
+            <p class="product-description">
+              {{ product.description | strip_html | truncatewords: 15 }}
+            </p>
+
+            <div class="product-price">
+              <span class="current-price">{{ product.price | money }}</span>
+              {% if product.compare_at_price > product.price %}
+                <span class="original-price">{{ product.compare_at_price | money }}</span>
+              {% endif %}
+            </div>
+
+            <div class="product-rating">
+              <div class="stars">★★★★★</div>
+              <span class="rating-count">({{ forloop.index | times: 12 }})</span>
+            </div>
+
+            <div class="product-actions">
+              <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
+                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="add-to-cart-btn" name="add">
+                  Add to Cart
+                </button>
+              </form>
+              <button class="wishlist-btn" aria-label="Add to wishlist">
+                ♡
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    {% endfor %}
+      {% else %}
+        {% comment %} Fallback demo products {% endcomment %}
+        {% for i in (1..4) %}
+          <div class="product-card">
+            <div class="product-image-container">
+              <div class="product-image" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                Product {{ i }}
+              </div>
+              <button class="product-quick-view" data-product-handle="demo-{{ i }}">
+                Quick View
+              </button>
+            </div>
+            <div class="product-info">
+              <div class="product-category">Hair Care</div>
+              <h3 class="product-title">
+                <a href="#">Demo Product {{ i }}</a>
+              </h3>
+              <p class="product-description">Professional hair care product for beautiful curls.</p>
+              <div class="product-price">
+                <span class="current-price">$29.99</span>
+              </div>
+              <div class="product-rating">
+                <div class="stars">★★★★★</div>
+                <span class="rating-count">(24)</span>
+              </div>
+              <div class="product-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+                <button class="wishlist-btn">♡</button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+
+    {% comment %} Carousel Navigation {% endcomment %}
+    <div class="carousel-nav">
+      <button class="carousel-btn prev-btn" id="carousel-prev" aria-label="Previous products">
+        ‹
+      </button>
+      <button class="carousel-btn next-btn" id="carousel-next" aria-label="Next products">
+        ›
+      </button>
+    </div>
+
+    {% comment %} Carousel Dots {% endcomment %}
+    <div class="carousel-dots" id="carousel-dots">
+      <!-- Dots will be generated by JavaScript -->
+    </div>
+  </div>
+
+  <div class="view-all-container">
+    <a href="{{ section.settings.collection_url | default: routes.all_products_collection_url }}" class="btn-outline">
+      View All Products
+    </a>
   </div>
 </section>
 
+<script>
+class ProductCarousel {
+  constructor() {
+    this.carousel = document.getElementById('products-carousel');
+    this.prevBtn = document.getElementById('carousel-prev');
+    this.nextBtn = document.getElementById('carousel-next');
+    this.dotsContainer = document.getElementById('carousel-dots');
+    this.isDragging = false;
+    this.startX = 0;
+    this.scrollLeft = 0;
+    
+    if (this.carousel) {
+      this.cardWidth = this.carousel.querySelector('.product-card')?.offsetWidth + 30 || 350;
+      this.totalCards = this.carousel.querySelectorAll('.product-card').length;
+      this.cardsPerView = Math.floor(this.carousel.offsetWidth / this.cardWidth);
+      this.totalDots = Math.ceil(this.totalCards / this.cardsPerView);
+    } else {
+      this.cardWidth = 350;
+      this.totalCards = 0;
+      this.cardsPerView = 3;
+      this.totalDots = 0;
+    }
+    
+    this.currentIndex = 0;
+    this.init();
+  }
+
+  init() {
+    this.bindEvents();
+    this.createDots();
+    this.updateNavigation();
+  }
+
+  bindEvents() {
+    // Carousel navigation
+    if (this.prevBtn && this.nextBtn) {
+      this.prevBtn.addEventListener('click', () => this.scroll('prev'));
+      this.nextBtn.addEventListener('click', () => this.scroll('next'));
+    }
+
+    // Drag to scroll
+    if (this.carousel) {
+      this.carousel.addEventListener('mousedown', this.startDrag.bind(this));
+      this.carousel.addEventListener('touchstart', this.startDrag.bind(this));
+      
+      this.carousel.addEventListener('mousemove', this.drag.bind(this));
+      this.carousel.addEventListener('touchmove', this.drag.bind(this));
+      
+      this.carousel.addEventListener('mouseup', this.endDrag.bind(this));
+      this.carousel.addEventListener('touchend', this.endDrag.bind(this));
+      this.carousel.addEventListener('mouseleave', this.endDrag.bind(this));
+    }
+
+    // Update on scroll
+    if (this.carousel) {
+      this.carousel.addEventListener('scroll', () => {
+        this.updateNavigation();
+        this.updateDots();
+      });
+    }
+
+    // Wishlist buttons
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        btn.classList.toggle('active');
+        btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
+        
+        const originalText = btn.textContent;
+        if (btn.classList.contains('active')) {
+          btn.textContent = '♥ Added!';
+          setTimeout(() => {
+            btn.textContent = originalText;
+          }, 2000);
+        }
+      });
+    });
+
+    // Quick view buttons
+    document.querySelectorAll('.product-quick-view').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const productHandle = btn.dataset.productHandle;
+        this.openQuickView(productHandle);
+      });
+    });
+  }
+
+  startDrag(e) {
+    this.isDragging = true;
+    this.startX = (e.pageX || e.touches[0].pageX) - this.carousel.offsetLeft;
+    this.scrollLeft = this.carousel.scrollLeft;
+    this.carousel.style.cursor = 'grabbing';
+    this.carousel.style.scrollBehavior = 'auto';
+  }
+
+  drag(e) {
+    if (!this.isDragging) return;
+    e.preventDefault();
+    const x = (e.pageX || e.touches[0].pageX) - this.carousel.offsetLeft;
+    const walk = (x - this.startX) * 2;
+    this.carousel.scrollLeft = this.scrollLeft - walk;
+  }
+
+  endDrag() {
+    this.isDragging = false;
+    this.carousel.style.cursor = 'grab';
+    this.carousel.style.scrollBehavior = 'smooth';
+  }
+
+  scroll(direction) {
+    if (!this.carousel) return;
+    
+    const scrollAmount = this.cardWidth * this.cardsPerView;
+    let newScrollLeft;
+    
+    if (direction === 'next') {
+      newScrollLeft = this.carousel.scrollLeft + scrollAmount;
+      this.currentIndex = Math.min(this.currentIndex + 1, this.totalDots - 1);
+    } else {
+      newScrollLeft = this.carousel.scrollLeft - scrollAmount;
+      this.currentIndex = Math.max(this.currentIndex - 1, 0);
+    }
+
+    this.carousel.scrollTo({
+      left: newScrollLeft,
+      behavior: 'smooth'
+    });
+  }
+
+  createDots() {
+    if (!this.dotsContainer || this.totalDots <= 1) return;
+    
+    this.dotsContainer.innerHTML = '';
+    for (let i = 0; i < this.totalDots; i++) {
+      const dot = document.createElement('button');
+      dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
+      dot.addEventListener('click', () => this.goToSlide(i));
+      this.dotsContainer.appendChild(dot);
+    }
+  }
+
+  goToSlide(index) {
+    if (!this.carousel) return;
+    
+    this.currentIndex = index;
+    const scrollAmount = this.cardWidth * this.cardsPerView * index;
+    
+    this.carousel.scrollTo({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  updateNavigation() {
+    if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
+    
+    const { scrollLeft, scrollWidth, clientWidth } = this.carousel;
+    
+    this.prevBtn.disabled = scrollLeft <= 0;
+    this.nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - 10;
+  }
+
+  updateDots() {
+    if (!this.carousel || !this.dotsContainer) return;
+    
+    const scrollLeft = this.carousel.scrollLeft;
+    const cardWidth = this.cardWidth;
+    const currentIndex = Math.round(scrollLeft / (cardWidth * this.cardsPerView));
+    
+    const dots = this.dotsContainer.querySelectorAll('.carousel-dot');
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentIndex);
+    });
+    
+    this.currentIndex = currentIndex;
+  }
+
+  openQuickView(productHandle) {
+    console.log('Opening quick view for:', productHandle);
+    // In production, this would open a modal with product details
+  }
+}
+
+// Initialize carousel
+document.addEventListener('DOMContentLoaded', () => {
+  new ProductCarousel();
+});
+</script>
+
 {% schema %}
 {
-  "name": "Featured Collections",
-  "max_blocks": 3,
-  "blocks": [
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Most loved by our curl community"
+    },
     {
       "type": "collection",
-      "name": "Collection",
-      "settings": [
-        {
-          "type": "collection",
-          "id": "collection",
-          "label": "Collection"
-        }
-      ]
+      "id": "collection",
+      "label": "Collection",
+      "info": "Select collection to feature products from"
+    },
+    {
+      "type": "url",
+      "id": "collection_url",
+      "label": "View All Link"
     }
   ],
   "presets": [
     {
-      "name": "Featured Collections",
-      "blocks": [
-        { "type": "collection" },
-        { "type": "collection" },
-        { "type": "collection" }
-      ]
+      "name": "Numberc Style Products",
+      "category": "Homepage"
     }
   ]
 }
