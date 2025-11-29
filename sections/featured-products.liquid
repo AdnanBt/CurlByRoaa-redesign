@@ -388,10 +388,10 @@
           {% endif %}
 
           <div class="product-image-container">
-            {% comment %} SIMPLE IMAGE FIX - Use basic product image {% endcomment %}
+            {% comment %} FIXED: Using image_url filter correctly {% endcomment %}
             {% if product.featured_image %}
               <img 
-                src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" 
+                src="{{ product.featured_image | image_url: width: 400, height: 400 }}" 
                 alt="{{ product.title | escape }}"
                 class="product-image"
                 width="400"
