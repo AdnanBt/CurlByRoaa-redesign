@@ -41,6 +41,7 @@
     aspect-ratio: 1;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f8f8f8;
   }
 
   .gallery-item:hover {
@@ -137,6 +138,8 @@
     max-height: 80vh;
     border-radius: 16px;
     object-fit: contain;
+    width: 100%;
+    height: auto;
   }
 
   .lightbox-info {
@@ -265,14 +268,24 @@
 
 <section class="ugc-gallery">
   <div class="gallery-header">
-    <h2 class="gallery-title">#CurlsByRoaa Transformations</h2>
-    <p class="gallery-subtitle">Real results from our amazing community. Share your journey with #CurlsByRoaa</p>
+    <h2 class="gallery-title">{{ section.settings.title | default: "#CurlsByRoaa Transformations" }}</h2>
+    <p class="gallery-subtitle">{{ section.settings.subtitle | default: "Real results from our amazing community. Share your journey with #CurlsByRoaa" }}</p>
   </div>
 
   <div class="gallery-grid">
     <!-- UGC Item 1 -->
     <div class="gallery-item" data-index="0">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      {% comment %} Using asset_url for better performance {% endcomment %}
+      <img 
+        src="{{ 'IMG-1625.webp' | asset_url }}" 
+        alt="Customer hair transformation showing defined curls"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         📸
       </div>
       <div class="gallery-overlay">
@@ -283,7 +296,16 @@
 
     <!-- UGC Item 2 -->
     <div class="gallery-item" data-index="1">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A8D8EA, #78C2DC); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      <img 
+        src="{{ 'IMG-1318.jpg' | asset_url }}" 
+        alt="Before and after hair results showing improved curl pattern"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A8D8EA, #78C2DC); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         ✨
       </div>
       <div class="gallery-overlay">
@@ -294,7 +316,16 @@
 
     <!-- UGC Item 3 -->
     <div class="gallery-item" data-index="2">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #F8B500, #FCE38A); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      <img 
+        src="{{ 'IMG-1316.jpg' | asset_url }}" 
+        alt="Healthy shiny curls with great definition"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #F8B500, #FCE38A); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         🌟
       </div>
       <div class="gallery-overlay">
@@ -305,7 +336,16 @@
 
     <!-- UGC Item 4 -->
     <div class="gallery-item" data-index="3">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #95E1D3, #6DCFB7); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      <img 
+        src="{{ 'IMG-1315.jpg' | asset_url }}" 
+        alt="Natural hair journey progress showing reduced frizz"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #95E1D3, #6DCFB7); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         💫
       </div>
       <div class="gallery-overlay">
@@ -316,7 +356,16 @@
 
     <!-- UGC Item 5 -->
     <div class="gallery-item" data-index="4">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      <img 
+        src="{{ '1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg' | asset_url }}" 
+        alt="Soft defined curls with natural shine"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         🎀
       </div>
       <div class="gallery-overlay">
@@ -327,7 +376,16 @@
 
     <!-- UGC Item 6 -->
     <div class="gallery-item" data-index="5">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A3A1F6, #8A87E3); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      <img 
+        src="{{ '2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg' | asset_url }}" 
+        alt="Confident curly hair styling results"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #A3A1F6, #8A87E3); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         🌈
       </div>
       <div class="gallery-overlay">
@@ -338,7 +396,16 @@
 
     <!-- UGC Item 7 -->
     <div class="gallery-item" data-index="6">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FFD3B6, #FFAAA5); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      <img 
+        src="{{ 'IMG-1311.jpg' | asset_url }}" 
+        alt="Perfect curl definition and hold"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #FFD3B6, #FFAAA5); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         🌸
       </div>
       <div class="gallery-overlay">
@@ -349,7 +416,16 @@
 
     <!-- UGC Item 8 -->
     <div class="gallery-item" data-index="7">
-      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #98DDCA, #6AC4B5); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+      <img 
+        src="{{ '3B488469-481D-4B83-BB18-021D2815511F.jpg' | asset_url }}" 
+        alt="Organic hair care results with natural ingredients"
+        class="gallery-image"
+        width="400"
+        height="400"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="gallery-image-placeholder" style="background: linear-gradient(135deg, #98DDCA, #6AC4B5); display: none; align-items: center; justify-content: center; color: white; font-size: 3rem; width: 100%; height: 100%;">
         🍃
       </div>
       <div class="gallery-overlay">
@@ -360,8 +436,8 @@
   </div>
 
   <div class="gallery-cta">
-    <div class="gallery-hashtag">#CurlsByRoaa</div>
-    <a href="https://instagram.com" class="btn btn-primary" target="_blank" rel="noopener">
+    <div class="gallery-hashtag">{{ section.settings.hashtag | default: "#CurlsByRoaa" }}</div>
+    <a href="https://instagram.com" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
       Share Your Transformation
     </a>
   </div>
@@ -369,16 +445,16 @@
 
 <!-- Lightbox Modal -->
 <div class="gallery-lightbox" id="gallery-lightbox">
-  <button class="lightbox-close" id="lightbox-close">✕</button>
-  <button class="lightbox-nav lightbox-prev" id="lightbox-prev">‹</button>
-  <button class="lightbox-nav lightbox-next" id="lightbox-next">›</button>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous image">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next image">›</button>
   
   <div class="lightbox-content" id="lightbox-content">
-    <img class="lightbox-image" id="lightbox-image" src="" alt="">
+    <img class="lightbox-image" id="lightbox-image" src="" alt="" width="600" height="600">
     <div class="lightbox-info">
       <div class="lightbox-handle" id="lightbox-handle"></div>
       <div class="lightbox-caption" id="lightbox-caption"></div>
-      <a href="https://instagram.com" class="btn btn-outline" style="color: white; border-color: white;" target="_blank" rel="noopener">
+      <a href="https://instagram.com" class="btn btn-outline" style="color: white; border-color: white;" target="_blank" rel="noopener noreferrer">
         View on Instagram
       </a>
     </div>
@@ -390,12 +466,31 @@ class UGCGallery {
   constructor() {
     this.currentIndex = 0;
     this.items = [];
+    this.images = [
+      "{{ 'IMG-1625.webp' | asset_url }}",
+      "{{ 'IMG-1318.jpg' | asset_url }}", 
+      "{{ 'IMG-1316.jpg' | asset_url }}",
+      "{{ 'IMG-1315.jpg' | asset_url }}",
+      "{{ '1224A8E8-82DB-4B44-8842-59472FCE02B0.jpg' | asset_url }}",
+      "{{ '2DFF26C9-7768-4A49-A4DE-3D3125AF30D6.jpg' | asset_url }}",
+      "{{ 'IMG-1311.jpg' | asset_url }}",
+      "{{ '3B488469-481D-4B83-BB18-021D2815511F.jpg' | asset_url }}"
+    ];
     this.init();
   }
 
   init() {
     this.items = Array.from(document.querySelectorAll('.gallery-item'));
     this.bindEvents();
+    this.preloadImages();
+  }
+
+  preloadImages() {
+    // Preload images for better performance
+    this.images.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
   }
 
   bindEvents() {
@@ -467,8 +562,10 @@ class UGCGallery {
     document.getElementById('lightbox-handle').textContent = handle;
     document.getElementById('lightbox-caption').textContent = caption;
     
-    // In a real implementation, you would set the actual image source
-    // document.getElementById('lightbox-image').src = currentItem.dataset.imageSrc;
+    // Set the actual image source
+    const lightboxImage = document.getElementById('lightbox-image');
+    lightboxImage.src = this.images[this.currentIndex];
+    lightboxImage.alt = handle + ' - ' + caption;
   }
 }
 
