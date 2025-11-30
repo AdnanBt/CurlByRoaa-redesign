@@ -1,0 +1,346 @@
+<style>
+.faq-section {
+  padding: 100px 0;
+  background: white;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.faq-header h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #2D2D2D;
+}
+
+.faq-header p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.faq-item {
+  border-bottom: 1px solid #eee;
+  padding: 30px 0;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.faq-question:hover {
+  color: #E8C4B8;
+}
+
+.faq-question h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+  color: inherit;
+}
+
+.faq-toggle {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.faq-toggle::before,
+.faq-toggle::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  transition: all 0.3s ease;
+}
+
+.faq-toggle::before {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.faq-toggle::after {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+.faq-item.active .faq-toggle::after {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: #666;
+  line-height: 1.6;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 500px;
+  margin-top: 20px;
+}
+
+.faq-categories {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.faq-category {
+  padding: 10px 20px;
+  background: #FAF8F6;
+  border: 2px solid transparent;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.faq-category.active {
+  background: #E8C4B8;
+  color: white;
+  border-color: #E8C4B8;
+}
+
+.faq-contact {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 60px;
+  border-top: 1px solid #eee;
+}
+
+.contact-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 600px;
+  margin: 40px auto 0;
+}
+
+.contact-item {
+  text-align: center;
+  padding: 30px 20px;
+  background: #FAF8F6;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-5px);
+}
+
+.contact-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
+  background: #E8C4B8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.contact-item h4 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #2D2D2D;
+}
+
+.contact-item p {
+  color: #666;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .faq-section {
+    padding: 80px 0;
+  }
+  
+  .faq-header h2 {
+    font-size: 2.5rem;
+  }
+  
+  .faq-question h3 {
+    font-size: 1.1rem;
+  }
+  
+  .contact-info {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .contact-item {
+    padding: 25px 20px;
+  }
+}
+</style>
+
+<section class="faq-section">
+  <div class="faq-header">
+    <h2>Frequently Asked Questions</h2>
+    <p>Find answers to common questions about our products and hair care</p>
+  </div>
+  
+  <div class="faq-categories">
+    <div class="faq-category active" data-category="all">All Questions</div>
+    <div class="faq-category" data-category="products">Products</div>
+    <div class="faq-category" data-category="shipping">Shipping</div>
+    <div class="faq-category" data-category="returns">Returns</div>
+    <div class="faq-category" data-category="haircare">Hair Care</div>
+  </div>
+  
+  <div class="faq-container">
+    <div class="faq-item active" data-categories="products,haircare">
+      <div class="faq-question">
+        <h3>How long until I see results with your products?</h3>
+        <div class="faq-toggle"></div>
+      </div>
+      <div class="faq-answer">
+        <p>Most customers notice significant improvement within 2-3 weeks of consistent use. However, many see immediate results in terms of softness and manageability after the first wash. For optimal results, we recommend using the complete system for at least 4 weeks to allow your hair to adjust and show full transformation.</p>
+      </div>
+    </div>
+    
+    <div class="faq-item" data-categories="products">
+      <div class="faq-question">
+        <h3>Are your products suitable for all curl types?</h3>
+        <div class="faq-toggle"></div>
+      </div>
+      <div class="faq-answer">
+        <p>Yes! Our products are specifically formulated to work with all curl patterns from wavy (2A-2C) to coily (4A-4C). The key is in the application technique and amount used. We recommend taking our hair quiz to get personalized recommendations for your specific curl type and concerns.</p>
+      </div>
+    </div>
+    
+    <div class="faq-item" data-categories="shipping">
+      <div class="faq-question">
+        <h3>What is your shipping policy and delivery time?</h3>
+        <div class="faq-toggle"></div>
+      </div>
+      <div class="faq-answer">
+        <p>We offer free standard shipping on all orders over $50. Standard shipping takes 3-5 business days, while express shipping (2-3 business days) is available for an additional fee. International shipping is also available to most countries with delivery times of 7-14 business days.</p>
+      </div>
+    </div>
+    
+    <div class="faq-item" data-categories="returns">
+      <div class="faq-question">
+        <h3>What is your return policy?</h3>
+        <div class="faq-toggle"></div>
+      </div>
+      <div class="faq-answer">
+        <p>We offer a 30-day money-back guarantee. If you're not completely satisfied with your purchase, you can return the products within 30 days for a full refund. Products must be at least 50% full to qualify for return. The return shipping is free for customers in the United States.</p>
+      </div>
+    </div>
+    
+    <div class="faq-item" data-categories="haircare">
+      <div class="faq-question">
+        <h3>How often should I wash my curly hair?</h3>
+        <div class="faq-toggle"></div>
+      </div>
+      <div class="faq-answer">
+        <p>This depends on your hair type and lifestyle. Most curly hair benefits from washing 1-2 times per week. Wavy hair may need washing 2-3 times per week, while coily hair often does best with once weekly washing. Listen to your hair - if it feels dry, wash less frequently; if it gets greasy quickly, you may need to wash more often.</p>
+      </div>
+    </div>
+    
+    <div class="faq-item" data-categories="products,haircare">
+      <div class="faq-question">
+        <h3>Can I use your products on color-treated hair?</h3>
+        <div class="faq-toggle"></div>
+      </div>
+      <div class="faq-answer">
+        <p>Absolutely! Our products are safe for color-treated hair and actually help extend the life of your color. The sulfate-free formulas won't strip color, and the moisturizing ingredients help maintain color vibrancy. Many customers report their color lasts longer when using our system.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-contact">
+    <h3>Still have questions?</h3>
+    <p>Our curl experts are here to help you find the perfect products for your hair.</p>
+    
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">💬</div>
+        <h4>Live Chat</h4>
+        <p>Get instant help from our experts</p>
+      </div>
+      
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <h4>Email Support</h4>
+        <p>Response within 24 hours</p>
+      </div>
+      
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <h4>Phone Support</h4>
+        <p>Mon-Fri, 9AM-6PM EST</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // FAQ toggle functionality
+  const faqQuestions = document.querySelectorAll('.faq-question');
+  
+  faqQuestions.forEach(question => {
+    question.addEventListener('click', function() {
+      const faqItem = this.parentElement;
+      faqItem.classList.toggle('active');
+    });
+  });
+  
+  // FAQ category filtering
+  const faqCategories = document.querySelectorAll('.faq-category');
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqCategories.forEach(category => {
+    category.addEventListener('click', function() {
+      const categoryName = this.getAttribute('data-category');
+      
+      // Update active category
+      faqCategories.forEach(cat => cat.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Filter FAQ items
+      faqItems.forEach(item => {
+        const itemCategories = item.getAttribute('data-categories').split(',');
+        
+        if (categoryName === 'all' || itemCategories.includes(categoryName)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+});
+</script>
