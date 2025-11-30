@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background:rgb(255, 255, 255);
+    background: #0a0a0a;
     margin-top: 80px;
   }
 
@@ -40,8 +40,8 @@
   }
 
   .product-card-hero {
-    flex: 0 0 420px; /* Wider cards */
-    height: 520px; /* Taller cards */
+    flex: 0 0 420px;
+    height: 520px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 28px;
@@ -51,36 +51,31 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    /* Subtle gradient backgrounds like Numberc.com */
-    background: linear-gradient(145deg, 
-      rgba(232, 196, 184, 0.1) 0%, 
-      rgba(168, 216, 234, 0.05) 50%, 
-      rgba(149, 225, 211, 0.08) 100%);
   }
 
-  /* Different color themes for each card like Numberc.com */
-  .product-card-hero:nth-child(1) {
+  /* Different color themes for each card */
+  .product-card-hero:nth-child(4n+1) {
     background: linear-gradient(145deg, 
       rgba(232, 196, 184, 0.15) 0%, 
       rgba(232, 196, 184, 0.05) 100%);
     border-color: rgba(232, 196, 184, 0.3);
   }
 
-  .product-card-hero:nth-child(2) {
+  .product-card-hero:nth-child(4n+2) {
     background: linear-gradient(145deg, 
       rgba(168, 216, 234, 0.15) 0%, 
       rgba(168, 216, 234, 0.05) 100%);
     border-color: rgba(168, 216, 234, 0.3);
   }
 
-  .product-card-hero:nth-child(3) {
+  .product-card-hero:nth-child(4n+3) {
     background: linear-gradient(145deg, 
       rgba(149, 225, 211, 0.15) 0%, 
       rgba(149, 225, 211, 0.05) 100%);
     border-color: rgba(149, 225, 211, 0.3);
   }
 
-  .product-card-hero:nth-child(4) {
+  .product-card-hero:nth-child(4n+4) {
     background: linear-gradient(145deg, 
       rgba(255, 154, 158, 0.15) 0%, 
       rgba(255, 154, 158, 0.05) 100%);
@@ -156,7 +151,7 @@
     backdrop-filter: blur(10px);
   }
 
-  /* Hero Content - Like Numberc.com */
+  /* Hero Content */
   .hero-content {
     position: relative;
     z-index: 20;
@@ -256,7 +251,7 @@
       transform: translateX(0);
     }
     100% {
-      transform: translateX(calc(-420px * 4 - 40px * 4));
+      transform: translateX(calc(-420px * {{ section.blocks.size | default: 4 }} - 40px * {{ section.blocks.size | default: 4 }}));
     }
   }
 
@@ -311,6 +306,15 @@
     .hero-btn {
       width: 200px;
     }
+
+    @keyframes carouselScroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-320px * {{ section.blocks.size | default: 4 }} - 25px * {{ section.blocks.size | default: 4 }}));
+      }
+    }
   }
 </style>
 
@@ -318,127 +322,149 @@
   <!-- Background -->
   <div class="hero-background"></div>
 
-  <!-- Product Cards Carousel -->
+  <!-- Product Cards Carousel - Now Dynamic -->
   <div class="hero-carousel">
     <div class="carousel-track">
-      <!-- Product Card 1 -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
-          alt="Curl Defining Cream"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Curl Defining Cream</h3>
-        <div class="product-price-hero">{{ 29.99 | money }}</div>
-      </div>
+      {% comment %} Original Products from Blocks {% endcomment %}
+      {% for block in section.blocks %}
+        {% assign product = all_products[block.settings.product] %}
+        {% if product != blank %}
+          <div class="product-card-hero" {{ block.shopify_attributes }}>
+            {% if block.settings.show_badge and block.settings.badge_text != blank %}
+              <div class="product-badge-hero">{{ block.settings.badge_text }}</div>
+            {% elsif product.tags contains 'bestseller' %}
+              <div class="product-badge-hero">Best Seller</div>
+            {% elsif product.tags contains 'new' %}
+              <div class="product-badge-hero">New</div>
+            {% endif %}
 
-      <!-- Product Card 2 -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">NEW</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
-          alt="Hydrating Shampoo"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Hydrating Shampoo</h3>
-        <div class="product-price-hero">{{ 24.99 | money }}</div>
-      </div>
+            <a href="{{ product.url }}">
+              <img 
+                src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                alt="{{ product.title | escape }}"
+                class="product-image-hero"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            </a>
+            
+            <h3 class="product-title-hero">
+              <a href="{{ product.url }}" style="color: inherit; text-decoration: none;">
+                {{ product.title }}
+              </a>
+            </h3>
+            
+            <div class="product-price-hero">{{ product.price | money }}</div>
+            
+            {% if block.settings.show_button %}
+              <a href="{{ product.url }}" class="hero-btn hero-btn-secondary" style="margin-top: 10px;">
+                {{ block.settings.button_text | default: "View Product" }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
 
-      <!-- Product Card 3 -->
-      <div class="product-card-hero">
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
-          alt="Repairing Conditioner"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Repairing Conditioner</h3>
-        <div class="product-price-hero">{{ 26.99 | money }}</div>
-      </div>
+      {% comment %} Fallback: If no blocks, show latest products {% endcomment %}
+      {% if section.blocks.size == 0 %}
+        {% assign featured_products = collections[section.settings.fallback_collection].products | default: collections.all.products %}
+        {% for product in featured_products limit: section.settings.fallback_limit %}
+          <div class="product-card-hero">
+            {% if product.tags contains 'bestseller' %}
+              <div class="product-badge-hero">Best Seller</div>
+            {% elsif product.tags contains 'new' %}
+              <div class="product-badge-hero">New</div>
+            {% endif %}
 
-      <!-- Product Card 4 -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
-          alt="Leave-In Treatment"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Leave-In Treatment</h3>
-        <div class="product-price-hero">{{ 32.99 | money }}</div>
-      </div>
+            <a href="{{ product.url }}">
+              <img 
+                src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                alt="{{ product.title | escape }}"
+                class="product-image-hero"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            </a>
+            
+            <h3 class="product-title-hero">
+              <a href="{{ product.url }}" style="color: inherit; text-decoration: none;">
+                {{ product.title }}
+              </a>
+            </h3>
+            
+            <div class="product-price-hero">{{ product.price | money }}</div>
+            
+            <a href="{{ product.url }}" class="hero-btn hero-btn-secondary" style="margin-top: 10px;">
+              View Product
+            </a>
+          </div>
+        {% endfor %}
+      {% endif %}
 
-      <!-- Duplicate cards for seamless loop -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
-          alt="Curl Defining Cream"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Curl Defining Cream</h3>
-        <div class="product-price-hero">{{ 29.99 | money }}</div>
-      </div>
+      {% comment %} Duplicate cards for seamless loop {% endcomment %}
+      {% for block in section.blocks %}
+        {% assign product = all_products[block.settings.product] %}
+        {% if product != blank %}
+          <div class="product-card-hero">
+            {% if block.settings.show_badge and block.settings.badge_text != blank %}
+              <div class="product-badge-hero">{{ block.settings.badge_text }}</div>
+            {% elsif product.tags contains 'bestseller' %}
+              <div class="product-badge-hero">Best Seller</div>
+            {% elsif product.tags contains 'new' %}
+              <div class="product-badge-hero">New</div>
+            {% endif %}
 
-      <div class="product-card-hero">
-        <div class="product-badge-hero">NEW</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
-          alt="Hydrating Shampoo"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Hydrating Shampoo</h3>
-        <div class="product-price-hero">{{ 24.99 | money }}</div>
-      </div>
-
-      <div class="product-card-hero">
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
-          alt="Repairing Conditioner"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Repairing Conditioner</h3>
-        <div class="product-price-hero">{{ 26.99 | money }}</div>
-      </div>
-
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
-          alt="Leave-In Treatment"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Leave-In Treatment</h3>
-        <div class="product-price-hero">{{ 32.99 | money }}</div>
-      </div>
+            <a href="{{ product.url }}">
+              <img 
+                src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                alt="{{ product.title | escape }}"
+                class="product-image-hero"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            </a>
+            
+            <h3 class="product-title-hero">
+              <a href="{{ product.url }}" style="color: inherit; text-decoration: none;">
+                {{ product.title }}
+              </a>
+            </h3>
+            
+            <div class="product-price-hero">{{ product.price | money }}</div>
+            
+            {% if block.settings.show_button %}
+              <a href="{{ product.url }}" class="hero-btn hero-btn-secondary" style="margin-top: 10px;">
+                {{ block.settings.button_text | default: "View Product" }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 
-
+  <!-- Main Content -->
+  <div class="hero-content">
+    <h1 class="hero-title">
+      {{ section.settings.heading | default: "Transform Your Curl Journey" }}
+    </h1>
+    
+    <p class="hero-subtitle">
+      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
+    </p>
+    
+    <div class="hero-actions">
+      <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+        {{ section.settings.cta_text | default: "Shop Collection" }}
+      </a>
+      <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+        {{ section.settings.secondary_cta_text | default: "Learn More" }}
+      </a>
+    </div>
+  </div>
 
   <div class="hero-scroll-indicator" onclick="scrollToNextSection()">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -493,12 +519,78 @@ function scrollToNextSection() {
       "type": "url",
       "id": "secondary_cta_url",
       "label": "Secondary Button Link"
+    },
+    {
+      "type": "collection",
+      "id": "fallback_collection",
+      "label": "Fallback Collection",
+      "info": "Show products from this collection if no products are selected in blocks"
+    },
+    {
+      "type": "range",
+      "id": "fallback_limit",
+      "label": "Fallback Products Limit",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show Custom Badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text",
+          "default": "New"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_button",
+          "label": "Show Button",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "View Product"
+        }
+      ]
     }
   ],
   "presets": [
     {
       "name": "Hero Carousel",
-      "category": "Homepage"
+      "category": "Homepage",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
     }
   ]
 }
