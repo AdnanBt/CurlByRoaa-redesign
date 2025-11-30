@@ -8,6 +8,9 @@
     justify-content: center;
     overflow: hidden;
     background: #000;
+    /* ADD THESE FIXES */
+    margin-top: 80px; /* Account for fixed header height */
+    padding-top: 40px; /* Additional spacing */
   }
 
   .hero-background {
@@ -132,6 +135,8 @@
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 60px 40px;
+    /* ADD THIS TO REMOVE THE TOP CARD */
+    margin-top: -100px; /* Pull content up to avoid overlapping with carousel */
   }
 
   .hero-title {
@@ -306,6 +311,8 @@
   @media (max-width: 768px) {
     .hero {
       min-height: 100vh;
+      margin-top: 60px; /* Adjust for mobile header */
+      padding-top: 20px;
     }
 
     .hero-title {
@@ -340,6 +347,7 @@
     .hero-content {
       padding: 40px 20px;
       margin: 0 20px;
+      margin-top: -50px; /* Adjust for mobile */
     }
 
     /* Adjust carousel for mobile */
