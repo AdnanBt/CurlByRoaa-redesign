@@ -10,14 +10,6 @@
 {
   "current": {
     "sections": {
-      "announcement-bar": {
-        "type": "announcement-bar",
-        "settings": {}
-      },
-      "header": {
-        "type": "header",
-        "settings": {}
-      },
       "hero": {
         "type": "hero",
         "settings": {
@@ -26,8 +18,7 @@
           "cta_text": "Explore Products",
           "cta_url": "",
           "secondary_cta_text": "Begin Journey",
-          "secondary_cta_url": "",
-          "video_url": ""
+          "secondary_cta_url": ""
         }
       },
       "featured-collections": {
@@ -62,46 +53,8 @@
         "settings": {
           "title": "Find Your Perfect Routine"
         }
-      },
-      "footer": {
-        "type": "footer",
-        "settings": {}
       }
     },
-    "content_for_index": [],
-    "blocks": {
-      "4976129024724438625": {
-        "type": "shopify://apps/smart-seo/blocks/brokenLinkDetection/7b0a6064-ca2e-4392-9a1d-8c43c942357b",
-        "disabled": false,
-        "settings": {}
-      },
-      "6406956604159796213": {
-        "type": "shopify://apps/smart-seo/blocks/smartseo/7b0a6064-ca2e-4392-9a1d-8c43c942357b",
-        "disabled": false,
-        "settings": {}
-      },
-      "6455419830187867978": {
-        "type": "shopify://apps/sesami-booking-app/blocks/app-embed/dc3b1344-0a53-477e-93d0-4b8a473ab587",
-        "disabled": false,
-        "settings": {
-          "enable_cart_verification": true
-        }
-      },
-      "6744518860797519131": {
-        "type": "shopify://apps/langwill-translate/blocks/floating-selector/35c05b0e-4f05-4fc9-adc7-77b6ccb6b2ca",
-        "disabled": false,
-        "settings": {}
-      },
-      "3847134708050210359": {
-        "type": "shopify://apps/transcy/blocks/switcher_embed_block/bce4f1c0-c18c-43b0-b0b2-a1aefaa44573",
-        "disabled": false,
-        "settings": {}
-      },
-      "4493994212685255146": {
-        "type": "shopify://apps/hextom-whatsapp-sms-push/blocks/app-block/7861f6ce-2897-4f30-be3b-04c90bf56b8c",
-        "disabled": false,
-        "settings": {}
-      }
-    }
+    "content_for_index": []
   }
 }
