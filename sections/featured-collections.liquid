@@ -60,7 +60,14 @@
         {% assign collection = collections[block.settings.collection] %}
         <div class="collection-card">
           {% if collection.image %}
-            <img src="{{ collection.image | img_url: '600x800', crop: 'center' }}" alt="{{ collection.title }}" class="collection-image" loading="lazy">
+            <img 
+              src="{{ collection.image | image_url: width: 600, height: 800, crop: 'center' }}" 
+              alt="{{ collection.title | escape }}" 
+              class="collection-image" 
+              loading="lazy"
+              width="600"
+              height="800"
+            >
           {% else %}
             <div class="collection-image" style="background: var(--color-secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
               {{ collection.title | default: 'Collection' }}
@@ -81,7 +88,7 @@
           </div>
           <div class="collection-content">
             <h3 class="collection-title" style="margin-bottom: 10px; font-size: 1.4rem;">Featured Collection</h3>
-            <a href="/collections" class="btn btn-outline" style="color: white; border-color: white;">Shop Now</a>
+            <a href="{{ routes.collections_url }}" class="btn btn-outline" style="color: white; border-color: white;">Shop Now</a>
           </div>
         </div>
       {% endfor %}
