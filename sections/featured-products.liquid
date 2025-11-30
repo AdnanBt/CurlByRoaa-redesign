@@ -428,7 +428,7 @@
 
           <div class="product-image-container">
             <img 
-              src="{{ product.featured_image | img_url: '400x400' }}" 
+              src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
               alt="{{ product.title | escape }}"
               class="product-image"
               loading="lazy"
@@ -464,7 +464,6 @@
             {% if section.settings.show_ratings %}
               <div class="product-rating">
                 <div class="stars">
-                  {% comment %} Static stars - replace with dynamic ratings if available {% endcomment %}
                   ★★★★★
                 </div>
                 <span class="rating-count">({{ forloop.index | times: 12 }})</span>
@@ -473,7 +472,7 @@
 
             <div class="product-actions">
               {% if product.available %}
-                <form action="/cart/add" method="post" class="product-form">
+                <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
                   <input type="hidden" name="id" value="{{ product.variants.first.id }}">
                   <button type="submit" class="add-to-cart-btn">
                     Add to Cart
@@ -527,35 +526,55 @@ class ProductCarousel {
     this.quickViewModal = document.getElementById('quick-view-modal');
     this.modalClose = document.getElementById('modal-close');
     this.quickViewContent = document.getElementById('quick-view-content');
-    this.cardWidth = 320 + 30; // card width + gap
+    
+    // Calculate card width dynamically
+    this.cardWidth = 0;
     this.init();
   }
 
   init() {
-    this.bindEvents();
-    this.updateButtonStates();
+    if (this.carousel && this.carousel.children.length > 0) {
+      const firstCard = this.carousel.children[0];
+      const cardStyle = window.getComputedStyle(firstCard);
+      const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 30;
+      this.cardWidth = firstCard.offsetWidth + gap;
+      
+      this.bindEvents();
+      this.updateButtonStates();
+    }
   }
 
   bindEvents() {
     // Carousel navigation
-    this.prevBtn.addEventListener('click', () => this.scroll('prev'));
-    this.nextBtn.addEventListener('click', () => this.scroll('next'));
+    if (this.prevBtn) {
+      this.prevBtn.addEventListener('click', () => this.scroll('prev'));
+    }
+    if (this.nextBtn) {
+      this.nextBtn.addEventListener('click', () => this.scroll('next'));
+    }
 
     // Touch events for mobile
     let startX;
-    this.carousel.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-    });
-    
-    this.carousel.addEventListener('touchend', (e) => {
-      const endX = e.changedTouches[0].clientX;
-      const diff = startX - endX;
+    if (this.carousel) {
+      this.carousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      });
       
-      if (Math.abs(diff) > 50) { // Minimum swipe distance
-        if (diff > 0) this.scroll('next');
-        else this.scroll('prev');
-      }
-    });
+      this.carousel.addEventListener('touchend', (e) => {
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) this.scroll('next');
+          else this.scroll('prev');
+        }
+      });
+
+      // Update button states on scroll
+      this.carousel.addEventListener('scroll', () => {
+        this.updateButtonStates();
+      });
+    }
 
     // Wishlist buttons
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
@@ -564,7 +583,6 @@ class ProductCarousel {
         btn.classList.toggle('active');
         btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
         
-        // Show feedback
         const originalText = btn.textContent;
         if (btn.classList.contains('active')) {
           btn.textContent = '♥ Added!';
@@ -586,28 +604,29 @@ class ProductCarousel {
     });
 
     // Modal close
-    this.modalClose.addEventListener('click', () => this.closeQuickView());
-    this.quickViewModal.addEventListener('click', (e) => {
-      if (e.target === this.quickViewModal) {
-        this.closeQuickView();
-      }
-    });
-
-    // Update button states on scroll
-    this.carousel.addEventListener('scroll', () => {
-      this.updateButtonStates();
-    });
+    if (this.modalClose) {
+      this.modalClose.addEventListener('click', () => this.closeQuickView());
+    }
+    if (this.quickViewModal) {
+      this.quickViewModal.addEventListener('click', (e) => {
+        if (e.target === this.quickViewModal) {
+          this.closeQuickView();
+        }
+      });
+    }
 
     // Close modal on escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.quickViewModal.classList.contains('active')) {
+      if (e.key === 'Escape' && this.quickViewModal && this.quickViewModal.classList.contains('active')) {
         this.closeQuickView();
       }
     });
   }
 
   scroll(direction) {
-    const scrollAmount = this.cardWidth * 2; // Scroll 2 cards at a time
+    if (!this.carousel || this.cardWidth === 0) return;
+
+    const scrollAmount = this.cardWidth * 2;
     const newScrollLeft = direction === 'next' 
       ? this.carousel.scrollLeft + scrollAmount
       : this.carousel.scrollLeft - scrollAmount;
@@ -619,6 +638,8 @@ class ProductCarousel {
   }
 
   updateButtonStates() {
+    if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
+
     const { scrollLeft, scrollWidth, clientWidth } = this.carousel;
     
     this.prevBtn.disabled = scrollLeft <= 0;
@@ -626,6 +647,8 @@ class ProductCarousel {
   }
 
   async openQuickView(productHandle) {
+    if (!this.quickViewModal || !this.quickViewContent) return;
+
     try {
       this.quickViewModal.classList.add('active');
       this.quickViewContent.innerHTML = `
@@ -656,18 +679,19 @@ class ProductCarousel {
   }
 
   closeQuickView() {
-    this.quickViewModal.classList.remove('active');
-    this.quickViewContent.innerHTML = '';
+    if (this.quickViewModal && this.quickViewContent) {
+      this.quickViewModal.classList.remove('active');
+      this.quickViewContent.innerHTML = '';
+    }
   }
 }
 
-// Initialize carousel
-document.addEventListener('DOMContentLoaded', () => {
-  new ProductCarousel();
-});
-
-// Image loading fallback
+// Initialize carousel when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize carousel
+  new ProductCarousel();
+
+  // Image loading fallback
   const images = document.querySelectorAll('.product-image');
   images.forEach(img => {
     if (img.complete) {
@@ -677,7 +701,6 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.add('loaded');
       });
       img.addEventListener('error', function() {
-        // Handle broken images
         this.style.backgroundColor = '#f5f5f5';
       });
     }
