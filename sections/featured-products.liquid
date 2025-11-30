@@ -30,26 +30,24 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 60px;
+    overflow: hidden; /* Add this for carousel */
   }
 
+  /* Updated Carousel with Hero-style Animation */
   .products-carousel {
     display: flex;
     gap: 30px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    animation: productsCarouselScroll 40s linear infinite;
     padding: 20px 0;
-    scroll-snap-type: x mandatory;
+    width: max-content; /* Important for seamless loop */
   }
 
-  .products-carousel::-webkit-scrollbar {
-    display: none;
+  .products-carousel:hover {
+    animation-play-state: paused;
   }
 
   .product-card {
     flex: 0 0 320px;
-    scroll-snap-align: start;
     background: white;
     border-radius: 20px;
     overflow: hidden;
@@ -263,44 +261,9 @@
     color: white;
   }
 
+  /* Remove old carousel controls since we have auto-scroll */
   .carousel-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
-    pointer-events: none;
-  }
-
-  .carousel-btn {
-    background: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: all;
-    font-size: 1.2rem;
-    color: #2D2D2D;
-  }
-
-  .carousel-btn:hover:not(:disabled) {
-    background: #E8C4B8;
-    color: white;
-    transform: scale(1.1);
-  }
-
-  .carousel-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+    display: none;
   }
 
   .view-all-container {
@@ -363,6 +326,16 @@
     color: #2D2D2D;
   }
 
+  /* New Carousel Animation */
+  @keyframes productsCarouselScroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-320px * 8 - 30px * 8)); /* Adjust based on product count */
+    }
+  }
+
   /* Loading state */
   .loading {
     opacity: 0.7;
@@ -387,10 +360,6 @@
       flex: 0 0 280px;
     }
 
-    .carousel-controls {
-      display: none;
-    }
-
     .product-actions {
       flex-direction: column;
     }
@@ -403,6 +372,22 @@
     .modal-content {
       width: 95%;
       margin: 20px;
+    }
+
+    /* Adjust animation for mobile */
+    @keyframes productsCarouselScroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-280px * 8 - 30px * 8));
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .products-carousel {
+      animation-duration: 30s; /* Slower on mobile */
     }
   }
 </style>
@@ -418,6 +403,81 @@
       {% assign featured_collection = collections[section.settings.collection] | default: collections.all %}
       {% assign products_limit = section.settings.products_limit | default: 8 %}
       
+      <!-- Original Products -->
+      {% for product in featured_collection.products limit: products_limit %}
+        <div class="product-card">
+          {% if product.tags contains 'bestseller' %}
+            <div class="product-card-badge">Best Seller</div>
+          {% elsif product.tags contains 'new' %}
+            <div class="product-card-badge">New</div>
+          {% endif %}
+
+          <div class="product-image-container">
+            <img 
+              src="{{ product.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+              alt="{{ product.title | escape }}"
+              class="product-image"
+              loading="lazy"
+              width="400"
+              height="400"
+              onload="this.classList.add('loaded')"
+            >
+            <button class="product-quick-view" data-product-handle="{{ product.handle }}">
+              Quick View
+            </button>
+          </div>
+
+          <div class="product-info">
+            <div class="product-category">
+              {{ product.type | default: 'Hair Care' }}
+            </div>
+            
+            <h3 class="product-title">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+            
+            <p class="product-description">
+              {{ product.description | strip_html | truncatewords: 15 }}
+            </p>
+
+            <div class="product-price">
+              <span class="current-price">{{ product.price | money }}</span>
+              {% if product.compare_at_price > product.price %}
+                <span class="original-price">{{ product.compare_at_price | money }}</span>
+              {% endif %}
+            </div>
+
+            {% if section.settings.show_ratings %}
+              <div class="product-rating">
+                <div class="stars">
+                  ★★★★★
+                </div>
+                <span class="rating-count">({{ forloop.index | times: 12 }})</span>
+              </div>
+            {% endif %}
+
+            <div class="product-actions">
+              {% if product.available %}
+                <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
+                  <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                  <button type="submit" class="add-to-cart-btn">
+                    Add to Cart
+                  </button>
+                </form>
+              {% else %}
+                <button class="add-to-cart-btn" disabled>
+                  Sold Out
+                </button>
+              {% endif %}
+              <button class="wishlist-btn" aria-label="Add to wishlist">
+                ♡
+              </button>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+      <!-- Duplicate products for seamless loop (same as hero section) -->
       {% for product in featured_collection.products limit: products_limit %}
         <div class="product-card">
           {% if product.tags contains 'bestseller' %}
@@ -491,15 +551,6 @@
         </div>
       {% endfor %}
     </div>
-
-    <div class="carousel-controls">
-      <button class="carousel-btn prev-btn" id="carousel-prev" aria-label="Previous products">
-        ‹
-      </button>
-      <button class="carousel-btn next-btn" id="carousel-next" aria-label="Next products">
-        ›
-      </button>
-    </div>
   </div>
 
   <div class="view-all-container">
@@ -521,62 +572,23 @@
 class ProductCarousel {
   constructor() {
     this.carousel = document.getElementById('products-carousel');
-    this.prevBtn = document.getElementById('carousel-prev');
-    this.nextBtn = document.getElementById('carousel-next');
     this.quickViewModal = document.getElementById('quick-view-modal');
     this.modalClose = document.getElementById('modal-close');
     this.quickViewContent = document.getElementById('quick-view-content');
     
-    this.scrollDuration = 3000; // 3 seconds for smooth scrolling
     this.init();
   }
 
   init() {
-    if (!this.carousel || !this.carousel.children.length) {
-      console.warn('Carousel elements not found');
+    if (!this.carousel) {
+      console.warn('Carousel element not found');
       return;
     }
 
     this.bindEvents();
-    this.updateButtonStates();
   }
 
   bindEvents() {
-    // Carousel navigation with 3-second animation
-    if (this.prevBtn) {
-      this.prevBtn.addEventListener('click', () => this.scroll('prev'));
-    }
-    if (this.nextBtn) {
-      this.nextBtn.addEventListener('click', () => this.scroll('next'));
-    }
-
-    // Touch events for mobile
-    let startX;
-    let isScrolling = false;
-    
-    if (this.carousel) {
-      this.carousel.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-      });
-      
-      this.carousel.addEventListener('touchend', (e) => {
-        if (isScrolling) return;
-        
-        const endX = e.changedTouches[0].clientX;
-        const diff = startX - endX;
-        
-        if (Math.abs(diff) > 50) {
-          if (diff > 0) this.scroll('next');
-          else this.scroll('prev');
-        }
-      });
-
-      // Update button states on scroll
-      this.carousel.addEventListener('scroll', () => {
-        this.updateButtonStates();
-      });
-    }
-
     // Wishlist buttons
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -624,64 +636,6 @@ class ProductCarousel {
     });
   }
 
-  scroll(direction) {
-    if (!this.carousel || isScrolling) return;
-    
-    isScrolling = true;
-    
-    const card = this.carousel.querySelector('.product-card');
-    if (!card) return;
-    
-    const cardWidth = card.offsetWidth;
-    const gap = 30; // Match the CSS gap
-    const scrollAmount = (cardWidth + gap) * 2; // Scroll 2 cards
-    
-    const startPosition = this.carousel.scrollLeft;
-    const targetPosition = direction === 'next' 
-      ? startPosition + scrollAmount
-      : startPosition - scrollAmount;
-    
-    // Ensure we don't scroll beyond boundaries
-    const maxScroll = this.carousel.scrollWidth - this.carousel.clientWidth;
-    const finalPosition = Math.max(0, Math.min(targetPosition, maxScroll));
-    
-    const startTime = performance.now();
-    
-    const animateScroll = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / this.scrollDuration, 1);
-      
-      // Easing function for smooth animation
-      const easeProgress = this.easeInOutCubic(progress);
-      
-      this.carousel.scrollLeft = startPosition + (finalPosition - startPosition) * easeProgress;
-      
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
-      } else {
-        isScrolling = false;
-        this.updateButtonStates();
-      }
-    };
-    
-    requestAnimationFrame(animateScroll);
-  }
-
-  // Smooth easing function
-  easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-
-  updateButtonStates() {
-    if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
-
-    const { scrollLeft, scrollWidth, clientWidth } = this.carousel;
-    const tolerance = 1; // Small tolerance for floating point calculations
-    
-    this.prevBtn.disabled = scrollLeft <= tolerance;
-    this.nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - tolerance;
-  }
-
   async openQuickView(productHandle) {
     if (!this.quickViewModal || !this.quickViewContent) return;
 
@@ -724,10 +678,7 @@ class ProductCarousel {
 
 // Initialize carousel when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-  // Small delay to ensure all elements are rendered
-  setTimeout(() => {
-    new ProductCarousel();
-  }, 100);
+  new ProductCarousel();
 
   // Image loading fallback
   const images = document.querySelectorAll('.product-image');
@@ -744,19 +695,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-
-// Fallback initialization for Shopify themes
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-      new ProductCarousel();
-    }, 100);
-  });
-} else {
-  setTimeout(() => {
-    new ProductCarousel();
-  }, 100);
-}
 </script>
 
 {% schema %}
