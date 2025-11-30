@@ -2,7 +2,6 @@
   .featured-products {
     padding: 100px 0;
     background: white;
-    position: relative;
   }
 
   .section-header {
@@ -30,7 +29,7 @@
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 80px;
+    padding: 0 60px;
   }
 
   .products-carousel {
@@ -88,10 +87,43 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .product-image.loaded {
+    opacity: 1;
   }
 
   .product-card:hover .product-image {
     transform: scale(1.1);
+  }
+
+  .product-quick-view {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    color: #2D2D2D;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+  }
+
+  .product-card:hover .product-quick-view {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .product-quick-view:hover {
+    background: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   }
 
   .product-info {
@@ -240,7 +272,6 @@
     display: flex;
     justify-content: space-between;
     pointer-events: none;
-    z-index: 2;
   }
 
   .carousel-btn {
@@ -267,7 +298,7 @@
   }
 
   .carousel-btn:disabled {
-    opacity: 0.3;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
   }
@@ -291,6 +322,51 @@
   .btn-outline:hover {
     background: #2D2D2D;
     color: white;
+  }
+
+  .quick-view-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quick-view-modal.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 20px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+    color: #2D2D2D;
+  }
+
+  /* Loading state */
+  .loading {
+    opacity: 0.7;
+    pointer-events: none;
   }
 
   /* Mobile Styles */
@@ -323,18 +399,23 @@
       width: 100%;
       height: 48px;
     }
+
+    .modal-content {
+      width: 95%;
+      margin: 20px;
+    }
   }
 </style>
 
-<section class="featured-products" data-section-id="{{ section.id }}">
+<section class="featured-products">
   <div class="section-header">
-    <h2 class="section-title">{{ section.settings.title }}</h2>
-    <p class="section-description">{{ section.settings.description }}</p>
+    <h2 class="section-title">{{ section.settings.title | default: "Best Sellers" }}</h2>
+    <p class="section-description">{{ section.settings.description | default: "Most loved by our curl community. Formulated to transform your hair routine." }}</p>
   </div>
 
   <div class="products-carousel-container">
-    <div class="products-carousel" id="products-carousel-{{ section.id }}">
-      {% assign featured_collection = collections[section.settings.collection] %}
+    <div class="products-carousel" id="products-carousel">
+      {% assign featured_collection = collections[section.settings.collection] | default: collections.all %}
       {% assign products_limit = section.settings.products_limit | default: 8 %}
       
       {% for product in featured_collection.products limit: products_limit %}
@@ -353,7 +434,11 @@
               loading="lazy"
               width="400"
               height="400"
+              onload="this.classList.add('loaded')"
             >
+            <button class="product-quick-view" data-product-handle="{{ product.handle }}">
+              Quick View
+            </button>
           </div>
 
           <div class="product-info">
@@ -398,7 +483,7 @@
                   Sold Out
                 </button>
               {% endif %}
-              <button class="wishlist-btn" aria-label="Add to wishlist" data-wishlist-btn>
+              <button class="wishlist-btn" aria-label="Add to wishlist">
                 ♡
               </button>
             </div>
@@ -408,10 +493,10 @@
     </div>
 
     <div class="carousel-controls">
-      <button class="carousel-btn prev-btn" data-carousel-prev data-section="{{ section.id }}">
+      <button class="carousel-btn prev-btn" id="carousel-prev" aria-label="Previous products">
         ‹
       </button>
-      <button class="carousel-btn next-btn" data-carousel-next data-section="{{ section.id }}">
+      <button class="carousel-btn next-btn" id="carousel-next" aria-label="Next products">
         ›
       </button>
     </div>
@@ -424,96 +509,253 @@
   </div>
 </section>
 
-<script>
-// Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  initializeCarousels();
-});
+<!-- Quick View Modal -->
+<div class="quick-view-modal" id="quick-view-modal">
+  <div class="modal-content">
+    <button class="modal-close" id="modal-close">&times;</button>
+    <div id="quick-view-content"></div>
+  </div>
+</div>
 
-function initializeCarousels() {
-  // Find all featured product sections
-  const sections = document.querySelectorAll('.featured-products');
-  
-  sections.forEach(section => {
-    const sectionId = section.dataset.sectionId;
-    const carousel = document.getElementById(`products-carousel-${sectionId}`);
-    const prevBtn = section.querySelector('[data-carousel-prev]');
-    const nextBtn = section.querySelector('[data-carousel-next]');
-    const wishlistBtns = section.querySelectorAll('[data-wishlist-btn]');
+<script>
+class ProductCarousel {
+  constructor() {
+    this.carousel = document.getElementById('products-carousel');
+    this.prevBtn = document.getElementById('carousel-prev');
+    this.nextBtn = document.getElementById('carousel-next');
+    this.quickViewModal = document.getElementById('quick-view-modal');
+    this.modalClose = document.getElementById('modal-close');
+    this.quickViewContent = document.getElementById('quick-view-content');
     
-    if (!carousel) return;
-    
-    const card = carousel.querySelector('.product-card');
-    if (!card) return;
-    
-    const cardWidth = card.offsetWidth;
-    const gap = 30;
-    const scrollAmount = cardWidth + gap;
-    
-    // Previous button functionality
-    if (prevBtn) {
-      prevBtn.addEventListener('click', function() {
-        carousel.scrollBy({
-          left: -scrollAmount * 2,
-          behavior: 'smooth'
-        });
-      });
+    this.scrollDuration = 3000; // 3 seconds for smooth scrolling
+    this.init();
+  }
+
+  init() {
+    if (!this.carousel || !this.carousel.children.length) {
+      console.warn('Carousel elements not found');
+      return;
     }
-    
-    // Next button functionality
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function() {
-        carousel.scrollBy({
-          left: scrollAmount * 2,
-          behavior: 'smooth'
-        });
-      });
+
+    this.bindEvents();
+    this.updateButtonStates();
+  }
+
+  bindEvents() {
+    // Carousel navigation with 3-second animation
+    if (this.prevBtn) {
+      this.prevBtn.addEventListener('click', () => this.scroll('prev'));
     }
+    if (this.nextBtn) {
+      this.nextBtn.addEventListener('click', () => this.scroll('next'));
+    }
+
+    // Touch events for mobile
+    let startX;
+    let isScrolling = false;
     
-    // Update button states on scroll
-    carousel.addEventListener('scroll', function() {
-      updateButtonStates(carousel, prevBtn, nextBtn);
-    });
-    
-    // Initial button state update
-    updateButtonStates(carousel, prevBtn, nextBtn);
-    
-    // Wishlist functionality
-    wishlistBtns.forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.classList.toggle('active');
-        this.textContent = this.classList.contains('active') ? '♥' : '♡';
+    if (this.carousel) {
+      this.carousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      });
+      
+      this.carousel.addEventListener('touchend', (e) => {
+        if (isScrolling) return;
         
-        if (this.classList.contains('active')) {
-          const originalText = this.textContent;
-          this.textContent = '♥ Added!';
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) this.scroll('next');
+          else this.scroll('prev');
+        }
+      });
+
+      // Update button states on scroll
+      this.carousel.addEventListener('scroll', () => {
+        this.updateButtonStates();
+      });
+    }
+
+    // Wishlist buttons
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        btn.classList.toggle('active');
+        btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
+        
+        const originalText = btn.textContent;
+        if (btn.classList.contains('active')) {
+          btn.textContent = '♥ Added!';
           setTimeout(() => {
-            this.textContent = originalText;
+            btn.textContent = originalText;
           }, 2000);
         }
       });
     });
-  });
+
+    // Quick view buttons
+    document.querySelectorAll('.product-quick-view').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const productHandle = btn.dataset.productHandle;
+        this.openQuickView(productHandle);
+      });
+    });
+
+    // Modal close
+    if (this.modalClose) {
+      this.modalClose.addEventListener('click', () => this.closeQuickView());
+    }
+    if (this.quickViewModal) {
+      this.quickViewModal.addEventListener('click', (e) => {
+        if (e.target === this.quickViewModal) {
+          this.closeQuickView();
+        }
+      });
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.quickViewModal && this.quickViewModal.classList.contains('active')) {
+        this.closeQuickView();
+      }
+    });
+  }
+
+  scroll(direction) {
+    if (!this.carousel || isScrolling) return;
+    
+    isScrolling = true;
+    
+    const card = this.carousel.querySelector('.product-card');
+    if (!card) return;
+    
+    const cardWidth = card.offsetWidth;
+    const gap = 30; // Match the CSS gap
+    const scrollAmount = (cardWidth + gap) * 2; // Scroll 2 cards
+    
+    const startPosition = this.carousel.scrollLeft;
+    const targetPosition = direction === 'next' 
+      ? startPosition + scrollAmount
+      : startPosition - scrollAmount;
+    
+    // Ensure we don't scroll beyond boundaries
+    const maxScroll = this.carousel.scrollWidth - this.carousel.clientWidth;
+    const finalPosition = Math.max(0, Math.min(targetPosition, maxScroll));
+    
+    const startTime = performance.now();
+    
+    const animateScroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / this.scrollDuration, 1);
+      
+      // Easing function for smooth animation
+      const easeProgress = this.easeInOutCubic(progress);
+      
+      this.carousel.scrollLeft = startPosition + (finalPosition - startPosition) * easeProgress;
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        isScrolling = false;
+        this.updateButtonStates();
+      }
+    };
+    
+    requestAnimationFrame(animateScroll);
+  }
+
+  // Smooth easing function
+  easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  updateButtonStates() {
+    if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = this.carousel;
+    const tolerance = 1; // Small tolerance for floating point calculations
+    
+    this.prevBtn.disabled = scrollLeft <= tolerance;
+    this.nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - tolerance;
+  }
+
+  async openQuickView(productHandle) {
+    if (!this.quickViewModal || !this.quickViewContent) return;
+
+    try {
+      this.quickViewModal.classList.add('active');
+      this.quickViewContent.innerHTML = `
+        <div style="padding: 40px; text-align: center;" class="loading">
+          <p>Loading product...</p>
+        </div>
+      `;
+
+      const response = await fetch(`/products/${productHandle}?view=quick`);
+      
+      if (!response.ok) {
+        throw new Error('Product not found');
+      }
+      
+      const html = await response.text();
+      this.quickViewContent.innerHTML = html;
+      
+    } catch (error) {
+      console.error('Error loading quick view:', error);
+      this.quickViewContent.innerHTML = `
+        <div style="padding: 40px; text-align: center;">
+          <p>Unable to load product. <a href="/products/${productHandle}">View product page</a></p>
+        </div>
+      `;
+    } finally {
+      this.quickViewContent.classList.remove('loading');
+    }
+  }
+
+  closeQuickView() {
+    if (this.quickViewModal && this.quickViewContent) {
+      this.quickViewModal.classList.remove('active');
+      this.quickViewContent.innerHTML = '';
+    }
+  }
 }
 
-function updateButtonStates(carousel, prevBtn, nextBtn) {
-  if (!carousel || !prevBtn || !nextBtn) return;
-  
-  const { scrollLeft, scrollWidth, clientWidth } = carousel;
-  const tolerance = 1;
-  
-  prevBtn.disabled = scrollLeft <= tolerance;
-  nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - tolerance;
-}
+// Initialize carousel when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Small delay to ensure all elements are rendered
+  setTimeout(() => {
+    new ProductCarousel();
+  }, 100);
 
-// Re-initialize when section is added dynamically (for theme editor)
-if (typeof Shopify !== 'undefined') {
-  document.addEventListener('shopify:section:load', function(event) {
-    if (event.target.querySelector('.featured-products')) {
-      initializeCarousels();
+  // Image loading fallback
+  const images = document.querySelectorAll('.product-image');
+  images.forEach(img => {
+    if (img.complete) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', function() {
+        this.classList.add('loaded');
+      });
+      img.addEventListener('error', function() {
+        this.style.backgroundColor = '#f5f5f5';
+      });
     }
   });
+});
+
+// Fallback initialization for Shopify themes
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+      new ProductCarousel();
+    }, 100);
+  });
+} else {
+  setTimeout(() => {
+    new ProductCarousel();
+  }, 100);
 }
 </script>
 
@@ -536,7 +778,8 @@ if (typeof Shopify !== 'undefined') {
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection"
+      "label": "Collection",
+      "info": "Select collection to feature products from"
     },
     {
       "type": "range",
@@ -561,7 +804,7 @@ if (typeof Shopify !== 'undefined') {
   ],
   "presets": [
     {
-      "name": "Product Carousel",
+      "name": "Featured Products Carousel",
       "category": "Homepage"
     }
   ]
