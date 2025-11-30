@@ -527,25 +527,22 @@ class ProductCarousel {
     this.modalClose = document.getElementById('modal-close');
     this.quickViewContent = document.getElementById('quick-view-content');
     
-    // Calculate card width dynamically
-    this.cardWidth = 0;
+    this.scrollDuration = 3000; // 3 seconds for smooth scrolling
     this.init();
   }
 
   init() {
-    if (this.carousel && this.carousel.children.length > 0) {
-      const firstCard = this.carousel.children[0];
-      const cardStyle = window.getComputedStyle(firstCard);
-      const gap = parseInt(window.getComputedStyle(this.carousel).gap) || 30;
-      this.cardWidth = firstCard.offsetWidth + gap;
-      
-      this.bindEvents();
-      this.updateButtonStates();
+    if (!this.carousel || !this.carousel.children.length) {
+      console.warn('Carousel elements not found');
+      return;
     }
+
+    this.bindEvents();
+    this.updateButtonStates();
   }
 
   bindEvents() {
-    // Carousel navigation
+    // Carousel navigation with 3-second animation
     if (this.prevBtn) {
       this.prevBtn.addEventListener('click', () => this.scroll('prev'));
     }
@@ -555,12 +552,16 @@ class ProductCarousel {
 
     // Touch events for mobile
     let startX;
+    let isScrolling = false;
+    
     if (this.carousel) {
       this.carousel.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
       });
       
       this.carousel.addEventListener('touchend', (e) => {
+        if (isScrolling) return;
+        
         const endX = e.changedTouches[0].clientX;
         const diff = startX - endX;
         
@@ -624,26 +625,61 @@ class ProductCarousel {
   }
 
   scroll(direction) {
-    if (!this.carousel || this.cardWidth === 0) return;
+    if (!this.carousel || isScrolling) return;
+    
+    isScrolling = true;
+    
+    const card = this.carousel.querySelector('.product-card');
+    if (!card) return;
+    
+    const cardWidth = card.offsetWidth;
+    const gap = 30; // Match the CSS gap
+    const scrollAmount = (cardWidth + gap) * 2; // Scroll 2 cards
+    
+    const startPosition = this.carousel.scrollLeft;
+    const targetPosition = direction === 'next' 
+      ? startPosition + scrollAmount
+      : startPosition - scrollAmount;
+    
+    // Ensure we don't scroll beyond boundaries
+    const maxScroll = this.carousel.scrollWidth - this.carousel.clientWidth;
+    const finalPosition = Math.max(0, Math.min(targetPosition, maxScroll));
+    
+    const startTime = performance.now();
+    
+    const animateScroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / this.scrollDuration, 1);
+      
+      // Easing function for smooth animation
+      const easeProgress = this.easeInOutCubic(progress);
+      
+      this.carousel.scrollLeft = startPosition + (finalPosition - startPosition) * easeProgress;
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        isScrolling = false;
+        this.updateButtonStates();
+      }
+    };
+    
+    requestAnimationFrame(animateScroll);
+  }
 
-    const scrollAmount = this.cardWidth * 2;
-    const newScrollLeft = direction === 'next' 
-      ? this.carousel.scrollLeft + scrollAmount
-      : this.carousel.scrollLeft - scrollAmount;
-
-    this.carousel.scrollTo({
-      left: newScrollLeft,
-      behavior: 'smooth'
-    });
+  // Smooth easing function
+  easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
   updateButtonStates() {
     if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
 
     const { scrollLeft, scrollWidth, clientWidth } = this.carousel;
+    const tolerance = 1; // Small tolerance for floating point calculations
     
-    this.prevBtn.disabled = scrollLeft <= 0;
-    this.nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - 10;
+    this.prevBtn.disabled = scrollLeft <= tolerance;
+    this.nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - tolerance;
   }
 
   async openQuickView(productHandle) {
@@ -686,10 +722,12 @@ class ProductCarousel {
   }
 }
 
-// Initialize carousel when DOM is loaded
+// Initialize carousel when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize carousel
-  new ProductCarousel();
+  // Small delay to ensure all elements are rendered
+  setTimeout(() => {
+    new ProductCarousel();
+  }, 100);
 
   // Image loading fallback
   const images = document.querySelectorAll('.product-image');
@@ -706,6 +744,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+// Fallback initialization for Shopify themes
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+      new ProductCarousel();
+    }, 100);
+  });
+} else {
+  setTimeout(() => {
+    new ProductCarousel();
+  }, 100);
+}
 </script>
 
 {% schema %}
