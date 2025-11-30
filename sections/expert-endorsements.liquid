@@ -1,0 +1,220 @@
+<style>
+.expert-endorsements {
+  padding: 100px 0;
+  background: white;
+}
+
+.expert-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.expert-header h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #2D2D2D;
+}
+
+.expert-header p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.expert-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.expert-card {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  padding: 40px;
+  background: #FAF8F6;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.expert-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.expert-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.expert-content h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2D2D2D;
+}
+
+.expert-title {
+  color: #E8C4B8;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.expert-quote {
+  font-style: italic;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.expert-quote::before {
+  content: '"';
+  font-size: 3rem;
+  color: #E8C4B8;
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  opacity: 0.3;
+}
+
+.expert-credentials {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.credential {
+  background: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  border: 1px solid #eee;
+}
+
+.certifications {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 60px;
+  border-top: 1px solid #eee;
+}
+
+.certifications h3 {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cert-logos {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.cert-logo {
+  padding: 15px 25px;
+  background: #FAF8F6;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+@media (max-width: 968px) {
+  .expert-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .expert-endorsements {
+    padding: 80px 0;
+  }
+  
+  .expert-header h2 {
+    font-size: 2.5rem;
+  }
+  
+  .expert-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 25px;
+  }
+  
+  .cert-logos {
+    gap: 20px;
+  }
+  
+  .cert-logo {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+
+<section class="expert-endorsements">
+  <div class="expert-header">
+    <h2>Trusted by Hair Experts</h2>
+    <p>Leading dermatologists and hair care professionals recommend our products</p>
+  </div>
+  
+  <div class="expert-grid">
+    <div class="expert-card">
+      <div class="expert-image">👩‍⚕️</div>
+      <div class="expert-content">
+        <h3>Dr. Sarah Johnson</h3>
+        <div class="expert-title">Board Certified Dermatologist</div>
+        <p class="expert-quote">"In my practice, I've seen remarkable improvements in scalp health and hair quality when patients switch to CurlsByRoaa. The science-backed formulation is exceptional."</p>
+        <div class="expert-credentials">
+          <span class="credential">15+ Years Experience</span>
+          <span class="credential">Harvard Medical School</span>
+          <span class="credential">Scalp Specialist</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="expert-card">
+      <div class="expert-image">👨‍🔬</div>
+      <div class="expert-content">
+        <h3>Dr. Michael Chen</h3>
+        <div class="expert-title">Cosmetic Chemist & Researcher</div>
+        <p class="expert-quote">"The molecular technology used in these products represents a significant advancement in hair care. The bioavailability of ingredients ensures maximum effectiveness."</p>
+        <div class="expert-credentials">
+          <span class="credential">PhD Chemistry</span>
+          <span class="credential">Beauty Industry Expert</span>
+          <span class="credential">Formula Developer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="certifications">
+    <h3>Certifications & Awards</h3>
+    <div class="cert-logos">
+      <div class="cert-logo">🏆 Allure Best of Beauty</div>
+      <div class="cert-logo">🌿 Certified Cruelty Free</div>
+      <div class="cert-logo">♻️ Sustainable Packaging</div>
+      <div class="cert-logo">⭐ Dermatologist Tested</div>
+    </div>
+  </div>
+</section>
