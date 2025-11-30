@@ -10,34 +10,102 @@
     background: #000;
   }
 
-  .hero-video {
+  .hero-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    opacity: 0.6;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   }
 
-  .hero-video-overlay {
+  /* Floating Cards/Circles Animation */
+  .floating-cards {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.2) 50%,
-      rgba(0, 0, 0, 0.4) 100%
-    );
-    z-index: 1;
+    pointer-events: none;
+  }
+
+  .floating-card {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .floating-card:nth-child(1) {
+    width: 120px;
+    height: 120px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+    background: rgba(232, 196, 184, 0.05);
+    border-color: rgba(232, 196, 184, 0.2);
+  }
+
+  .floating-card:nth-child(2) {
+    width: 80px;
+    height: 80px;
+    top: 60%;
+    left: 80%;
+    animation-delay: -2s;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .floating-card:nth-child(3) {
+    width: 100px;
+    height: 100px;
+    top: 80%;
+    left: 20%;
+    animation-delay: -4s;
+    background: rgba(232, 196, 184, 0.04);
+    border-color: rgba(232, 196, 184, 0.18);
+  }
+
+  .floating-card:nth-child(4) {
+    width: 60px;
+    height: 60px;
+    top: 30%;
+    left: 85%;
+    animation-delay: -1s;
+  }
+
+  .floating-card:nth-child(5) {
+    width: 140px;
+    height: 140px;
+    top: 70%;
+    left: 5%;
+    animation-delay: -3s;
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .card-content {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    font-weight: 300;
+    padding: 10px;
+  }
+
+  .card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    display: block;
   }
 
   .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     text-align: center;
     color: white;
     max-width: 800px;
@@ -53,23 +121,25 @@
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.2s ease 0.3s forwards;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
   }
 
   .hero-title strong {
     font-weight: 400;
+    background: linear-gradient(135deg, #E8C4B8 0%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .hero-subtitle {
     font-size: 1.3rem;
     line-height: 1.6;
     margin-bottom: 48px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.8);
     font-weight: 300;
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.2s ease 0.6s forwards;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -132,7 +202,7 @@
     gap: 80px;
     margin-top: 100px;
     padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     opacity: 0;
     animation: fadeIn 1.2s ease 1.2s forwards;
   }
@@ -145,9 +215,8 @@
     font-size: 2rem;
     font-weight: 300;
     display: block;
-    color: white;
+    color: #E8C4B8;
     margin-bottom: 8px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .stat-label {
@@ -165,7 +234,7 @@
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.6);
     animation: float 3s ease-in-out infinite;
-    z-index: 2;
+    z-index: 3;
     cursor: pointer;
   }
 
@@ -174,15 +243,17 @@
     height: 20px;
   }
 
-  .hero-fallback-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-    opacity: 0.6;
+  /* Animations */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-20px) rotate(120deg);
+    }
+    66% {
+      transform: translateY(10px) rotate(240deg);
+    }
   }
 
   @keyframes fadeInUp {
@@ -196,22 +267,6 @@
     to {
       opacity: 1;
     }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateX(-50%) translateY(0);
-    }
-    50% {
-      transform: translateX(-50%) translateY(-10px);
-    }
-  }
-
-  .gradient-text {
-    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
   /* Mobile Styles */
@@ -252,6 +307,28 @@
     .hero-content {
       padding: 0 20px;
     }
+
+    /* Adjust floating cards for mobile */
+    .floating-card {
+      display: none; /* Hide on mobile for better performance */
+    }
+
+    .floating-card:nth-child(1),
+    .floating-card:nth-child(2) {
+      display: block;
+      width: 60px;
+      height: 60px;
+    }
+
+    .floating-card:nth-child(1) {
+      top: 15%;
+      left: 10%;
+    }
+
+    .floating-card:nth-child(2) {
+      top: 20%;
+      left: 80%;
+    }
   }
 
   @media (max-width: 480px) {
@@ -268,63 +345,79 @@
       margin-top: 60px;
     }
   }
+
+  /* Button hover effects */
+  .hero-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .hero-btn:hover::before {
+    left: 100%;
+  }
 </style>
 
 <section class="hero">
-  {% comment %} Use asset_url for better performance {% endcomment %}
-  {% if section.settings.video_asset != blank %}
-    <video class="hero-video" autoplay muted loop playsinline 
-           poster="{{ section.settings.fallback_image | image_url: width: 1920 }}"
-           onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';">
-      <source src="{{ section.settings.video_asset | asset_url }}" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  {% elsif section.settings.video_url != blank %}
-    <video class="hero-video" autoplay muted loop playsinline 
-           poster="{{ section.settings.fallback_image | image_url: width: 1920 }}"
-           onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';">
-      <source src="{{ section.settings.video_url }}" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  {% endif %}
-  
-  {% if section.settings.fallback_image != blank %}
-    <img 
-      id="hero-fallback"
-      class="hero-fallback-image"
-      src="{{ section.settings.fallback_image | image_url: width: 1920 }}" 
-      alt="{{ section.settings.heading | escape }}"
-      width="1920"
-      height="1080"
-      loading="eager"
-    >
-  {% endif %}
-  
-  <div class="hero-video-overlay"></div>
+  <!-- Background -->
+  <div class="hero-background"></div>
 
+  <!-- Floating Cards/Circles like Numberc -->
+  <div class="floating-cards">
+    <div class="floating-card">
+      <div class="card-content">
+        <span class="card-icon">✨</span>
+        Natural
+      </div>
+    </div>
+    <div class="floating-card">
+      <div class="card-content">
+        <span class="card-icon">🌿</span>
+        Pure
+      </div>
+    </div>
+    <div class="floating-card">
+      <div class="card-content">
+        <span class="card-icon">💫</span>
+        Effective
+      </div>
+    </div>
+    <div class="floating-card">
+      <div class="card-content">
+        <span class="card-icon">⭐</span>
+        Quality
+      </div>
+    </div>
+    <div class="floating-card">
+      <div class="card-content">
+        <span class="card-icon">🔬</span>
+        Science
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
   <div class="hero-content">
     <h1 class="hero-title">
-      <span class="gradient-text">
-        {{ section.settings.heading }}
-      </span>
+      Transform Your <strong>Curl Journey</strong>
     </h1>
     
     <p class="hero-subtitle">
-      {{ section.settings.subheading }}
+      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions designed for your unique texture." }}
     </p>
     
     <div class="hero-actions">
-      {% if section.settings.cta_url != blank and section.settings.cta_text != blank %}
-        <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
-          {{ section.settings.cta_text }}
-        </a>
-      {% endif %}
-      
-      {% if section.settings.secondary_cta_url != blank and section.settings.secondary_cta_text != blank %}
-        <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
-          {{ section.settings.secondary_cta_text }}
-        </a>
-      {% endif %}
+      <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+        {{ section.settings.cta_text | default: "Explore Products" }}
+      </a>
+      <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+        {{ section.settings.secondary_cta_text | default: "Begin Journey" }}
+      </a>
     </div>
 
     <div class="hero-stats">
@@ -358,31 +451,33 @@ function scrollToNextSection() {
   });
 }
 
+// Add some interactive effects to floating cards
 document.addEventListener('DOMContentLoaded', function() {
-  const heroVideo = document.querySelector('.hero-video');
-  const fallbackImage = document.getElementById('hero-fallback');
+  const cards = document.querySelectorAll('.floating-card');
   
-  if (heroVideo) {
-    heroVideo.play().catch(function(error) {
-      console.log('Video autoplay failed, showing fallback');
-      if (fallbackImage) {
-        fallbackImage.style.display = 'block';
-        heroVideo.style.display = 'none';
-      }
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.1)';
+      this.style.background = 'rgba(232, 196, 184, 0.1)';
     });
-  }
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+      this.style.background = '';
+    });
+  });
 });
 </script>
 
 {% schema %}
 {
-  "name": "Hero Section",
+  "name": "Numberc Style Hero",
   "settings": [
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Elevate Your Natural Beauty"
+      "default": "Transform Your Curl Journey"
     },
     {
       "type": "text",
@@ -411,29 +506,11 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "url",
       "id": "secondary_cta_url",
       "label": "Secondary Button Link"
-    },
-    {
-      "type": "url",
-      "id": "video_url",
-      "label": "Video URL",
-      "info": "External video URL (optional)"
-    },
-    {
-      "type": "text",
-      "id": "video_asset",
-      "label": "Video Asset",
-      "info": "Upload video to Assets and enter filename (e.g., 'hero-video.mp4')"
-    },
-    {
-      "type": "image_picker",
-      "id": "fallback_image",
-      "label": "Fallback Image",
-      "info": "This image will show if the video fails to load"
     }
   ],
   "presets": [
     {
-      "name": "Hero Section",
+      "name": "Numberc Style Hero",
       "category": "Homepage"
     }
   ]
