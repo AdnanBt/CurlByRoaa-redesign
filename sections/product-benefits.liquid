@@ -1,0 +1,187 @@
+<style>
+.product-benefits {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
+}
+
+.benefits-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.benefits-header h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #2D2D2D;
+}
+
+.benefits-header p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.benefit-card {
+  background: white;
+  padding: 50px 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #E8C4B8, #D4A59A);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.benefit-card:hover::before {
+  transform: scaleX(1);
+}
+
+.benefit-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+}
+
+.benefit-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 30px;
+  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  transition: transform 0.4s ease;
+}
+
+.benefit-card:hover .benefit-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.benefit-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #2D2D2D;
+}
+
+.benefit-card p {
+  color: #666;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.benefit-features {
+  list-style: none;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.benefit-features li {
+  padding: 8px 0;
+  color: #666;
+  position: relative;
+  padding-left: 20px;
+}
+
+.benefit-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #E8C4B8;
+  font-weight: 600;
+}
+
+@media (max-width: 968px) {
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-benefits {
+    padding: 80px 0;
+  }
+  
+  .benefits-header h2 {
+    font-size: 2.5rem;
+  }
+  
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .benefit-card {
+    padding: 40px 25px;
+  }
+}
+</style>
+
+<section class="product-benefits">
+  <div class="benefits-header">
+    <h2>Why Our Products Work Better</h2>
+    <p>Clinical results show significant improvement in curl health, definition, and moisture retention</p>
+  </div>
+  
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon">💧</div>
+      <h3>Deep Hydration</h3>
+      <p>Our advanced formula penetrates deep into the hair shaft, delivering moisture where it's needed most.</p>
+      <ul class="benefit-features">
+        <li>72-hour moisture retention</li>
+        <li>Reduces frizz by 85%</li>
+        <li>Improves elasticity</li>
+      </ul>
+    </div>
+    
+    <div class="benefit-card">
+      <div class="benefit-icon">🌀</div>
+      <h3>Enhanced Definition</h3>
+      <p>Get perfectly defined curls that last all day without crunch or stiffness.</p>
+      <ul class="benefit-features">
+        <li>3x better curl definition</li>
+        <li>No product buildup</li>
+        <li>Natural movement</li>
+      </ul>
+    </div>
+    
+    <div class="benefit-card">
+      <div class="benefit-icon">🛡️</div>
+      <h3>Damage Protection</h3>
+      <p>Protect your curls from environmental damage and heat styling with our protective formula.</p>
+      <ul class="benefit-features">
+        <li>UV protection</li>
+        <li>Heat protection up to 450°F</li>
+        <li>Reduces breakage by 70%</li>
+      </ul>
+    </div>
+  </div>
+</section>
