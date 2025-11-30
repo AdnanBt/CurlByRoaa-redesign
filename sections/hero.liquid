@@ -8,9 +8,6 @@
     justify-content: center;
     overflow: hidden;
     background: #000;
-    /* ADD THESE FIXES */
-    margin-top: 80px; /* Account for fixed header height */
-    padding-top: 40px; /* Additional spacing */
   }
 
   .hero-background {
@@ -135,8 +132,6 @@
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 60px 40px;
-    /* ADD THIS TO REMOVE THE TOP CARD */
-    margin-top: -100px; /* Pull content up to avoid overlapping with carousel */
   }
 
   .hero-title {
@@ -311,8 +306,6 @@
   @media (max-width: 768px) {
     .hero {
       min-height: 100vh;
-      margin-top: 60px; /* Adjust for mobile header */
-      padding-top: 20px;
     }
 
     .hero-title {
@@ -347,7 +340,6 @@
     .hero-content {
       padding: 40px 20px;
       margin: 0 20px;
-      margin-top: -50px; /* Adjust for mobile */
     }
 
     /* Adjust carousel for mobile */
@@ -396,3 +388,226 @@
     }
   }
 </style>
+
+<section class="hero">
+  <!-- Background -->
+  <div class="hero-background"></div>
+
+  <!-- Product Cards Carousel -->
+  <div class="hero-carousel">
+    <div class="carousel-track">
+      <!-- Product Card 1 -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
+          alt="Curl Defining Cream"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Curl Defining Cream</h3>
+        <div class="product-price-hero">{{ 29.99 | money }}</div>
+      </div>
+
+      <!-- Product Card 2 -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">NEW</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
+          alt="Hydrating Shampoo"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Hydrating Shampoo</h3>
+        <div class="product-price-hero">{{ 24.99 | money }}</div>
+      </div>
+
+      <!-- Product Card 3 -->
+      <div class="product-card-hero">
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
+          alt="Repairing Conditioner"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Repairing Conditioner</h3>
+        <div class="product-price-hero">{{ 26.99 | money }}</div>
+      </div>
+
+      <!-- Product Card 4 -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
+          alt="Leave-In Treatment"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Leave-In Treatment</h3>
+        <div class="product-price-hero">{{ 32.99 | money }}</div>
+      </div>
+
+      <!-- Duplicate cards for seamless loop -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
+          alt="Curl Defining Cream"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Curl Defining Cream</h3>
+        <div class="product-price-hero">{{ 29.99 | money }}</div>
+      </div>
+
+      <div class="product-card-hero">
+        <div class="product-badge-hero">NEW</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
+          alt="Hydrating Shampoo"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Hydrating Shampoo</h3>
+        <div class="product-price-hero">{{ 24.99 | money }}</div>
+      </div>
+
+      <div class="product-card-hero">
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
+          alt="Repairing Conditioner"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Repairing Conditioner</h3>
+        <div class="product-price-hero">{{ 26.99 | money }}</div>
+      </div>
+
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
+          alt="Leave-In Treatment"
+          class="product-image-hero"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+        <h3 class="product-title-hero">Leave-In Treatment</h3>
+        <div class="product-price-hero">{{ 32.99 | money }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="hero-content">
+    <h1 class="hero-title">
+      {{ section.settings.heading | default: "Transform Your Curl Journey" }}
+    </h1>
+    
+    <p class="hero-subtitle">
+      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
+    </p>
+    
+    <div class="hero-actions">
+      <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+        {{ section.settings.cta_text | default: "Shop Collection" }}
+      </a>
+      <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+        {{ section.settings.secondary_cta_text | default: "Learn More" }}
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-number">10K+</span>
+        <span class="stat-label">Happy Customers</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">4.9★</span>
+        <span class="stat-label">Rated Excellence</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Natural</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-indicator" onclick="scrollToNextSection()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<script>
+function scrollToNextSection() {
+  window.scrollTo({
+    top: window.innerHeight,
+    behavior: 'smooth'
+  });
+}
+</script>
+
+{% schema %}
+{
+  "name": "Hero Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Transform Your Curl Journey"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Primary Button Text",
+      "default": "Shop Collection"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_url",
+      "label": "Secondary Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Carousel",
+      "category": "Homepage"
+    }
+  ]
+}
+{% endschema %}
