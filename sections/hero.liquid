@@ -11,8 +11,8 @@
   }
 
   .hero-carousel-container {
-    width: 90%;
-    height: auto;
+    width: 100%;
+    height: 100%;
     position: relative;
   }
 
@@ -38,7 +38,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 10%;
+    padding: 0 5%;
     position: relative;
   }
 
@@ -63,18 +63,21 @@
     background: linear-gradient(135deg, #FFF6F8 0%, #FFFFFF 100%);
   }
 
-  /* Card Content */
+  /* Card Content - Adjusted for larger images */
   .card-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
+    grid-template-columns: 1fr 1.2fr; /* More space for images */
+    gap: 60px;
     align-items: center;
     max-width: 1400px;
     width: 100%;
+    height: 100%;
+    padding: 40px 0;
   }
 
   .card-text {
-    padding-right: 40px;
+    padding-right: 0;
+    max-width: 500px;
   }
 
   .card-badge {
@@ -157,24 +160,45 @@
     transform: translateY(-2px);
   }
 
-  /* Card Image */
+  /* Card Image - LARGER and better positioned */
   .card-image {
     position: relative;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
   }
 
   .product-image-large {
     width: 100%;
-    max-width: 500px;
-    height: 500px;
+    max-width: 700px; /* Much larger */
+    height: 600px; /* Taller */
     object-fit: cover;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-    transition: transform 0.6s ease;
+    border-radius: 24px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hero-card:hover .product-image-large {
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 35px 100px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Fallback image styling */
+  .image-placeholder {
+    width: 100%;
+    max-width: 700px;
+    height: 600px;
+    background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 600;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
   }
 
   /* Carousel Navigation */
@@ -206,8 +230,8 @@
   .carousel-nav {
     position: absolute;
     top: 50%;
-    left: 20px;
-    right: 20px;
+    left: 40px;
+    right: 40px;
     transform: translateY(-50%);
     display: flex;
     justify-content: space-between;
@@ -269,10 +293,16 @@
       grid-template-columns: 1fr;
       gap: 40px;
       text-align: center;
+      padding: 60px 0;
     }
 
     .card-text {
-      padding-right: 0;
+      max-width: 100%;
+      order: 2;
+    }
+
+    .card-image {
+      order: 1;
     }
 
     .card-title {
@@ -280,8 +310,13 @@
     }
 
     .product-image-large {
-      max-width: 400px;
-      height: 400px;
+      max-width: 500px;
+      height: 450px;
+    }
+
+    .image-placeholder {
+      max-width: 500px;
+      height: 450px;
     }
   }
 
@@ -293,7 +328,11 @@
     }
 
     .hero-card {
-      padding: 100px 5% 80px;
+      padding: 80px 5% 60px;
+    }
+
+    .card-content {
+      padding: 40px 0;
     }
 
     .card-title {
@@ -315,8 +354,14 @@
     }
 
     .product-image-large {
-      max-width: 300px;
-      height: 300px;
+      max-width: 400px;
+      height: 350px;
+    }
+
+    .image-placeholder {
+      max-width: 400px;
+      height: 350px;
+      font-size: 1.4rem;
     }
 
     .carousel-btn {
@@ -336,8 +381,14 @@
     }
 
     .product-image-large {
-      max-width: 250px;
-      height: 250px;
+      max-width: 300px;
+      height: 280px;
+    }
+
+    .image-placeholder {
+      max-width: 300px;
+      height: 280px;
+      font-size: 1.2rem;
     }
   }
 </style>
@@ -382,15 +433,15 @@
             <div class="card-image">
               {%- if product.featured_image -%}
                 <img 
-                  src="{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' }}" 
+                  src="{{ product.featured_image | image_url: width: 800, height: 800, crop: 'center' }}" 
                   alt="{{ product.title | escape }}"
                   class="product-image-large"
-                  width="600"
-                  height="600"
+                  width="800"
+                  height="800"
                   loading="lazy"
                 >
               {%- else -%}
-                <div class="product-image-large" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border-radius: 20px;">
+                <div class="image-placeholder">
                   {{ product.title | truncate: 20 }}
                 </div>
               {%- endif -%}
@@ -428,7 +479,7 @@
               </div>
               
               <div class="card-image">
-                <div class="product-image-large" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border-radius: 20px;">
+                <div class="image-placeholder">
                   Product {{ i }}
                 </div>
               </div>
