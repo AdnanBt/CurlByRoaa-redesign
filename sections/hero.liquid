@@ -1,245 +1,239 @@
 <style>
   .hero {
     position: relative;
-    height: 80vh;
-    min-height: 600px;
+    height: 90vh;
+    min-height: 700px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: #0a0a0a;
+    background: #ffffff;
     margin-top: 80px;
   }
 
-  .hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .hero-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a1e1c 100%);
   }
 
-  /* Single Card Focus Design */
-  .hero-carousel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
+  /* Numberc.com Style Grid Layout */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .carousel-track {
-    display: flex;
-    gap: 60px; /* More gap for better focus */
-    animation: carouselScroll 60s linear infinite;
-    padding: 0 100px; /* More padding for center focus */
-  }
-
-  .carousel-track:hover {
-    animation-play-state: paused;
-  }
-
-  .product-card-hero {
-    flex: 0 0 600px; /* Much wider cards for single focus */
-    height: 500px; /* Slightly shorter for better proportions */
-    border-radius: 28px;
-    padding: 50px 45px;
-    text-align: center;
-    backdrop-filter: blur(25px);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    /* Center the card in view */
-    scroll-snap-align: center;
-  }
-
-  /* Main Content Card Styles */
-  .hero-content-card {
-    background: linear-gradient(145deg, 
-      rgba(0, 0, 0, 0.85) 0%, 
-      rgba(0, 0, 0, 0.7) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* Different color themes for product cards */
-  .product-card-hero:not(.hero-content-card):nth-child(5n+2),
-  .product-card-hero:not(.hero-content-card):nth-child(5n+7) {
-    background: linear-gradient(145deg, 
-      rgba(232, 196, 184, 0.2) 0%, 
-      rgba(232, 196, 184, 0.08) 100%);
-    border: 1px solid rgba(232, 196, 184, 0.4);
-  }
-
-  .product-card-hero:not(.hero-content-card):nth-child(5n+3),
-  .product-card-hero:not(.hero-content-card):nth-child(5n+8) {
-    background: linear-gradient(145deg, 
-      rgba(168, 216, 234, 0.2) 0%, 
-      rgba(168, 216, 234, 0.08) 100%);
-    border: 1px solid rgba(168, 216, 234, 0.4);
-  }
-
-  .product-card-hero:not(.hero-content-card):nth-child(5n+4),
-  .product-card-hero:not(.hero-content-card):nth-child(5n+9) {
-    background: linear-gradient(145deg, 
-      rgba(149, 225, 211, 0.2) 0%, 
-      rgba(149, 225, 211, 0.08) 100%);
-    border: 1px solid rgba(149, 225, 211, 0.4);
-  }
-
-  .product-card-hero:not(.hero-content-card):nth-child(5n+5),
-  .product-card-hero:not(.hero-content-card):nth-child(5n+10) {
-    background: linear-gradient(145deg, 
-      rgba(255, 154, 158, 0.2) 0%, 
-      rgba(255, 154, 158, 0.08) 100%);
-    border: 1px solid rgba(255, 154, 158, 0.4);
-  }
-
-  .product-card-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-    transition: left 0.8s ease;
   }
 
-  .product-card-hero:hover::before {
-    left: 100%;
+  /* Content Side */
+  .hero-content {
+    padding: 60px 0;
   }
 
-  .product-card-hero:hover {
-    transform: translateY(-15px) scale(1.05);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 
-      0 40px 80px rgba(0, 0, 0, 0.6),
-      0 0 0 1px rgba(255, 255, 255, 0.3);
-  }
-
-  .product-image-hero {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto 30px;
-    border: 3px solid rgba(255, 255, 255, 0.25);
-    transition: all 0.5s ease;
-    background: linear-gradient(135deg, #2a1e1c, #3a2e2c);
-  }
-
-  .product-card-hero:hover .product-image-hero {
-    transform: scale(1.15);
-    border-color: rgba(255, 255, 255, 0.5);
-  }
-
-  .product-title-hero {
-    font-size: 1.6rem;
-    font-weight: 400;
-    color: white;
-    margin-bottom: 20px;
-    line-height: 1.4;
-    letter-spacing: -0.5px;
-  }
-
-  .product-price-hero {
-    font-size: 1.8rem;
-    font-weight: 300;
-    color: #E8C4B8;
-    margin-bottom: 30px;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .product-badge-hero {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    background: rgba(255, 255, 255, 0.95);
-    color: #000;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-  }
-
-  /* Hero Content Styles */
   .hero-title {
-    font-size: 3.2rem;
-    font-weight: 350;
+    font-size: 4rem;
+    font-weight: 700;
     line-height: 1.1;
-    margin-bottom: 25px;
+    margin-bottom: 24px;
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #ffffff 0%, #E8C4B8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-align: center;
+    color: #2D2D2D;
   }
 
   .hero-subtitle {
     font-size: 1.3rem;
     line-height: 1.6;
-    margin-bottom: 40px;
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 350;
-    max-width: 450px;
-    text-align: center;
+    margin-bottom: 48px;
+    color: #666;
+    font-weight: 400;
+    max-width: 500px;
   }
 
   .hero-actions {
     display: flex;
     gap: 20px;
-    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
   }
 
   .hero-btn {
     padding: 16px 40px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     text-decoration: none;
     border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    background: transparent;
-    color: white;
+    letter-spacing: 0.5px;
   }
 
   .hero-btn-primary {
-    background: white;
-    color: #000;
-    border: 1px solid white;
+    background: #2D2D2D;
+    color: white;
+    border: 2px solid #2D2D2D;
   }
 
   .hero-btn-primary:hover {
-    background: transparent;
-    color: white;
+    background: #E8C4B8;
+    border-color: #E8C4B8;
     transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(232, 196, 184, 0.4);
   }
 
   .hero-btn-secondary {
     background: transparent;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #2D2D2D;
+    border: 2px solid #2D2D2D;
   }
 
   .hero-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.6);
+    background: #2D2D2D;
+    color: white;
     transform: translateY(-2px);
+  }
+
+  /* Products Side - Numberc.com Style Carousel */
+  .hero-products {
+    position: relative;
+    height: 600px;
+    display: flex;
+    align-items: center;
+  }
+
+  .products-carousel {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 40px 20px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .products-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-card-hero {
+    flex: 0 0 380px;
+    scroll-snap-align: start;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #f0f0f0;
+    text-align: center;
+  }
+
+  .product-card-hero:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .product-image-container {
+    position: relative;
+    height: 280px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f8f8f8;
+  }
+
+  .product-image-hero {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .product-card-hero:hover .product-image-hero {
+    transform: scale(1.05);
+  }
+
+  .product-badge-hero {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #E8C4B8;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 2;
+  }
+
+  .product-title-hero {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2D2D2D;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .product-price-hero {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #E8C4B8;
+    margin-bottom: 20px;
+  }
+
+  .add-to-cart-btn {
+    width: 100%;
+    padding: 14px;
+    background: #2D2D2D;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .add-to-cart-btn:hover {
+    background: #E8C4B8;
+    transform: translateY(-2px);
+  }
+
+  /* Carousel Navigation */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .carousel-btn {
+    background: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    pointer-events: all;
+    font-size: 1.2rem;
+    color: #2D2D2D;
+  }
+
+  .carousel-btn:hover {
+    background: #E8C4B8;
+    color: white;
+    transform: scale(1.1);
   }
 
   .hero-scroll-indicator {
@@ -247,25 +241,15 @@
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.6);
+    color: #666;
     animation: float 3s ease-in-out infinite;
     z-index: 20;
     cursor: pointer;
-    background: rgba(0, 0, 0, 0.6);
+    background: white;
     border-radius: 50%;
     padding: 12px;
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
-  /* Animations - Adjusted for single card focus */
-  @keyframes carouselScroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(calc(-600px * 5 - 60px * 5)); /* Adjusted for wider cards */
-    }
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
   }
 
   @keyframes float {
@@ -278,28 +262,28 @@
   }
 
   /* Mobile Styles */
-  @media (max-width: 768px) {
-    .hero {
-      height: 70vh;
-      min-height: 500px;
-      margin-top: 60px;
+  @media (max-width: 1024px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      text-align: center;
     }
 
-    .carousel-track {
-      gap: 40px;
-      padding: 0 50px;
-      animation-duration: 40s;
+    .hero-products {
+      height: 500px;
     }
 
     .product-card-hero {
-      flex: 0 0 400px; /* Still wide but smaller for mobile */
-      height: 450px;
-      padding: 40px 30px;
+      flex: 0 0 320px;
     }
+  }
 
-    .product-image-hero {
-      width: 150px;
-      height: 150px;
+  @media (max-width: 768px) {
+    .hero {
+      height: auto;
+      min-height: auto;
+      padding: 100px 0 60px;
+      margin-top: 60px;
     }
 
     .hero-title {
@@ -313,223 +297,199 @@
 
     .hero-actions {
       flex-direction: column;
-      align-items: center;
       gap: 15px;
     }
 
     .hero-btn {
-      width: 220px;
+      width: 200px;
       padding: 14px 32px;
     }
 
-    @keyframes carouselScroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-400px * 5 - 40px * 5));
-      }
+    .products-carousel {
+      padding: 20px 10px;
+    }
+
+    .carousel-nav {
+      display: none;
+    }
+
+    .product-card-hero {
+      flex: 0 0 280px;
+      padding: 25px 20px;
+    }
+
+    .product-image-container {
+      height: 220px;
     }
   }
 
   @media (max-width: 480px) {
-    .carousel-track {
-      gap: 30px;
-      padding: 0 30px;
-    }
-
-    .product-card-hero {
-      flex: 0 0 320px;
-      height: 420px;
-      padding: 35px 25px;
-    }
-
     .hero-title {
       font-size: 2rem;
     }
 
-    .hero-subtitle {
-      font-size: 1rem;
+    .product-card-hero {
+      flex: 0 0 260px;
     }
   }
 </style>
 
 <section class="hero">
-  <!-- Background -->
-  <div class="hero-background"></div>
-
-  <!-- Product Cards Carousel -->
-  <div class="hero-carousel">
-    <div class="carousel-track">
-      <!-- Main Content Card - First in carousel -->
-      <div class="product-card-hero hero-content-card">
+  <div class="hero-container">
+    <div class="hero-grid">
+      <!-- Content Side -->
+      <div class="hero-content">
         <h1 class="hero-title">
-          {{ section.settings.heading | default: "Transform Your Curl Journey" }}
+          {{ section.settings.heading | default: "Discover Your Perfect Curl Journey" }}
         </h1>
         
         <p class="hero-subtitle">
-          {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
+          {{ section.settings.subheading | default: "Professional-grade hair care solutions tailored to your unique curl pattern. Transform your routine with scientifically formulated products." }}
         </p>
         
         <div class="hero-actions">
-          <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
-            {{ section.settings.cta_text | default: "Shop Collection" }}
+          <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="hero-btn hero-btn-primary">
+            {{ section.settings.cta_text | default: 'Shop Collection' }}
           </a>
-          <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
-            {{ section.settings.secondary_cta_text | default: "Learn More" }}
+          <a href="{{ section.settings.secondary_cta_url | default: '/pages/quiz' }}" class="hero-btn hero-btn-secondary">
+            {{ section.settings.secondary_cta_text | default: 'Find Your Routine' }}
           </a>
         </div>
       </div>
 
-      <!-- Product Card 1 -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
-          alt="Curl Defining Cream"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Curl Defining Cream</h3>
-        <div class="product-price-hero">{{ 29.99 | money }}</div>
-      </div>
+      <!-- Products Side -->
+      <div class="hero-products">
+        <div class="products-carousel" id="hero-carousel">
+          {%- assign featured_collection = collections[section.settings.collection] | default: collections.all -%}
+          
+          {%- for product in featured_collection.products limit: 6 -%}
+            <div class="product-card-hero">
+              {%- if product.tags contains 'bestseller' or product.tags contains 'best seller' -%}
+                <div class="product-badge-hero">BESTSELLER</div>
+              {%- elsif product.tags contains 'new' -%}
+                <div class="product-badge-hero">NEW</div>
+              {%- endif -%}
 
-      <!-- Product Card 2 -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">NEW</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
-          alt="Hydrating Shampoo"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Hydrating Shampoo</h3>
-        <div class="product-price-hero">{{ 24.99 | money }}</div>
-      </div>
+              <div class="product-image-container">
+                {%- if product.featured_image -%}
+                  <img 
+                    src="{{ product.featured_image | img_url: '400x400' }}" 
+                    alt="{{ product.title | escape }}"
+                    class="product-image-hero"
+                    width="400"
+                    height="400"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  <div class="product-image-hero" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                    {{ product.title | truncate: 15 }}
+                  </div>
+                {%- endif -%}
+              </div>
 
-      <!-- Product Card 3 -->
-      <div class="product-card-hero">
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
-          alt="Repairing Conditioner"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Repairing Conditioner</h3>
-        <div class="product-price-hero">{{ 26.99 | money }}</div>
-      </div>
-
-      <!-- Product Card 4 -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
-          alt="Leave-In Treatment"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Leave-In Treatment</h3>
-        <div class="product-price-hero">{{ 32.99 | money }}</div>
-      </div>
-
-      <!-- Duplicate cards for seamless loop -->
-      <!-- Main Content Card Duplicate -->
-      <div class="product-card-hero hero-content-card">
-        <h1 class="hero-title">
-          {{ section.settings.heading | default: "Transform Your Curl Journey" }}
-        </h1>
-        
-        <p class="hero-subtitle">
-          {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
-        </p>
-        
-        <div class="hero-actions">
-          <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
-            {{ section.settings.cta_text | default: "Shop Collection" }}
-          </a>
-          <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
-            {{ section.settings.secondary_cta_text | default: "Learn More" }}
-          </a>
+              <h3 class="product-title-hero">{{ product.title }}</h3>
+              <div class="product-price-hero">{{ product.price | money }}</div>
+              
+              <form action="/cart/add" method="post" class="product-form">
+                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="add-to-cart-btn" name="add">
+                  Add to Cart
+                </button>
+              </form>
+            </div>
+          {%- else -%}
+            <!-- Fallback demo products -->
+            {%- for i in (1..4) -%}
+              <div class="product-card-hero">
+                <div class="product-badge-hero">{{ 'BESTSELLER' }}</div>
+                <div class="product-image-container">
+                  <div class="product-image-hero" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    Product {{ i }}
+                  </div>
+                </div>
+                <h3 class="product-title-hero">Demo Product {{ i }}</h3>
+                <div class="product-price-hero">{{ 29.99 | money }}</div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            {%- endfor -%}
+          {%- endfor -%}
         </div>
-      </div>
 
-      <!-- Product Card 1 Duplicate -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
-          alt="Curl Defining Cream"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Curl Defining Cream</h3>
-        <div class="product-price-hero">{{ 29.99 | money }}</div>
-      </div>
-
-      <!-- Product Card 2 Duplicate -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">NEW</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
-          alt="Hydrating Shampoo"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Hydrating Shampoo</h3>
-        <div class="product-price-hero">{{ 24.99 | money }}</div>
-      </div>
-
-      <!-- Product Card 3 Duplicate -->
-      <div class="product-card-hero">
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
-          alt="Repairing Conditioner"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Repairing Conditioner</h3>
-        <div class="product-price-hero">{{ 26.99 | money }}</div>
-      </div>
-
-      <!-- Product Card 4 Duplicate -->
-      <div class="product-card-hero">
-        <div class="product-badge-hero">BESTSELLER</div>
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
-          alt="Leave-In Treatment"
-          class="product-image-hero"
-          loading="lazy"
-          width="200"
-          height="200"
-        >
-        <h3 class="product-title-hero">Leave-In Treatment</h3>
-        <div class="product-price-hero">{{ 32.99 | money }}</div>
+        <!-- Carousel Navigation -->
+        <div class="carousel-nav">
+          <button class="carousel-btn prev-btn" id="hero-prev">
+            ‹
+          </button>
+          <button class="carousel-btn next-btn" id="hero-next">
+            ›
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="hero-scroll-indicator" onclick="scrollToNextSection()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M12 5v14M5 12l7 7 7-7"/>
     </svg>
   </div>
 </section>
 
 <script>
+class HeroCarousel {
+  constructor() {
+    this.carousel = document.getElementById('hero-carousel');
+    this.prevBtn = document.getElementById('hero-prev');
+    this.nextBtn = document.getElementById('hero-next');
+    
+    if (this.carousel) {
+      this.cardWidth = 380 + 30; // card width + gap
+      this.init();
+    }
+  }
+
+  init() {
+    this.bindEvents();
+  }
+
+  bindEvents() {
+    if (this.prevBtn && this.nextBtn) {
+      this.prevBtn.addEventListener('click', () => this.scroll('prev'));
+      this.nextBtn.addEventListener('click', () => this.scroll('next'));
+    }
+
+    // Pause auto-scroll on hover
+    if (this.carousel) {
+      this.carousel.addEventListener('mouseenter', () => this.stopAutoScroll());
+      this.carousel.addEventListener('mouseleave', () => this.startAutoScroll());
+    }
+  }
+
+  scroll(direction) {
+    if (!this.carousel) return;
+    
+    const scrollAmount = this.cardWidth * 2; // Scroll 2 cards at a time
+    
+    if (direction === 'next') {
+      this.carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    } else {
+      this.carousel.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+}
+
+// Initialize carousel
+document.addEventListener('DOMContentLoaded', () => {
+  new HeroCarousel();
+});
+
 function scrollToNextSection() {
   window.scrollTo({
     top: window.innerHeight,
@@ -540,19 +500,19 @@ function scrollToNextSection() {
 
 {% schema %}
 {
-  "name": "Hero Carousel",
+  "name": "Hero Section",
   "settings": [
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Transform Your Curl Journey"
+      "default": "Discover Your Perfect Curl Journey"
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions"
+      "default": "Professional-grade hair care solutions tailored to your unique curl pattern"
     },
     {
       "type": "text",
@@ -569,17 +529,23 @@ function scrollToNextSection() {
       "type": "text",
       "id": "secondary_cta_text",
       "label": "Secondary Button Text",
-      "default": "Learn More"
+      "default": "Find Your Routine"
     },
     {
       "type": "url",
       "id": "secondary_cta_url",
       "label": "Secondary Button Link"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Featured Collection",
+      "info": "Select collection to show products from"
     }
   ],
   "presets": [
     {
-      "name": "Hero Carousel",
+      "name": "Numberc Style Hero",
       "category": "Homepage"
     }
   ]
