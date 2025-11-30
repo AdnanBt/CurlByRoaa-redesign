@@ -19,97 +19,118 @@
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   }
 
-  /* Floating Cards/Circles Animation */
-  .floating-cards {
+  /* Product Cards Carousel */
+  .hero-carousel {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none;
-  }
-
-  .floating-card {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(10px);
-    animation: float 6s ease-in-out infinite;
   }
 
-  .floating-card:nth-child(1) {
+  .carousel-track {
+    display: flex;
+    gap: 40px;
+    animation: carouselScroll 30s linear infinite;
+    padding: 0 100px;
+  }
+
+  .carousel-track:hover {
+    animation-play-state: paused;
+  }
+
+  .product-card-hero {
+    flex: 0 0 280px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.6s ease;
+  }
+
+  .product-card-hero:hover::before {
+    left: 100%;
+  }
+
+  .product-card-hero:hover {
+    transform: translateY(-10px) scale(1.05);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(232, 196, 184, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .product-image-hero {
     width: 120px;
     height: 120px;
-    top: 20%;
-    left: 10%;
-    animation-delay: 0s;
-    background: rgba(232, 196, 184, 0.05);
-    border-color: rgba(232, 196, 184, 0.2);
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    border: 2px solid rgba(232, 196, 184, 0.3);
+    transition: all 0.4s ease;
   }
 
-  .floating-card:nth-child(2) {
-    width: 80px;
-    height: 80px;
-    top: 60%;
-    left: 80%;
-    animation-delay: -2s;
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.15);
+  .product-card-hero:hover .product-image-hero {
+    transform: scale(1.1);
+    border-color: rgba(232, 196, 184, 0.6);
   }
 
-  .floating-card:nth-child(3) {
-    width: 100px;
-    height: 100px;
-    top: 80%;
-    left: 20%;
-    animation-delay: -4s;
-    background: rgba(232, 196, 184, 0.04);
-    border-color: rgba(232, 196, 184, 0.18);
+  .product-title-hero {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: white;
+    margin-bottom: 10px;
+    line-height: 1.3;
   }
 
-  .floating-card:nth-child(4) {
-    width: 60px;
-    height: 60px;
-    top: 30%;
-    left: 85%;
-    animation-delay: -1s;
-  }
-
-  .floating-card:nth-child(5) {
-    width: 140px;
-    height: 140px;
-    top: 70%;
-    left: 5%;
-    animation-delay: -3s;
-    background: rgba(255, 255, 255, 0.02);
-    border-color: rgba(255, 255, 255, 0.12);
-  }
-
-  .card-content {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.8rem;
+  .product-price-hero {
+    font-size: 1.3rem;
     font-weight: 300;
-    padding: 10px;
+    color: #E8C4B8;
+    margin-bottom: 15px;
   }
 
-  .card-icon {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-    display: block;
+  .product-badge-hero {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #E8C4B8;
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
   }
 
   .hero-content {
     position: relative;
-    z-index: 3;
+    z-index: 10;
     text-align: center;
     color: white;
     max-width: 800px;
     padding: 0 40px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 60px 40px;
   }
 
   .hero-title {
@@ -200,7 +221,7 @@
     display: flex;
     justify-content: center;
     gap: 80px;
-    margin-top: 100px;
+    margin-top: 60px;
     padding-top: 40px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     opacity: 0;
@@ -234,8 +255,13 @@
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.6);
     animation: float 3s ease-in-out infinite;
-    z-index: 3;
+    z-index: 10;
     cursor: pointer;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .hero-scroll-indicator svg {
@@ -244,15 +270,12 @@
   }
 
   /* Animations */
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px) rotate(0deg);
+  @keyframes carouselScroll {
+    0% {
+      transform: translateX(0);
     }
-    33% {
-      transform: translateY(-20px) rotate(120deg);
-    }
-    66% {
-      transform: translateY(10px) rotate(240deg);
+    100% {
+      transform: translateX(calc(-280px * 4 - 40px * 4)); /* Adjust based on card width and gap */
     }
   }
 
@@ -266,6 +289,15 @@
   @keyframes fadeIn {
     to {
       opacity: 1;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-10px);
     }
   }
 
@@ -297,7 +329,7 @@
     .hero-stats {
       flex-direction: column;
       gap: 30px;
-      margin-top: 80px;
+      margin-top: 40px;
     }
 
     .stat-number {
@@ -305,29 +337,33 @@
     }
 
     .hero-content {
-      padding: 0 20px;
+      padding: 40px 20px;
+      margin: 0 20px;
     }
 
-    /* Adjust floating cards for mobile */
-    .floating-card {
-      display: none; /* Hide on mobile for better performance */
+    /* Adjust carousel for mobile */
+    .carousel-track {
+      gap: 20px;
+      padding: 0 50px;
+      animation-duration: 20s;
     }
 
-    .floating-card:nth-child(1),
-    .floating-card:nth-child(2) {
-      display: block;
-      width: 60px;
-      height: 60px;
+    .product-card-hero {
+      flex: 0 0 200px;
+      padding: 20px 15px;
     }
 
-    .floating-card:nth-child(1) {
-      top: 15%;
-      left: 10%;
+    .product-image-hero {
+      width: 80px;
+      height: 80px;
     }
 
-    .floating-card:nth-child(2) {
-      top: 20%;
-      left: 80%;
+    .product-title-hero {
+      font-size: 0.9rem;
+    }
+
+    .product-price-hero {
+      font-size: 1.1rem;
     }
   }
 
@@ -342,24 +378,12 @@
 
     .hero-stats {
       gap: 25px;
-      margin-top: 60px;
+      margin-top: 30px;
     }
-  }
 
-  /* Button hover effects */
-  .hero-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .hero-btn:hover::before {
-    left: 100%;
+    .carousel-track {
+      animation-duration: 15s;
+    }
   }
 </style>
 
@@ -367,36 +391,106 @@
   <!-- Background -->
   <div class="hero-background"></div>
 
-  <!-- Floating Cards/Circles like Numberc -->
-  <div class="floating-cards">
-    <div class="floating-card">
-      <div class="card-content">
-        <span class="card-icon">✨</span>
-        Natural
+  <!-- Product Cards Carousel -->
+  <div class="hero-carousel">
+    <div class="carousel-track">
+      <!-- Product Card 1 -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
+          alt="Curl Defining Cream"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Curl Defining Cream</h3>
+        <div class="product-price-hero">{{ 29.99 | money }}</div>
       </div>
-    </div>
-    <div class="floating-card">
-      <div class="card-content">
-        <span class="card-icon">🌿</span>
-        Pure
+
+      <!-- Product Card 2 -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">NEW</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
+          alt="Hydrating Shampoo"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Hydrating Shampoo</h3>
+        <div class="product-price-hero">{{ 24.99 | money }}</div>
       </div>
-    </div>
-    <div class="floating-card">
-      <div class="card-content">
-        <span class="card-icon">💫</span>
-        Effective
+
+      <!-- Product Card 3 -->
+      <div class="product-card-hero">
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
+          alt="Repairing Conditioner"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Repairing Conditioner</h3>
+        <div class="product-price-hero">{{ 26.99 | money }}</div>
       </div>
-    </div>
-    <div class="floating-card">
-      <div class="card-content">
-        <span class="card-icon">⭐</span>
-        Quality
+
+      <!-- Product Card 4 -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
+          alt="Leave-In Treatment"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Leave-In Treatment</h3>
+        <div class="product-price-hero">{{ 32.99 | money }}</div>
       </div>
-    </div>
-    <div class="floating-card">
-      <div class="card-content">
-        <span class="card-icon">🔬</span>
-        Science
+
+      <!-- Duplicate cards for seamless loop -->
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product1.jpg" 
+          alt="Curl Defining Cream"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Curl Defining Cream</h3>
+        <div class="product-price-hero">{{ 29.99 | money }}</div>
+      </div>
+
+      <div class="product-card-hero">
+        <div class="product-badge-hero">NEW</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product2.jpg" 
+          alt="Hydrating Shampoo"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Hydrating Shampoo</h3>
+        <div class="product-price-hero">{{ 24.99 | money }}</div>
+      </div>
+
+      <div class="product-card-hero">
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
+          alt="Repairing Conditioner"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Repairing Conditioner</h3>
+        <div class="product-price-hero">{{ 26.99 | money }}</div>
+      </div>
+
+      <div class="product-card-hero">
+        <div class="product-badge-hero">BESTSELLER</div>
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product4.jpg" 
+          alt="Leave-In Treatment"
+          class="product-image-hero"
+          loading="lazy"
+        >
+        <h3 class="product-title-hero">Leave-In Treatment</h3>
+        <div class="product-price-hero">{{ 32.99 | money }}</div>
       </div>
     </div>
   </div>
@@ -404,26 +498,26 @@
   <!-- Main Content -->
   <div class="hero-content">
     <h1 class="hero-title">
-      Transform Your <strong>Curl Journey</strong>
+      {{ section.settings.heading | default: "Transform Your Curl Journey" }}
     </h1>
     
     <p class="hero-subtitle">
-      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions designed for your unique texture." }}
+      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
     </p>
     
     <div class="hero-actions">
       <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
-        {{ section.settings.cta_text | default: "Explore Products" }}
+        {{ section.settings.cta_text | default: "Shop Collection" }}
       </a>
       <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
-        {{ section.settings.secondary_cta_text | default: "Begin Journey" }}
+        {{ section.settings.secondary_cta_text | default: "Learn More" }}
       </a>
     </div>
 
     <div class="hero-stats">
       <div class="stat-item">
         <span class="stat-number">10K+</span>
-        <span class="stat-label">Transformations</span>
+        <span class="stat-label">Happy Customers</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">4.9★</span>
@@ -431,7 +525,7 @@
       </div>
       <div class="stat-item">
         <span class="stat-number">100%</span>
-        <span class="stat-label">Pure Ingredients</span>
+        <span class="stat-label">Natural</span>
       </div>
     </div>
   </div>
@@ -451,19 +545,16 @@ function scrollToNextSection() {
   });
 }
 
-// Add some interactive effects to floating cards
+// Pause animation when hovering over cards
 document.addEventListener('DOMContentLoaded', function() {
-  const cards = document.querySelectorAll('.floating-card');
+  const carouselTrack = document.querySelector('.carousel-track');
+  const cards = document.querySelectorAll('.product-card-hero');
   
+  // Add click functionality to product cards
   cards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-      this.style.transform = 'scale(1.1)';
-      this.style.background = 'rgba(232, 196, 184, 0.1)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-      this.style.transform = 'scale(1)';
-      this.style.background = '';
+    card.addEventListener('click', function() {
+      // Add your product click logic here
+      console.log('Product card clicked');
     });
   });
 });
@@ -471,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {% schema %}
 {
-  "name": "Numberc Style Hero",
+  "name": "Hero Carousel",
   "settings": [
     {
       "type": "text",
@@ -489,7 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "text",
       "id": "cta_text",
       "label": "Primary Button Text",
-      "default": "Explore Products"
+      "default": "Shop Collection"
     },
     {
       "type": "url",
@@ -500,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "text",
       "id": "secondary_cta_text",
       "label": "Secondary Button Text",
-      "default": "Begin Journey"
+      "default": "Learn More"
     },
     {
       "type": "url",
@@ -510,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
   ],
   "presets": [
     {
-      "name": "Numberc Style Hero",
+      "name": "Hero Carousel",
       "category": "Homepage"
     }
   ]
