@@ -271,22 +271,34 @@
 </style>
 
 <section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline 
-         poster="{{ section.settings.fallback_image | image_url: width: 1920 }}"
-         onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';">
-    <source src="{{ section.settings.video_url }}" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  {% comment %} Use asset_url for better performance {% endcomment %}
+  {% if section.settings.video_asset != blank %}
+    <video class="hero-video" autoplay muted loop playsinline 
+           poster="{{ section.settings.fallback_image | image_url: width: 1920 }}"
+           onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';">
+      <source src="{{ section.settings.video_asset | asset_url }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  {% elsif section.settings.video_url != blank %}
+    <video class="hero-video" autoplay muted loop playsinline 
+           poster="{{ section.settings.fallback_image | image_url: width: 1920 }}"
+           onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';">
+      <source src="{{ section.settings.video_url }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  {% endif %}
   
-  <img 
-    id="hero-fallback"
-    class="hero-fallback-image"
-    src="{{ section.settings.fallback_image | image_url: width: 1920 }}" 
-    alt="{{ section.settings.heading | escape }}"
-    width="1920"
-    height="1080"
-    loading="eager"
-  >
+  {% if section.settings.fallback_image != blank %}
+    <img 
+      id="hero-fallback"
+      class="hero-fallback-image"
+      src="{{ section.settings.fallback_image | image_url: width: 1920 }}" 
+      alt="{{ section.settings.heading | escape }}"
+      width="1920"
+      height="1080"
+      loading="eager"
+    >
+  {% endif %}
   
   <div class="hero-video-overlay"></div>
 
@@ -302,12 +314,17 @@
     </p>
     
     <div class="hero-actions">
-      <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
-        {{ section.settings.cta_text }}
-      </a>
-      <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
-        {{ section.settings.secondary_cta_text }}
-      </a>
+      {% if section.settings.cta_url != blank and section.settings.cta_text != blank %}
+        <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+          {{ section.settings.cta_text }}
+        </a>
+      {% endif %}
+      
+      {% if section.settings.secondary_cta_url != blank and section.settings.secondary_cta_text != blank %}
+        <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+          {{ section.settings.secondary_cta_text }}
+        </a>
+      {% endif %}
     </div>
 
     <div class="hero-stats">
@@ -399,7 +416,13 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "url",
       "id": "video_url",
       "label": "Video URL",
-      "info": "Add URL to your hero video"
+      "info": "External video URL (optional)"
+    },
+    {
+      "type": "text",
+      "id": "video_asset",
+      "label": "Video Asset",
+      "info": "Upload video to Assets and enter filename (e.g., 'hero-video.mp4')"
     },
     {
       "type": "image_picker",
