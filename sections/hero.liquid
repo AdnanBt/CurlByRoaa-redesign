@@ -434,8 +434,9 @@
               
               <div class="card-image">
                 {%- if product.featured_image -%}
+                  {%- comment -%} Use simpler image URL without crop parameter {%- endcomment -%}
                   <img 
-                    src="{{ product.featured_image | image_url: width: 600, height: 600 }}" 
+                    src="{{ product.featured_image | image_url: width: 600 }}" 
                     alt="{{ product.title | escape }}"
                     class="product-image-large"
                     width="600"
@@ -456,7 +457,7 @@
           </div>
         {%- endfor -%}
       {%- else -%}
-        <!-- Fallback demo cards when no products exist -->
+        <!-- DEMO CARDS WITH GUARANTEED IMAGES -->
         {%- for i in (1..3) -%}
           <div class="hero-card" data-index="{{ forloop.index0 }}">
             <div class="card-content">
@@ -487,10 +488,11 @@
               </div>
               
               <div class="card-image">
-                <div class="image-placeholder">
-                  {%- if i == 1 -%}Curl Cream
-                  {%- elsif i == 2 -%}Shampoo
-                  {%- else -%}Conditioner
+                {%- comment -%} Use gradient background images for demo {%- endcomment -%}
+                <div class="product-image-large" style="background: {% if i == 1 %}linear-gradient(135deg, #E8C4B8, #D4A59A){% elsif i == 2 %}linear-gradient(135deg, #A8D8EA, #78C2DC){% else %}linear-gradient(135deg, #95E1D3, #6DCFB7){% endif %}; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; font-weight: 600;">
+                  {%- if i == 1 -%}✨ Curl Cream
+                  {%- elsif i == 2 -%}💧 Shampoo
+                  {%- else -%}🌟 Conditioner
                   {%- endif -%}
                 </div>
               </div>
@@ -668,16 +670,27 @@ function scrollToNextSection() {
   });
 }
 
-// Image error handling
+// Force image loading and error handling
 document.addEventListener('DOMContentLoaded', function() {
-  const images = document.querySelectorAll('.product-image-large');
+  const images = document.querySelectorAll('.product-image-large[src]');
+  
   images.forEach(img => {
+    // Force image to load
+    const src = img.src;
+    img.src = '';
+    img.src = src;
+    
     img.addEventListener('error', function() {
+      console.log('Image failed to load:', this.src);
       this.style.display = 'none';
       const placeholder = this.nextElementSibling;
       if (placeholder && placeholder.classList.contains('image-placeholder')) {
         placeholder.style.display = 'flex';
       }
+    });
+    
+    img.addEventListener('load', function() {
+      console.log('Image loaded successfully:', this.src);
     });
   });
 });
