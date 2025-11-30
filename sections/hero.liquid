@@ -56,33 +56,45 @@
     overflow: hidden;
   }
 
-  /* Different color themes for each card */
-  .product-card-hero:nth-child(8n+1),
-  .product-card-hero:nth-child(8n+5) {
+  /* Main Content Card Styles */
+  .hero-content-card {
+    background: linear-gradient(145deg, 
+      rgba(0, 0, 0, 0.8) 0%, 
+      rgba(0, 0, 0, 0.6) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Different color themes for product cards */
+  .product-card-hero:nth-child(8n+2),
+  .product-card-hero:nth-child(8n+6) {
     background: linear-gradient(145deg, 
       rgba(232, 196, 184, 0.15) 0%, 
       rgba(232, 196, 184, 0.05) 100%);
     border: 1px solid rgba(232, 196, 184, 0.3);
   }
 
-  .product-card-hero:nth-child(8n+2),
-  .product-card-hero:nth-child(8n+6) {
+  .product-card-hero:nth-child(8n+3),
+  .product-card-hero:nth-child(8n+7) {
     background: linear-gradient(145deg, 
       rgba(168, 216, 234, 0.15) 0%, 
       rgba(168, 216, 234, 0.05) 100%);
     border: 1px solid rgba(168, 216, 234, 0.3);
   }
 
-  .product-card-hero:nth-child(8n+3),
-  .product-card-hero:nth-child(8n+7) {
+  .product-card-hero:nth-child(8n+4),
+  .product-card-hero:nth-child(8n+8) {
     background: linear-gradient(145deg, 
       rgba(149, 225, 211, 0.15) 0%, 
       rgba(149, 225, 211, 0.05) 100%);
     border: 1px solid rgba(149, 225, 211, 0.3);
   }
 
-  .product-card-hero:nth-child(8n+4),
-  .product-card-hero:nth-child(8n+8) {
+  .product-card-hero:nth-child(8n+5),
+  .product-card-hero:nth-child(8n+9) {
     background: linear-gradient(145deg, 
       rgba(255, 154, 158, 0.15) 0%, 
       rgba(255, 154, 158, 0.05) 100%);
@@ -158,23 +170,9 @@
     backdrop-filter: blur(10px);
   }
 
-  /* Hero Content - Like Numberc.com */
-  .hero-content {
-    position: relative;
-    z-index: 20;
-    text-align: center;
-    color: white;
-    max-width: 650px;
-    padding: 60px 45px;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(30px);
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    margin: 0 auto;
-  }
-
+  /* Hero Content Styles */
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 350;
     line-height: 1.1;
     margin-bottom: 20px;
@@ -183,6 +181,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-align: center;
   }
 
   .hero-subtitle {
@@ -192,8 +191,7 @@
     color: rgba(255, 255, 255, 0.8);
     font-weight: 350;
     max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    text-align: center;
   }
 
   .hero-actions {
@@ -264,7 +262,7 @@
       transform: translateX(0);
     }
     100% {
-      transform: translateX(calc(-420px * 4 - 40px * 4));
+      transform: translateX(calc(-420px * 5 - 40px * 5)); /* Adjusted for 5 cards */
     }
   }
 
@@ -303,21 +301,23 @@
     }
 
     .hero-title {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
     }
 
-    .hero-content {
-      padding: 40px 25px;
-      margin: 0 20px;
+    .hero-subtitle {
+      font-size: 1rem;
+      margin-bottom: 30px;
     }
 
     .hero-actions {
       flex-direction: column;
       align-items: center;
+      gap: 12px;
     }
 
     .hero-btn {
       width: 200px;
+      padding: 14px 28px;
     }
 
     @keyframes carouselScroll {
@@ -325,7 +325,7 @@
         transform: translateX(0);
       }
       100% {
-        transform: translateX(calc(-320px * 4 - 25px * 4));
+        transform: translateX(calc(-320px * 5 - 25px * 5));
       }
     }
   }
@@ -338,6 +338,26 @@
   <!-- Product Cards Carousel -->
   <div class="hero-carousel">
     <div class="carousel-track">
+      <!-- Main Content Card - First in carousel -->
+      <div class="product-card-hero hero-content-card">
+        <h1 class="hero-title">
+          {{ section.settings.heading | default: "Transform Your Curl Journey" }}
+        </h1>
+        
+        <p class="hero-subtitle">
+          {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
+        </p>
+        
+        <div class="hero-actions">
+          <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+            {{ section.settings.cta_text | default: "Shop Collection" }}
+          </a>
+          <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+            {{ section.settings.secondary_cta_text | default: "Learn More" }}
+          </a>
+        </div>
+      </div>
+
       <!-- Product Card 1 -->
       <div class="product-card-hero">
         <div class="product-badge-hero">BESTSELLER</div>
@@ -398,6 +418,27 @@
       </div>
 
       <!-- Duplicate cards for seamless loop -->
+      <!-- Main Content Card Duplicate -->
+      <div class="product-card-hero hero-content-card">
+        <h1 class="hero-title">
+          {{ section.settings.heading | default: "Transform Your Curl Journey" }}
+        </h1>
+        
+        <p class="hero-subtitle">
+          {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
+        </p>
+        
+        <div class="hero-actions">
+          <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+            {{ section.settings.cta_text | default: "Shop Collection" }}
+          </a>
+          <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+            {{ section.settings.secondary_cta_text | default: "Learn More" }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Product Card 1 Duplicate -->
       <div class="product-card-hero">
         <div class="product-badge-hero">BESTSELLER</div>
         <img 
@@ -412,6 +453,7 @@
         <div class="product-price-hero">{{ 29.99 | money }}</div>
       </div>
 
+      <!-- Product Card 2 Duplicate -->
       <div class="product-card-hero">
         <div class="product-badge-hero">NEW</div>
         <img 
@@ -426,6 +468,7 @@
         <div class="product-price-hero">{{ 24.99 | money }}</div>
       </div>
 
+      <!-- Product Card 3 Duplicate -->
       <div class="product-card-hero">
         <img 
           src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/product3.jpg" 
@@ -439,6 +482,7 @@
         <div class="product-price-hero">{{ 26.99 | money }}</div>
       </div>
 
+      <!-- Product Card 4 Duplicate -->
       <div class="product-card-hero">
         <div class="product-badge-hero">BESTSELLER</div>
         <img 
@@ -452,26 +496,6 @@
         <h3 class="product-title-hero">Leave-In Treatment</h3>
         <div class="product-price-hero">{{ 32.99 | money }}</div>
       </div>
-    </div>
-  </div>
-
-  <!-- Main Content - ADDED BACK -->
-  <div class="hero-content">
-    <h1 class="hero-title">
-      {{ section.settings.heading | default: "Transform Your Curl Journey" }}
-    </h1>
-    
-    <p class="hero-subtitle">
-      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
-    </p>
-    
-    <div class="hero-actions">
-      <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
-        {{ section.settings.cta_text | default: "Shop Collection" }}
-      </a>
-      <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
-        {{ section.settings.secondary_cta_text | default: "Learn More" }}
-      </a>
     </div>
   </div>
 
