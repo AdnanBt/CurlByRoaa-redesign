@@ -1,0 +1,308 @@
+<style>
+.before-after {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #2D2D2D 0%, #1a1a1a 100%);
+  color: white;
+  position: relative;
+}
+
+.before-after::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('https://cdn.shopify.com/s/files/1/0567/4172/4316/files/pattern.png?v=1763925101');
+  opacity: 0.05;
+}
+
+.before-after-header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.before-after-header h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.before-after-header p {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.comparison-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.comparison-slider {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+}
+
+.comparison-image {
+  width: 100%;
+  height: 500px;
+  position: relative;
+}
+
+.before-image, .after-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.before-image {
+  background: linear-gradient(135deg, #8B7355, #A08D75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.after-image {
+  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  width: 50%;
+}
+
+.slider-handle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 100%;
+  background: white;
+  cursor: ew-resize;
+  z-index: 10;
+  transform: translateX(-50%);
+}
+
+.slider-handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.slider-handle::after {
+  content: '↔';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #E8C4B8;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 80px;
+  position: relative;
+  z-index: 2;
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 40px 30px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.testimonial-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.testimonial-text {
+  font-style: italic;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.testimonial-author {
+  font-weight: 600;
+  color: white;
+}
+
+.testimonial-time {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4px;
+}
+
+@media (max-width: 968px) {
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .before-after {
+    padding: 80px 0;
+  }
+  
+  .before-after-header h2 {
+    font-size: 2.5rem;
+  }
+  
+  .comparison-image {
+    height: 400px;
+  }
+  
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-top: 60px;
+  }
+  
+  .testimonial-card {
+    padding: 30px 25px;
+  }
+}
+</style>
+
+<section class="before-after">
+  <div class="before-after-header">
+    <h2>Real Transformations</h2>
+    <p>See the incredible results our customers have achieved with our curl care system</p>
+  </div>
+  
+  <div class="comparison-container">
+    <div class="comparison-slider">
+      <div class="comparison-image">
+        <div class="before-image">Before: Dry, Frizzy Curls</div>
+        <div class="after-image">After: Defined, Hydrated Curls</div>
+        <div class="slider-handle"></div>
+      </div>
+    </div>
+    <div class="labels">
+      <span>Before</span>
+      <span>After 4 Weeks</span>
+    </div>
+  </div>
+  
+  <div class="testimonial-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-image">👩🏽</div>
+      <p class="testimonial-text">"I've struggled with frizz my entire life. After 2 weeks, my curls are defined and so soft!"</p>
+      <div class="testimonial-author">Maria S.</div>
+      <div class="testimonial-time">After 2 weeks</div>
+    </div>
+    
+    <div class="testimonial-card">
+      <div class="testimonial-image">👩🏼</div>
+      <p class="testimonial-text">"The moisture retention is unbelievable. My curls used to get dry by day 2, now they last 4 days!"</p>
+      <div class="testimonial-author">Jessica T.</div>
+      <div class="testimonial-time">After 1 month</div>
+    </div>
+    
+    <div class="testimonial-card">
+      <div class="testimonial-image">👩🏻</div>
+      <p class="testimonial-text">"Finally found products that don't weigh down my fine curls. The volume and definition are perfect!"</p>
+      <div class="testimonial-author">Sarah M.</div>
+      <div class="testimonial-time">After 3 weeks</div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slider = document.querySelector('.comparison-slider');
+  const handle = document.querySelector('.slider-handle');
+  const afterImage = document.querySelector('.after-image');
+  let isDragging = false;
+  
+  function updateSlider(x) {
+    const rect = slider.getBoundingClientRect();
+    let percentage = (x - rect.left) / rect.width * 100;
+    percentage = Math.max(0, Math.min(100, percentage));
+    
+    afterImage.style.width = `${percentage}%`;
+    handle.style.left = `${percentage}%`;
+  }
+  
+  handle.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    e.preventDefault();
+  });
+  
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    updateSlider(e.clientX);
+  });
+  
+  document.addEventListener('mouseup', function() {
+    isDragging = false;
+  });
+  
+  // Touch events for mobile
+  handle.addEventListener('touchstart', function(e) {
+    isDragging = true;
+    e.preventDefault();
+  });
+  
+  document.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    updateSlider(e.touches[0].clientX);
+  });
+  
+  document.addEventListener('touchend', function() {
+    isDragging = false;
+  });
+});
+</script>
