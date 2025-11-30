@@ -1,0 +1,206 @@
+<style>
+.science-technology {
+  padding: 120px 0;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.science-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.science-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.science-content h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #2D2D2D;
+  line-height: 1.1;
+}
+
+.science-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.technology-features {
+  display: grid;
+  gap: 30px;
+}
+
+.tech-feature {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.tech-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.tech-content h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2D2D2D;
+}
+
+.tech-content p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.science-visual {
+  position: relative;
+  background: linear-gradient(135deg, #FAF8F6, #FFFFFF);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+.visual-graphic {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  border-radius: 12px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.visual-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.visual-stat {
+  text-align: center;
+}
+
+.visual-stat-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #E8C4B8;
+  display: block;
+}
+
+.visual-stat-label {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+@media (max-width: 968px) {
+  .science-grid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  
+  .science-content h2 {
+    font-size: 2.5rem;
+  }
+  
+  .visual-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .science-technology {
+    padding: 80px 0;
+  }
+  
+  .tech-feature {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .visual-stats {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+</style>
+
+<section class="science-technology">
+  <div class="science-container">
+    <div class="science-grid">
+      <div class="science-content">
+        <h2>The Science of Perfect Curls</h2>
+        <p class="science-subtitle">Our proprietary technology combines cutting-edge research with natural ingredients to deliver visible results from the first use.</p>
+        
+        <div class="technology-features">
+          <div class="tech-feature">
+            <div class="tech-icon">🔬</div>
+            <div class="tech-content">
+              <h3>Advanced Molecular Technology</h3>
+              <p>Our formulas use micro-molecules that penetrate deep into the hair shaft, delivering hydration where it's needed most.</p>
+            </div>
+          </div>
+          
+          <div class="tech-feature">
+            <div class="tech-icon">💧</div>
+            <div class="tech-content">
+              <h3>Smart Moisture Lock</h3>
+              <p>Patented moisture-lock technology ensures your curls stay hydrated for up to 72 hours, even in dry conditions.</p>
+            </div>
+          </div>
+          
+          <div class="tech-feature">
+            <div class="tech-icon">🌿</div>
+            <div class="tech-content">
+              <h3>Bio-Available Ingredients</h3>
+              <p>We use only ingredients that are readily absorbed by your hair, ensuring maximum effectiveness with every use.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="science-visual">
+        <div class="visual-graphic">
+          Molecular Technology Visualization
+        </div>
+        <div class="visual-stats">
+          <div class="visual-stat">
+            <span class="visual-stat-number">95%</span>
+            <span class="visual-stat-label">More Hydration</span>
+          </div>
+          <div class="visual-stat">
+            <span class="visual-stat-number">3x</span>
+            <span class="visual-stat-label">Curl Definition</span>
+          </div>
+          <div class="visual-stat">
+            <span class="visual-stat-number">72h</span>
+            <span class="visual-stat-label">Long Lasting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
