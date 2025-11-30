@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background:rgb(255, 255, 255);
+    background: #0a0a0a;
     margin-top: 80px;
   }
 
@@ -30,20 +30,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   }
 
   .carousel-track {
     display: flex;
     gap: 40px;
-    animation: carouselScroll 60s linear infinite;
+    animation: carouselScroll 40s linear infinite;
     padding: 0 50px;
   }
 
+  .carousel-track:hover {
+    animation-play-state: paused;
+  }
+
   .product-card-hero {
-    flex: 0 0 420px; /* Wider cards */
-    height: 520px; /* Taller cards */
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex: 0 0 420px;
+    height: 520px;
     border-radius: 28px;
     padding: 50px 35px;
     text-align: center;
@@ -51,40 +54,39 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    /* Subtle gradient backgrounds like Numberc.com */
-    background: linear-gradient(145deg, 
-      rgba(232, 196, 184, 0.1) 0%, 
-      rgba(168, 216, 234, 0.05) 50%, 
-      rgba(149, 225, 211, 0.08) 100%);
   }
 
-  /* Different color themes for each card like Numberc.com */
-  .product-card-hero:nth-child(1) {
+  /* Different color themes for each card */
+  .product-card-hero:nth-child(8n+1),
+  .product-card-hero:nth-child(8n+5) {
     background: linear-gradient(145deg, 
       rgba(232, 196, 184, 0.15) 0%, 
       rgba(232, 196, 184, 0.05) 100%);
-    border-color: rgba(232, 196, 184, 0.3);
+    border: 1px solid rgba(232, 196, 184, 0.3);
   }
 
-  .product-card-hero:nth-child(2) {
+  .product-card-hero:nth-child(8n+2),
+  .product-card-hero:nth-child(8n+6) {
     background: linear-gradient(145deg, 
       rgba(168, 216, 234, 0.15) 0%, 
       rgba(168, 216, 234, 0.05) 100%);
-    border-color: rgba(168, 216, 234, 0.3);
+    border: 1px solid rgba(168, 216, 234, 0.3);
   }
 
-  .product-card-hero:nth-child(3) {
+  .product-card-hero:nth-child(8n+3),
+  .product-card-hero:nth-child(8n+7) {
     background: linear-gradient(145deg, 
       rgba(149, 225, 211, 0.15) 0%, 
       rgba(149, 225, 211, 0.05) 100%);
-    border-color: rgba(149, 225, 211, 0.3);
+    border: 1px solid rgba(149, 225, 211, 0.3);
   }
 
-  .product-card-hero:nth-child(4) {
+  .product-card-hero:nth-child(8n+4),
+  .product-card-hero:nth-child(8n+8) {
     background: linear-gradient(145deg, 
       rgba(255, 154, 158, 0.15) 0%, 
       rgba(255, 154, 158, 0.05) 100%);
-    border-color: rgba(255, 154, 158, 0.3);
+    border: 1px solid rgba(255, 154, 158, 0.3);
   }
 
   .product-card-hero::before {
@@ -228,6 +230,12 @@
     box-shadow: 0 15px 35px rgba(255, 255, 255, 0.15);
   }
 
+  .hero-btn-secondary {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
   .hero-btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.5);
@@ -280,7 +288,7 @@
     .carousel-track {
       gap: 25px;
       padding: 0 30px;
-      animation-duration: 40s;
+      animation-duration: 30s;
     }
 
     .product-card-hero {
@@ -310,6 +318,15 @@
 
     .hero-btn {
       width: 200px;
+    }
+
+    @keyframes carouselScroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-320px * 4 - 25px * 4));
+      }
     }
   }
 </style>
@@ -438,7 +455,25 @@
     </div>
   </div>
 
-
+  <!-- Main Content - ADDED BACK -->
+  <div class="hero-content">
+    <h1 class="hero-title">
+      {{ section.settings.heading | default: "Transform Your Curl Journey" }}
+    </h1>
+    
+    <p class="hero-subtitle">
+      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions" }}
+    </p>
+    
+    <div class="hero-actions">
+      <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+        {{ section.settings.cta_text | default: "Shop Collection" }}
+      </a>
+      <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+        {{ section.settings.secondary_cta_text | default: "Learn More" }}
+      </a>
+    </div>
+  </div>
 
   <div class="hero-scroll-indicator" onclick="scrollToNextSection()">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
