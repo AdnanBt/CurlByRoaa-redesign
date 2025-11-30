@@ -434,7 +434,6 @@
               
               <div class="card-image">
                 {%- if product.featured_image -%}
-                  {%- comment -%} Use simpler image URL without crop parameter {%- endcomment -%}
                   <img 
                     src="{{ product.featured_image | image_url: width: 600 }}" 
                     alt="{{ product.title | escape }}"
@@ -478,10 +477,10 @@
                 <div class="card-price">{{ 29.99 | times: i | money }}</div>
                 
                 <div class="card-actions">
-                  <button class="card-btn card-btn-primary" onclick="window.location.href='/collections/all'">
+                  <button class="card-btn card-btn-primary" onclick="window.location.href='{{ routes.all_products_collection_url }}'">
                     Add to Cart
                   </button>
-                  <a href="/collections/all" class="card-btn card-btn-secondary">
+                  <a href="{{ routes.all_products_collection_url }}" class="card-btn card-btn-secondary">
                     Learn More
                   </a>
                 </div>
