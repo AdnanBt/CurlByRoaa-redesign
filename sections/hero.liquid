@@ -8,7 +8,7 @@
     justify-content: center;
     overflow: hidden;
     background: #000;
-    margin-top: 80px; /* For fixed header */
+    margin-top: 0; /* Remove margin for full viewport */
   }
 
   .hero-video {
@@ -18,7 +18,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.3; /* Reduced opacity for better text visibility */
+    opacity: 0.6; /* Adjusted opacity for Numberc style */
   }
 
   .hero-video-overlay {
@@ -29,108 +29,116 @@
     height: 100%;
     background: linear-gradient(
       135deg,
-      rgba(45, 45, 45, 0.7) 0%,    /* Darker overlay for better contrast */
-      rgba(232, 196, 184, 0.4) 100%
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 50%,
+      rgba(0, 0, 0, 0.4) 100%
     );
     z-index: 1;
   }
 
   .hero-content {
     position: relative;
-    z-index: 2; /* Higher z-index to stay above overlay */
+    z-index: 2;
     text-align: center;
     color: white;
     max-width: 800px;
-    padding: 0 20px;
+    padding: 0 40px;
   }
 
   .hero-title {
-    font-size: 4.5rem;
-    font-weight: 700;
+    font-size: 4rem;
+    font-weight: 300; /* Lighter weight like Numberc */
     line-height: 1.1;
     margin-bottom: 24px;
     letter-spacing: -0.02em;
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 1s ease 0.3s forwards;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Text shadow for better readability */
+    animation: fadeInUp 1.2s ease 0.3s forwards;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .hero-title strong {
+    font-weight: 400; /* Slightly bolder for emphasis */
   }
 
   .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     line-height: 1.6;
     margin-bottom: 48px;
-    color: rgba(255, 255, 255, 0.95); /* Brighter text */
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 300; /* Lighter weight */
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 1s ease 0.6s forwards;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Text shadow */
+    animation: fadeInUp 1.2s ease 0.6s forwards;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .hero-actions {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     justify-content: center;
     flex-wrap: wrap;
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 1s ease 0.9s forwards;
+    animation: fadeInUp 1.2s ease 0.9s forwards;
     position: relative;
     z-index: 3;
   }
 
   .hero-btn {
-    padding: 16px 32px;
-    font-size: 1rem;
-    font-weight: 600;
+    padding: 16px 40px;
+    font-size: 0.9rem;
+    font-weight: 400;
     text-decoration: none;
-    border-radius: 50px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0; /* Square edges like Numberc */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1.5px;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px); /* Glass effect */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    color: white;
   }
 
   .hero-btn-primary {
-    background: rgba(232, 196, 184, 0.9); /* More opaque */
-    color: #2D2D2D;
-    border: 2px solid #E8C4B8;
+    background: white;
+    color: #000;
+    border: 1px solid white;
   }
 
   .hero-btn-primary:hover {
-    background: rgba(232, 196, 184, 1);
-    color: #2D2D2D;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(232, 196, 184, 0.4);
-  }
-
-  .hero-btn-secondary {
-    background: rgba(255, 255, 255, 0.15); /* Semi-transparent */
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
-  }
-
-  .hero-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: transparent;
     color: white;
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.6);
     box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
   }
 
+  .hero-btn-secondary {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .hero-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+  }
+
+  /* Numberc-style stats */
   .hero-stats {
     display: flex;
     justify-content: center;
-    gap: 60px;
-    margin-top: 80px;
+    gap: 80px;
+    margin-top: 100px;
     padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
     opacity: 0;
-    animation: fadeIn 1s ease 1.2s forwards;
+    animation: fadeIn 1.2s ease 1.2s forwards;
     position: relative;
     z-index: 2;
   }
@@ -140,34 +148,37 @@
   }
 
   .stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 2rem;
+    font-weight: 300;
     display: block;
-    color: #E8C4B8;
+    color: white;
     margin-bottom: 8px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .stat-label {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+    font-weight: 300;
   }
 
+  /* Subtle scroll indicator like Numberc */
   .hero-scroll-indicator {
     position: absolute;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.8);
-    animation: bounce 2s infinite;
+    color: rgba(255, 255, 255, 0.6);
+    animation: float 3s ease-in-out infinite;
     z-index: 2;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
-    padding: 8px;
-    backdrop-filter: blur(5px);
+    cursor: pointer;
+  }
+
+  .hero-scroll-indicator svg {
+    width: 20px;
+    height: 20px;
   }
 
   .hero-fallback-image {
@@ -178,26 +189,10 @@
     height: 100%;
     object-fit: cover;
     display: none;
-    opacity: 0.4; /* Same opacity as video for consistency */
+    opacity: 0.6;
   }
 
-  /* Content background for extra readability (optional) */
-  .hero-content-backdrop {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 900px;
-    height: 70%;
-    background: rgba(45, 45, 45, 0.3);
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    z-index: 1;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: none; /* Hidden by default, can enable if needed */
-  }
-
+  /* Numberc-style animations */
   @keyframes fadeInUp {
     to {
       opacity: 1;
@@ -211,80 +206,120 @@
     }
   }
 
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
+  @keyframes float {
+    0%, 100% {
       transform: translateX(-50%) translateY(0);
     }
-    40% {
+    50% {
       transform: translateX(-50%) translateY(-10px);
-    }
-    60% {
-      transform: translateX(-50%) translateY(-5px);
     }
   }
 
-  /* Mobile Styles */
+  /* Gradient text effect like Numberc */
+  .gradient-text {
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Mobile Styles - Adjusted for Numberc aesthetic */
   @media (max-width: 768px) {
     .hero {
-      min-height: 700px;
+      min-height: 100vh;
       height: 100vh;
     }
 
     .hero-title {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
+      font-weight: 300;
     }
 
     .hero-subtitle {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
+      font-weight: 300;
     }
 
     .hero-actions {
       flex-direction: column;
       align-items: center;
+      gap: 15px;
     }
 
     .hero-btn {
-      width: 200px;
+      width: 220px;
+      padding: 14px 32px;
     }
 
     .hero-stats {
       flex-direction: column;
       gap: 30px;
-      margin-top: 60px;
+      margin-top: 80px;
     }
 
     .stat-number {
-      font-size: 2rem;
+      font-size: 1.8rem;
     }
 
-    /* Stronger overlay on mobile for better readability */
-    .hero-video-overlay {
-      background: linear-gradient(
-        135deg,
-        rgba(45, 45, 45, 0.8) 0%,
-        rgba(232, 196, 184, 0.3) 100%
-      );
+    .hero-content {
+      padding: 0 20px;
     }
   }
 
   @media (max-width: 480px) {
     .hero-title {
-      font-size: 2rem;
+      font-size: 2.2rem;
     }
 
     .hero-subtitle {
-      font-size: 1.125rem;
+      font-size: 1rem;
     }
+
+    .hero-stats {
+      gap: 25px;
+      margin-top: 60px;
+    }
+  }
+
+  /* Additional Numberc-style enhancements */
+  .hero-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .hero-btn:hover::before {
+    left: 100%;
+  }
+
+  /* Subtle background animation */
+  @keyframes backgroundShift {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .hero-video {
+    animation: backgroundShift 20s ease-in-out infinite;
   }
 </style>
 
 <section class="hero">
-  <!-- Optional content backdrop (uncomment if needed) -->
-  <!-- <div class="hero-content-backdrop"></div> -->
-  
   <!-- Video Background -->
   <video class="hero-video" autoplay muted loop playsinline 
-         onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';">
+         onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';"
+         poster="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2211B086-44F7-40E0-BE64-96D504EAE7F9.webp?v=1763925101">
     <source src="https://cdn.shopify.com/videos/c/o/v/1f8218940a0d4c5bbd92cb24c024b184.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -304,40 +339,42 @@
 
   <div class="hero-content">
     <h1 class="hero-title">
-      {{ section.settings.heading | default: "Discover Your Perfect Curl Journey" }}
+      <span class="gradient-text">
+        {{ section.settings.heading | default: "Elevate Your Natural Beauty" }}
+      </span>
     </h1>
     
     <p class="hero-subtitle">
-      {{ section.settings.subheading | default: "Professional-grade hair care solutions tailored to your unique curl pattern. Transform your routine with scientifically formulated products." }}
+      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions designed for your unique texture." }}
     </p>
     
     <div class="hero-actions">
       <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="hero-btn hero-btn-primary">
-        {{ section.settings.cta_text | default: 'Shop The Collection' }}
+        {{ section.settings.cta_text | default: 'Explore Products' }}
       </a>
       <a href="{{ section.settings.secondary_cta_url | default: '/pages/quiz' }}" class="hero-btn hero-btn-secondary">
-        {{ section.settings.secondary_cta_text | default: 'Find Your Routine' }}
+        {{ section.settings.secondary_cta_text | default: 'Begin Journey' }}
       </a>
     </div>
 
     <div class="hero-stats">
       <div class="stat-item">
         <span class="stat-number">10K+</span>
-        <span class="stat-label">Happy Customers</span>
+        <span class="stat-label">Transformations</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">4.9★</span>
-        <span class="stat-label">Average Rating</span>
+        <span class="stat-label">Rated Excellence</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">100%</span>
-        <span class="stat-label">Natural Ingredients</span>
+        <span class="stat-label">Pure Ingredients</span>
       </div>
     </div>
   </div>
 
   <div class="hero-scroll-indicator">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M12 5v14M5 12l7 7 7-7"/>
     </svg>
   </div>
@@ -345,7 +382,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Scroll functionality
+  // Smooth scroll functionality
   const scrollIndicator = document.querySelector('.hero-scroll-indicator');
   if (scrollIndicator) {
     scrollIndicator.addEventListener('click', function() {
@@ -356,11 +393,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Video error handling
+  // Enhanced video handling
   const heroVideo = document.querySelector('.hero-video');
   const fallbackImage = document.getElementById('hero-fallback');
   
   if (heroVideo) {
+    // Force video to play
+    heroVideo.play().catch(function(error) {
+      console.log('Video autoplay failed:', error);
+      // Show fallback if autoplay is blocked
+      if (fallbackImage) {
+        fallbackImage.style.display = 'block';
+      }
+    });
+
     heroVideo.addEventListener('error', function() {
       console.log('Video failed to load, showing fallback image');
       if (fallbackImage) {
@@ -377,40 +423,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Fallback timeout
+  // Fallback timeout with shorter delay
   setTimeout(function() {
-    if (heroVideo && heroVideo.readyState < 3) {
-      console.log('Video taking too long to load, showing fallback');
+    if (heroVideo && (heroVideo.readyState < 3 || heroVideo.paused)) {
+      console.log('Video not playing properly, showing fallback');
       if (fallbackImage) {
         fallbackImage.style.display = 'block';
-        heroVideo.style.display = 'none';
+        if (heroVideo) heroVideo.style.display = 'none';
       }
     }
-  }, 3000);
+  }, 2000);
+
+  // Add scroll event for parallax effect
+  window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      const rate = scrolled * -0.5;
+      hero.style.transform = `translateY(${rate}px)`;
+    }
+  });
 });
 </script>
 
 {% schema %}
 {
-  "name": "Hero Section",
+  "name": "Numberc Style Hero",
   "settings": [
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Discover Your Perfect Curl Journey"
+      "default": "Elevate Your Natural Beauty"
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Professional-grade hair care solutions tailored to your unique curl pattern"
+      "default": "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions"
     },
     {
       "type": "text",
       "id": "cta_text",
       "label": "Primary Button Text",
-      "default": "Shop The Collection"
+      "default": "Explore Products"
     },
     {
       "type": "url",
@@ -421,7 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "text",
       "id": "secondary_cta_text",
       "label": "Secondary Button Text",
-      "default": "Find Your Routine"
+      "default": "Begin Journey"
     },
     {
       "type": "url",
