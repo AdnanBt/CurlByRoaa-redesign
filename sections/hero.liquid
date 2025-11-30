@@ -1,16 +1,14 @@
 <style>
   .hero {
     position: relative;
-    height: 60vh;
-    min-height: 500px;
+    height: 80vh;
+    min-height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-   /* background: #000;
-    /* ADD THESE FIXES */
-    margin-top: 80px; /* Account for fixed header height */
-    padding-top: 40px; /* Additional spacing */
+    background: #0a0a0a;
+    margin-top: 80px;
   }
 
   .hero-background {
@@ -19,10 +17,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a1e1c 100%);
   }
 
-  /* Product Cards Carousel */
+  /* Single Card Focus Design */
   .hero-carousel {
     position: absolute;
     top: 0;
@@ -36,27 +34,57 @@
 
   .carousel-track {
     display: flex;
-    gap: 60px;
-    animation: carouselScroll 40s linear infinite;
-    padding: 0 100px;
-  }
-
-  .carousel-track:hover {
-    animation-play-state: paused;
+    gap: 40px;
+    animation: carouselScroll 60s linear infinite;
+    padding: 0 50px;
   }
 
   .product-card-hero {
-    flex: 0 0 380px;
-    height: 480px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 40px 30px;
+    flex: 0 0 420px; /* Wider cards */
+    height: 520px; /* Taller cards */
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 28px;
+    padding: 50px 35px;
     text-align: center;
-    backdrop-filter: blur(20px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(25px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    /* Subtle gradient backgrounds like Numberc.com */
+    background: linear-gradient(145deg, 
+      rgba(232, 196, 184, 0.1) 0%, 
+      rgba(168, 216, 234, 0.05) 50%, 
+      rgba(149, 225, 211, 0.08) 100%);
+  }
+
+  /* Different color themes for each card like Numberc.com */
+  .product-card-hero:nth-child(1) {
+    background: linear-gradient(145deg, 
+      rgba(232, 196, 184, 0.15) 0%, 
+      rgba(232, 196, 184, 0.05) 100%);
+    border-color: rgba(232, 196, 184, 0.3);
+  }
+
+  .product-card-hero:nth-child(2) {
+    background: linear-gradient(145deg, 
+      rgba(168, 216, 234, 0.15) 0%, 
+      rgba(168, 216, 234, 0.05) 100%);
+    border-color: rgba(168, 216, 234, 0.3);
+  }
+
+  .product-card-hero:nth-child(3) {
+    background: linear-gradient(145deg, 
+      rgba(149, 225, 211, 0.15) 0%, 
+      rgba(149, 225, 211, 0.05) 100%);
+    border-color: rgba(149, 225, 211, 0.3);
+  }
+
+  .product-card-hero:nth-child(4) {
+    background: linear-gradient(145deg, 
+      rgba(255, 154, 158, 0.15) 0%, 
+      rgba(255, 154, 158, 0.05) 100%);
+    border-color: rgba(255, 154, 158, 0.3);
   }
 
   .product-card-hero::before {
@@ -67,7 +95,7 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    transition: left 0.6s ease;
+    transition: left 0.8s ease;
   }
 
   .product-card-hero:hover::before {
@@ -75,124 +103,113 @@
   }
 
   .product-card-hero:hover {
-    transform: translateY(-15px) scale(1.05);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(232, 196, 184, 0.4);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    transform: translateY(-20px) scale(1.08);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 30px 60px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
   }
 
   .product-image-hero {
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 0 auto 30px;
-    border: 2px solid rgba(232, 196, 184, 0.3);
-    transition: all 0.4s ease;
+    margin: 0 auto 35px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.5s ease;
+    background: linear-gradient(135deg, #2a1e1c, #3a2e2c);
   }
 
   .product-card-hero:hover .product-image-hero {
-    transform: scale(1.15);
-    border-color: rgba(232, 196, 184, 0.6);
+    transform: scale(1.2);
+    border-color: rgba(255, 255, 255, 0.4);
   }
 
   .product-title-hero {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 400;
     color: white;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     line-height: 1.4;
+    letter-spacing: -0.5px;
   }
 
   .product-price-hero {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 300;
     color: #E8C4B8;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    font-family: 'Inter', sans-serif;
   }
 
   .product-badge-hero {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    background: #E8C4B8;
+    top: 25px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.9);
     color: #000;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 0.8rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: 600;
+    backdrop-filter: blur(10px);
   }
 
+  /* Hero Content - Like Numberc.com */
   .hero-content {
     position: relative;
-    z-index: 10;
+    z-index: 20;
     text-align: center;
     color: white;
-    max-width: 800px;
-    padding: 0 40px;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 60px 40px;
-    /* ADD THIS TO REMOVE THE TOP CARD */
-    margin-top: -100px; /* Pull content up to avoid overlapping with carousel */
+    max-width: 650px;
+    padding: 60px 45px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(30px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 0 auto;
   }
 
   .hero-title {
-    font-size: 4rem;
-    font-weight: 300;
+    font-size: 3.5rem;
+    font-weight: 350;
     line-height: 1.1;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     letter-spacing: -0.02em;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s ease 0.3s forwards;
-  }
-
-  .hero-title strong {
-    font-weight: 400;
-    background: linear-gradient(135deg, #E8C4B8 0%, #ffffff 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #E8C4B8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .hero-subtitle {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     line-height: 1.6;
-    margin-bottom: 48px;
+    margin-bottom: 40px;
     color: rgba(255, 255, 255, 0.8);
-    font-weight: 300;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s ease 0.6s forwards;
-    max-width: 600px;
+    font-weight: 350;
+    max-width: 500px;
     margin-left: auto;
     margin-right: auto;
   }
 
   .hero-actions {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s ease 0.9s forwards;
   }
 
   .hero-btn {
-    padding: 16px 40px;
+    padding: 16px 36px;
     font-size: 0.9rem;
     font-weight: 400;
     text-decoration: none;
-    border-radius: 0;
+    border-radius: 12px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    position: relative;
-    overflow: hidden;
+    letter-spacing: 1.2px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     background: transparent;
     color: white;
@@ -208,71 +225,29 @@
     background: transparent;
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-  }
-
-  .hero-btn-secondary {
-    background: transparent;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.15);
   }
 
   .hero-btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-2px);
-  }
-
-  .hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 80px;
-    margin-top: 60px;
-    padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    opacity: 0;
-    animation: fadeIn 1.2s ease 1.2s forwards;
-  }
-
-  .stat-item {
-    text-align: center;
-  }
-
-  .stat-number {
-    font-size: 2rem;
-    font-weight: 300;
-    display: block;
-    color: #E8C4B8;
-    margin-bottom: 8px;
-  }
-
-  .stat-label {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 300;
   }
 
   .hero-scroll-indicator {
     position: absolute;
-    bottom: 40px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     color: rgba(255, 255, 255, 0.6);
     animation: float 3s ease-in-out infinite;
-    z-index: 10;
+    z-index: 20;
     cursor: pointer;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     border-radius: 50%;
-    padding: 10px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .hero-scroll-indicator svg {
-    width: 20px;
-    height: 20px;
+    padding: 12px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
   /* Animations */
@@ -281,20 +256,7 @@
       transform: translateX(0);
     }
     100% {
-      transform: translateX(calc(-380px * 4 - 60px * 4));
-    }
-  }
-
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
+      transform: translateX(calc(-420px * 4 - 40px * 4));
     }
   }
 
@@ -303,96 +265,51 @@
       transform: translateX(-50%) translateY(0);
     }
     50% {
-      transform: translateX(-50%) translateY(-10px);
+      transform: translateX(-50%) translateY(-8px);
     }
   }
 
   /* Mobile Styles */
   @media (max-width: 768px) {
     .hero {
-      min-height: 100vh;
-      margin-top: 60px; /* Adjust for mobile header */
-      padding-top: 20px;
+      height: 70vh;
+      min-height: 500px;
+      margin-top: 60px;
+    }
+
+    .carousel-track {
+      gap: 25px;
+      padding: 0 30px;
+      animation-duration: 40s;
+    }
+
+    .product-card-hero {
+      flex: 0 0 320px;
+      height: 420px;
+      padding: 35px 25px;
+    }
+
+    .product-image-hero {
+      width: 160px;
+      height: 160px;
     }
 
     .hero-title {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
     }
 
-    .hero-subtitle {
-      font-size: 1.1rem;
+    .hero-content {
+      padding: 40px 25px;
+      margin: 0 20px;
     }
 
     .hero-actions {
       flex-direction: column;
       align-items: center;
-      gap: 15px;
     }
 
     .hero-btn {
-      width: 220px;
-      padding: 14px 32px;
-    }
-
-    .hero-stats {
-      flex-direction: column;
-      gap: 30px;
-      margin-top: 40px;
-    }
-
-    .stat-number {
-      font-size: 1.8rem;
-    }
-
-    .hero-content {
-      padding: 40px 20px;
-      margin: 0 20px;
-      margin-top: -50px; /* Adjust for mobile */
-    }
-
-    /* Adjust carousel for mobile */
-    .carousel-track {
-      gap: 30px;
-      padding: 0 50px;
-      animation-duration: 25s;
-    }
-
-    .product-card-hero {
-      flex: 0 0 280px;
-      height: 380px;
-      padding: 30px 20px;
-    }
-
-    .product-image-hero {
-      width: 120px;
-      height: 120px;
-    }
-
-    .product-title-hero {
-      font-size: 1.1rem;
-    }
-
-    .product-price-hero {
-      font-size: 1.3rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .hero-title {
-      font-size: 2.2rem;
-    }
-
-    .hero-subtitle {
-      font-size: 1rem;
-    }
-
-    .hero-stats {
-      gap: 25px;
-      margin-top: 30px;
-    }
-
-    .carousel-track {
-      animation-duration: 20s;
+      width: 200px;
     }
   }
 </style>
