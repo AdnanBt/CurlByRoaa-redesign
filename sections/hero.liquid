@@ -8,7 +8,6 @@
     justify-content: center;
     overflow: hidden;
     background: #000;
-    margin-top: 0; /* Remove margin for full viewport */
   }
 
   .hero-video {
@@ -18,7 +17,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.6; /* Adjusted opacity for Numberc style */
+    opacity: 0.6;
   }
 
   .hero-video-overlay {
@@ -47,7 +46,7 @@
 
   .hero-title {
     font-size: 4rem;
-    font-weight: 300; /* Lighter weight like Numberc */
+    font-weight: 300;
     line-height: 1.1;
     margin-bottom: 24px;
     letter-spacing: -0.02em;
@@ -58,7 +57,7 @@
   }
 
   .hero-title strong {
-    font-weight: 400; /* Slightly bolder for emphasis */
+    font-weight: 400;
   }
 
   .hero-subtitle {
@@ -66,7 +65,7 @@
     line-height: 1.6;
     margin-bottom: 48px;
     color: rgba(255, 255, 255, 0.9);
-    font-weight: 300; /* Lighter weight */
+    font-weight: 300;
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.2s ease 0.6s forwards;
@@ -84,8 +83,6 @@
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.2s ease 0.9s forwards;
-    position: relative;
-    z-index: 3;
   }
 
   .hero-btn {
@@ -93,7 +90,7 @@
     font-size: 0.9rem;
     font-weight: 400;
     text-decoration: none;
-    border-radius: 0; /* Square edges like Numberc */
+    border-radius: 0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -129,7 +126,6 @@
     transform: translateY(-2px);
   }
 
-  /* Numberc-style stats */
   .hero-stats {
     display: flex;
     justify-content: center;
@@ -139,8 +135,6 @@
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     opacity: 0;
     animation: fadeIn 1.2s ease 1.2s forwards;
-    position: relative;
-    z-index: 2;
   }
 
   .stat-item {
@@ -164,7 +158,6 @@
     font-weight: 300;
   }
 
-  /* Subtle scroll indicator like Numberc */
   .hero-scroll-indicator {
     position: absolute;
     bottom: 40px;
@@ -192,7 +185,6 @@
     opacity: 0.6;
   }
 
-  /* Numberc-style animations */
   @keyframes fadeInUp {
     to {
       opacity: 1;
@@ -215,7 +207,6 @@
     }
   }
 
-  /* Gradient text effect like Numberc */
   .gradient-text {
     background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
     -webkit-background-clip: text;
@@ -223,21 +214,18 @@
     background-clip: text;
   }
 
-  /* Mobile Styles - Adjusted for Numberc aesthetic */
+  /* Mobile Styles */
   @media (max-width: 768px) {
     .hero {
       min-height: 100vh;
-      height: 100vh;
     }
 
     .hero-title {
       font-size: 2.8rem;
-      font-weight: 300;
     }
 
     .hero-subtitle {
       font-size: 1.1rem;
-      font-weight: 300;
     }
 
     .hero-actions {
@@ -280,56 +268,21 @@
       margin-top: 60px;
     }
   }
-
-  /* Additional Numberc-style enhancements */
-  .hero-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .hero-btn:hover::before {
-    left: 100%;
-  }
-
-  /* Subtle background animation */
-  @keyframes backgroundShift {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  .hero-video {
-    animation: backgroundShift 20s ease-in-out infinite;
-  }
 </style>
 
 <section class="hero">
-  <!-- Video Background -->
   <video class="hero-video" autoplay muted loop playsinline 
-         onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';"
-         poster="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2211B086-44F7-40E0-BE64-96D504EAE7F9.webp?v=1763925101">
-    <source src="https://cdn.shopify.com/videos/c/o/v/1f8218940a0d4c5bbd92cb24c024b184.mp4" type="video/mp4">
+         poster="{{ section.settings.fallback_image | image_url: width: 1920 }}"
+         onerror="document.getElementById('hero-fallback').style.display='block'; this.style.display='none';">
+    <source src="{{ section.settings.video_url }}" type="video/mp4">
     Your browser does not support the video tag.
   </video>
   
-  <!-- Fallback Image -->
   <img 
     id="hero-fallback"
     class="hero-fallback-image"
-    src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/2211B086-44F7-40E0-BE64-96D504EAE7F9.webp?v=1763925101" 
-    alt="Hero background - CurlsByRoaa hair care products"
+    src="{{ section.settings.fallback_image | image_url: width: 1920 }}" 
+    alt="{{ section.settings.heading | escape }}"
     width="1920"
     height="1080"
     loading="eager"
@@ -340,20 +293,20 @@
   <div class="hero-content">
     <h1 class="hero-title">
       <span class="gradient-text">
-        {{ section.settings.heading | default: "Elevate Your Natural Beauty" }}
+        {{ section.settings.heading }}
       </span>
     </h1>
     
     <p class="hero-subtitle">
-      {{ section.settings.subheading | default: "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions designed for your unique texture." }}
+      {{ section.settings.subheading }}
     </p>
     
     <div class="hero-actions">
-      <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="hero-btn hero-btn-primary">
-        {{ section.settings.cta_text | default: 'Explore Products' }}
+      <a href="{{ section.settings.cta_url }}" class="hero-btn hero-btn-primary">
+        {{ section.settings.cta_text }}
       </a>
-      <a href="{{ section.settings.secondary_cta_url | default: '/pages/quiz' }}" class="hero-btn hero-btn-secondary">
-        {{ section.settings.secondary_cta_text | default: 'Begin Journey' }}
+      <a href="{{ section.settings.secondary_cta_url }}" class="hero-btn hero-btn-secondary">
+        {{ section.settings.secondary_cta_text }}
       </a>
     </div>
 
@@ -373,7 +326,7 @@
     </div>
   </div>
 
-  <div class="hero-scroll-indicator">
+  <div class="hero-scroll-indicator" onclick="scrollToNextSection()">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M12 5v14M5 12l7 7 7-7"/>
     </svg>
@@ -381,74 +334,32 @@
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Smooth scroll functionality
-  const scrollIndicator = document.querySelector('.hero-scroll-indicator');
-  if (scrollIndicator) {
-    scrollIndicator.addEventListener('click', function() {
-      window.scrollTo({
-        top: window.innerHeight,
-        behavior: 'smooth'
-      });
-    });
-  }
+function scrollToNextSection() {
+  window.scrollTo({
+    top: window.innerHeight,
+    behavior: 'smooth'
+  });
+}
 
-  // Enhanced video handling
+document.addEventListener('DOMContentLoaded', function() {
   const heroVideo = document.querySelector('.hero-video');
   const fallbackImage = document.getElementById('hero-fallback');
   
   if (heroVideo) {
-    // Force video to play
     heroVideo.play().catch(function(error) {
-      console.log('Video autoplay failed:', error);
-      // Show fallback if autoplay is blocked
+      console.log('Video autoplay failed, showing fallback');
       if (fallbackImage) {
         fallbackImage.style.display = 'block';
-      }
-    });
-
-    heroVideo.addEventListener('error', function() {
-      console.log('Video failed to load, showing fallback image');
-      if (fallbackImage) {
-        fallbackImage.style.display = 'block';
-        this.style.display = 'none';
-      }
-    });
-
-    heroVideo.addEventListener('loadeddata', function() {
-      console.log('Video loaded successfully');
-      if (fallbackImage) {
-        fallbackImage.style.display = 'none';
+        heroVideo.style.display = 'none';
       }
     });
   }
-
-  // Fallback timeout with shorter delay
-  setTimeout(function() {
-    if (heroVideo && (heroVideo.readyState < 3 || heroVideo.paused)) {
-      console.log('Video not playing properly, showing fallback');
-      if (fallbackImage) {
-        fallbackImage.style.display = 'block';
-        if (heroVideo) heroVideo.style.display = 'none';
-      }
-    }
-  }, 2000);
-
-  // Add scroll event for parallax effect
-  window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-      const rate = scrolled * -0.5;
-      hero.style.transform = `translateY(${rate}px)`;
-    }
-  });
 });
 </script>
 
 {% schema %}
 {
-  "name": "Numberc Style Hero",
+  "name": "Hero Section",
   "settings": [
     {
       "type": "text",
@@ -483,11 +394,23 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "url",
       "id": "secondary_cta_url",
       "label": "Secondary Button Link"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "Add URL to your hero video"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback Image",
+      "info": "This image will show if the video fails to load"
     }
   ],
   "presets": [
     {
-      "name": "Numberc Style Hero",
+      "name": "Hero Section",
       "category": "Homepage"
     }
   ]
