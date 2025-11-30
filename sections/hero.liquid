@@ -33,8 +33,8 @@
 
   .carousel-track {
     display: flex;
-    gap: 40px;
-    animation: carouselScroll 30s linear infinite;
+    gap: 60px;
+    animation: carouselScroll 40s linear infinite;
     padding: 0 100px;
   }
 
@@ -43,11 +43,12 @@
   }
 
   .product-card-hero {
-    flex: 0 0 280px;
+    flex: 0 0 380px;
+    height: 480px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 30px 20px;
+    border-radius: 24px;
+    padding: 40px 30px;
     text-align: center;
     backdrop-filter: blur(20px);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -71,51 +72,51 @@
   }
 
   .product-card-hero:hover {
-    transform: translateY(-10px) scale(1.05);
+    transform: translateY(-15px) scale(1.05);
     background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(232, 196, 184, 0.3);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(232, 196, 184, 0.4);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
   }
 
   .product-image-hero {
-    width: 120px;
-    height: 120px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 0 auto 20px;
+    margin: 0 auto 30px;
     border: 2px solid rgba(232, 196, 184, 0.3);
     transition: all 0.4s ease;
   }
 
   .product-card-hero:hover .product-image-hero {
-    transform: scale(1.1);
+    transform: scale(1.15);
     border-color: rgba(232, 196, 184, 0.6);
   }
 
   .product-title-hero {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     font-weight: 400;
     color: white;
-    margin-bottom: 10px;
-    line-height: 1.3;
+    margin-bottom: 15px;
+    line-height: 1.4;
   }
 
   .product-price-hero {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     font-weight: 300;
     color: #E8C4B8;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
   }
 
   .product-badge-hero {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 20px;
+    right: 20px;
     background: #E8C4B8;
     color: #000;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.7rem;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
     font-weight: 600;
   }
 
@@ -275,7 +276,7 @@
       transform: translateX(0);
     }
     100% {
-      transform: translateX(calc(-280px * 4 - 40px * 4)); /* Adjust based on card width and gap */
+      transform: translateX(calc(-380px * 4 - 60px * 4));
     }
   }
 
@@ -343,27 +344,28 @@
 
     /* Adjust carousel for mobile */
     .carousel-track {
-      gap: 20px;
+      gap: 30px;
       padding: 0 50px;
-      animation-duration: 20s;
+      animation-duration: 25s;
     }
 
     .product-card-hero {
-      flex: 0 0 200px;
-      padding: 20px 15px;
+      flex: 0 0 280px;
+      height: 380px;
+      padding: 30px 20px;
     }
 
     .product-image-hero {
-      width: 80px;
-      height: 80px;
+      width: 120px;
+      height: 120px;
     }
 
     .product-title-hero {
-      font-size: 0.9rem;
+      font-size: 1.1rem;
     }
 
     .product-price-hero {
-      font-size: 1.1rem;
+      font-size: 1.3rem;
     }
   }
 
@@ -382,7 +384,7 @@
     }
 
     .carousel-track {
-      animation-duration: 15s;
+      animation-duration: 20s;
     }
   }
 </style>
@@ -402,6 +404,8 @@
           alt="Curl Defining Cream"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Curl Defining Cream</h3>
         <div class="product-price-hero">{{ 29.99 | money }}</div>
@@ -415,6 +419,8 @@
           alt="Hydrating Shampoo"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Hydrating Shampoo</h3>
         <div class="product-price-hero">{{ 24.99 | money }}</div>
@@ -427,6 +433,8 @@
           alt="Repairing Conditioner"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Repairing Conditioner</h3>
         <div class="product-price-hero">{{ 26.99 | money }}</div>
@@ -440,6 +448,8 @@
           alt="Leave-In Treatment"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Leave-In Treatment</h3>
         <div class="product-price-hero">{{ 32.99 | money }}</div>
@@ -453,6 +463,8 @@
           alt="Curl Defining Cream"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Curl Defining Cream</h3>
         <div class="product-price-hero">{{ 29.99 | money }}</div>
@@ -465,6 +477,8 @@
           alt="Hydrating Shampoo"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Hydrating Shampoo</h3>
         <div class="product-price-hero">{{ 24.99 | money }}</div>
@@ -476,6 +490,8 @@
           alt="Repairing Conditioner"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Repairing Conditioner</h3>
         <div class="product-price-hero">{{ 26.99 | money }}</div>
@@ -488,6 +504,8 @@
           alt="Leave-In Treatment"
           class="product-image-hero"
           loading="lazy"
+          width="200"
+          height="200"
         >
         <h3 class="product-title-hero">Leave-In Treatment</h3>
         <div class="product-price-hero">{{ 32.99 | money }}</div>
@@ -544,20 +562,6 @@ function scrollToNextSection() {
     behavior: 'smooth'
   });
 }
-
-// Pause animation when hovering over cards
-document.addEventListener('DOMContentLoaded', function() {
-  const carouselTrack = document.querySelector('.carousel-track');
-  const cards = document.querySelectorAll('.product-card-hero');
-  
-  // Add click functionality to product cards
-  cards.forEach(card => {
-    card.addEventListener('click', function() {
-      // Add your product click logic here
-      console.log('Product card clicked');
-    });
-  });
-});
 </script>
 
 {% schema %}
