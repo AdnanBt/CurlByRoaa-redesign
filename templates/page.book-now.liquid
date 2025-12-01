@@ -8,120 +8,124 @@
 
 <style>
   .booking-page {
-    padding: var(--section-padding) 0;
+    padding: 40px 0;
   }
   
   .booking-container {
     max-width: 800px;
     margin: 0 auto;
     background: white;
-    border-radius: var(--border-radius-xl);
-    padding: var(--space-xl);
-    box-shadow: var(--shadow-lg);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   }
   
   .selected-service {
     background: #FFF8F6;
-    border: 2px solid var(--color-accent);
-    border-radius: var(--border-radius-lg);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    border: 2px solid #D4A574;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
   }
   
   .service-tag {
     display: inline-block;
-    background: var(--color-accent);
+    background: #D4A574;
     color: white;
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--border-radius);
-    font-size: var(--fs-sm);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: var(--space-sm);
+    margin-bottom: 10px;
   }
   
   .booking-form {
     display: grid;
-    gap: var(--space-lg);
+    gap: 20px;
   }
   
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: 8px;
   }
   
   .form-label {
     font-weight: 600;
-    color: var(--color-primary);
+    color: #333;
   }
   
   .form-input,
   .form-select,
   .form-textarea {
-    padding: var(--space-sm);
-    border: 2px solid var(--color-border);
-    border-radius: var(--border-radius);
-    font-size: var(--fs-base);
-    transition: border-color var(--transition-base);
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
   }
   
   .form-input:focus,
   .form-select:focus,
   .form-textarea:focus {
     outline: none;
-    border-color: var(--color-accent);
+    border-color: #D4A574;
   }
   
   .time-slots {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-sm);
-    margin-top: var(--space-xs);
+    gap: 10px;
+    margin-top: 8px;
   }
   
   .time-slot {
-    padding: var(--space-sm);
-    border: 2px solid var(--color-border);
-    border-radius: var(--border-radius);
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
     text-align: center;
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: all 0.3s;
   }
   
   .time-slot.selected {
-    background: var(--color-accent);
+    background: #D4A574;
     color: white;
-    border-color: var(--color-accent);
+    border-color: #D4A574;
   }
   
   .stylist-selection {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--space-sm);
-    margin-top: var(--space-xs);
+    gap: 10px;
+    margin-top: 8px;
   }
   
   .stylist-card {
     text-align: center;
-    padding: var(--space-md);
-    border: 2px solid var(--color-border);
-    border-radius: var(--border-radius);
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: all 0.3s;
   }
   
   .stylist-card.selected {
-    border-color: var(--color-accent);
+    border-color: #D4A574;
     background: #FFF8F6;
   }
   
-  .stylist-image {
+  .stylist-avatar {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto var(--space-sm);
-    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
   }
 </style>
 
@@ -134,131 +138,83 @@
         <!-- Will be populated by JavaScript -->
       </div>
       
-      <form class="booking-form" id="booking-form">
-        <div class="form-group">
-          <label class="form-label">Full Name *</label>
-          <input type="text" class="form-input" name="name" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Email *</label>
-          <input type="email" class="form-input" name="email" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Phone *</label>
-          <input type="tel" class="form-input" name="phone" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Select Date *</label>
-          <input type="date" class="form-input" name="date" min="{{ "now" | date: "%Y-%m-%d" }}" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Preferred Time *</label>
-          <div class="time-slots">
-            {% assign time_slots = "9:00 AM,10:00 AM,11:00 AM,12:00 PM,2:00 PM,3:00 PM,4:00 PM,5:00 PM" | split: "," %}
-            {% for time in time_slots %}
-              <div class="time-slot" data-time="{{ time }}">{{ time }}</div>
-            {% endfor %}
+      {% form 'contact' %}
+        <div class="booking-form" id="booking-form">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-input" name="contact[name]" required>
           </div>
-          <input type="hidden" name="time" id="selected-time">
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Select Stylist (Optional)</label>
-          <div class="stylist-selection">
-            {% comment %} 
-              Create placeholder image asset first:
-              1. Create an 80x80px placeholder image
-              2. Upload to Shopify Files with name "stylist-placeholder.jpg"
-              3. Use asset_url filter for better performance
-            {% endcomment %}
-            
-            {% comment %} Option 1: Use a simple SVG placeholder (no external asset needed) {% endcomment %}
-            {% capture placeholder_svg %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
-                <circle cx="40" cy="40" r="40" fill="var(--color-accent)"/>
-                <text x="40" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+          
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" class="form-input" name="contact[email]" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Phone *</label>
+            <input type="tel" class="form-input" name="contact[phone]" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Select Date *</label>
+            <input type="date" class="form-input" name="contact[date]" id="booking-date" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Preferred Time *</label>
+            <div class="time-slots">
+              {% assign time_slots = "9:00 AM,10:00 AM,11:00 AM,12:00 PM,2:00 PM,3:00 PM,4:00 PM,5:00 PM" | split: "," %}
+              {% for time in time_slots %}
+                <div class="time-slot" data-time="{{ time }}">{{ time }}</div>
+              {% endfor %}
+            </div>
+            <input type="hidden" name="contact[time]" id="selected-time" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Select Stylist (Optional)</label>
+            <div class="stylist-selection">
+              <div class="stylist-card" data-stylist="Sarah">
+                <div class="stylist-avatar" style="background: #FF6B6B;">
                   S
-                </text>
-              </svg>
-            {% endcapture %}
-            
-            <div class="stylist-card" data-stylist="Sarah">
-              {% comment %} Use your actual stylist image URL or placeholder {% endcomment %}
-              {% assign sarah_image_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist1.jpg?v=123456789' %}
+                </div>
+                <div class="stylist-name">Sarah</div>
+                <div class="stylist-specialty">Color Specialist</div>
+              </div>
               
-              {% if sarah_image_url contains 'cdn.shopify.com' %}
-                <img 
-                  src="{{ sarah_image_url }}" 
-                  alt="Sarah - Color Specialist" 
-                  class="stylist-image"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                  onerror="this.parentElement.innerHTML = `{{ placeholder_svg | replace: 'S', 'S' }}` + '<div class=\"stylist-name\">Sarah</div><div class=\"stylist-specialty\">Color Specialist</div>';"
-                >
-              {% else %}
-                {{ placeholder_svg | replace: 'S', 'S' }}
-              {% endif %}
-              <div class="stylist-name">Sarah</div>
-              <div class="stylist-specialty">Color Specialist</div>
-            </div>
-            
-            <div class="stylist-card" data-stylist="Michael">
-              {% assign michael_image_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist2.jpg?v=123456789' %}
+              <div class="stylist-card" data-stylist="Michael">
+                <div class="stylist-avatar" style="background: #4ECDC4;">
+                  M
+                </div>
+                <div class="stylist-name">Michael</div>
+                <div class="stylist-specialty">Keratin Expert</div>
+              </div>
               
-              {% if michael_image_url contains 'cdn.shopify.com' %}
-                <img 
-                  src="{{ michael_image_url }}" 
-                  alt="Michael - Keratin Expert" 
-                  class="stylist-image"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                  onerror="this.parentElement.innerHTML = `{{ placeholder_svg | replace: 'S', 'M' }}` + '<div class=\"stylist-name\">Michael</div><div class=\"stylist-specialty\">Keratin Expert</div>';"
-                >
-              {% else %}
-                {{ placeholder_svg | replace: 'S', 'M' }}
-              {% endif %}
-              <div class="stylist-name">Michael</div>
-              <div class="stylist-specialty">Keratin Expert</div>
+              <div class="stylist-card" data-stylist="Jessica">
+                <div class="stylist-avatar" style="background: #FFD166;">
+                  J
+                </div>
+                <div class="stylist-name">Jessica</div>
+                <div class="stylist-specialty">Curl Specialist</div>
+              </div>
             </div>
-            
-            <div class="stylist-card" data-stylist="Jessica">
-              {% assign jessica_image_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist3.jpg?v=123456789' %}
-              
-              {% if jessica_image_url contains 'cdn.shopify.com' %}
-                <img 
-                  src="{{ jessica_image_url }}" 
-                  alt="Jessica - Curl Specialist" 
-                  class="stylist-image"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                  onerror="this.parentElement.innerHTML = `{{ placeholder_svg | replace: 'S', 'J' }}` + '<div class=\"stylist-name\">Jessica</div><div class=\"stylist-specialty\">Curl Specialist</div>';"
-                >
-              {% else %}
-                {{ placeholder_svg | replace: 'S', 'J' }}
-              {% endif %}
-              <div class="stylist-name">Jessica</div>
-              <div class="stylist-specialty">Curl Specialist</div>
-            </div>
+            <input type="hidden" name="contact[stylist]" id="selected-stylist">
           </div>
-          <input type="hidden" name="stylist" id="selected-stylist">
+          
+          <div class="form-group">
+            <label class="form-label">Additional Notes</label>
+            <textarea class="form-textarea" name="contact[notes]" rows="4" placeholder="Any specific concerns or requests..."></textarea>
+          </div>
+          
+          <!-- Hidden fields for concern and service -->
+          <input type="hidden" name="contact[concern]" id="contact-concern">
+          <input type="hidden" name="contact[service]" id="contact-service">
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; background: #D4A574; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;">
+            Confirm Booking
+          </button>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label">Additional Notes</label>
-          <textarea class="form-textarea" name="notes" rows="4" placeholder="Any specific concerns or requests..."></textarea>
-        </div>
-        
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: var(--space-lg);">
-          Confirm Booking
-        </button>
-      </form>
+      {% endform %}
     </div>
   </div>
 </div>
@@ -278,19 +234,9 @@
       <p><strong>For:</strong> ${concern}</p>
     `;
     
-    // Add hidden inputs for concern and service
-    const form = document.getElementById('booking-form');
-    const concernInput = document.createElement('input');
-    concernInput.type = 'hidden';
-    concernInput.name = 'concern';
-    concernInput.value = concern;
-    form.appendChild(concernInput);
-    
-    const serviceInput = document.createElement('input');
-    serviceInput.type = 'hidden';
-    serviceInput.name = 'service';
-    serviceInput.value = service;
-    form.appendChild(serviceInput);
+    // Set hidden fields for Shopify contact form
+    document.getElementById('contact-concern').value = concern;
+    document.getElementById('contact-service').value = service;
     
     // Time slot selection
     document.querySelectorAll('.time-slot').forEach(slot => {
@@ -310,38 +256,13 @@
       });
     });
     
-    // Form submission
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      if (!document.getElementById('selected-time').value) {
-        alert('Please select a time slot');
-        return;
-      }
-      
-      // Collect form data
-      const formData = new FormData(this);
-      const bookingData = Object.fromEntries(formData);
-      
-      // Here you would typically:
-      // 1. Send to email (using Formspree, etc.)
-      // 2. Send to Google Calendar
-      // 3. Store in database
-      
-      // For demo - show confirmation
-      alert(`Booking Confirmed!\n\n✅ Service: ${bookingData.service}\n✅ Date: ${bookingData.date}\n✅ Time: ${bookingData.time}\n✅ Name: ${bookingData.name}\n\nWe'll contact you at ${bookingData.email} to confirm.`);
-      
-      // Clear localStorage
-      localStorage.removeItem('selectedConcern');
-      localStorage.removeItem('selectedService');
-      
-      // Redirect to thank you page
-      window.location.href = '/pages/thank-you';
-    });
-    
     // Set minimum date to today
-    const dateInput = document.querySelector('input[name="date"]');
+    const dateInput = document.getElementById('booking-date');
     const today = new Date().toISOString().split('T')[0];
     dateInput.min = today;
+    dateInput.value = today;
+    
+    // Remove the custom form submission handler since we're using Shopify's form
+    // Shopify will handle the submission automatically
   });
 </script>
