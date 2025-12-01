@@ -1,12 +1,11 @@
 {%- comment -%}
-  Template: page.book-now
-  Location: Templates/page.book-now.liquid
+  page.book-now.liquid
+  Booking page that connects services with concerns
 {%- endcomment -%}
 
 {{ 'theme.css' | asset_url | stylesheet_tag }}
 
 <style>
-  /* Add the booking page CSS here */
   .booking-page {
     padding: var(--section-padding) 0;
   }
@@ -175,29 +174,59 @@
             {% assign stylist3_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist3.jpg?v=123456789' %}
             
             <div class="stylist-card" data-stylist="Sarah">
-              <img src="{{ stylist1_url }}" 
-                   alt="Sarah" 
-                   class="stylist-image"
-                   loading="lazy"
-                   onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'">
+              {% if stylist1_url %}
+                <img 
+                  src="{{ stylist1_url }}" 
+                  alt="Sarah - Color Specialist" 
+                  class="stylist-image"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                  onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'; this.alt='Stylist placeholder image';"
+                >
+              {% else %}
+                <div class="stylist-image" style="display: flex; align-items: center; justify-content: center; background: var(--color-accent); color: white; font-size: 1.5rem;">
+                  S
+                </div>
+              {% endif %}
               <div class="stylist-name">Sarah</div>
               <div class="stylist-specialty">Color Specialist</div>
             </div>
             <div class="stylist-card" data-stylist="Michael">
-              <img src="{{ stylist2_url }}" 
-                   alt="Michael" 
-                   class="stylist-image"
-                   loading="lazy"
-                   onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'">
+              {% if stylist2_url %}
+                <img 
+                  src="{{ stylist2_url }}" 
+                  alt="Michael - Keratin Expert" 
+                  class="stylist-image"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                  onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'; this.alt='Stylist placeholder image';"
+                >
+              {% else %}
+                <div class="stylist-image" style="display: flex; align-items: center; justify-content: center; background: var(--color-accent); color: white; font-size: 1.5rem;">
+                  M
+                </div>
+              {% endif %}
               <div class="stylist-name">Michael</div>
               <div class="stylist-specialty">Keratin Expert</div>
             </div>
             <div class="stylist-card" data-stylist="Jessica">
-              <img src="{{ stylist3_url }}" 
-                   alt="Jessica" 
-                   class="stylist-image"
-                   loading="lazy"
-                   onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'">
+              {% if stylist3_url %}
+                <img 
+                  src="{{ stylist3_url }}" 
+                  alt="Jessica - Curl Specialist" 
+                  class="stylist-image"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                  onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'; this.alt='Stylist placeholder image';"
+                >
+              {% else %}
+                <div class="stylist-image" style="display: flex; align-items: center; justify-content: center; background: var(--color-accent); color: white; font-size: 1.5rem;">
+                  J
+                </div>
+              {% endif %}
               <div class="stylist-name">Jessica</div>
               <div class="stylist-specialty">Curl Specialist</div>
             </div>
