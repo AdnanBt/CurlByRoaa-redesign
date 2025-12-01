@@ -435,6 +435,59 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('🎉 CurlsByRoaa Theme Loaded Successfully!');
 });
 
+// ===== MOBILE OPTIMIZATIONS =====
+class MobileOptimizer {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    this.detectTouch();
+    this.optimizeAnimations();
+    this.lazyLoadImages();
+    this.fixViewportHeight();
+    this.preventZoomOnInput();
+  }
+
+  detectTouch() {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isTouchDevice) {
+      document.documentElement.classList.add('touch-device');
+      document.documentElement.classList.remove('no-touch');
+      
+      // Add touch-specific optimizations
+      this.addTouchStyles();
+    } else {
+      document.documentElement.classList.add('no-touch');
+      document.documentElement.classList.remove('touch-device');
+    }
+  }
+
+  addTouchStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .touch-device .btn:hover,
+      .touch-device .product-card:hover,
+      .touch-device .nav-link:hover {
+        transform: none !important;
+      }
+      
+      .touch-device .card-btn {
+        transition: background-color 0.2s ease !important;
+      }
+      
+      /* Improve scrolling on iOS */
+      .touch-device .scrollable {
+        -webkit-overflow-scrolling: touch;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  optimizeAnimations() {
+    // Check for reduced motion preference
+
 // ===== UTILITY FUNCTIONS =====
 const ThemeUtils = {
   formatMoney: (cents) => {
