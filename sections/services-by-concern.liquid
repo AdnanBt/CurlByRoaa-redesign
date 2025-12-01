@@ -1,0 +1,689 @@
+{%- comment -%}
+  services-by-concern.liquid
+  Shows services based on hair concerns with connection to collections
+{%- endcomment -%}
+
+<style>
+  .concern-services-section {
+    padding: var(--section-padding) 0;
+    background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
+  }
+  
+  .concern-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  @media (min-width: 768px) {
+    .concern-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .concern-card {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .concern-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--color-accent);
+  }
+  
+  .concern-number {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    background: var(--color-accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--fs-lg);
+  }
+  
+  .concern-header {
+    margin-bottom: var(--space-md);
+    padding-right: 40px;
+  }
+  
+  .concern-title {
+    font-size: var(--fs-xl);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--space-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  
+  .concern-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-accent);
+  }
+  
+  .concern-symptoms {
+    font-size: var(--fs-sm);
+    color: var(--color-text-light);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+  }
+  
+  .services-list {
+    margin-bottom: var(--space-lg);
+  }
+  
+  .service-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--color-background-alt);
+    border-radius: var(--border-radius);
+    transition: background var(--transition-base);
+  }
+  
+  .service-item:hover {
+    background: #FFF8F6;
+  }
+  
+  .service-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .service-info {
+    flex: 1;
+  }
+  
+  .service-name {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 2px;
+  }
+  
+  .service-description {
+    font-size: var(--fs-xs);
+    color: var(--color-text-light);
+    line-height: 1.4;
+  }
+  
+  .related-products {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-md);
+    margin-top: var(--space-md);
+  }
+  
+  .products-title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-xs);
+  }
+  
+  .product-mini {
+    text-align: center;
+    padding: var(--space-xs);
+    border-radius: var(--border-radius);
+    background: white;
+    border: 1px solid var(--color-border);
+    transition: all var(--transition-base);
+  }
+  
+  .product-mini:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  
+  .product-mini img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin: 0 auto var(--space-xs);
+  }
+  
+  .product-mini-name {
+    font-size: var(--fs-xs);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+  
+  .concern-cta {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+  
+  .book-btn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: var(--fs-sm);
+  }
+  
+  .book-btn:hover {
+    background: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  
+  .learn-btn {
+    background: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: var(--fs-sm);
+  }
+  
+  .learn-btn:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+</style>
+
+<section class="concern-services-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2 class="section-title">{{ section.settings.title | default: "Book Service by Concern" }}</h2>
+      <p class="section-description">{{ section.settings.subtitle | default: "Find the perfect treatment for your specific hair needs" }}</p>
+    </div>
+    
+    <div class="concern-grid">
+      <!-- Concern 1: Dry / Frizzy / Dull Hair -->
+      <div class="concern-card">
+        <div class="concern-number">1</div>
+        <div class="concern-header">
+          <h3 class="concern-title">
+            <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.464 15.536A5 5 0 1117.657 6.343 5 5 0 016.343 17.657L2.929 21.07a1 1 0 11-1.414-1.414l3.414-3.414a5 5 0 013.535-1.716zm0 0L15.536 8.464"/>
+            </svg>
+            Dry / Frizzy / Dull Hair
+          </h3>
+          <p class="concern-symptoms">Lack of moisture, rough texture, no shine</p>
+        </div>
+        
+        <div class="services-list">
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">ABC Replenish Ritual</div>
+              <div class="service-description">Deep hydration treatment for extremely dry hair</div>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">ABC Hydrate Ritual</div>
+              <div class="service-description">Moisture infusion for frizzy, dull hair</div>
+            </div>
+          </div>
+        </div>
+        
+        {% comment %} Connect to ABC products collection {% endcomment %}
+        {% assign abc_collection = collections['authentic-beauty-concept'] %}
+        {% if abc_collection.products.size > 0 %}
+        <div class="related-products">
+          <div class="products-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Recommended ABC Products
+          </div>
+          <div class="products-grid">
+            {% for product in abc_collection.products limit: 3 %}
+              <a href="{{ product.url }}" class="product-mini">
+                {% if product.featured_image %}
+                  <img src="{{ product.featured_image | img_url: '100x100' }}" 
+                       alt="{{ product.title }}" 
+                       loading="lazy"
+                       width="40"
+                       height="40">
+                {% endif %}
+                <div class="product-mini-name">{{ product.title | truncate: 20 }}</div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        
+        <div class="concern-cta">
+          <button class="book-btn" onclick="bookConcernService('Dry/Frizzy Hair', 'ABC Replenish Ritual')">
+            Book Now
+          </button>
+          <a href="{{ collections['authentic-beauty-concept'].url | default: '#' }}" class="learn-btn">
+            View Products
+          </a>
+        </div>
+      </div>
+      
+      <!-- Concern 2: Damaged or Weak Hair -->
+      <div class="concern-card">
+        <div class="concern-number">2</div>
+        <div class="concern-header">
+          <h3 class="concern-title">
+            <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Damaged or Weak Hair
+          </h3>
+          <p class="concern-symptoms">Breakage, split ends, chemical damage</p>
+        </div>
+        
+        <div class="services-list">
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">Fiber Clinix Bond Builder Treatment</div>
+              <div class="service-description">Repairs internal hair bonds, strengthens structure</div>
+            </div>
+          </div>
+        </div>
+        
+        {% comment %} Connect to Fiber Clinix products {% endcomment %}
+        {% assign fiber_clinix_collection = collections['schwarzkopf'] %}
+        {% if fiber_clinix_collection.products.size > 0 %}
+        <div class="related-products">
+          <div class="products-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Repair Products
+          </div>
+          <div class="products-grid">
+            {% for product in fiber_clinix_collection.products limit: 3 %}
+              {% if product.tags contains 'repair' or product.tags contains 'bond' %}
+                <a href="{{ product.url }}" class="product-mini">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '100x100' }}" 
+                         alt="{{ product.title }}" 
+                         loading="lazy"
+                         width="40"
+                         height="40">
+                  {% endif %}
+                  <div class="product-mini-name">{{ product.title | truncate: 15 }}</div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        
+        <div class="concern-cta">
+          <button class="book-btn" onclick="bookConcernService('Damaged Hair', 'Fiber Clinix Bond Builder')">
+            Book Now
+          </button>
+          <a href="{{ collections['schwarzkopf'].url | default: '#' }}" class="learn-btn">
+            View Products
+          </a>
+        </div>
+      </div>
+      
+      <!-- Concern 3: Hair Fall / Breakage -->
+      <div class="concern-card">
+        <div class="concern-number">3</div>
+        <div class="concern-header">
+          <h3 class="concern-title">
+            <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Hair Fall / Breakage
+          </h3>
+          <p class="concern-symptoms">Excessive shedding, thinning, weak roots</p>
+        </div>
+        
+        <div class="services-list">
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">Fiber Clinix Fortify Bond Builder</div>
+              <div class="service-description">Strengthens hair from root to tip, reduces breakage</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="concern-cta">
+          <button class="book-btn" onclick="bookConcernService('Hair Fall', 'Fiber Clinix Fortify')">
+            Book Now
+          </button>
+          <a href="{{ collections['schwarzkopf'].url | default: '#' }}" class="learn-btn">
+            View Products
+          </a>
+        </div>
+      </div>
+      
+      <!-- Concern 4: Oily Scalp / Dandruff / Itchy Scalp -->
+      <div class="concern-card">
+        <div class="concern-number">4</div>
+        <div class="concern-header">
+          <h3 class="concern-title">
+            <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Scalp Issues
+          </h3>
+          <p class="concern-symptoms">Oily scalp, dandruff, itching, product buildup</p>
+        </div>
+        
+        <div class="services-list">
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">Scalp Clinix Purifying Ritual</div>
+              <div class="service-description">Deep cleansing for oily scalp and buildup</div>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">Anti-Dandruff Ritual</div>
+              <div class="service-description">Targeted treatment for dandruff and flaking</div>
+            </div>
+          </div>
+        </div>
+        
+        {% comment %} Connect to Scalp Clinix products {% endcomment %}
+        {% assign scalp_collection = collections['schwarzkopf'] %}
+        {% if scalp_collection.products.size > 0 %}
+        <div class="related-products">
+          <div class="products-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Scalp Care Products
+          </div>
+          <div class="products-grid">
+            {% for product in scalp_collection.products limit: 3 %}
+              {% if product.tags contains 'scalp' or product.tags contains 'purifying' %}
+                <a href="{{ product.url }}" class="product-mini">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '100x100' }}" 
+                         alt="{{ product.title }}" 
+                         loading="lazy"
+                         width="40"
+                         height="40">
+                  {% endif %}
+                  <div class="product-mini-name">{{ product.title | truncate: 15 }}</div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        
+        <div class="concern-cta">
+          <button class="book-btn" onclick="bookConcernService('Scalp Issues', 'Scalp Clinix Purifying')">
+            Book Now
+          </button>
+          <a href="{{ collections['schwarzkopf'].url | default: '#' }}" class="learn-btn">
+            View Products
+          </a>
+        </div>
+      </div>
+      
+      <!-- Concern 5: Dry or Sensitive Scalp -->
+      <div class="concern-card">
+        <div class="concern-number">5</div>
+        <div class="concern-header">
+          <h3 class="concern-title">
+            <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Dry/Sensitive Scalp
+          </h3>
+          <p class="concern-symptoms">Tightness, irritation, flaking without oiliness</p>
+        </div>
+        
+        <div class="services-list">
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">Scalp Clinix Soothing Ritual</div>
+              <div class="service-description">Gentle treatment for sensitive, dry scalp</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="concern-cta">
+          <button class="book-btn" onclick="bookConcernService('Sensitive Scalp', 'Scalp Clinix Soothing')">
+            Book Now
+          </button>
+          <a href="{{ collections['schwarzkopf'].url | default: '#' }}" class="learn-btn">
+            View Products
+          </a>
+        </div>
+      </div>
+      
+      <!-- Concern 6: Curly Hair -->
+      <div class="concern-card">
+        <div class="concern-number">6</div>
+        <div class="concern-header">
+          <h3 class="concern-title">
+            <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.66 7.93L12 2.27 6.34 7.93c-3.12 3.12-3.12 8.19 0 11.31C7.9 20.8 9.95 21.58 12 21.58s4.1-.78 5.66-2.34c3.12-3.12 3.12-8.19 0-11.31zM12 19.59c-1.6 0-3.11-.62-4.24-1.76C6.62 16.69 6 15.19 6 13.59s.62-3.11 1.76-4.24L12 5.1v14.49z"/>
+            </svg>
+            Curly Hair Care
+          </h3>
+          <p class="concern-symptoms">Dry curls, lack of definition, frizz</p>
+        </div>
+        
+        <div class="services-list">
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">ABC Hydrate Ritual + Curl Styling</div>
+              <div class="service-description">Hydration treatment with curl definition styling</div>
+            </div>
+          </div>
+        </div>
+        
+        {% comment %} Connect to curly hair products {% endcomment %}
+        {% assign curly_collection = collections['authentic-beauty-concept'] %}
+        {% if curly_collection.products.size > 0 %}
+        <div class="related-products">
+          <div class="products-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Curly Hair Products
+          </div>
+          <div class="products-grid">
+            {% for product in curly_collection.products limit: 3 %}
+              {% if product.tags contains 'curl' or product.tags contains 'curly' %}
+                <a href="{{ product.url }}" class="product-mini">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '100x100' }}" 
+                         alt="{{ product.title }}" 
+                         loading="lazy"
+                         width="40"
+                         height="40">
+                  {% endif %}
+                  <div class="product-mini-name">{{ product.title | truncate: 15 }}</div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        
+        <div class="concern-cta">
+          <button class="book-btn" onclick="bookConcernService('Curly Hair', 'ABC Hydrate + Curl Styling')">
+            Book Now
+          </button>
+          <a href="{{ collections['authentic-beauty-concept'].url | default: '#' }}" class="learn-btn">
+            View Products
+          </a>
+        </div>
+      </div>
+      
+      <!-- Concern 7: Color Protection -->
+      <div class="concern-card">
+        <div class="concern-number">7</div>
+        <div class="concern-header">
+          <h3 class="concern-title">
+            <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.66 7.93L12 2.27 6.34 7.93c-3.12 3.12-3.12 8.19 0 11.31C7.9 20.8 9.95 21.58 12 21.58s4.1-.78 5.66-2.34c3.12-3.12 3.12-8.19 0-11.31zM12 19.59c-1.6 0-3.11-.62-4.24-1.76C6.62 16.69 6 15.19 6 13.59s.62-3.11 1.76-4.24L12 5.1v14.49z"/>
+            </svg>
+            Color Protection
+          </h3>
+          <p class="concern-symptoms">Fading color, lack of shine, dry colored hair</p>
+        </div>
+        
+        <div class="services-list">
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">ABC Glow Ritual</div>
+              <div class="service-description">Color-enhancing shine treatment</div>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="service-info">
+              <div class="service-name">Color Protect Ritual</div>
+              <div class="service-description">UV protection and color lock treatment</div>
+            </div>
+          </div>
+        </div>
+        
+        {% comment %} Connect to color care products {% endcomment %}
+        {% assign color_collection = collections['authentic-beauty-concept'] %}
+        {% if color_collection.products.size > 0 %}
+        <div class="related-products">
+          <div class="products-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Color Care Products
+          </div>
+          <div class="products-grid">
+            {% for product in color_collection.products limit: 3 %}
+              {% if product.tags contains 'color' or product.tags contains 'glow' %}
+                <a href="{{ product.url }}" class="product-mini">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '100x100' }}" 
+                         alt="{{ product.title }}" 
+                         loading="lazy"
+                         width="40"
+                         height="40">
+                  {% endif %}
+                  <div class="product-mini-name">{{ product.title | truncate: 15 }}</div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        
+        <div class="concern-cta">
+          <button class="book-btn" onclick="bookConcernService('Color Protection', 'ABC Glow Ritual')">
+            Book Now
+          </button>
+          <a href="{{ collections['authentic-beauty-concept'].url | default: '#' }}" class="learn-btn">
+            View Products
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function bookConcernService(concern, service) {
+    // Store in localStorage for booking page
+    localStorage.setItem('selectedConcern', concern);
+    localStorage.setItem('selectedService', service);
+    
+    // Redirect to booking page or open modal
+    const bookingUrl = `/pages/book-now?concern=${encodeURIComponent(concern)}&service=${encodeURIComponent(service)}`;
+    window.location.href = bookingUrl;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Services by Concern",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Book Service by Concern"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Find the perfect treatment for your specific hair needs"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Services by Concern",
+      "category": "Homepage"
+    }
+  ]
+}
+{% endschema %}
