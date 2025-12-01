@@ -487,6 +487,82 @@ class MobileOptimizer {
 
   optimizeAnimations() {
     // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+      document.documentElement.style.setProperty('--transition-base', '0.01ms');
+      document.documentElement.style.setProperty('--transition-slow', '0.01ms');
+    }
+  }
+
+  lazyLoadImages() {
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+            }
+            
+            if (img.dataset.srcset) {
+              img.srcset = img.dataset.srcset;
+            }
+            
+            img.classList.add('loaded');
+            imageObserver.unobserve(img);
+          }
+        });
+      }, {
+        rootMargin: '50px 0px',
+        threshold: 0.1
+      });
+
+      // Observe all lazy images
+      document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        imageObserver.observe(img);
+      });
+    }
+  }
+
+  fixViewportHeight() {
+    // Fix 100vh issue on mobile
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+  }
+
+  preventZoomOnInput() {
+    // Prevent zoom on input focus in iOS
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      document.addEventListener('focus', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+          document.body.style.fontSize = '16px';
+        }
+      }, true);
+      
+      document.addEventListener('blur', () => {
+        document.body.style.fontSize = '';
+      }, true);
+    }
+  }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new MobileOptimizer();
+  
+  // Fix for iOS viewport height
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+    document.documentElement.style.setProperty('--ios-vh', '1vh');
+  }
+});
 
 // ===== UTILITY FUNCTIONS =====
 const ThemeUtils = {
