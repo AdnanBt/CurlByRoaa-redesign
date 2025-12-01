@@ -1,6 +1,7 @@
 {%- comment -%}
   page.book-now.liquid
   Booking page that connects services with concerns
+  Updated with proper asset handling
 {%- endcomment -%}
 
 {{ 'theme.css' | asset_url | stylesheet_tag }}
@@ -168,64 +169,79 @@
         <div class="form-group">
           <label class="form-label">Select Stylist (Optional)</label>
           <div class="stylist-selection">
-            {% comment %} Add your actual stylist image URLs here {% endcomment %}
-            {% assign stylist1_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist1.jpg?v=123456789' %}
-            {% assign stylist2_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist2.jpg?v=123456789' %}
-            {% assign stylist3_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist3.jpg?v=123456789' %}
+            {% comment %} 
+              Create placeholder image asset first:
+              1. Create an 80x80px placeholder image
+              2. Upload to Shopify Files with name "stylist-placeholder.jpg"
+              3. Use asset_url filter for better performance
+            {% endcomment %}
+            
+            {% comment %} Option 1: Use a simple SVG placeholder (no external asset needed) {% endcomment %}
+            {% capture placeholder_svg %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="40" fill="var(--color-accent)"/>
+                <text x="40" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+                  S
+                </text>
+              </svg>
+            {% endcapture %}
             
             <div class="stylist-card" data-stylist="Sarah">
-              {% if stylist1_url %}
+              {% comment %} Use your actual stylist image URL or placeholder {% endcomment %}
+              {% assign sarah_image_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist1.jpg?v=123456789' %}
+              
+              {% if sarah_image_url contains 'cdn.shopify.com' %}
                 <img 
-                  src="{{ stylist1_url }}" 
+                  src="{{ sarah_image_url }}" 
                   alt="Sarah - Color Specialist" 
                   class="stylist-image"
                   width="80"
                   height="80"
                   loading="lazy"
-                  onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'; this.alt='Stylist placeholder image';"
+                  onerror="this.parentElement.innerHTML = `{{ placeholder_svg | replace: 'S', 'S' }}` + '<div class=\"stylist-name\">Sarah</div><div class=\"stylist-specialty\">Color Specialist</div>';"
                 >
               {% else %}
-                <div class="stylist-image" style="display: flex; align-items: center; justify-content: center; background: var(--color-accent); color: white; font-size: 1.5rem;">
-                  S
-                </div>
+                {{ placeholder_svg | replace: 'S', 'S' }}
               {% endif %}
               <div class="stylist-name">Sarah</div>
               <div class="stylist-specialty">Color Specialist</div>
             </div>
+            
             <div class="stylist-card" data-stylist="Michael">
-              {% if stylist2_url %}
+              {% assign michael_image_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist2.jpg?v=123456789' %}
+              
+              {% if michael_image_url contains 'cdn.shopify.com' %}
                 <img 
-                  src="{{ stylist2_url }}" 
+                  src="{{ michael_image_url }}" 
                   alt="Michael - Keratin Expert" 
                   class="stylist-image"
                   width="80"
                   height="80"
                   loading="lazy"
-                  onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'; this.alt='Stylist placeholder image';"
+                  onerror="this.parentElement.innerHTML = `{{ placeholder_svg | replace: 'S', 'M' }}` + '<div class=\"stylist-name\">Michael</div><div class=\"stylist-specialty\">Keratin Expert</div>';"
                 >
               {% else %}
-                <div class="stylist-image" style="display: flex; align-items: center; justify-content: center; background: var(--color-accent); color: white; font-size: 1.5rem;">
-                  M
-                </div>
+                {{ placeholder_svg | replace: 'S', 'M' }}
               {% endif %}
               <div class="stylist-name">Michael</div>
               <div class="stylist-specialty">Keratin Expert</div>
             </div>
+            
             <div class="stylist-card" data-stylist="Jessica">
-              {% if stylist3_url %}
+              {% assign jessica_image_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist3.jpg?v=123456789' %}
+              
+              {% if jessica_image_url contains 'cdn.shopify.com' %}
                 <img 
-                  src="{{ stylist3_url }}" 
+                  src="{{ jessica_image_url }}" 
                   alt="Jessica - Curl Specialist" 
                   class="stylist-image"
                   width="80"
                   height="80"
                   loading="lazy"
-                  onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'; this.alt='Stylist placeholder image';"
+                  onerror="this.parentElement.innerHTML = `{{ placeholder_svg | replace: 'S', 'J' }}` + '<div class=\"stylist-name\">Jessica</div><div class=\"stylist-specialty\">Curl Specialist</div>';"
                 >
               {% else %}
-                <div class="stylist-image" style="display: flex; align-items: center; justify-content: center; background: var(--color-accent); color: white; font-size: 1.5rem;">
-                  J
-                </div>
+                {{ placeholder_svg | replace: 'S', 'J' }}
               {% endif %}
               <div class="stylist-name">Jessica</div>
               <div class="stylist-specialty">Curl Specialist</div>
