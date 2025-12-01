@@ -13,20 +13,36 @@
       "hero": {
         "type": "hero",
         "settings": {
-          "heading": "Elevate Your Natural Beauty",
-          "subheading": "Experience the perfect harmony of science and nature with our meticulously crafted hair care solutions",
-          "cta_text": "Explore Products",
-          "cta_url": "",
-          "secondary_cta_text": "Begin Journey",
-          "secondary_cta_url": ""
+          "collection": ""
         }
       },
       "featured-collections": {
         "type": "featured-collections",
-        "settings": {}
-      },
-      "benefits": {
-        "type": "benefits",
+        "blocks": {
+          "collection_fc9zDB": {
+            "type": "collection",
+            "settings": {
+              "collection": "browsbylush"
+            }
+          },
+          "collection_H7EzNQ": {
+            "type": "collection",
+            "settings": {
+              "collection": "alterna"
+            }
+          },
+          "collection_VqpMnh": {
+            "type": "collection",
+            "settings": {
+              "collection": "shwarzkopf"
+            }
+          }
+        },
+        "block_order": [
+          "collection_fc9zDB",
+          "collection_H7EzNQ",
+          "collection_VqpMnh"
+        ],
         "settings": {}
       },
       "featured-products": {
@@ -53,8 +69,88 @@
         "settings": {
           "title": "Find Your Perfect Routine"
         }
+      },
+      "announcement-bar": {
+        "type": "announcement-bar",
+        "settings": {}
+      },
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "trust-indicators": {
+        "type": "trust-indicators",
+        "settings": {}
+      },
+      "science-technology": {
+        "type": "science-technology",
+        "settings": {}
+      },
+      "product-benefits": {
+        "type": "product-benefits",
+        "settings": {}
+      },
+      "ingredients-spotlight": {
+        "type": "ingredients-spotlight",
+        "settings": {}
+      },
+      "before-after": {
+        "type": "before-after",
+        "settings": {}
+      },
+      "expert-endorsements": {
+        "type": "expert-endorsements",
+        "settings": {}
+      },
+      "educational-content": {
+        "type": "educational-content",
+        "settings": {}
+      },
+      "faq": {
+        "type": "faq",
+        "settings": {}
+      },
+      "services-by-concern": {
+        "type": "services-by-concern",
+        "settings": {
+          "title": "Book Service by Concern",
+          "subtitle": "Find the perfect treatment for your specific hair needs"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
       }
     },
-    "content_for_index": []
+    "content_for_index": [],
+    "blocks": {
+      "4976129024724438625": {
+        "type": "shopify://apps/smart-seo/blocks/brokenLinkDetection/7b0a6064-ca2e-4392-9a1d-8c43c942357b",
+        "disabled": false,
+        "settings": {}
+      },
+      "6406956604159796213": {
+        "type": "shopify://apps/smart-seo/blocks/smartseo/7b0a6064-ca2e-4392-9a1d-8c43c942357b",
+        "disabled": false,
+        "settings": {}
+      },
+      "4493994212685255146": {
+        "type": "shopify://apps/hextom-whatsapp-sms-push/blocks/app-block/7861f6ce-2897-4f30-be3b-04c90bf56b8c",
+        "disabled": false,
+        "settings": {}
+      },
+      "6455419830187867978": {
+        "type": "shopify://apps/sesami-booking-app/blocks/app-embed/dc3b1344-0a53-477e-93d0-4b8a473ab587",
+        "disabled": false,
+        "settings": {
+          "enable_cart_verification": true
+        }
+      },
+      "6744518860797519131": {
+        "type": "shopify://apps/langwill-translate/blocks/floating-selector/35c05b0e-4f05-4fc9-adc7-77b6ccb6b2ca",
+        "disabled": false,
+        "settings": {}
+      }
+    }
   }
 }
