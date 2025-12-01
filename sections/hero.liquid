@@ -385,20 +385,23 @@
               <a href="/pages/book-now" class="card-btn card-btn-primary">
                 Book Treatment
               </a>
-              <a href="/collections/all" class="card-btn card-btn-secondary">
+              <a href="{{ routes.all_products_collection_url }}" class="card-btn card-btn-secondary">
                 Shop Products
               </a>
             </div>
           </div>
           
           <div class="card-image">
+            {% comment %} Use the actual URL from Shopify Files {% endcomment %}
+            {% assign hero_image_1 = 'hero-card-1.jpg' | file_url %}
             <img 
-              src="{{ 'hero-card-1.jpg' | asset_url }}" 
+              src="{{ hero_image_1 }}" 
               alt="Luxury Hair Treatment"
               class="product-image-large"
               loading="lazy"
               width="600"
-              height="600">
+              height="600"
+              onerror="this.src='https://placehold.co/600x600/F5E7D6/000000?text=Hair+Treatment';">
           </div>
         </div>
       </div>
@@ -414,23 +417,42 @@
               with our salon-exclusive Absolut Repair treatment.
             </p>
             <div class="card-actions">
-              <a href="/collections/absolut-repair" class="card-btn card-btn-primary">
-                Try Absolut Repair
-              </a>
-              <a href="/collections/hair-masks" class="card-btn card-btn-secondary">
-                Explore Hair Masks
-              </a>
+              {% comment %} Use dynamic collection links {% endcomment %}
+              {% assign absolut_collection = collections['absolut-repair'] %}
+              {% assign masks_collection = collections['hair-masks'] %}
+              
+              {% if absolut_collection %}
+                <a href="{{ absolut_collection.url }}" class="card-btn card-btn-primary">
+                  Try Absolut Repair
+                </a>
+              {% else %}
+                <a href="{{ routes.all_products_collection_url }}" class="card-btn card-btn-primary">
+                  Try Absolut Repair
+                </a>
+              {% endif %}
+              
+              {% if masks_collection %}
+                <a href="{{ masks_collection.url }}" class="card-btn card-btn-secondary">
+                  Explore Hair Masks
+                </a>
+              {% else %}
+                <a href="{{ routes.collections_url }}" class="card-btn card-btn-secondary">
+                  Explore Collections
+                </a>
+              {% endif %}
             </div>
           </div>
           
           <div class="card-image">
+            {% assign hero_image_2 = 'hero-card-2.jpg' | file_url %}
             <img 
-              src="{{ 'hero-card-2.jpg' | asset_url }}" 
+              src="{{ hero_image_2 }}" 
               alt="L'Oréal Absolut Repair Mask"
               class="product-image-large"
               loading="lazy"
               width="600"
-              height="600">
+              height="600"
+              onerror="this.src='https://placehold.co/600x600/F3E3C5/000000?text=Absolut+Repair';">
           </div>
         </div>
       </div>
