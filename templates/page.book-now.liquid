@@ -1,0 +1,282 @@
+{%- comment -%}
+  page.book-now.liquid
+  Booking page that connects services with concerns
+{%- endcomment -%}
+
+<style>
+  .booking-page {
+    padding: var(--section-padding) 0;
+  }
+  
+  .booking-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--border-radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .selected-service {
+    background: #FFF8F6;
+    border: 2px solid var(--color-accent);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+  
+  .service-tag {
+    display: inline-block;
+    background: var(--color-accent);
+    color: white;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .booking-form {
+    display: grid;
+    gap: var(--space-lg);
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  
+  .form-label {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+  
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: var(--space-sm);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius);
+    font-size: var(--fs-base);
+    transition: border-color var(--transition-base);
+  }
+  
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+  
+  .time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+  }
+  
+  .time-slot {
+    padding: var(--space-sm);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+  
+  .time-slot.selected {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+  
+  .stylist-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+  }
+  
+  .stylist-card {
+    text-align: center;
+    padding: var(--space-md);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+  
+  .stylist-card.selected {
+    border-color: var(--color-accent);
+    background: #FFF8F6;
+  }
+  
+  .stylist-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto var(--space-sm);
+  }
+</style>
+
+<div class="booking-page">
+  <div class="container">
+    <div class="booking-container">
+      <h1 class="section-title">Book Your Service</h1>
+      
+      <div class="selected-service" id="selected-service-display">
+        <!-- Will be populated by JavaScript -->
+      </div>
+      
+      <form class="booking-form" id="booking-form">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-input" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Phone *</label>
+          <input type="tel" class="form-input" name="phone" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Select Date *</label>
+          <input type="date" class="form-input" name="date" min="{{ "now" | date: "%Y-%m-%d" }}" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Preferred Time *</label>
+          <div class="time-slots">
+            {% assign time_slots = "9:00 AM,10:00 AM,11:00 AM,12:00 PM,2:00 PM,3:00 PM,4:00 PM,5:00 PM" | split: "," %}
+            {% for time in time_slots %}
+              <div class="time-slot" data-time="{{ time }}">{{ time }}</div>
+            {% endfor %}
+          </div>
+          <input type="hidden" name="time" id="selected-time">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Select Stylist (Optional)</label>
+          <div class="stylist-selection">
+            {% comment %} Connect to your stylists metaobjects or collection {% endcomment %}
+            <div class="stylist-card" data-stylist="Sarah">
+              <img src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/stylist1.jpg?v=123456" 
+                   alt="Sarah" 
+                   class="stylist-image"
+                   loading="lazy">
+              <div class="stylist-name">Sarah</div>
+              <div class="stylist-specialty">Color Specialist</div>
+            </div>
+            <div class="stylist-card" data-stylist="Michael">
+              <img src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/stylist2.jpg?v=123456" 
+                   alt="Michael" 
+                   class="stylist-image"
+                   loading="lazy">
+              <div class="stylist-name">Michael</div>
+              <div class="stylist-specialty">Keratin Expert</div>
+            </div>
+            <div class="stylist-card" data-stylist="Jessica">
+              <img src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/stylist3.jpg?v=123456" 
+                   alt="Jessica" 
+                   class="stylist-image"
+                   loading="lazy">
+              <div class="stylist-name">Jessica</div>
+              <div class="stylist-specialty">Curl Specialist</div>
+            </div>
+          </div>
+          <input type="hidden" name="stylist" id="selected-stylist">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Additional Notes</label>
+          <textarea class="form-textarea" name="notes" rows="4" placeholder="Any specific concerns or requests..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: var(--space-lg);">
+          Confirm Booking
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get selected concern and service from localStorage or URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const concern = urlParams.get('concern') || localStorage.getItem('selectedConcern') || 'General Service';
+    const service = urlParams.get('service') || localStorage.getItem('selectedService') || 'Hair Treatment';
+    
+    // Display selected service
+    const serviceDisplay = document.getElementById('selected-service-display');
+    serviceDisplay.innerHTML = `
+      <div class="service-tag">Selected Service</div>
+      <h3>${service}</h3>
+      <p>For: ${concern}</p>
+    `;
+    
+    // Add hidden inputs for concern and service
+    const form = document.getElementById('booking-form');
+    const concernInput = document.createElement('input');
+    concernInput.type = 'hidden';
+    concernInput.name = 'concern';
+    concernInput.value = concern;
+    form.appendChild(concernInput);
+    
+    const serviceInput = document.createElement('input');
+    serviceInput.type = 'hidden';
+    serviceInput.name = 'service';
+    serviceInput.value = service;
+    form.appendChild(serviceInput);
+    
+    // Time slot selection
+    document.querySelectorAll('.time-slot').forEach(slot => {
+      slot.addEventListener('click', function() {
+        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+        this.classList.add('selected');
+        document.getElementById('selected-time').value = this.dataset.time;
+      });
+    });
+    
+    // Stylist selection
+    document.querySelectorAll('.stylist-card').forEach(card => {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.stylist-card').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+        document.getElementById('selected-stylist').value = this.dataset.stylist;
+      });
+    });
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if (!document.getElementById('selected-time').value) {
+        alert('Please select a time slot');
+        return;
+      }
+      
+      // Here you would typically send to your booking system
+      // For now, just show confirmation
+      const formData = new FormData(this);
+      const bookingData = Object.fromEntries(formData);
+      
+      // Show confirmation
+      alert(`Booking confirmed!\n\nService: ${bookingData.service}\nDate: ${bookingData.date}\nTime: ${bookingData.time}\nWe'll contact you shortly to confirm.`);
+      
+      // Clear localStorage
+      localStorage.removeItem('selectedConcern');
+      localStorage.removeItem('selectedService');
+      
+      // Redirect to thank you page
+      window.location.href = '/pages/thank-you';
+    });
+  });
+</script>
