@@ -1,9 +1,12 @@
 {%- comment -%}
-  page.book-now.liquid
-  Booking page that connects services with concerns
+  Template: page.book-now
+  Location: Templates/page.book-now.liquid
 {%- endcomment -%}
 
+{{ 'theme.css' | asset_url | stylesheet_tag }}
+
 <style>
+  /* Add the booking page CSS here */
   .booking-page {
     padding: var(--section-padding) 0;
   }
@@ -118,6 +121,7 @@
     border-radius: 50%;
     object-fit: cover;
     margin: 0 auto var(--space-sm);
+    background: #f5f5f5;
   }
 </style>
 
@@ -165,28 +169,35 @@
         <div class="form-group">
           <label class="form-label">Select Stylist (Optional)</label>
           <div class="stylist-selection">
-            {% comment %} Connect to your stylists metaobjects or collection {% endcomment %}
+            {% comment %} Add your actual stylist image URLs here {% endcomment %}
+            {% assign stylist1_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist1.jpg?v=123456789' %}
+            {% assign stylist2_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist2.jpg?v=123456789' %}
+            {% assign stylist3_url = 'https://cdn.shopify.com/s/files/1/YOUR-STORE-ID/files/stylist3.jpg?v=123456789' %}
+            
             <div class="stylist-card" data-stylist="Sarah">
-              <img src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/stylist1.jpg?v=123456" 
+              <img src="{{ stylist1_url }}" 
                    alt="Sarah" 
                    class="stylist-image"
-                   loading="lazy">
+                   loading="lazy"
+                   onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'">
               <div class="stylist-name">Sarah</div>
               <div class="stylist-specialty">Color Specialist</div>
             </div>
             <div class="stylist-card" data-stylist="Michael">
-              <img src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/stylist2.jpg?v=123456" 
+              <img src="{{ stylist2_url }}" 
                    alt="Michael" 
                    class="stylist-image"
-                   loading="lazy">
+                   loading="lazy"
+                   onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'">
               <div class="stylist-name">Michael</div>
               <div class="stylist-specialty">Keratin Expert</div>
             </div>
             <div class="stylist-card" data-stylist="Jessica">
-              <img src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/stylist3.jpg?v=123456" 
+              <img src="{{ stylist3_url }}" 
                    alt="Jessica" 
                    class="stylist-image"
-                   loading="lazy">
+                   loading="lazy"
+                   onerror="this.src='https://cdn.shopify.com/s/files/1/0567/4172/4316/files/placeholder.jpg?v=123456'">
               <div class="stylist-name">Jessica</div>
               <div class="stylist-specialty">Curl Specialist</div>
             </div>
@@ -211,15 +222,15 @@
   document.addEventListener('DOMContentLoaded', function() {
     // Get selected concern and service from localStorage or URL
     const urlParams = new URLSearchParams(window.location.search);
-    const concern = urlParams.get('concern') || localStorage.getItem('selectedConcern') || 'General Service';
-    const service = urlParams.get('service') || localStorage.getItem('selectedService') || 'Hair Treatment';
+    const concern = urlParams.get('concern') || localStorage.getItem('selectedConcern') || 'Hair Treatment';
+    const service = urlParams.get('service') || localStorage.getItem('selectedService') || 'General Service';
     
     // Display selected service
     const serviceDisplay = document.getElementById('selected-service-display');
     serviceDisplay.innerHTML = `
       <div class="service-tag">Selected Service</div>
       <h3>${service}</h3>
-      <p>For: ${concern}</p>
+      <p><strong>For:</strong> ${concern}</p>
     `;
     
     // Add hidden inputs for concern and service
@@ -263,13 +274,17 @@
         return;
       }
       
-      // Here you would typically send to your booking system
-      // For now, just show confirmation
+      // Collect form data
       const formData = new FormData(this);
       const bookingData = Object.fromEntries(formData);
       
-      // Show confirmation
-      alert(`Booking confirmed!\n\nService: ${bookingData.service}\nDate: ${bookingData.date}\nTime: ${bookingData.time}\nWe'll contact you shortly to confirm.`);
+      // Here you would typically:
+      // 1. Send to email (using Formspree, etc.)
+      // 2. Send to Google Calendar
+      // 3. Store in database
+      
+      // For demo - show confirmation
+      alert(`Booking Confirmed!\n\n✅ Service: ${bookingData.service}\n✅ Date: ${bookingData.date}\n✅ Time: ${bookingData.time}\n✅ Name: ${bookingData.name}\n\nWe'll contact you at ${bookingData.email} to confirm.`);
       
       // Clear localStorage
       localStorage.removeItem('selectedConcern');
@@ -278,5 +293,10 @@
       // Redirect to thank you page
       window.location.href = '/pages/thank-you';
     });
+    
+    // Set minimum date to today
+    const dateInput = document.querySelector('input[name="date"]');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
   });
 </script>
