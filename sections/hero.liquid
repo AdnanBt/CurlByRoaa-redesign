@@ -345,44 +345,6 @@
   }
 }
 
-/* Add image loading animation */
-.product-image-large {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.product-image-large.loaded {
-  opacity: 1;
-}
-
-.image-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f8f8;
-  color: #666;
-  font-size: 16px;
-  border-radius: 20px;
-  width: 100%;
-  max-width: 400px;
-  height: 300px;
-}
-
-/* Update for larger screens */
-@media (min-width: 768px) {
-  .image-placeholder {
-    max-width: 600px;
-    height: 400px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .image-placeholder {
-    max-width: 600px;
-    height: 500px;
-  }
-}
-
 /* LARGE DESKTOP (1400px and up) */
 @media (min-width: 1400px) {
   .hero-card {
@@ -531,25 +493,26 @@
                 </div>
               </div>
               
-              <div class="card-image">
-                {%- if product.featured_image -%}
-                  <img 
-                    src="{{ product.featured_image | image_url: width: 600, height: 600 }}" 
-                    alt="{{ product.title | escape }}"
-                    class="product-image-large"
-                    width="600"
-                    height="600"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                  >
-                  <div class="image-placeholder" style="display: none;">
-                    {{ product.title | truncate: 20 }}
-                  </div>
-                {%- else -%}
-                  <div class="image-placeholder">
-                    {{ product.title | truncate: 20 }}
-                  </div>
-                {%- endif -%}
+           <div class="card-image">
+  {%- if product.featured_image -%}
+    <img 
+      src="{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' }}" 
+      alt="{{ product.title | escape }}"
+      class="product-image-large"
+      width="600"
+      height="600"
+      loading="lazy"
+      onload="this.classList.add('loaded')"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="image-placeholder" style="display: none;">
+      {{ product.title | truncate: 20 }}
+    </div>
+  {%- else -%}
+    <div class="image-placeholder">
+      {{ product.title | truncate: 20 }}
+    </div>
+  {%- endif -%}
+</div>
               </div>
             </div>
           </div>
