@@ -591,18 +591,17 @@
             </div>
           </div>
           
-          <div class="card-image">
-            {% comment %} Use the actual URL from Shopify Files {% endcomment %}
-            {% assign hero_image_1 = 'hero-card-1.jpg' | file_url %}
-            <img 
-              src="{{ hero_image_1 }}" 
-              alt="Luxury Hair Treatment"
-              class="product-image-large"
-              loading="lazy"
-              width="600"
-              height="600"
-              onerror="this.src='https://placehold.co/600x600/F5E7D6/000000?text=Hair+Treatment';">
-          </div>
+       <div class="card-image">
+  {% assign hero_image_1 = 'hero-card-1.jpg' | file_url %}
+  <img 
+    src="{{ hero_image_1 }}" 
+    alt="Luxury Hair Treatment"
+    class="product-image-large"
+    loading="lazy"
+    onload="this.classList.add('loaded')"
+    onerror="this.src='https://placehold.co/600x600/F5E7D6/000000?text=Hair+Treatment';">
+</div>
+
         </div>
       </div>
 
