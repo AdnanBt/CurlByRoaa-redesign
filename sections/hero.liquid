@@ -417,6 +417,24 @@
     font-size: 4rem;
   }
 }
+/* Add this to your existing CSS */
+.product-image-large {
+  height: auto !important;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .product-image-large {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-image-large {
+    max-height: 300px;
+  }
+}
 
 /* ANIMATION */
 @keyframes float {
