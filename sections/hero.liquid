@@ -576,7 +576,6 @@
     </svg>
   </div>
 </section>
-
 <script>
 class HeroCarousel {
   constructor() {
@@ -598,6 +597,30 @@ class HeroCarousel {
     this.createDots();
     this.updateNavigation();
     this.startAutoScroll();
+    this.setupImageLoading(); // Add image loading setup
+  }
+
+  setupImageLoading() {
+    const images = document.querySelectorAll('.product-image-large');
+    images.forEach(img => {
+      // Check if image is already loaded
+      if (img.complete) {
+        img.classList.add('loaded');
+      } else {
+        img.addEventListener('load', function() {
+          this.classList.add('loaded');
+        });
+        
+        img.addEventListener('error', function() {
+          console.error('Image failed to load:', this.src);
+          this.style.display = 'none';
+          const placeholder = this.nextElementSibling;
+          if (placeholder && placeholder.classList.contains('image-placeholder')) {
+            placeholder.style.display = 'flex';
+          }
+        });
+      }
+    });
   }
 
   bindEvents() {
@@ -721,22 +744,7 @@ function scrollToNextSection() {
     behavior: 'smooth'
   });
 }
-
-// Image error handling
-document.addEventListener('DOMContentLoaded', function() {
-  const images = document.querySelectorAll('.product-image-large');
-  images.forEach(img => {
-    img.addEventListener('error', function() {
-      this.style.display = 'none';
-      const placeholder = this.nextElementSibling;
-      if (placeholder && placeholder.classList.contains('image-placeholder')) {
-        placeholder.style.display = 'flex';
-      }
-    });
-  });
-});
 </script>
-
 {% schema %}
 {
   "name": "Hero Carousel",
