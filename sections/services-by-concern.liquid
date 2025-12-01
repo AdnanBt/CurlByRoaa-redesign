@@ -1,6 +1,7 @@
 {%- comment -%}
   services-by-concern.liquid
   Beautiful carousel layout for services by concern
+  Updated with image_url filter
 {%- endcomment -%}
 
 <style>
@@ -466,7 +467,7 @@
                       <div class="product-mini-image-wrapper">
                         {% if product.featured_image %}
                           <img 
-                            src="{{ product.featured_image | img_url: '120x120', crop: 'center' }}" 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
                             alt="{{ product.title | escape }}"
                             class="product-mini-image"
                             width="120"
@@ -547,7 +548,7 @@
                       <div class="product-mini-image-wrapper">
                         {% if product.featured_image %}
                           <img 
-                            src="{{ product.featured_image | img_url: '120x120', crop: 'center' }}" 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
                             alt="{{ product.title | escape }}"
                             class="product-mini-image"
                             width="120"
@@ -626,7 +627,7 @@
                       <div class="product-mini-image-wrapper">
                         {% if product.featured_image %}
                           <img 
-                            src="{{ product.featured_image | img_url: '120x120', crop: 'center' }}" 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
                             alt="{{ product.title | escape }}"
                             class="product-mini-image"
                             width="120"
@@ -715,7 +716,7 @@
                       <div class="product-mini-image-wrapper">
                         {% if product.featured_image %}
                           <img 
-                            src="{{ product.featured_image | img_url: '120x120', crop: 'center' }}" 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
                             alt="{{ product.title | escape }}"
                             class="product-mini-image"
                             width="120"
@@ -833,7 +834,7 @@
                       <div class="product-mini-image-wrapper">
                         {% if product.featured_image %}
                           <img 
-                            src="{{ product.featured_image | img_url: '120x120', crop: 'center' }}" 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
                             alt="{{ product.title | escape }}"
                             class="product-mini-image"
                             width="120"
@@ -922,7 +923,7 @@
                       <div class="product-mini-image-wrapper">
                         {% if product.featured_image %}
                           <img 
-                            src="{{ product.featured_image | img_url: '120x120', crop: 'center' }}" 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
                             alt="{{ product.title | escape }}"
                             class="product-mini-image"
                             width="120"
