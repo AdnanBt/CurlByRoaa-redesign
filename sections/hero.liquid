@@ -146,6 +146,26 @@
   background: #f8f8f8;
 }
 
+/* Add image loading animation */
+.product-image-large {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-image-large.loaded {
+  opacity: 1;
+}
+
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
+  color: #666;
+  font-size: 16px;
+  border-radius: 20px;
+}
+
 /* Your custom hero card styles */
 .custom-hero-card {
   background: #F3E3C5;
@@ -366,6 +386,186 @@
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(-10px); }
 }
+
+/* ==================== */
+/* MOBILE RESPONSIVENESS FIXES */
+/* ==================== */
+
+/* Base mobile fixes */
+@media (max-width: 639px) {
+  .hero {
+    padding: 60px 16px 40px !important;
+    height: auto !important;
+    min-height: 80vh !important;
+  }
+  
+  .custom-hero-card {
+    height: 80vh !important;
+    min-height: 500px !important;
+    padding: 20px !important;
+  }
+  
+  .custom-hero-card .card-content {
+    padding: 0 16px !important;
+    gap: 30px !important;
+  }
+  
+  .custom-hero-card .card-title {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .card-description {
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .product-image-large,
+  .image-placeholder {
+    max-width: 100% !important;
+    height: 250px !important;
+    border-radius: 16px !important;
+  }
+  
+  .card-actions {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+  
+  .card-btn {
+    min-width: 100% !important;
+    width: 100% !important;
+    padding: 14px 20px !important;
+    font-size: 14px !important;
+  }
+  
+  .card-badge {
+    font-size: 10px !important;
+    padding: 4px 10px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* Mobile grid fix */
+  .card-content {
+    gap: 30px;
+    grid-template-columns: 1fr;
+  }
+  
+  .card-text {
+    order: 2;
+    text-align: center;
+  }
+  
+  .card-image {
+    order: 1;
+  }
+}
+
+/* Small mobile fixes */
+@media (max-width: 375px) {
+  .custom-hero-card .card-title {
+    font-size: 1.8rem !important;
+  }
+  
+  .card-description {
+    font-size: 0.9rem !important;
+  }
+  
+  .product-image-large,
+  .image-placeholder {
+    height: 200px !important;
+  }
+  
+  .card-btn {
+    padding: 12px 16px !important;
+    font-size: 13px !important;
+  }
+  
+  .card-title {
+    font-size: 1.6rem !important;
+  }
+  
+  .custom-hero-card .card-title {
+    font-size: 1.8rem !important;
+  }
+}
+
+/* Fix carousel dots on mobile */
+@media (max-width: 768px) {
+  .carousel-dots {
+    bottom: 20px !important;
+  }
+  
+  .carousel-dot {
+    width: 6px !important;
+    height: 6px !important;
+  }
+  
+  .card-title {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .custom-hero-card .card-title {
+    font-size: 2.2rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .card-btn {
+    min-width: 100% !important;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .card-actions {
+    gap: 10px;
+  }
+}
+
+/* Ensure content stays within viewport */
+@media (max-width: 639px) {
+  .hero-carousel {
+    min-height: 80vh;
+  }
+  
+  .hero-card {
+    padding: 16px !important;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Mobile custom hero card heights */
+@media (max-width: 768px) {
+  .custom-hero-card {
+    height: 80vh !important;
+    min-height: 500px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-hero-card {
+    height: 75vh !important;
+    min-height: 450px !important;
+  }
+  
+  .image-placeholder {
+    max-width: 600px;
+    height: 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .image-placeholder {
+    max-width: 600px;
+    height: 500px;
+  }
+}
 </style>
 
 <section class="hero">
@@ -494,25 +694,25 @@
               </div>
               
               <div class="card-image">
-  {%- if product.featured_image -%}
-    <img 
-      src="{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' }}" 
-      alt="{{ product.title | escape }}"
-      class="product-image-large"
-      width="600"
-      height="600"
-      loading="lazy"
-      onload="this.classList.add('loaded')"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-    <div class="image-placeholder" style="display: none;">
-      {{ product.title | truncate: 20 }}
-    </div>
-  {%- else -%}
-    <div class="image-placeholder">
-      {{ product.title | truncate: 20 }}
-    </div>
-  {%- endif -%}
-</div>
+                {%- if product.featured_image -%}
+                  <img 
+                    src="{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' }}" 
+                    alt="{{ product.title | escape }}"
+                    class="product-image-large"
+                    width="600"
+                    height="600"
+                    loading="lazy"
+                    onload="this.classList.add('loaded')"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                  <div class="image-placeholder" style="display: none;">
+                    {{ product.title | truncate: 20 }}
+                  </div>
+                {%- else -%}
+                  <div class="image-placeholder">
+                    {{ product.title | truncate: 20 }}
+                  </div>
+                {%- endif -%}
+              </div>
             </div>
           </div>
         {%- endfor -%}
@@ -576,6 +776,7 @@
     </svg>
   </div>
 </section>
+
 <script>
 class HeroCarousel {
   constructor() {
@@ -597,13 +798,12 @@ class HeroCarousel {
     this.createDots();
     this.updateNavigation();
     this.startAutoScroll();
-    this.setupImageLoading(); // Add image loading setup
+    this.setupImageLoading();
   }
 
   setupImageLoading() {
     const images = document.querySelectorAll('.product-image-large');
     images.forEach(img => {
-      // Check if image is already loaded
       if (img.complete) {
         img.classList.add('loaded');
       } else {
@@ -661,10 +861,42 @@ class HeroCarousel {
       }
     });
 
-    // Pause auto-scroll on hover
+    // Touch/swipe for mobile
     if (this.carousel) {
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      this.carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+      
+      this.carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        this.handleSwipe(touchStartX, touchEndX);
+      });
+
+      // Pause auto-scroll on hover
       this.carousel.addEventListener('mouseenter', () => this.stopAutoScroll());
       this.carousel.addEventListener('mouseleave', () => this.startAutoScroll());
+    }
+  }
+
+  handleSwipe(startX, endX) {
+    const swipeThreshold = 50;
+    const swipeDistance = startX - endX;
+    
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      if (swipeDistance > 0) {
+        // Swipe left - next slide
+        this.stopAutoScroll();
+        this.nextSlide();
+        this.startAutoScroll();
+      } else {
+        // Swipe right - previous slide
+        this.stopAutoScroll();
+        this.prevSlide();
+        this.startAutoScroll();
+      }
     }
   }
 
@@ -745,6 +977,7 @@ function scrollToNextSection() {
   });
 }
 </script>
+
 {% schema %}
 {
   "name": "Hero Carousel",
