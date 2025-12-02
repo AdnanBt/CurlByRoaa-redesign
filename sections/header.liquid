@@ -1,2572 +1,803 @@
-{% comment %} hair-quiz-complete.liquid - Full 4-Step Version {% endcomment %}
-
 <style>
-/* ==================== */
-/* HAIR QUIZ STYLES */
-/* ==================== */
-.hair-quiz-section {
-  padding: 80px 20px;
-  background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.hair-quiz-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
-
-/* Language Toggle */
-.language-toggle-container {
-  position: absolute;
-  top: 0;
-  right: 20px;
-  z-index: 1000;
-}
-
-.language-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(212, 165, 116, 0.3);
-  border-radius: 25px;
-  color: #D4A574;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.language-toggle:hover {
-  background: white;
-  border-color: #D4A574;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.15);
-}
-
-.language-divider {
-  width: 1px;
-  height: 14px;
-  background: rgba(212, 165, 116, 0.4);
-}
-
-/* Hero Section */
-.quiz-hero {
-  text-align: center;
-  margin-bottom: 60px;
-  padding: 0 20px;
-}
-
-.hero-tagline {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.tagline-divider {
-  width: 60px;
-  height: 1px;
-  background: #D4A574;
-  border: none;
-}
-
-.tagline-text {
-  color: #D4A574;
-  font-weight: 700;
-  letter-spacing: 3px;
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.hero-title {
-  font-size: 56px;
-  color: #D4A574;
-  line-height: 1.1;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-style: italic;
-  margin-bottom: 20px;
-  font-weight: 400;
-}
-
-.hero-description {
-  font-size: 18px;
-  color: rgba(45, 45, 45, 0.75);
-  font-weight: 300;
-  line-height: 1.7;
-  max-width: 700px;
-  margin: 0 auto 40px;
-}
-
-.hero-note {
-  font-size: 14px;
-  color: rgba(45, 45, 45, 0.6);
-  font-style: italic;
-  border-top: 1px solid rgba(212, 165, 116, 0.2);
-  padding-top: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Progress Bar */
-.quiz-progress-container {
-  margin-bottom: 50px;
-  padding: 0 20px;
-}
-
-.progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.progress-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.progress-label.consultation {
-  color: #999;
-}
-
-.progress-label.step {
-  color: #D4A574;
-}
-
-.progress-bar {
-  display: flex;
-  gap: 8px;
-  height: 2px;
-}
-
-.progress-step {
-  flex: 1;
-  height: 100%;
-  background: rgba(212, 165, 116, 0.2);
-  transition: background 0.5s ease;
-}
-
-.progress-step.active {
-  background: #D4A574;
-}
-
-/* Form Container */
-.quiz-form-container {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
-  padding: 40px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-/* Step Content */
-.quiz-step {
-  animation: fadeIn 0.6s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  .header {
+    background: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
-}
 
-.step-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.step-title {
-  font-size: 36px;
-  color: #D4A574;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-style: italic;
-  margin-bottom: 10px;
-  font-weight: 400;
-}
-
-.step-subtitle {
-  color: rgba(45, 45, 45, 0.65);
-  font-weight: 300;
-  font-size: 14px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-/* Step 1 - Personal Info */
-.step1-content {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.name-field {
-  margin-bottom: 50px;
-  position: relative;
-}
-
-.name-label {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 15px;
-  transition: color 0.3s ease;
-}
-
-.name-input {
-  width: 100%;
-  padding-bottom: 15px;
-  border: none;
-  border-bottom: 1px solid rgba(212, 165, 116, 0.3);
-  font-size: 28px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  text-align: center;
-  background: transparent;
-  color: #2D2D2D;
-  transition: border-color 0.3s ease;
-}
-
-.name-input:focus {
-  outline: none;
-  border-bottom-color: #D4A574;
-}
-
-.name-input::placeholder {
-  color: #DDD;
-  font-style: italic;
-}
-
-.hair-type-field {
-  margin-bottom: 50px;
-}
-
-.hair-type-label {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 25px;
-}
-
-.hair-type-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 15px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.hair-type-option {
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.hair-type-option:hover {
-  border-color: #D4A574;
-  color: #D4A574;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(212, 165, 116, 0.1);
-}
-
-.hair-type-option.selected {
-  background: #D4A574;
-  color: white;
-  border-color: #D4A574;
-  box-shadow: 0 5px 15px rgba(212, 165, 116, 0.2);
-}
-
-.age-field {
-  margin-bottom: 40px;
-}
-
-.age-label {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 25px;
-}
-
-.age-options {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.age-option {
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 25px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.age-option:hover {
-  border-color: #D4A574;
-  color: #D4A574;
-}
-
-.age-option.selected {
-  background: #D4A574;
-  color: white;
-  border-color: #D4A574;
-}
-
-/* Step 2 - Hair & Scalp Analysis */
-.step2-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.scalp-field {
-  margin-bottom: 60px;
-}
-
-.scalp-label {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 25px;
-}
-
-.scalp-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.scalp-option {
-  padding: 25px 15px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.scalp-option:hover {
-  border-color: #D4A574;
-  color: #D4A574;
-  transform: translateY(-2px);
-}
-
-.scalp-option.selected {
-  background: #D4A574;
-  color: white;
-  border-color: #D4A574;
-}
-
-.problems-field {
-  margin-bottom: 40px;
-}
-
-.problems-label {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 25px;
-}
-
-.problems-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.problem-option {
-  padding: 25px 15px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.problem-option:hover {
-  border-color: #D4A574;
-  color: #D4A574;
-  transform: translateY(-2px);
-}
-
-.problem-option.selected {
-  background: #D4A574;
-  color: white;
-  border-color: #D4A574;
-}
-
-/* Step 3 - History & Habits */
-.step3-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.history-field {
-  margin-bottom: 60px;
-}
-
-.history-label {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 25px;
-}
-
-.history-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-}
-
-.history-option {
-  padding: 25px 15px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.history-option:hover {
-  border-color: #D4A574;
-  color: #D4A574;
-  transform: translateY(-2px);
-}
-
-.history-option.selected {
-  background: #D4A574;
-  color: white;
-  border-color: #D4A574;
-}
-
-.habits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
-  margin-top: 60px;
-}
-
-.habit-field {
-  text-align: center;
-}
-
-.habit-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 15px;
-}
-
-.select-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.habit-select {
-  width: 100%;
-  padding: 18px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #2D2D2D;
-  appearance: none;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.habit-select:focus {
-  outline: none;
-  border-color: #D4A574;
-}
-
-.select-arrow {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.select-arrow svg {
-  width: 16px;
-  height: 16px;
-  color: #999;
-}
-
-/* Step 4 - Lifestyle */
-.step4-content {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.lifestyle-field {
-  margin-bottom: 40px;
-}
-
-.lifestyle-label {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 25px;
-}
-
-.lifestyle-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
-}
-
-.lifestyle-option {
-  padding: 25px 20px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.lifestyle-option:hover {
-  border-color: #D4A574;
-  color: #D4A574;
-  transform: translateY(-2px);
-}
-
-.lifestyle-option.selected {
-  background: #D4A574;
-  color: white;
-  border-color: #D4A574;
-}
-
-/* Navigation Buttons */
-.quiz-navigation {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 60px;
-  padding-top: 30px;
-  border-top: 1px solid rgba(212, 165, 116, 0.2);
-}
-
-.nav-button {
-  padding: 16px 50px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 8px;
-  border: none;
-}
-
-.nav-button.back {
-  background: transparent;
-  color: #999;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 30px;
-}
-
-.nav-button.back:hover {
-  color: #D4A574;
-}
-
-.nav-button.next,
-.nav-button.submit {
-  background: #D4A574;
-  color: white;
-  box-shadow: 0 5px 20px rgba(212, 165, 116, 0.3);
-}
-
-.nav-button.next:hover,
-.nav-button.submit:hover {
-  background: #C19564;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
-}
-
-.nav-button.next:disabled {
-  background: rgba(255, 255, 255, 0.5);
-  color: #CCC;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-.nav-button.next:disabled:hover {
-  background: rgba(255, 255, 255, 0.5);
-  transform: none;
-  box-shadow: none;
-}
-
-/* Loading Screen */
-.quiz-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 500px;
-  gap: 40px;
-}
-
-.loading-spinner {
-  position: relative;
-  width: 100px;
-  height: 100px;
-}
-
-.spinner-outer {
-  position: absolute;
-  inset: 0;
-  border: 4px solid rgba(212, 165, 116, 0.1);
-  border-radius: 50%;
-}
-
-.spinner-inner {
-  position: absolute;
-  inset: 0;
-  border: 4px solid transparent;
-  border-top-color: #D4A574;
-  border-radius: 50%;
-  animation: spin 1.2s linear infinite;
-}
-
-.loading-icon {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  color: #D4A574;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.loading-content {
-  text-align: center;
-  max-width: 400px;
-}
-
-.loading-title {
-  font-size: 24px;
-  color: #D4A574;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  margin-bottom: 15px;
-}
-
-.loading-tip {
-  font-size: 16px;
-  color: #666;
-  min-height: 24px;
-  transition: opacity 0.5s ease;
-}
-
-/* Results Screen */
-.quiz-results {
-  animation: fadeIn 0.8s ease;
-}
-
-.results-header {
-  text-align: center;
-  margin-bottom: 60px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid rgba(212, 165, 116, 0.2);
-}
-
-.results-tag {
-  display: inline-block;
-  padding: 8px 24px;
-  border: 1px solid #D4A574;
-  border-radius: 25px;
-  margin-bottom: 25px;
-}
-
-.results-tag span {
-  color: #D4A574;
-  font-weight: 700;
-  letter-spacing: 2px;
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.results-title {
-  font-size: 48px;
-  color: #D4A574;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-style: italic;
-  margin-bottom: 20px;
-  font-weight: 400;
-}
-
-.results-meta {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  color: #666;
-  font-size: 13px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.results-divider {
-  width: 4px;
-  height: 4px;
-  background: #D4A574;
-  border-radius: 50%;
-}
-
-/* Results Layout */
-.results-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 60px;
-  margin-bottom: 80px;
-}
-
-@media (min-width: 1024px) {
-  .results-layout {
-    grid-template-columns: 1fr 2fr;
-    gap: 80px;
+  .header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
-}
 
-/* Diagnosis Card */
-.diagnosis-card {
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 12px;
-  padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-}
-
-.diagnosis-title {
-  font-size: 28px;
-  color: #D4A574;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-style: italic;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(212, 165, 116, 0.1);
-}
-
-.diagnosis-content {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.diagnosis-section h4 {
-  font-size: 11px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 12px;
-}
-
-.diagnosis-section p {
-  color: #2D2D2D;
-  font-size: 15px;
-  line-height: 1.7;
-  font-weight: 300;
-}
-
-.diagnosis-tips {
-  padding-top: 30px;
-  border-top: 1px solid rgba(212, 165, 116, 0.1);
-}
-
-.diagnosis-tips h4 {
-  color: #D4A574;
-}
-
-.tips-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.tips-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  font-size: 14px;
-  color: #2D2D2D;
-  font-weight: 400;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-.tips-list li:before {
-  content: "✦";
-  color: #D4A574;
-  font-size: 12px;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
-/* Routine Section */
-.routine-section {
-  margin-bottom: 60px;
-}
-
-.routine-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(212, 165, 116, 0.2);
-}
-
-.routine-title {
-  font-size: 32px;
-  color: #D4A574;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: 400;
-}
-
-.routine-tag {
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.routine-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-}
-
-@media (min-width: 768px) {
-  .routine-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
   }
-}
 
-.routine-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.column-divider {
-  width: 40px;
-  height: 2px;
-  background: #D4A574;
-  border: none;
-}
-
-.column-title {
-  font-size: 22px;
-  color: #2D2D2D;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: 400;
-}
-
-.routine-steps {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.routine-steps li {
-  font-size: 15px;
-  color: rgba(45, 45, 45, 0.8);
-  line-height: 1.6;
-  padding-left: 20px;
-  border-left: 1px solid rgba(212, 165, 116, 0.2);
-  margin-bottom: 18px;
-  position: relative;
-}
-
-.routine-steps li:before {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: 0;
-  width: 2px;
-  height: 100%;
-  background: #D4A574;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.routine-steps li:hover:before {
-  opacity: 0.3;
-}
-
-/* Products Section */
-.products-section {
-  margin-bottom: 60px;
-}
-
-.products-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(212, 165, 116, 0.2);
-}
-
-.products-title {
-  font-size: 32px;
-  color: #D4A574;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: 400;
-}
-
-.products-tag {
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 30px;
-}
-
-@media (min-width: 640px) {
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
+  /* Logo */
+  .logo {
+    flex-shrink: 0;
+    z-index: 1002;
   }
-}
 
-/* Product Card */
-.product-card {
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 12px;
-  padding: 25px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(20px);
-  position: relative;
-  overflow: hidden;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-  border-color: rgba(212, 165, 116, 0.3);
-}
-
-.product-image {
-  width: 100%;
-  aspect-ratio: 4/5;
-  margin-bottom: 25px;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-.image-bg {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transition: transform 0.7s ease;
-}
-
-.product-card:hover .image-bg {
-  transform: scale(1.05);
-}
-
-.image-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  align-items: flex-end;
-  padding: 20px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.product-card:hover .image-overlay {
-  opacity: 1;
-}
-
-.image-note {
-  background: white;
-  padding: 20px;
-  border-radius: 6px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  transform: translateY(10px);
-  transition: transform 0.3s ease;
-}
-
-.product-card:hover .image-note {
-  transform: translateY(0);
-}
-
-.note-label {
-  display: block;
-  font-size: 11px;
-  color: #D4A574;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.note-text {
-  font-size: 13px;
-  color: #2D2D2D;
-  line-height: 1.5;
-}
-
-.product-info {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.product-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.product-name {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 700;
-  color: #D4A574;
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  flex: 1;
-  padding-right: 20px;
-}
-
-.product-price {
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: 20px;
-  color: #2D2D2D;
-  font-style: italic;
-  font-weight: 400;
-}
-
-.product-description {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.6;
-  font-weight: 300;
-}
-
-.product-button {
-  width: 100%;
-  padding: 16px;
-  background: #D4A574;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-}
-
-.product-button:hover {
-  background: #C19564;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(212, 165, 116, 0.3);
-}
-
-/* Reset Button */
-.reset-container {
-  display: flex;
-  justify-content: center;
-  padding-top: 60px;
-  border-top: 1px solid rgba(212, 165, 116, 0.2);
-}
-
-.reset-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  background: none;
-  border: none;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 20px;
-}
-
-.reset-button:hover {
-  color: #D4A574;
-}
-
-.reset-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.reset-divider {
-  width: 60px;
-  height: 1px;
-  background: #DDD;
-  transition: background 0.3s ease;
-}
-
-.reset-button:hover .reset-divider {
-  background: #D4A574;
-}
-
-/* Error Screen */
-.quiz-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 500px;
-  text-align: center;
-  gap: 30px;
-}
-
-.error-icon {
-  font-size: 48px;
-  color: #D4A574;
-  margin-bottom: 10px;
-}
-
-.error-title {
-  font-size: 32px;
-  color: #D4A574;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-style: italic;
-}
-
-.error-message {
-  font-size: 16px;
-  color: #666;
-  max-width: 500px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.error-button {
-  padding: 16px 50px;
-  background: #D4A574;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.error-button:hover {
-  background: #C19564;
-  transform: translateY(-2px);
-}
-
-/* Animations */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
-}
-
-/* RTL Support */
-[dir="rtl"] .select-arrow {
-  right: auto;
-  left: 20px;
-}
-
-[dir="rtl"] .routine-steps li {
-  padding-left: 0;
-  padding-right: 20px;
-  border-left: none;
-  border-right: 1px solid rgba(212, 165, 116, 0.2);
-}
-
-[dir="rtl"] .routine-steps li:before {
-  left: auto;
-  right: -1px;
-}
-
-[dir="rtl"] .product-name {
-  padding-left: 20px;
-  padding-right: 0;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hair-quiz-section {
-    padding: 40px 15px;
+  .logo a {
+    display: block;
   }
-  
-  .hero-title {
-    font-size: 40px;
+
+  .logo img {
+    height: 40px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
   }
-  
-  .hero-description {
+
+  /* Main Navigation */
+  .nav-main {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Navigation Item */
+  .nav-item {
+    position: relative;
+  }
+
+  /* Navigation Link */
+  .nav-link {
+    text-decoration: none;
+    color: #2D2D2D;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 8px 0;
+    transition: color 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  /* Hover effect for nav links */
+  .nav-link::after {
+    content: '›';
     font-size: 16px;
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+    display: inline-block;
   }
-  
-  .quiz-form-container {
-    padding: 30px 20px;
-  }
-  
-  .step-title {
-    font-size: 28px;
-  }
-  
-  .results-title {
-    font-size: 36px;
-  }
-  
-  .diagnosis-card {
-    padding: 30px 20px;
-  }
-  
-  .routine-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .products-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .nav-button {
-    padding: 14px 30px;
-    font-size: 11px;
-  }
-}
 
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 32px;
+  .nav-item:hover .nav-link::after {
+    transform: rotate(-90deg);
   }
-  
-  .language-toggle {
-    padding: 8px 16px;
+
+  .nav-link:hover {
+    color: #E8C4B8;
+  }
+
+  /* Active state for mobile */
+  .nav-link.active::after {
+    transform: rotate(-90deg);
+  }
+
+  /* Mega Dropdown Styles - FIXED POSITIONING */
+  .mega-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    width: 800px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    padding: 40px;
+    pointer-events: none;
+  }
+
+  /* Show dropdown on hover */
+  .nav-item:hover .mega-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Keep dropdown visible when hovering over it */
+  .mega-dropdown:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Dropdown Grid Layout */
+  .dropdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .dropdown-column h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2D2D2D;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .dropdown-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dropdown-link {
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+  }
+
+  .dropdown-link:hover {
+    color: #E8C4B8;
+    border-bottom-color: #E8C4B8;
+    transform: translateX(8px);
+  }
+
+  .dropdown-image {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  .dropdown-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .dropdown-image:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Header Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1002;
+  }
+
+  .header-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #2D2D2D;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .header-action:hover {
+    background: rgba(232, 196, 184, 0.1);
+    color: #E8C4B8;
+  }
+
+  .cart-count {
+    background: #E8C4B8;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
     font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -2px;
+    right: -2px;
   }
-  
-  .hair-type-grid,
-  .scalp-grid,
-  .problems-grid,
-  .history-grid,
-  .lifestyle-grid {
-    grid-template-columns: 1fr;
+
+  /* Mobile Menu Button */
+  .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    color: #2D2D2D;
+    z-index: 1002;
   }
-  
-  .habits-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
+
+  .mobile-menu-btn:hover {
+    background: rgba(232, 196, 184, 0.1);
   }
-  
-  .nav-button.back span {
+
+  /* Mobile Menu Styles */
+  @media (max-width: 768px) {
+    .header {
+      background: white !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .mobile-menu-btn {
+      display: block;
+    }
+
+    .nav-main {
+      display: none;
+      position: fixed;
+      top: 80px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      flex-direction: column;
+      padding: 20px;
+      gap: 0;
+      overflow-y: auto;
+      z-index: 1001;
+    }
+
+    .nav-main.active {
+      display: flex;
+    }
+
+    .nav-item {
+      width: 100%;
+    }
+
+    .nav-link {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 16px;
+      text-transform: none;
+      width: 100%;
+    }
+
+    .nav-link::after {
+      transform: rotate(0deg);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-link.active::after {
+      transform: rotate(180deg);
+    }
+
+    .mega-dropdown {
+      display: none;
+      position: static;
+      width: 100%;
+      box-shadow: none;
+      padding: 20px 0;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: #f9f9f9;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .nav-link.active + .mega-dropdown {
+      display: block;
+      max-height: 500px;
+      padding: 20px;
+    }
+
+    .dropdown-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .header-actions {
+      gap: 12px;
+    }
+    
+    /* Push content down */
+    main {
+      padding-top: 80px !important;
+    }
+  }
+
+  /* Mobile dropdown trigger fix */
+  @media (max-width: 768px) {
+    .nav-link {
+      pointer-events: auto !important;
+    }
+  }
+
+  /* Services by Concern Link Styling */
+  .nav-item .nav-link[href="#services-by-concern"] {
+    position: relative;
+  }
+
+  .nav-item .nav-link[href="#services-by-concern"]::after {
     display: none;
   }
-  
-  .nav-button.back {
-    padding: 14px;
+
+  /* Hide scrollbar for clean look */
+  .nav-main::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
   }
-}
+
+  .nav-main {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
 </style>
 
-<section class="hair-quiz-section" id="hair-quiz-section">
-  <div class="hair-quiz-container">
-    
-    <!-- Language Toggle -->
-    <div class="language-toggle-container">
-      <button class="language-toggle" id="language-toggle">
-        <span id="language-text">العربية</span>
-        <span class="language-divider"></span>
-        <span id="language-code">AR</span>
+<header class="header" id="main-header">
+  <div class="header-container">
+    <div class="header-inner">
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+        ☰
       </button>
+
+      <!-- Logo -->
+      <div class="logo">
+        <a href="{{ routes.root_url }}">
+          <img 
+            src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
+            alt="{{ shop.name }}"
+            width="120"
+            height="40"
+            loading="eager"
+          >
+        </a>
+      </div>
+
+      <!-- Main Navigation with Mega Dropdowns -->
+      <nav class="nav-main" id="main-nav">
+        <!-- Shop Dropdown -->
+        <div class="nav-item">
+          <a href="{{ routes.all_products_collection_url }}" class="nav-link">Shop</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>By Product Type</h4>
+                <div class="dropdown-links">
+                  {% assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' %}
+                  {% for handle in collections_to_show %}
+                    {% assign collection = collections[handle] %}
+                    {% if collection %}
+                      <a href="{{ collection.url }}" class="dropdown-link">{{ collection.title }}</a>
+                    {% else %}
+                      <a href="{{ routes.collections_url }}" class="dropdown-link">{{ handle | replace: '-', ' ' | capitalize }}</a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>By Curl Type</h4>
+                <div class="dropdown-links">
+                  {% assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' %}
+                  {% for handle in curl_collections %}
+                    {% assign collection = collections[handle] %}
+                    {% if collection %}
+                      <a href="{{ collection.url }}" class="dropdown-link">{{ collection.title }}</a>
+                    {% else %}
+                      <a href="{{ routes.collections_url }}" class="dropdown-link">{{ handle | replace: '-', ' ' | capitalize }}</a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <a href="{{ routes.all_products_collection_url }}" style="display: block;">
+                <div style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+                  Shop The Full Collection
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hair Quiz Dropdown -->
+        <div class="nav-item">
+          <a href="#hair-quiz-section" class="nav-link">Hair Quiz</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>Find Your Routine</h4>
+                <div class="dropdown-links">
+                  <a href="#hair-quiz-section" class="dropdown-link">Start Hair Quiz</a>
+                  <a href="{{ pages['curl-pattern-quiz'].url | default: '#' }}" class="dropdown-link">Curl Pattern Analysis</a>
+                  <a href="{{ pages['hair-concerns-quiz'].url | default: '#' }}" class="dropdown-link">Hair Concerns Assessment</a>
+                  <a href="{{ pages['routine-builder'].url | default: '#' }}" class="dropdown-link">Custom Routine Builder</a>
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>Quick Guides</h4>
+                <div class="dropdown-links">
+                  <a href="{{ pages['curl-type-guide'].url | default: '#' }}" class="dropdown-link">Curl Type Identification</a>
+                  <a href="{{ pages['porosity-test'].url | default: '#' }}" class="dropdown-link">Hair Porosity Test</a>
+                  <a href="{{ pages['density-guide'].url | default: '#' }}" class="dropdown-link">Hair Density Guide</a>
+                  <a href="{{ pages['ingredients-guide'].url | default: '#' }}" class="dropdown-link">Key Ingredients</a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <a href="#hair-quiz-section" style="display: block;">
+                <div style="background: linear-gradient(135deg, #A8D8EA, #78C2DC); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+                  Start Your Hair Journey
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services by Concern - Scroll to Section -->
+        <div class="nav-item">
+          <a href="#services-by-concern" class="nav-link">Services by Concern</a>
+        </div>
+
+        <!-- Our Story Dropdown -->
+        <div class="nav-item">
+          <a href="{{ pages['about'].url | default: '#' }}" class="nav-link">Our Story</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>About Us</h4>
+                <div class="dropdown-links">
+                  <a href="{{ pages['our-mission'].url | default: '#' }}" class="dropdown-link">Our Mission</a>
+                  <a href="{{ pages['our-story'].url | default: '#' }}" class="dropdown-link">Brand Story</a>
+                  <a href="{{ pages['ingredients'].url | default: '#' }}" class="dropdown-link">Ingredient Philosophy</a>
+                  <a href="{{ pages['sustainability'].url | default: '#' }}" class="dropdown-link">Sustainability</a>
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>Community</h4>
+                <div class="dropdown-links">
+                  <a href="{{ pages['curl-community'].url | default: '#' }}" class="dropdown-link">Curl Community</a>
+                  <a href="{{ pages['education'].url | default: '#' }}" class="dropdown-link">Hair Education</a>
+                  <a href="{{ pages['events'].url | default: '#' }}" class="dropdown-link">Events & Workshops</a>
+                  <a href="{{ pages['testimonials'].url | default: '#' }}" class="dropdown-link">Success Stories</a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <a href="{{ pages['about'].url | default: '#' }}" style="display: block;">
+                <div style="background: linear-gradient(135deg, #95E1D3, #6DCFB7); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+                  Join Our Community
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guides Dropdown -->
+        <div class="nav-item">
+          <a href="{{ blogs['guides'].url | default: routes.blog_url }}" class="nav-link">Guides</a>
+          <div class="mega-dropdown">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <h4>Hair Care Guides</h4>
+                <div class="dropdown-links">
+                  {% if blogs.guides.articles.size > 0 %}
+                    {% for article in blogs.guides.articles limit: 4 %}
+                      <a href="{{ article.url }}" class="dropdown-link">{{ article.title }}</a>
+                    {% endfor %}
+                  {% else %}
+                    <a href="{{ routes.blog_url }}" class="dropdown-link">Wash Day Routine</a>
+                    <a href="{{ routes.blog_url }}" class="dropdown-link">Styling Techniques</a>
+                    <a href="{{ routes.blog_url }}" class="dropdown-link">Night Time Routine</a>
+                    <a href="{{ routes.blog_url }}" class="dropdown-link">Seasonal Hair Care</a>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="dropdown-column">
+                <h4>Expert Advice</h4>
+                <div class="dropdown-links">
+                  <a href="{{ routes.blog_url }}" class="dropdown-link">Common Mistakes</a>
+                  <a href="{{ routes.blog_url }}" class="dropdown-link">Product Application</a>
+                  <a href="{{ routes.blog_url }}" class="dropdown-link">Troubleshooting Guide</a>
+                  <a href="{{ routes.blog_url }}" class="dropdown-link">Professional Tips</a>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-image">
+              <a href="{{ routes.blog_url }}" style="display: block;">
+                <div style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+                  Learn & Grow
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <a href="{{ routes.search_url }}" class="header-action search-btn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+          </svg>
+        </a>
+        <a href="{{ routes.account_login_url }}" class="header-action account-btn" aria-label="Account">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+        </a>
+        <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+          </svg>
+          <span class="cart-count">{{ cart.item_count }}</span>
+        </a>
+      </div>
     </div>
-    
-    <!-- Main Quiz Container -->
-    <div id="hair-quiz-app"></div>
-    
   </div>
-</section>
+</header>
 
 <script>
-// ==================== //
-// COMPLETE HAIR QUIZ   //
-// ==================== //
-
-// Translations
-const TRANSLATIONS = {
-  en: {
-    // Hero
-    hero_tagline: "AI-Powered Hair Diagnosis",
-    hero_title: "Hair Genius Tool",
-    hero_desc: "A scientific hair diagnostic tool designed exclusively for CurlByRoaa salon. Receive personalized analysis, custom routines, and product recommendations tailored to Kuwait's climate.",
-    hero_note: "Complete our 4-step consultation for your personalized hair profile",
-    
-    // Progress
-    consultation: "Consultation",
-    step: "Step",
-    
-    // Step 1
-    step1_title: "Let's Get Started",
-    step1_sub: "Introduce yourself to our AI hair specialist",
-    label_name: "Your First Name",
-    placeholder_name: "e.g., Sarah, Fatima, Noor",
-    label_hair_type: "What is your hair type?",
-    label_age: "Select your age range",
-    
-    // Step 2
-    step2_title: "Hair & Scalp Analysis",
-    step2_sub: "Tell us about your current hair condition",
-    label_scalp: "Scalp Condition (Select all that apply)",
-    label_problems: "Hair Concerns (Select all that apply)",
-    
-    // Step 3
-    step3_title: "Hair History & Habits",
-    step3_sub: "Share your hair care routine and history",
-    label_history: "Chemical Treatment History",
-    label_wash: "How often do you wash your hair?",
-    label_heat: "How often do you use heat styling tools?",
-    select_option: "Please select",
-    
-    // Step 4
-    step4_title: "Lifestyle & Environment",
-    step4_sub: "Your lifestyle impacts your hair health",
-    label_lifestyle: "Lifestyle Factors (Select all that apply)",
-    
-    // Buttons
-    btn_back: "Back",
-    btn_next: "Continue",
-    btn_analyze: "Analyze My Hair",
-    btn_retry: "Try Again",
-    btn_new: "Start New Consultation",
-    btn_cart: "Add to Cart",
-    
-    // Loading
-    processing: "Processing...",
-    
-    // Results
-    result_header_tag: "Your Personalized Hair Report",
-    result_title: "Hair Analysis Complete",
-    result_prepared: "Prepared for",
-    result_diagnosis: "Professional Diagnosis",
-    result_obs: "Primary Observations",
-    result_science: "Scientific Breakdown",
-    result_kuwait: "Kuwait-Specific Recommendations",
-    result_ritual: "Your Personalized Hair Ritual",
-    result_step: "Step-by-Step Guide",
-    result_daily: "Daily Care",
-    result_weekly: "Weekly Treatment",
-    result_monthly: "Monthly Maintenance",
-    result_regimen: "Your Recommended Regimen",
-    result_shop: "Shop These Products",
-    result_note: "Expert Tip",
-    
-    // Error
-    error_title: "Analysis Unavailable",
-    error_msg: "Our AI specialist is currently unavailable. Please try again later or visit our salon for a personal consultation with our experts."
-  },
-  
-  ar: {
-    // Hero
-    hero_tagline: "تشخيص الشعر بالذكاء الاصطناعي",
-    hero_title: "أداة عبقرية الشعر",
-    hero_desc: "أداة تشخيص علمية للشعر مصممة خصيصًا لصالون كيرلبايرو. احصل على تحليل مخصص، روتين شخصي، وتوصيات منتجات مصممة لمناخ الكويت.",
-    hero_note: "أكمل استشارتنا المكونة من 4 خطوات للحصول على ملفك الشخصي للشعر",
-    
-    // Progress
-    consultation: "استشارة",
-    step: "خطوة",
-    
-    // Step 1
-    step1_title: "لنبدأ",
-    step1_sub: "تعرف على أخصائي الشعر بالذكاء الاصطناعي",
-    label_name: "اسمك الأول",
-    placeholder_name: "مثال: سارة، فاطمة، نور",
-    label_hair_type: "ما هو نوع شعرك؟",
-    label_age: "اختر فئتك العمرية",
-    
-    // Step 2
-    step2_title: "تحليل الشعر وفروة الرأس",
-    step2_sub: "أخبرنا عن حالة شعرك الحالية",
-    label_scalp: "حالة فروة الرأس (اختر كل ما ينطبق)",
-    label_problems: "مشاكل الشعر (اختر كل ما ينطبق)",
-    
-    // Step 3
-    step3_title: "تاريخ الشعر والعادات",
-    step3_sub: "شارك روتين العناية بشعرك وتاريخه",
-    label_history: "تاريخ العلاجات الكيميائية",
-    label_wash: "كم مرة تغسل شعرك؟",
-    label_heat: "كم مرة تستخدم أدوات التصفيف بالحرارة؟",
-    select_option: "الرجاء الاختيار",
-    
-    // Step 4
-    step4_title: "نمط الحياة والبيئة",
-    step4_sub: "نمط حياتك يؤثر على صحة شعرك",
-    label_lifestyle: "عوامل نمط الحياة (اختر كل ما ينطبق)",
-    
-    // Buttons
-    btn_back: "رجوع",
-    btn_next: "التالي",
-    btn_analyze: "تحليل شعري",
-    btn_retry: "حاول مرة أخرى",
-    btn_new: "بدء استشارة جديدة",
-    btn_cart: "أضف إلى السلة",
-    
-    // Loading
-    processing: "جاري المعالجة...",
-    
-    // Results
-    result_header_tag: "تقرير الشعر المخصص",
-    result_title: "اكتمل تحليل الشعر",
-    result_prepared: "أعدّ لـ",
-    result_diagnosis: "التشخيص الاحترافي",
-    result_obs: "الملاحظات الأساسية",
-    result_science: "الشرح العلمي",
-    result_kuwait: "توصيات خاصة بالكويت",
-    result_ritual: "طقوس الشعر المخصصة",
-    result_step: "دليل خطوة بخطوة",
-    result_daily: "العناية اليومية",
-    result_weekly: "العلاج الأسبوعي",
-    result_monthly: "الصيانة الشهرية",
-    result_regimen: "النظام الموصى به",
-    result_shop: "تسوق هذه المنتجات",
-    result_note: "نصيحة الخبراء",
-    
-    // Error
-    error_title: "التحليل غير متاح",
-    error_msg: "أخصائي الذكاء الاصطناعي غير متاح حاليًا. يرجى المحاولة مرة أخرى لاحقًا أو زيارة صالوننا للحصول على استشارة شخصية مع خبرائنا."
-  }
-};
-
-// Data Options
-const QUIZ_DATA = {
-  // English
-  en: {
-    hairTypes: ["Straight", "Wavy", "Curly", "Coily", "Mixed Texture"],
-    scalpConditions: ["Dry", "Oily", "Balanced", "Sensitive", "Dandruff", "Itchy"],
-    hairProblems: ["Frizz", "Breakage", "Split Ends", "Dullness", "Thinning", "Dryness", "Lack of Volume", "Color Fading"],
-    chemicalHistory: ["Never", "Regular Hair Color", "Bleach/Highlight", "Perm", "Keratin Treatment", "Relaxer", "Extensions"],
-    washFrequency: ["Daily", "Every 2-3 Days", "Weekly", "Every 10 Days", "As Needed", "Twice Weekly"],
-    heatUsage: ["Never", "Rarely (Once a month)", "Weekly", "Daily", "Professional Only", "Occasionally"],
-    lifestyle: ["Active/Sports", "Outdoor Work", "Air Conditioned Environment", "Swimmer", "Stressful Job", "Frequent Traveler"],
-    ageRanges: ["Under 18", "18-25", "26-35", "36-45", "46-55", "55+"]
-  },
-  
-  // Arabic
-  ar: {
-    hairTypes: ["مستقيم", "مموج", "مجعد", "مجعّد بشدة", "ملمس مختلط"],
-    scalpConditions: ["جاف", "دهني", "متوازن", "حساس", "قشرة", "حكة"],
-    hairProblems: ["تطاير", "تقصف", "تقسم الأطراف", "بهتان", "خفاقة", "جفاف", "نقص الحجم", "بهتان اللون"],
-    chemicalHistory: ["أبداً", "صبغة شعر منتظمة", "تبييض/هايلايت", "تمويج دائم", "علاج كيراتين", "مُستقيم", "إضافات"],
-    washFrequency: ["يوميًا", "كل 2-3 أيام", "أسبوعيًا", "كل 10 أيام", "حسب الحاجة", "مرتين أسبوعيًا"],
-    heatUsage: ["أبداً", "نادرًا (مرة شهريًا)", "أسبوعيًا", "يوميًا", "محترف فقط", "بين الحين والآخر"],
-    lifestyle: ["نشط/رياضي", "عمل خارجي", "بيئة مكيفة", "سباح", "عمل مرهق", "مسافر متكرر"],
-    ageRanges: ["تحت 18", "25-18", "35-26", "45-36", "55-46", "+55"]
-  }
-};
-
-// Mock Products
-const PRODUCTS = {
-  en: [
-    {
-      id: "CB001",
-      name: "Curl Defining Cream",
-      description: "Weightless hydration with flaxseed and shea butter for defined, frizz-free curls that last all day.",
-      price: "KD 12.500",
-      category: "Styling",
-      color: "bg-gradient-to-br from-rose-50 to-amber-50"
-    },
-    {
-      id: "CB002",
-      name: "Scalp Balancing Serum",
-      description: "Tea tree and salicylic acid formula to regulate oil production and soothe irritation for a healthier scalp.",
-      price: "KD 18.750",
-      category: "Treatment",
-      color: "bg-gradient-to-br from-emerald-50 to-teal-50"
-    },
-    {
-      id: "CB003",
-      name: "Repair Bond Treatment",
-      description: "Bond-rebuilding complex with ceramides and amino acids for damaged, chemically-treated hair.",
-      price: "KD 24.000",
-      category: "Treatment",
-      color: "bg-gradient-to-br from-blue-50 to-indigo-50"
-    },
-    {
-      id: "CB004",
-      name: "Moisture Lock Mask",
-      description: "Intensive overnight treatment with hyaluronic acid and argan oil for deep hydration and shine.",
-      price: "KD 15.500",
-      category: "Treatment",
-      color: "bg-gradient-to-br from-purple-50 to-pink-50"
-    }
-  ],
-  
-  ar: [
-    {
-      id: "CB001",
-      name: "كريم تعريف التجعيد",
-      description: "ترطيب خفيف الوزن مع بذر الكتان وزبدة الشيا لتجعيدات محددة وخالية من التطاير تدوم طوال اليوم.",
-      price: "د.ك 12.500",
-      category: "تثبيت",
-      color: "bg-gradient-to-br from-rose-50 to-amber-50"
-    },
-    {
-      id: "CB002",
-      name: "مصل توازن فروة الرأس",
-      description: "تركيبة شجرة الشاي وحمض الساليسيليك لتنظيم إنتاج الدهون وتهدئة التهيج لفروة رأس أكثر صحة.",
-      price: "د.ك 18.750",
-      category: "علاج",
-      color: "bg-gradient-to-br from-emerald-50 to-teal-50"
-    },
-    {
-      id: "CB003",
-      name: "علاج إصلاح الروابط",
-      description: "مركب إعادة بناء الروابط مع السيراميد والأحماض الأمينية للشعر التالم والمعالج كيميائيًا.",
-      price: "د.ك 24.000",
-      category: "علاج",
-      color: "bg-gradient-to-br from-blue-50 to-indigo-50"
-    },
-    {
-      id: "CB004",
-      name: "قناع قفل الرطوبة",
-      description: "علاج مكثف طوال الليل مع حمض الهيالورونيك وزيت الأرجان للترطيب العميق واللمعان.",
-      price: "د.ك 15.500",
-      category: "علاج",
-      color: "bg-gradient-to-br from-purple-50 to-pink-50"
-    }
-  ]
-};
-
-// Loading Tips
-const LOADING_TIPS = {
-  en: [
-    "Analyzing your hair's protein-moisture balance...",
-    "Evaluating the impact of Kuwait's hard water on your hair...",
-    "Formulating your personalized 3-step hair ritual...",
-    "Selecting the perfect CurlByRoaa products for your needs...",
-    "Consulting our digital dermatologist database...",
-    "Customizing recommendations for Kuwait's climate..."
-  ],
-  
-  ar: [
-    "...جاري تحليل توازن البروتين والرطوبة في شعرك",
-    "...تقييم تأثير الماء العسر في الكويت على شعرك",
-    "...صياغة طقوس الشعر المكونة من 3 خطوات والمخصصة لك",
-    "...CurlByRoaa اختيار المنتجات المثالية من",
-    "...استشارة قاعدة بيانات طبيبة الجلدية الرقمية",
-    "...تخصيص التوصيات لمناخ الكويت"
-  ]
-};
-
-// Main Hair Quiz Class
-class HairQuiz {
+class HeaderWithDropdowns {
   constructor() {
-    this.state = 'idle'; // idle, step1, step2, step3, step4, loading, results, error
-    this.currentStep = 1;
-    this.language = 'en';
-    this.formData = {
-      name: '',
-      hairType: '',
-      scalpCondition: [],
-      hairProblems: [],
-      chemicalHistory: [],
-      washFrequency: '',
-      heatUsage: '',
-      lifestyle: [],
-      ageRange: ''
-    };
-    this.results = null;
-    this.loadingTipIndex = 0;
-    this.loadingInterval = null;
+    this.header = document.getElementById('main-header');
+    this.mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    this.mainNav = document.getElementById('main-nav');
+    this.navItems = document.querySelectorAll('.nav-item');
+    this.navLinks = document.querySelectorAll('.nav-link');
+    this.dropdowns = document.querySelectorAll('.mega-dropdown');
     
     this.init();
   }
-  
+
   init() {
     this.bindEvents();
-    this.render();
+    this.setupScrollEffect();
+    this.setupDropdowns();
+    this.setupScrollToSections();
   }
-  
+
   bindEvents() {
-    // Language toggle
-    document.getElementById('language-toggle')?.addEventListener('click', () => this.toggleLanguage());
-  }
-  
-  toggleLanguage() {
-    this.language = this.language === 'en' ? 'ar' : 'en';
-    document.documentElement.dir = this.language === 'ar' ? 'rtl' : 'ltr';
-    this.updateLanguageToggle();
-    this.render();
-  }
-  
-  updateLanguageToggle() {
-    const text = document.getElementById('language-text');
-    const code = document.getElementById('language-code');
-    
-    if (text && code) {
-      if (this.language === 'en') {
-        text.textContent = 'العربية';
-        code.textContent = 'AR';
-      } else {
-        text.textContent = 'English';
-        code.textContent = 'EN';
-      }
-    }
-  }
-  
-  // Form Data Management
-  updateForm(field, value, isMultiSelect = false) {
-    if (isMultiSelect) {
-      const current = this.formData[field];
-      const index = current.indexOf(value);
-      
-      if (index > -1) {
-        // Remove if already selected
-        current.splice(index, 1);
-      } else {
-        // Add if not selected
-        current.push(value);
-      }
-      
-      // Update the array reference to trigger re-render
-      this.formData[field] = [...current];
-    } else {
-      this.formData[field] = value;
-    }
-    
-    this.renderStep();
-  }
-  
-  // Navigation
-  nextStep() {
-    if (this.currentStep < 4) {
-      this.currentStep++;
-      this.state = `step${this.currentStep}`;
-      this.render();
-    }
-  }
-  
-  prevStep() {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-      this.state = `step${this.currentStep}`;
-      this.render();
-    }
-  }
-  
-  isStepValid() {
-    switch(this.currentStep) {
-      case 1:
-        return this.formData.name.trim() !== '' && this.formData.hairType !== '';
-      case 2:
-        return this.formData.scalpCondition.length > 0 && this.formData.hairProblems.length > 0;
-      case 3:
-        return this.formData.washFrequency !== '' && this.formData.heatUsage !== '';
-      case 4:
-        return true; // Lifestyle is optional
-      default:
-        return false;
-    }
-  }
-  
-  // Submit Form
-  async submitForm() {
-    this.state = 'loading';
-    this.render();
-    
-    // Start loading animation
-    this.startLoadingAnimation();
-    
-    // Simulate API call
-    try {
-      await this.simulateAnalysis();
-      this.generateResults();
-      this.state = 'results';
-      this.stopLoadingAnimation();
-      this.render();
-    } catch (error) {
-      this.state = 'error';
-      this.stopLoadingAnimation();
-      this.render();
-    }
-  }
-  
-  startLoadingAnimation() {
-    this.loadingTipIndex = 0;
-    this.loadingInterval = setInterval(() => {
-      this.loadingTipIndex = (this.loadingTipIndex + 1) % LOADING_TIPS[this.language].length;
-      this.renderLoading();
-    }, 2500);
-  }
-  
-  stopLoadingAnimation() {
-    if (this.loadingInterval) {
-      clearInterval(this.loadingInterval);
-      this.loadingInterval = null;
-    }
-  }
-  
-  simulateAnalysis() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, 8000);
-    });
-  }
-  
-  generateResults() {
-    const t = TRANSLATIONS[this.language];
-    const isArabic = this.language === 'ar';
-    
-    this.results = {
-      diagnosisSummary: isArabic 
-        ? `بناءً على تحليلنا، يظهر شعرك (${this.formData.hairType}) علامات على اختلال توازن البروتين والرطوبة مع مسامية معتدلة. يشير مزيج ملمس الشعر والتاريخ الكيميائي إلى الحاجة إلى علاجات بناء الروابط جنبًا إلى جنب مع الترطيب خفيف الوزن لمكافحة آثار الماء العسر في الكويت.`
-        : `Based on our analysis, your ${this.formData.hairType.toLowerCase()} hair shows signs of protein-moisture imbalance with moderate porosity. The combination of hair texture and chemical history suggests need for bond-building treatments alongside lightweight hydration to combat Kuwait's hard water effects.`,
-      
-      scientificExplanation: isArabic
-        ? `الشعر المجعد (النوع 3) عادةً ما يكون له مسامية أعلى، مما يجعله عرضة لفقدان الرطوبة. تؤثر العلاجات الكيميائية بشكل أكبر على طبقة القشرة الخاصة بالشعر، بينما يمكن أن يتسبب الماء العسر في الكويت (300+ جزء في المليون) في تراكم المعادن الذي يؤثر على امتصاص المنتج ويؤدي إلى بهتان الشعر وتطايره.`
-        : `Curly hair (Type 3) typically has higher porosity, making it prone to moisture loss. Chemical treatments further compromise the hair's cuticle layer, while Kuwait's hard water (300+ ppm) can cause mineral buildup affecting product absorption and leading to dullness and frizz.`,
-      
-      kuwaitTips: isArabic ? [
-        "قم بتركيب فلتر للاستحمام لتقليل تراكم المعادن من الماء العسر في الكويت",
-        "زود التكييف العميق خلال أشهر الصيف (45°م+) لمواجهة الجفاف",
-        "استخدم شامبو مخلب شهريًا لإزالة رواسب المعادن من الماء العسر",
-        "ضع بلسم بدون شطف قبل التعرض للخارج لحماية الشعر من الرطوبة العالية",
-        "حدد مواعيد تقليم كل 8-10 أسابيع بسبب تأثيرات الرطوبة العالية في الكويت",
-        "تجنب غسل الشعر بالماء الساخن جدًا مما يزيد من جفاف الشعر في المناخ الجاف"
-      ] : [
-        "Install a shower filter to reduce mineral buildup from Kuwait's hard water",
-        "Increase deep conditioning during summer months (45°C+) to combat dryness",
-        "Use chelating shampoo monthly to remove hard water mineral deposits",
-        "Apply leave-in conditioner before outdoor exposure to protect from high humidity",
-        "Schedule trims every 8-10 weeks due to high humidity effects in Kuwait",
-        "Avoid very hot water when washing hair as it increases dryness in arid climate"
-      ],
-      
-      routine: {
-        daily: isArabic ? [
-          "ضع بلسم بدون شطف على الشعر الرطب بعد الاستحمام",
-          "استخدم مشط أسنان واسعة فقط لتجنب التقصف",
-          "احمِ شعرك بوشاح حريري أو قبعة قطنية عند النوم"
-        ] : [
-          "Apply leave-in conditioner to damp hair after showering",
-          "Use wide-tooth comb only to prevent breakage",
-          "Protect hair with silk scarf or cotton bonnet at night"
-        ],
-        weekly: isArabic ? [
-          "نظف بشامبو مخلب لإزالة تراكم المعادن",
-          "عالج شعرك بعناية عميقة لمدة 20-30 دقيقة",
-          "ضع علاج بروتين كل أسبوعين لتقوية الشعر"
-        ] : [
-          "Clarify with chelating shampoo to remove mineral buildup",
-          "Deep condition hair for 20-30 minutes weekly",
-          "Apply protein treatment bi-weekly to strengthen hair"
-        ],
-        monthly: isArabic ? [
-          "قص الأطراف (1/4 بوصة) لمنع التقصف",
-          "عالج فروة الرأس بتقشير لطيف مرة شهريًا",
-          "استخدم قناع شعر بالبخار لاختراق أعمق للمواد المغذية"
-        ] : [
-          "Trim ends (1/4 inch) to prevent split ends",
-          "Treat scalp with gentle exfoliation once monthly",
-          "Use hair mask with steam for deeper nutrient penetration"
-        ]
-      },
-      
-      recommendedProductIds: ["CB001", "CB002", "CB003", "CB004"],
-      
-      productUsageInstructions: {
-        "CB001": isArabic 
-          ? "ضع على الشعر الرطب بعد الغسيل، مع التركيز على المنتصف حتى الأطراف. اضغط لأعلى للتحديد ولا تلمس فروة الرأس."
-          : "Apply to damp hair after washing, focusing on mid-lengths to ends. Scrunch upward for definition and avoid scalp area.",
-        "CB002": isArabic
-          ? "ضع مباشرة على فروة الرأس بعد الشامبو. دلك بلطف لمدة دقيقتين، لا حاجة للشطف. استخدم 2-3 مرات أسبوعيًا."
-          : "Apply directly to scalp after shampooing. Gently massage for 2 minutes, no rinse needed. Use 2-3 times weekly.",
-        "CB003": isArabic
-          ? "استخدم مرة أسبوعيًا بعد الشامبو. اترك لمدة 10-15 دقيقة، ثم اشطف جيدًا. لا تستخدم مع علاجات كيراتين أخرى."
-          : "Use once weekly after shampoo. Leave on for 10-15 minutes, then rinse thoroughly. Do not use with other keratin treatments.",
-        "CB004": isArabic
-          ? "ضع على الشعر الجاف قبل النوم، ركز على الأطراف. غط بوشاح حريري واترك طوال الليل. اشطف في الصباح."
-          : "Apply to dry hair before bed, focusing on ends. Cover with silk scarf and leave overnight. Rinse in morning."
-      }
-    };
-  }
-  
-  resetQuiz() {
-    this.state = 'idle';
-    this.currentStep = 1;
-    this.formData = {
-      name: '',
-      hairType: '',
-      scalpCondition: [],
-      hairProblems: [],
-      chemicalHistory: [],
-      washFrequency: '',
-      heatUsage: '',
-      lifestyle: [],
-      ageRange: ''
-    };
-    this.results = null;
-    this.render();
-  }
-  
-  // Rendering Methods
-  render() {
-    const app = document.getElementById('hair-quiz-app');
-    if (!app) return;
-    
-    switch(this.state) {
-      case 'idle':
-        app.innerHTML = this.renderIdle();
-        break;
-      case 'loading':
-        app.innerHTML = this.renderLoading();
-        break;
-      case 'results':
-        app.innerHTML = this.renderResults();
-        break;
-      case 'error':
-        app.innerHTML = this.renderError();
-        break;
-      default:
-        if (this.state.startsWith('step')) {
-          app.innerHTML = this.renderForm();
-        } else {
-          app.innerHTML = this.renderIdle();
+    // Mobile menu toggle
+    if (this.mobileMenuBtn && this.mainNav) {
+      this.mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleMobileMenu();
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.header') && this.mainNav.classList.contains('active')) {
+          this.closeMobileMenu();
         }
-    }
-    
-    this.bindStepEvents();
-  }
-  
-  renderIdle() {
-    const t = TRANSLATIONS[this.language];
-    
-    return `
-      <div class="quiz-hero">
-        <div class="hero-tagline">
-          <hr class="tagline-divider">
-          <span class="tagline-text">${t.hero_tagline}</span>
-        </div>
-        <h1 class="hero-title">${t.hero_title}</h1>
-        <p class="hero-description">${t.hero_desc}</p>
-        <p class="hero-note">${t.hero_note}</p>
-      </div>
-      
-      <div class="quiz-progress-container">
-        <div class="progress-header">
-          <div class="progress-label consultation">${t.consultation}</div>
-          <div class="progress-label step">${t.step} 1/4</div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-step active"></div>
-          <div class="progress-step"></div>
-          <div class="progress-step"></div>
-          <div class="progress-step"></div>
-        </div>
-      </div>
-      
-      <div class="quiz-form-container">
-        ${this.renderStep1()}
-      </div>
-    `;
-  }
-  
-  renderForm() {
-    const t = TRANSLATIONS[this.language];
-    
-    return `
-      <div class="quiz-progress-container">
-        <div class="progress-header">
-          <div class="progress-label consultation">${t.consultation}</div>
-          <div class="progress-label step">${t.step} ${this.currentStep}/4</div>
-        </div>
-        <div class="progress-bar">
-          ${[1, 2, 3, 4].map(step => `
-            <div class="progress-step ${step <= this.currentStep ? 'active' : ''}"></div>
-          `).join('')}
-        </div>
-      </div>
-      
-      <div class="quiz-form-container">
-        ${this.renderCurrentStep()}
-      </div>
-    `;
-  }
-  
-  renderCurrentStep() {
-    switch(this.currentStep) {
-      case 1:
-        return this.renderStep1();
-      case 2:
-        return this.renderStep2();
-      case 3:
-        return this.renderStep3();
-      case 4:
-        return this.renderStep4();
-      default:
-        return this.renderStep1();
-    }
-  }
-  
-  renderStep1() {
-    const t = TRANSLATIONS[this.language];
-    const data = QUIZ_DATA[this.language];
-    
-    return `
-      <div class="quiz-step">
-        <div class="step-header">
-          <h2 class="step-title">${t.step1_title}</h2>
-          <p class="step-subtitle">${t.step1_sub}</p>
-        </div>
-        
-        <div class="step1-content">
-          <!-- Name Field -->
-          <div class="name-field">
-            <label class="name-label">${t.label_name}</label>
-            <input type="text" 
-                   class="name-input" 
-                   placeholder="${t.placeholder_name}"
-                   value="${this.formData.name}"
-                   id="quiz-name">
-          </div>
-          
-          <!-- Hair Type -->
-          <div class="hair-type-field">
-            <label class="hair-type-label">${t.label_hair_type}</label>
-            <div class="hair-type-grid">
-              ${data.hairTypes.map(type => `
-                <div class="hair-type-option ${this.formData.hairType === type ? 'selected' : ''}"
-                     data-field="hairType"
-                     data-value="${type}">
-                  ${type}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-          
-          <!-- Age Range -->
-          <div class="age-field">
-            <label class="age-label">${t.label_age}</label>
-            <div class="age-options">
-              ${data.ageRanges.map(age => `
-                <div class="age-option ${this.formData.ageRange === age ? 'selected' : ''}"
-                     data-field="ageRange"
-                     data-value="${age}">
-                  ${age}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        
-        ${this.renderNavigation()}
-      </div>
-    `;
-  }
-  
-  renderStep2() {
-    const t = TRANSLATIONS[this.language];
-    const data = QUIZ_DATA[this.language];
-    
-    return `
-      <div class="quiz-step">
-        <div class="step-header">
-          <h2 class="step-title">${t.step2_title}</h2>
-          <p class="step-subtitle">${t.step2_sub}</p>
-        </div>
-        
-        <div class="step2-content">
-          <!-- Scalp Condition -->
-          <div class="scalp-field">
-            <label class="scalp-label">${t.label_scalp}</label>
-            <div class="scalp-grid">
-              ${data.scalpConditions.map(condition => `
-                <div class="scalp-option ${this.formData.scalpCondition.includes(condition) ? 'selected' : ''}"
-                     data-field="scalpCondition"
-                     data-value="${condition}"
-                     data-multi="true">
-                  ${condition}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-          
-          <!-- Hair Problems -->
-          <div class="problems-field">
-            <label class="problems-label">${t.label_problems}</label>
-            <div class="problems-grid">
-              ${data.hairProblems.map(problem => `
-                <div class="problem-option ${this.formData.hairProblems.includes(problem) ? 'selected' : ''}"
-                     data-field="hairProblems"
-                     data-value="${problem}"
-                     data-multi="true">
-                  ${problem}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        
-        ${this.renderNavigation()}
-      </div>
-    `;
-  }
-  
-  renderStep3() {
-    const t = TRANSLATIONS[this.language];
-    const data = QUIZ_DATA[this.language];
-    
-    return `
-      <div class="quiz-step">
-        <div class="step-header">
-          <h2 class="step-title">${t.step3_title}</h2>
-          <p class="step-subtitle">${t.step3_sub}</p>
-        </div>
-        
-        <div class="step3-content">
-          <!-- Chemical History -->
-          <div class="history-field">
-            <label class="history-label">${t.label_history}</label>
-            <div class="history-grid">
-              ${data.chemicalHistory.map(history => `
-                <div class="history-option ${this.formData.chemicalHistory.includes(history) ? 'selected' : ''}"
-                     data-field="chemicalHistory"
-                     data-value="${history}"
-                     data-multi="true">
-                  ${history}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-          
-          <!-- Habits Grid -->
-          <div class="habits-grid">
-            <!-- Wash Frequency -->
-            <div class="habit-field">
-              <label class="habit-label">${t.label_wash}</label>
-              <div class="select-wrapper">
-                <select class="habit-select" id="quiz-wash">
-                  <option value="">${t.select_option}</option>
-                  ${data.washFrequency.map(freq => `
-                    <option value="${freq}" ${this.formData.washFrequency === freq ? 'selected' : ''}>${freq}</option>
-                  `).join('')}
-                </select>
-                <div class="select-arrow">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Heat Usage -->
-            <div class="habit-field">
-              <label class="habit-label">${t.label_heat}</label>
-              <div class="select-wrapper">
-                <select class="habit-select" id="quiz-heat">
-                  <option value="">${t.select_option}</option>
-                  ${data.heatUsage.map(usage => `
-                    <option value="${usage}" ${this.formData.heatUsage === usage ? 'selected' : ''}>${usage}</option>
-                  `).join('')}
-                </select>
-                <div class="select-arrow">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        ${this.renderNavigation()}
-      </div>
-    `;
-  }
-  
-  renderStep4() {
-    const t = TRANSLATIONS[this.language];
-    const data = QUIZ_DATA[this.language];
-    
-    return `
-      <div class="quiz-step">
-        <div class="step-header">
-          <h2 class="step-title">${t.step4_title}</h2>
-          <p class="step-subtitle">${t.step4_sub}</p>
-        </div>
-        
-        <div class="step4-content">
-          <!-- Lifestyle Factors -->
-          <div class="lifestyle-field">
-            <label class="lifestyle-label">${t.label_lifestyle}</label>
-            <div class="lifestyle-grid">
-              ${data.lifestyle.map(factor => `
-                <div class="lifestyle-option ${this.formData.lifestyle.includes(factor) ? 'selected' : ''}"
-                     data-field="lifestyle"
-                     data-value="${factor}"
-                     data-multi="true">
-                  ${factor}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        
-        ${this.renderNavigation(true)}
-      </div>
-    `;
-  }
-  
-  renderNavigation(isFinalStep = false) {
-    const t = TRANSLATIONS[this.language];
-    const isRTL = this.language === 'ar';
-    
-    return `
-      <div class="quiz-navigation">
-        ${this.currentStep > 1 ? `
-          <button class="nav-button back" id="quiz-prev">
-            ${isRTL ? '→' : '←'} ${t.btn_back}
-          </button>
-        ` : '<div></div>'}
-        
-        ${isFinalStep ? `
-          <button class="nav-button submit" id="quiz-submit">
-            ${t.btn_analyze}
-          </button>
-        ` : `
-          <button class="nav-button next" id="quiz-next" ${!this.isStepValid() ? 'disabled' : ''}>
-            ${t.btn_next}
-          </button>
-        `}
-      </div>
-    `;
-  }
-  
-  renderLoading() {
-    const t = TRANSLATIONS[this.language];
-    const tips = LOADING_TIPS[this.language];
-    const currentTip = tips[this.loadingTipIndex] || tips[0];
-    
-    return `
-      <div class="quiz-loading">
-        <div class="loading-spinner">
-          <div class="spinner-outer"></div>
-          <div class="spinner-inner"></div>
-          <div class="loading-icon">✨</div>
-        </div>
-        
-        <div class="loading-content">
-          <h3 class="loading-title">${this.language === 'ar' ? 'التحليل العلمي قيد التقدم' : 'Scientific Analysis in Progress'}</h3>
-          <p class="loading-tip">${currentTip}</p>
-        </div>
-      </div>
-    `;
-  }
-  
-  renderResults() {
-    if (!this.results) return '';
-    
-    const t = TRANSLATIONS[this.language];
-    const isRTL = this.language === 'ar';
-    const products = PRODUCTS[this.language];
-    const recommendedProducts = this.results.recommendedProductIds
-      .map(id => products.find(p => p.id === id))
-      .filter(p => p);
-    
-    return `
-      <div class="quiz-results">
-        <!-- Results Header -->
-        <div class="results-header">
-          <div class="results-tag">
-            <span>${t.result_header_tag}</span>
-          </div>
-          <h2 class="results-title">${t.result_title}</h2>
-          <div class="results-meta">
-            <span>${t.result_prepared} ${this.formData.name}</span>
-            <span class="results-divider"></span>
-            <span>${new Date().toLocaleDateString(isRTL ? 'ar-KW' : 'en-US')}</span>
-          </div>
-        </div>
-        
-        <!-- Results Layout -->
-        <div class="results-layout">
-          <!-- Left Column: Diagnosis -->
-          <div>
-            <div class="diagnosis-card">
-              <h3 class="diagnosis-title">${t.result_diagnosis}</h3>
-              
-              <div class="diagnosis-content">
-                <div class="diagnosis-section">
-                  <h4>${t.result_obs}</h4>
-                  <p>${this.results.diagnosisSummary}</p>
-                </div>
-                
-                <div class="diagnosis-section">
-                  <h4>${t.result_science}</h4>
-                  <p>${this.results.scientificExplanation}</p>
-                </div>
-                
-                <div class="diagnosis-section diagnosis-tips">
-                  <h4>${t.result_kuwait}</h4>
-                  <ul class="tips-list">
-                    ${this.results.kuwaitTips.map(tip => `
-                      <li>${tip}</li>
-                    `).join('')}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Right Column: Routine & Products -->
-          <div>
-            <!-- Hair Ritual -->
-            <div class="routine-section">
-              <div class="routine-header">
-                <h3 class="routine-title">${t.result_ritual}</h3>
-                <span class="routine-tag">${t.result_step}</span>
-              </div>
-              
-              <div class="routine-grid">
-                <div class="routine-column">
-                  <hr class="column-divider">
-                  <h4 class="column-title">${t.result_daily}</h4>
-                  <ul class="routine-steps">
-                    ${this.results.routine.daily.map(step => `
-                      <li>${step}</li>
-                    `).join('')}
-                  </ul>
-                </div>
-                
-                <div class="routine-column">
-                  <hr class="column-divider">
-                  <h4 class="column-title">${t.result_weekly}</h4>
-                  <ul class="routine-steps">
-                    ${this.results.routine.weekly.map(step => `
-                      <li>${step}</li>
-                    `).join('')}
-                  </ul>
-                </div>
-                
-                <div class="routine-column">
-                  <hr class="column-divider">
-                  <h4 class="column-title">${t.result_monthly}</h4>
-                  <ul class="routine-steps">
-                    ${this.results.routine.monthly.map(step => `
-                      <li>${step}</li>
-                    `).join('')}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Recommended Products -->
-            <div class="products-section">
-              <div class="products-header">
-                <h3 class="products-title">${t.result_regimen}</h3>
-                <span class="products-tag">${t.result_shop}</span>
-              </div>
-              
-              <div class="products-grid">
-                ${recommendedProducts.map(product => `
-                  <div class="product-card" data-product-id="${product.id}">
-                    <div class="product-image">
-                      <div class="image-bg ${product.color}">
-                        <div class="image-overlay">
-                          <div class="image-note">
-                            <span class="note-label">${t.result_note}:</span>
-                            <p class="note-text">${this.results.productUsageInstructions[product.id]}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="product-info">
-                      <div class="product-header">
-                        <h4 class="product-name">${product.name}</h4>
-                        <span class="product-price">${product.price}</span>
-                      </div>
-                      <p class="product-description">${product.description}</p>
-                      <button class="product-button" onclick="addToCart('${product.id}')">
-                        ${t.btn_cart}
-                      </button>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Reset Button -->
-        <div class="reset-container">
-          <button class="reset-button" id="quiz-reset">
-            <span class="reset-label">${t.btn_new}</span>
-            <div class="reset-divider"></div>
-          </button>
-        </div>
-      </div>
-    `;
-  }
-  
-  renderError() {
-    const t = TRANSLATIONS[this.language];
-    
-    return `
-      <div class="quiz-error">
-        <div class="error-icon">✦</div>
-        <h3 class="error-title">${t.error_title}</h3>
-        <p class="error-message">${t.error_msg}</p>
-        <button class="error-button" id="quiz-retry">
-          ${t.btn_retry}
-        </button>
-      </div>
-    `;
-  }
-  
-  renderStep() {
-    this.render();
-  }
-  
-  renderLoading() {
-    const app = document.getElementById('hair-quiz-app');
-    if (app && this.state === 'loading') {
-      app.innerHTML = this.renderLoading();
-    }
-  }
-  
-  // Event Binding for Steps
-  bindStepEvents() {
-    // Name input
-    const nameInput = document.getElementById('quiz-name');
-    if (nameInput) {
-      nameInput.addEventListener('input', (e) => {
-        this.formData.name = e.target.value;
-        this.renderStep();
       });
     }
-    
-    // Selection options (hair type, age, scalp, problems, history, lifestyle)
-    document.querySelectorAll('.hair-type-option, .age-option, .scalp-option, .problem-option, .history-option, .lifestyle-option').forEach(option => {
-      option.addEventListener('click', (e) => {
-        const field = e.currentTarget.dataset.field;
-        const value = e.currentTarget.dataset.value;
-        const isMulti = e.currentTarget.dataset.multi === 'true';
-        this.updateForm(field, value, isMulti);
+
+    // Close dropdowns when clicking elsewhere (desktop)
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth > 768) {
+        if (!e.target.closest('.nav-item') && !e.target.closest('.mega-dropdown')) {
+          this.closeAllDropdowns();
+        }
+      }
+    });
+
+    // Escape key to close dropdowns
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeAllDropdowns();
+        this.closeMobileMenu();
+      }
+    });
+
+    // Close mobile menu when clicking a link
+    this.navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          const href = link.getAttribute('href');
+          
+          // If it's a dropdown trigger (has dropdown), toggle it
+          if (link.nextElementSibling && link.nextElementSibling.classList.contains('mega-dropdown')) {
+            e.preventDefault();
+            link.classList.toggle('active');
+          } else if (href.startsWith('#')) {
+            // If it's an anchor link, scroll to section and close menu
+            this.closeMobileMenu();
+          } else {
+            // If it's a regular link, just close the menu
+            this.closeMobileMenu();
+          }
+        }
       });
     });
-    
-    // Select dropdowns
-    const washSelect = document.getElementById('quiz-wash');
-    if (washSelect) {
-      washSelect.addEventListener('change', (e) => {
-        this.formData.washFrequency = e.target.value;
-        this.renderStep();
-      });
-    }
-    
-    const heatSelect = document.getElementById('quiz-heat');
-    if (heatSelect) {
-      heatSelect.addEventListener('change', (e) => {
-        this.formData.heatUsage = e.target.value;
-        this.renderStep();
-      });
-    }
-    
-    // Navigation buttons
-    const prevBtn = document.getElementById('quiz-prev');
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => this.prevStep());
-    }
-    
-    const nextBtn = document.getElementById('quiz-next');
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => this.nextStep());
-    }
-    
-    const submitBtn = document.getElementById('quiz-submit');
-    if (submitBtn) {
-      submitBtn.addEventListener('click', () => this.submitForm());
-    }
-    
-    // Results buttons
-    const resetBtn = document.getElementById('quiz-reset');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => this.resetQuiz());
-    }
-    
-    const retryBtn = document.getElementById('quiz-retry');
-    if (retryBtn) {
-      retryBtn.addEventListener('click', () => this.resetQuiz());
-    }
   }
-}
 
-// Initialize Hair Quiz
-let hairQuiz;
+  setupDropdowns() {
+    // Desktop dropdown hover
+    this.navItems.forEach(item => {
+      const link = item.querySelector('.nav-link');
+      const dropdown = item.querySelector('.mega-dropdown');
+      
+      if (dropdown) {
+        // Mouse enter
+        item.addEventListener('mouseenter', () => {
+          if (window.innerWidth > 768) {
+            this.closeAllDropdowns();
+            dropdown.style.opacity = '1';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.transform = 'translateX(-50%) translateY(0)';
+            dropdown.style.pointerEvents = 'auto';
+          }
+        });
 
-document.addEventListener('DOMContentLoaded', () => {
-  hairQuiz = new HairQuiz();
-});
+        // Mouse leave
+        item.addEventListener('mouseleave', (e) => {
+          if (window.innerWidth > 768) {
+            // Check if we're moving to the dropdown
+            if (!e.relatedTarget || !e.relatedTarget.closest('.mega-dropdown')) {
+              dropdown.style.opacity = '0';
+              dropdown.style.visibility = 'hidden';
+              dropdown.style.transform = 'translateX(-50%) translateY(20px)';
+              dropdown.style.pointerEvents = 'none';
+            }
+          }
+        });
 
-// Add to Cart Function (to integrate with Shopify)
-function addToCart(productId) {
-  // This would integrate with Shopify's cart API
-  const products = PRODUCTS[hairQuiz?.language || 'en'];
-  const product = products.find(p => p.id === productId);
-  
-  if (product) {
-    if (typeof Shopify !== 'undefined' && Shopify.addItem) {
-      // Real Shopify integration would go here
-      // Example: Shopify.addItem(productId, 1);
-      alert(`Added ${product.name} to cart!`);
+        // Keep dropdown open when hovering over it
+        dropdown.addEventListener('mouseenter', () => {
+          if (window.innerWidth > 768) {
+            dropdown.style.opacity = '1';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.transform = 'translateX(-50%) translateY(0)';
+            dropdown.style.pointerEvents = 'auto';
+          }
+        });
+
+        dropdown.addEventListener('mouseleave', () => {
+          if (window.innerWidth > 768) {
+            dropdown.style.opacity = '0';
+            dropdown.style.visibility = 'hidden';
+            dropdown.style.transform = 'translateX(-50%) translateY(20px)';
+            dropdown.style.pointerEvents = 'none';
+          }
+        });
+      }
+    });
+  }
+
+  setupScrollEffect() {
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      // Add scrolled class when scrolling down
+      if (currentScroll > 50) {
+        this.header.classList.add('scrolled');
+      } else {
+        this.header.classList.remove('scrolled');
+      }
+      
+      // Close dropdowns on scroll
+      if (window.innerWidth > 768) {
+        this.closeAllDropdowns();
+      }
+      
+      lastScroll = currentScroll;
+    });
+  }
+
+  setupScrollToSections() {
+    // Handle anchor links in header
+    this.navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            // Close mobile menu if open
+            if (window.innerWidth <= 768) {
+              this.closeMobileMenu();
+            }
+            
+            // Close dropdowns
+            this.closeAllDropdowns();
+            
+            // Scroll to element with offset for header
+            const headerHeight = this.header.offsetHeight;
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = targetPosition - headerHeight;
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        }
+      });
+    });
+  }
+
+  toggleMobileMenu() {
+    this.mainNav.classList.toggle('active');
+    this.mobileMenuBtn.textContent = this.mainNav.classList.contains('active') ? '✕' : '☰';
+    
+    // Toggle body scroll
+    if (this.mainNav.classList.contains('active')) {
+      document.body.style.overflow = 'hidden';
     } else {
-      alert(`${product.name} - ${product.price}\n\nAdd to cart functionality will work when integrated with Shopify.`);
+      document.body.style.overflow = '';
+    }
+  }
+
+  closeMobileMenu() {
+    if (this.mainNav.classList.contains('active')) {
+      this.mainNav.classList.remove('active');
+      this.mobileMenuBtn.textContent = '☰';
+      document.body.style.overflow = '';
+    }
+    
+    // Close all mobile dropdowns
+    this.navLinks.forEach(link => {
+      link.classList.remove('active');
+    });
+  }
+
+  closeAllDropdowns() {
+    if (window.innerWidth > 768) {
+      this.dropdowns.forEach(dropdown => {
+        dropdown.style.opacity = '0';
+        dropdown.style.visibility = 'hidden';
+        dropdown.style.transform = 'translateX(-50%) translateY(20px)';
+        dropdown.style.pointerEvents = 'none';
+      });
     }
   }
 }
-</script>
 
-{% schema %}
-{
-  "name": "Hair Quiz",
-  "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Section Title",
-      "default": "Hair Genius Tool"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "AI-powered hair analysis and personalized recommendations"
-    }
-  ],
-  "presets": [
-    {
-      "name": "Hair Quiz",
-      "category": "Quiz"
-    }
-  ]
-}
-{% endschema %}
+// Initialize header when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  const header = new HeaderWithDropdowns();
+  
+  // Make header instance available globally for debugging
+  window.headerInstance = header;
+  
+  console.log('Header initialized successfully');
+});
+</script>
