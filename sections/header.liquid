@@ -12,6 +12,8 @@
 
   .header.scrolled {
     background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
@@ -76,6 +78,10 @@
     cursor: pointer;
   }
 
+  .header.scrolled .nav-link {
+    color: #2D2D2D;
+  }
+
   /* Hover effect for nav links */
   .nav-link::after {
     content: '›';
@@ -98,7 +104,7 @@
     transform: rotate(-90deg);
   }
 
-  /* Mega Dropdown Styles - FIXED POSITIONING */
+  /* Mega Dropdown Styles - FIXED WITH BETTER TRANSITIONS */
   .mega-dropdown {
     position: absolute;
     top: 100%;
@@ -110,18 +116,19 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1001;
     padding: 40px;
     pointer-events: none;
   }
 
-  /* Show dropdown on hover */
+  /* Show dropdown on hover - FIXED TRANSITION */
   .nav-item:hover .mega-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
     pointer-events: auto;
+    transition-delay: 0.1s;
   }
 
   /* Keep dropdown visible when hovering over it */
@@ -143,7 +150,7 @@
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 20px;
-    color: #2D2D2D;
+    color: #2D2D2D; /* Changed from white to dark */
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -156,11 +163,12 @@
 
   .dropdown-link {
     text-decoration: none;
-    color: #666;
+    color: #666; /* Changed from white to gray */
     font-size: 14px;
     transition: all 0.3s ease;
     padding: 8px 0;
     border-bottom: 1px solid transparent;
+    display: block;
   }
 
   .dropdown-link:hover {
@@ -250,6 +258,8 @@
   @media (max-width: 768px) {
     .header {
       background: white !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
 
@@ -288,6 +298,7 @@
       font-size: 16px;
       text-transform: none;
       width: 100%;
+      color: #2D2D2D !important;
     }
 
     .nav-link::after {
@@ -304,7 +315,7 @@
       position: static;
       width: 100%;
       box-shadow: none;
-      padding: 20px 0;
+      padding: 20px;
       opacity: 1;
       visibility: visible;
       transform: none;
@@ -314,12 +325,12 @@
       background: #f9f9f9;
       border-radius: 8px;
       margin-top: 10px;
+      pointer-events: auto;
     }
 
     .nav-link.active + .mega-dropdown {
       display: block;
       max-height: 500px;
-      padding: 20px;
     }
 
     .dropdown-grid {
@@ -337,18 +348,7 @@
     }
   }
 
-  /* Mobile dropdown trigger fix */
-  @media (max-width: 768px) {
-    .nav-link {
-      pointer-events: auto !important;
-    }
-  }
-
   /* Services by Concern Link Styling */
-  .nav-item .nav-link[href="#services-by-concern"] {
-    position: relative;
-  }
-
   .nav-item .nav-link[href="#services-by-concern"]::after {
     display: none;
   }
@@ -362,6 +362,43 @@
   .nav-main {
     scrollbar-width: none;
     -ms-overflow-style: none;
+  }
+
+  /* Dropdown Images */
+  .dropdown-image-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .dropdown-image-content {
+    background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .dropdown-image-content:hover {
+    transform: scale(1.02);
+  }
+
+  /* Fix for white text in dropdowns */
+  .dropdown-column h4,
+  .dropdown-link {
+    color: #2D2D2D !important;
+  }
+
+  .dropdown-link {
+    color: #666 !important;
+  }
+
+  .dropdown-link:hover {
+    color: #E8C4B8 !important;
   }
 </style>
 
@@ -423,8 +460,8 @@
               </div>
             </div>
             <div class="dropdown-image">
-              <a href="{{ routes.all_products_collection_url }}" style="display: block;">
-                <div style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+              <a href="{{ routes.all_products_collection_url }}" class="dropdown-image-link">
+                <div class="dropdown-image-content">
                   Shop The Full Collection
                 </div>
               </a>
@@ -457,8 +494,8 @@
               </div>
             </div>
             <div class="dropdown-image">
-              <a href="#hair-quiz-section" style="display: block;">
-                <div style="background: linear-gradient(135deg, #A8D8EA, #78C2DC); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+              <a href="#hair-quiz-section" class="dropdown-image-link">
+                <div class="dropdown-image-content" style="background: linear-gradient(135deg, #A8D8EA, #78C2DC);">
                   Start Your Hair Journey
                 </div>
               </a>
@@ -496,8 +533,8 @@
               </div>
             </div>
             <div class="dropdown-image">
-              <a href="{{ pages['about'].url | default: '#' }}" style="display: block;">
-                <div style="background: linear-gradient(135deg, #95E1D3, #6DCFB7); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+              <a href="{{ pages['about'].url | default: '#' }}" class="dropdown-image-link">
+                <div class="dropdown-image-content" style="background: linear-gradient(135deg, #95E1D3, #6DCFB7);">
                   Join Our Community
                 </div>
               </a>
@@ -536,8 +573,8 @@
               </div>
             </div>
             <div class="dropdown-image">
-              <a href="{{ routes.blog_url }}" style="display: block;">
-                <div style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 600; border-radius: 12px;">
+              <a href="{{ routes.blog_url }}" class="dropdown-image-link">
+                <div class="dropdown-image-content" style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4);">
                   Learn & Grow
                 </div>
               </a>
@@ -579,6 +616,10 @@ class HeaderWithDropdowns {
     this.navLinks = document.querySelectorAll('.nav-link');
     this.dropdowns = document.querySelectorAll('.mega-dropdown');
     
+    this.hoverTimeout = null;
+    this.closeTimeout = null;
+    this.isMobile = window.innerWidth <= 768;
+    
     this.init();
   }
 
@@ -587,6 +628,7 @@ class HeaderWithDropdowns {
     this.setupScrollEffect();
     this.setupDropdowns();
     this.setupScrollToSections();
+    this.handleResize();
   }
 
   bindEvents() {
@@ -605,15 +647,6 @@ class HeaderWithDropdowns {
       });
     }
 
-    // Close dropdowns when clicking elsewhere (desktop)
-    document.addEventListener('click', (e) => {
-      if (window.innerWidth > 768) {
-        if (!e.target.closest('.nav-item') && !e.target.closest('.mega-dropdown')) {
-          this.closeAllDropdowns();
-        }
-      }
-    });
-
     // Escape key to close dropdowns
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -622,83 +655,113 @@ class HeaderWithDropdowns {
       }
     });
 
-    // Close mobile menu when clicking a link
-    this.navLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768) {
-          const href = link.getAttribute('href');
-          
-          // If it's a dropdown trigger (has dropdown), toggle it
-          if (link.nextElementSibling && link.nextElementSibling.classList.contains('mega-dropdown')) {
-            e.preventDefault();
-            link.classList.toggle('active');
-          } else if (href.startsWith('#')) {
-            // If it's an anchor link, scroll to section and close menu
-            this.closeMobileMenu();
-          } else {
-            // If it's a regular link, just close the menu
-            this.closeMobileMenu();
-          }
-        }
-      });
+    // Window resize
+    window.addEventListener('resize', () => {
+      this.handleResize();
     });
   }
 
+  handleResize() {
+    this.isMobile = window.innerWidth <= 768;
+    
+    // Clear any timeouts on resize
+    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+    if (this.closeTimeout) clearTimeout(this.closeTimeout);
+    
+    // Reset all dropdowns on resize
+    this.closeAllDropdowns();
+    
+    // Close mobile menu on resize to desktop
+    if (!this.isMobile && this.mainNav.classList.contains('active')) {
+      this.closeMobileMenu();
+    }
+  }
+
   setupDropdowns() {
-    // Desktop dropdown hover
+    if (this.isMobile) return; // Skip for mobile
+
     this.navItems.forEach(item => {
       const link = item.querySelector('.nav-link');
       const dropdown = item.querySelector('.mega-dropdown');
       
-      if (dropdown) {
-        // Mouse enter
-        item.addEventListener('mouseenter', () => {
-          if (window.innerWidth > 768) {
-            this.closeAllDropdowns();
-            dropdown.style.opacity = '1';
-            dropdown.style.visibility = 'visible';
-            dropdown.style.transform = 'translateX(-50%) translateY(0)';
-            dropdown.style.pointerEvents = 'auto';
-          }
-        });
+      if (!dropdown) return;
 
-        // Mouse leave
-        item.addEventListener('mouseleave', (e) => {
-          if (window.innerWidth > 768) {
-            // Check if we're moving to the dropdown
-            if (!e.relatedTarget || !e.relatedTarget.closest('.mega-dropdown')) {
-              dropdown.style.opacity = '0';
-              dropdown.style.visibility = 'hidden';
-              dropdown.style.transform = 'translateX(-50%) translateY(20px)';
-              dropdown.style.pointerEvents = 'none';
-            }
-          }
-        });
+      // Mouse enter - OPEN with delay for smoothness
+      item.addEventListener('mouseenter', () => {
+        if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+        
+        this.hoverTimeout = setTimeout(() => {
+          if (this.closeTimeout) clearTimeout(this.closeTimeout);
+          
+          // Close all other dropdowns first
+          this.closeAllDropdowns();
+          
+          // Open this dropdown
+          dropdown.style.opacity = '1';
+          dropdown.style.visibility = 'visible';
+          dropdown.style.transform = 'translateX(-50%) translateY(0)';
+          dropdown.style.pointerEvents = 'auto';
+        }, 100); // Small delay for smoothness
+      });
 
-        // Keep dropdown open when hovering over it
-        dropdown.addEventListener('mouseenter', () => {
-          if (window.innerWidth > 768) {
-            dropdown.style.opacity = '1';
-            dropdown.style.visibility = 'visible';
-            dropdown.style.transform = 'translateX(-50%) translateY(0)';
-            dropdown.style.pointerEvents = 'auto';
-          }
-        });
-
-        dropdown.addEventListener('mouseleave', () => {
-          if (window.innerWidth > 768) {
+      // Mouse leave - CLOSE with delay to prevent flickering
+      item.addEventListener('mouseleave', (e) => {
+        if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+        
+        // Check if moving to dropdown
+        const relatedTarget = e.relatedTarget;
+        const isMovingToDropdown = relatedTarget && relatedTarget.closest('.mega-dropdown');
+        
+        if (!isMovingToDropdown) {
+          if (this.closeTimeout) clearTimeout(this.closeTimeout);
+          
+          this.closeTimeout = setTimeout(() => {
             dropdown.style.opacity = '0';
             dropdown.style.visibility = 'hidden';
             dropdown.style.transform = 'translateX(-50%) translateY(20px)';
             dropdown.style.pointerEvents = 'none';
-          }
+          }, 200); // Delay before closing
+        }
+      });
+
+      // Keep dropdown open when hovering over it
+      dropdown.addEventListener('mouseenter', () => {
+        if (this.closeTimeout) clearTimeout(this.closeTimeout);
+        dropdown.style.opacity = '1';
+        dropdown.style.visibility = 'visible';
+        dropdown.style.transform = 'translateX(-50%) translateY(0)';
+        dropdown.style.pointerEvents = 'auto';
+      });
+
+      dropdown.addEventListener('mouseleave', (e) => {
+        if (this.closeTimeout) clearTimeout(this.closeTimeout);
+        
+        // Check if moving back to nav item
+        const relatedTarget = e.relatedTarget;
+        const isMovingToNavItem = relatedTarget && relatedTarget.closest('.nav-item');
+        
+        if (!isMovingToNavItem) {
+          this.closeTimeout = setTimeout(() => {
+            dropdown.style.opacity = '0';
+            dropdown.style.visibility = 'hidden';
+            dropdown.style.transform = 'translateX(-50%) translateY(20px)';
+            dropdown.style.pointerEvents = 'none';
+          }, 200);
+        }
+      });
+
+      // Mobile click handler
+      if (this.isMobile) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          link.classList.toggle('active');
         });
       }
     });
   }
 
   setupScrollEffect() {
-    let lastScroll = 0;
+    let scrollTimer = null;
     
     window.addEventListener('scroll', () => {
       const currentScroll = window.pageYOffset;
@@ -710,17 +773,17 @@ class HeaderWithDropdowns {
         this.header.classList.remove('scrolled');
       }
       
-      // Close dropdowns on scroll
-      if (window.innerWidth > 768) {
-        this.closeAllDropdowns();
+      // Close dropdowns on scroll (desktop only)
+      if (!this.isMobile) {
+        if (scrollTimer) clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+          this.closeAllDropdowns();
+        }, 100);
       }
-      
-      lastScroll = currentScroll;
     });
   }
 
   setupScrollToSections() {
-    // Handle anchor links in header
     this.navLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         const href = link.getAttribute('href');
@@ -732,7 +795,7 @@ class HeaderWithDropdowns {
           
           if (targetElement) {
             // Close mobile menu if open
-            if (window.innerWidth <= 768) {
+            if (this.isMobile) {
               this.closeMobileMenu();
             }
             
@@ -780,24 +843,27 @@ class HeaderWithDropdowns {
   }
 
   closeAllDropdowns() {
-    if (window.innerWidth > 768) {
-      this.dropdowns.forEach(dropdown => {
-        dropdown.style.opacity = '0';
-        dropdown.style.visibility = 'hidden';
-        dropdown.style.transform = 'translateX(-50%) translateY(20px)';
-        dropdown.style.pointerEvents = 'none';
-      });
-    }
+    // Clear any pending timeouts
+    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+    if (this.closeTimeout) clearTimeout(this.closeTimeout);
+    
+    // Close all dropdowns
+    this.dropdowns.forEach(dropdown => {
+      dropdown.style.opacity = '0';
+      dropdown.style.visibility = 'hidden';
+      dropdown.style.transform = 'translateX(-50%) translateY(20px)';
+      dropdown.style.pointerEvents = 'none';
+    });
   }
 }
 
 // Initialize header when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  const header = new HeaderWithDropdowns();
-  
-  // Make header instance available globally for debugging
-  window.headerInstance = header;
-  
-  console.log('Header initialized successfully');
+  // Wait a bit to ensure all elements are loaded
+  setTimeout(() => {
+    const header = new HeaderWithDropdowns();
+    window.headerInstance = header;
+    console.log('Header initialized successfully');
+  }, 100);
 });
 </script>
