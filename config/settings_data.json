@@ -13,7 +13,13 @@
       "hero": {
         "type": "hero",
         "settings": {
-          "collection": ""
+          "collection": "frontpage",
+          "hero_image_1": "shopify://shop_images/IMG-1208.webp",
+          "hero_title_1": "Luxury Hair Transformation for Every Texture",
+          "hero_description_1": "Discover our premium smoothing & repair treatments powered by salon-grade formulas. Perfect for sleek, shiny, healthy hair.",
+          "hero_image_2": "shopify://shop_images/IMG_1309.jpg",
+          "hero_title_2": "Ultimate Shine With K18 Absolut Repair",
+          "hero_description_2": "Restore softness, repair damage, and achieve a silky, luxurious finish with our salon-exclusive Absolut Repair treatment."
         }
       },
       "featured-collections": {
