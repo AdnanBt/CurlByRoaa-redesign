@@ -369,7 +369,7 @@
                       loading="lazy"
                       width="400"
                       height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title }}</div></div>';"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
                     <img 
@@ -379,7 +379,7 @@
                       loading="lazy"
                       width="400"
                       height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title }}</div></div>';"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% else %}
                     <div class="featured-collection-placeholder">
@@ -421,7 +421,7 @@
                       loading="lazy"
                       width="400"
                       height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title }}</div></div>';"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
                     <img 
@@ -431,7 +431,7 @@
                       loading="lazy"
                       width="400"
                       height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title }}</div></div>';"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% else %}
                     <div class="featured-collection-placeholder">
@@ -480,7 +480,7 @@
                       loading="lazy"
                       width="400"
                       height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title }}</div></div>';"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
                     <img 
@@ -490,7 +490,7 @@
                       loading="lazy"
                       width="400"
                       height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title }}</div></div>';"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% else %}
                     <div class="featured-collection-placeholder">
@@ -683,10 +683,13 @@ class FeaturedCollectionsCarousel {
 
 // Initialize featured collections carousel
 document.addEventListener('DOMContentLoaded', () => {
-  new FeaturedCollectionsCarousel();
-  
-  // Debug log to confirm initialization
-  console.log('Featured Collections Carousel initialized');
+  // Check if elements exist before initializing
+  if (document.getElementById('featured-collections-carousel')) {
+    new FeaturedCollectionsCarousel();
+    console.log('Featured Collections Carousel initialized successfully');
+  } else {
+    console.warn('Featured Collections Carousel elements not found');
+  }
 });
 </script>
 
