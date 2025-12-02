@@ -13,7 +13,7 @@
   /* Adjust header position based on announcement bar */
   {% if section.settings.show_announcement_bar %}
   .header {
-    top: 40px; /* Height of announcement bar */
+    top: 40px !important; /* Use !important to ensure it overrides */
   }
   {% endif %}
 
@@ -90,7 +90,7 @@
   }
 
   /* Hover effect for nav links */
-  .nav-link::after {
+  .nav-link.has-dropdown::after {
     content: '›';
     font-size: 16px;
     transform: rotate(90deg);
@@ -98,7 +98,7 @@
     display: inline-block;
   }
 
-  .nav-item:hover .nav-link::after {
+  .nav-item:hover .nav-link.has-dropdown::after {
     transform: rotate(-90deg);
   }
 
@@ -111,31 +111,31 @@
     transform: rotate(-90deg);
   }
 
-  /* Mega Dropdown Styles */
+  /* Mega Dropdown Styles - FIXED TRANSITIONS */
   .mega-dropdown {
     position: absolute;
     top: 100%;
     left: 50%;
-    transform: translateX(-50%) translateY(20px);
+    transform: translateX(-50%) translateY(10px);
     width: 800px;
     background: white;
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     z-index: 1001;
     padding: 40px;
     pointer-events: none;
   }
 
-  /* Show dropdown on hover */
+  /* Show dropdown on hover - FIXED TRANSITION */
   .nav-item:hover .mega-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
     pointer-events: auto;
-    transition-delay: 0.1s;
+    transition-delay: 0s;
   }
 
   /* Keep dropdown visible when hovering over it */
@@ -153,17 +153,16 @@
     gap: 40px;
   }
 
-  /* SHOP DROPDOWN SPECIFIC STYLES - BLACK FONT */
-  .nav-item:first-child .dropdown-column h4,
-  .nav-item:first-child .dropdown-link {
-    color: #000000 !important; /* Pure black for shop dropdown */
+  /* ALL DROPDOWN CONTENT - SAME FONT COLOR (BLACK) */
+  .dropdown-column h4,
+  .dropdown-link {
+    color: #000000 !important; /* Pure black for ALL dropdowns */
   }
 
   .dropdown-column h4 {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 20px;
-    color: #2D2D2D;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -181,16 +180,12 @@
     padding: 8px 0;
     border-bottom: 1px solid transparent;
     display: block;
-  }
-
-  /* Default dropdown link color (for non-shop dropdowns) */
-  .dropdown-link {
-    color: #666;
+    color: #000000 !important; /* Force black color */
   }
 
   /* Hover effect for all dropdown links */
   .dropdown-link:hover {
-    color: #E8C4B8 !important; /* Important to override shop black color */
+    color: #E8C4B8 !important;
     border-bottom-color: #E8C4B8;
     transform: translateX(8px);
   }
@@ -279,16 +274,13 @@
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      top: 0 !important; /* Reset top on mobile */
     }
 
     {% if section.settings.show_announcement_bar %}
-    .header {
-      top: 0 !important; /* On mobile, stack normally */
-    }
-    
-    /* Add margin to main content to prevent overlap */
-    main {
-      margin-top: 40px !important;
+    /* Adjust content spacing on mobile with announcement bar */
+    body {
+      padding-top: 40px;
     }
     {% endif %}
 
@@ -330,7 +322,7 @@
       color: #2D2D2D !important;
     }
 
-    .nav-link::after {
+    .nav-link.has-dropdown::after {
       transform: rotate(0deg);
       transition: transform 0.3s ease;
     }
@@ -350,7 +342,7 @@
       transform: none;
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease;
+      transition: max-height 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
       background: #f9f9f9;
       border-radius: 8px;
       margin-top: 10px;
@@ -367,9 +359,9 @@
       gap: 20px;
     }
 
-    /* Mobile shop dropdown black text */
-    .nav-item:first-child .dropdown-column h4,
-    .nav-item:first-child .dropdown-link {
+    /* Mobile dropdown text - ALL BLACK */
+    .dropdown-column h4,
+    .dropdown-link {
       color: #000000 !important;
     }
 
@@ -377,7 +369,7 @@
       gap: 12px;
     }
     
-    /* Push content down for fixed header */
+    /* Push content down for fixed header on mobile */
     main {
       padding-top: 80px !important;
     }
@@ -385,7 +377,7 @@
 
   /* Services by Concern Link Styling */
   .nav-item .nav-link[href="#services-by-concern"]::after {
-    display: none;
+    display: none !important;
   }
 
   /* Hide scrollbar for clean look */
@@ -420,13 +412,6 @@
 
   .dropdown-image-content:hover {
     transform: scale(1.02);
-  }
-
-  /* Fix for mobile content spacing */
-  @media (max-width: 768px) {
-    body.announcement-bar-shown {
-      padding-top: 40px;
-    }
   }
 </style>
 
