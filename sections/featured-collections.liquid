@@ -1,434 +1,248 @@
-{% comment %} featured-collections.liquid - Horizontal Carousel with Auto-Rotating Card Images {% endcomment %}
+{% comment %} Featured Collections - Hybrid Grid + Swiper Carousel + Card Auto-Rotate (Version C) {% endcomment %}
+
+<!-- Swiper CSS (non-blocking; CSS link is fine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
 
 <style>
-.featured-collections-section {
-  padding: 60px 0;
-  background: #FAF8F6;
-  overflow: hidden;
-}
+/* ===== Featured Collections — Hybrid (Grid on desktop, Carousel on mobile) ===== */
+.featured-collections-section { padding: clamp(32px, 5vw, 72px) 0; background: #FAF8F6; }
+.featured-collections-header { text-align: center; margin-bottom: 28px; padding: 0 1rem; }
+.featured-collections-title { font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight:700; color:#2D2D2D; margin-bottom:6px; }
+.featured-collections-description { font-size: clamp(.9rem,1.1vw,1rem); color:#666; max-width:760px; margin:0 auto; line-height:1.6; }
 
-.featured-collections-header {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 0 20px;
-}
+/* Swiper container behaves like carousel on small screens and grid-like on large screens */
+.featured-collections-swiper { max-width:1400px; margin: 0 auto; padding: 12px 1rem 36px; position:relative; }
+.swiper-wrapper { display:flex; gap:22px; align-items:flex-start; }
 
-.featured-collections-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #2D2D2D;
-}
-
-.featured-collections-description {
-  font-size: 1rem;
-  color: #666;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-.featured-collections-carousel-container {
-  position: relative;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 60px;
-}
-
-.featured-collections-carousel-wrapper {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding: 20px 10px;
-  margin: -20px -10px;
-}
-
-.featured-collections-carousel-wrapper::-webkit-scrollbar {
-  display: none;
-}
-
-.featured-collections-carousel {
-  display: flex;
-  gap: 25px;
-  width: max-content;
-  padding: 10px 0;
-}
-
+/* Card */
 .featured-collection-card {
-  flex: 0 0 280px;
-  width: 280px;
-  height: 350px;
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  width: clamp(180px, 23%, 280px);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  display:flex;
+  flex-direction:column;
+  scroll-snap-align:start;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+}
+.featured-collection-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,0.10); }
+
+/* Image container: stacked images (absolute) for fade-in/out */
+.featured-collection-image-container { position:relative; width:100%; padding:0; height: clamp(140px, 18vw, 220px); overflow:hidden; background:#f6f6f6; }
+.featured-collection-image-container img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition: opacity .6s ease-in-out, transform .6s ease-in-out; }
+.featured-collection-image-container img.visible { opacity:1; transform: scale(1); }
+.featured-collection-card:hover .featured-collection-image-container img.visible { transform: scale(1.04); filter: brightness(1.03); }
+
+/* Content */
+.featured-collection-content { padding: 14px 14px 18px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:120px; }
+.featured-collection-title { font-size: 1rem; font-weight:700; color:#222; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; }
+.featured-collection-product-count { font-size:0.85rem; color:#777; }
+.featured-collection-link { display:inline-block; text-align:center; padding:8px 14px; background: linear-gradient(90deg,#D4A574,#B07F53); color:#fff; border-radius:8px; font-weight:700; text-decoration:none; border:2px solid transparent; transition: all .25s ease; }
+.featured-collection-link:hover { background:#fff; color:#D4A574; border-color:#D4A574; }
+
+/* Swiper controls (visible on desktop/tablet for UX) */
+.swiper-button-next, .swiper-button-prev { color:#222; width:44px; height:44px; border-radius:50%; background:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:grid; place-items:center; }
+.swiper-pagination-bullet { background: rgba(0,0,0,0.18); }
+.swiper-pagination-bullet-active { background: #D4A574; transform:scale(1.2); }
+
+/* Responsive: Desktop grid-ish layout */
+@media (min-width: 1100px) {
+  /* Make Swiper show multiple slides and leave them visible like a grid */
+  .swiper { padding-bottom:28px; }
 }
 
-.featured-collection-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.featured-collection-image-container {
-  width: 100%;
-  height: 200px;
-  position: relative;
-  overflow: hidden;
-}
-
-.featured-collection-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.featured-collection-card:hover .featured-collection-image {
-  transform: scale(1.05);
-}
-
-.featured-collection-content {
-  padding: 20px;
-  background: white;
-  height: 150px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.featured-collection-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #2D2D2D;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.featured-collection-product-count {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 15px;
-  display: block;
-}
-
-.featured-collection-link {
-  display: inline-block;
-  padding: 8px 16px;
-  background: #D4A574;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  text-align: center;
-  border: 2px solid #D4A574;
-}
-
-.featured-collection-link:hover {
-  background: transparent;
-  color: #D4A574;
-}
-
-.featured-collection-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  color: #666;
-  padding: 20px;
-  text-align: center;
-}
-
-.featured-placeholder-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  opacity: 0.7;
-}
-
-.featured-placeholder-text {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.featured-collections-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: white;
-  border: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 20;
-  opacity: 0.8;
-  transition: all 0.3s ease;
-}
-
-.featured-collections-carousel-container:hover .featured-collections-nav-btn {
-  opacity: 1;
-}
-
-.featured-collections-nav-btn:hover {
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-.featured-collections-nav-btn.prev {
-  left: 10px;
-}
-
-.featured-collections-nav-btn.next {
-  right: 10px;
-}
-
-.featured-collections-nav-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  transform: translateY(-50%) scale(1);
-}
-
-.featured-collections-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 30px;
-}
-
-.featured-collections-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.2);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.featured-collections-dot.active {
-  background: #D4A574;
-  transform: scale(1.3);
-}
-
-/* Mobile Responsive */
-@media (max-width: 1024px) {
-  .featured-collection-card { flex: 0 0 240px; width: 240px; height: 320px; }
-  .featured-collection-image-container { height: 180px; }
-}
+/* Mobile adjustments */
 @media (max-width: 768px) {
-  .featured-collection-card { flex: 0 0 200px; width: 200px; height: 300px; }
-  .featured-collection-image-container { height: 160px; }
-  .featured-collections-nav-btn { display: none; }
-}
-@media (max-width: 480px) {
-  .featured-collection-card { flex: 0 0 180px; width: 180px; height: 280px; }
-  .featured-collection-image-container { height: 140px; }
+  .featured-collection-card { width: 200px; }
+  .featured-collection-image-container { height: 150px; }
+  .swiper-button-next, .swiper-button-prev { display:none; } /* rely on swipe & pagination */
 }
 </style>
 
 <section class="featured-collections-section">
   <div class="featured-collections-header">
-    <h2 class="featured-collections-title">{{ section.settings.title | default: 'Shop By Collection' }}</h2>
-    <p class="featured-collections-description">{{ section.settings.description | default: 'Find the perfect products for your unique curl pattern' }}</p>
+    <h2 class="featured-collections-title">{{ section.settings.title | default: "Shop By Collection" }}</h2>
+    <p class="featured-collections-description">{{ section.settings.description | default: "Find the perfect products for your unique curl pattern" }}</p>
   </div>
 
-  <div class="featured-collections-carousel-container">
-    <button class="featured-collections-nav-btn prev" id="featured-collections-prev" aria-label="Previous collections">
-      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
+  <!-- Swiper root -->
+  <div class="swiper featured-collections-swiper">
+    <div class="swiper-wrapper">
+      {% comment %} Render one slide per block/collection. Each slide contains up to 5 product featured images (pre-rendered) {% endcomment %}
+      {% for block in section.blocks %}
+        {% assign collection = collections[block.settings.collection] %}
+        {% if collection %}
+          {% assign product_images = '' %}
+          {% assign prods = collection.products | slice: 0, 6 %}
+          <div class="swiper-slide">
+            <article class="featured-collection-card" aria-label="{{ collection.title | escape }}">
+              <div class="featured-collection-image-container" role="img" aria-label="{{ collection.title | escape }}">
+                {% comment %} Pre-render up to 5 images; first is visible {% endcomment %}
+                {% assign img_index = 0 %}
+                {% for p in prods limit:5 %}
+                  {% if p.featured_image %}
+                    {% assign img_url = p.featured_image | image_url: width: 800, height: 600, crop: 'center' %}
+                    <img
+                      src="{{ img_url }}"
+                      alt="{{ p.title | escape }}"
+                      class="collection-card-image{% if forloop.first %} visible{% endif %}"
+                      width="800"
+                      height="600"
+                      loading="lazy"
+                    >
+                  {% endif %}
+                {% endfor %}
 
-    <div class="featured-collections-carousel-wrapper">
-      <div class="featured-collections-carousel" id="featured-collections-carousel">
-        {% for block in section.blocks %}
-          {% assign collection = collections[block.settings.collection] %}
-          {% if collection %}
-          <div class="featured-collection-card" data-collection-handle="{{ collection.handle }}">
-            <div class="featured-collection-image-container">
-              {% if collection.image %}
-                <img src="{{ collection.image | image_url: width: 400, height: 300 }}" alt="{{ collection.title }}" loading="lazy" width="400" height="300">
-              {% else %}
-                <div class="featured-collection-placeholder">
-                  <div class="featured-placeholder-icon">📦</div>
-                  <div class="featured-placeholder-text">{{ collection.title }}</div>
+                {% comment %} If no product images rendered, fallback to collection image or placeholder {% endcomment %}
+                {% if prods.size == 0 or collection.products.size == 0 %}
+                  {% if collection.image %}
+                    <img
+                      src="{{ collection.image | image_url: width:800, height:600, crop:'center' }}"
+                      alt="{{ collection.title | escape }}"
+                      class="collection-card-image visible"
+                      width="800"
+                      height="600"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="featured-collection-placeholder">
+                      <div class="featured-placeholder-icon">📦</div>
+                      <div class="featured-placeholder-text">{{ collection.title }}</div>
+                    </div>
+                  {% endif %}
+                {% endif %}
+              </div>
+
+              <div class="featured-collection-content">
+                <div>
+                  <h3 class="featured-collection-title">{{ collection.title }}</h3>
+                  <div class="featured-collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</div>
                 </div>
-              {% endif %}
-            </div>
-            <div class="featured-collection-content">
-              <h3 class="featured-collection-title">{{ collection.title }}</h3>
-              <span class="featured-collection-product-count">{{ collection.products_count }} products</span>
-              <a href="{{ collection.url }}" class="featured-collection-link">Shop Now</a>
-            </div>
+
+                <a class="featured-collection-link" href="{{ collection.url | default: routes.collections_url }}">Shop Now</a>
+              </div>
+            </article>
           </div>
-          {% endif %}
-        {% endfor %}
-      </div>
+        {% endif %}
+      {% endfor %}
     </div>
 
-    <button class="featured-collections-nav-btn next" id="featured-collections-next" aria-label="Next collections">
-      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
+    <!-- Controls -->
+    <div class="swiper-button-prev" aria-label="Previous"></div>
+    <div class="swiper-button-next" aria-label="Next"></div>
 
-    <div class="featured-collections-dots" id="featured-collections-dots"></div>
+    <!-- Pagination -->
+    <div class="swiper-pagination" aria-hidden="false"></div>
   </div>
 </section>
 
-<script>
-class FeaturedCollectionsCarousel {
-  constructor() {
-    this.carousel = document.getElementById('featured-collections-carousel');
-    this.wrapper = document.querySelector('.featured-collections-carousel-wrapper');
-    this.prevBtn = document.getElementById('featured-collections-prev');
-    this.nextBtn = document.getElementById('featured-collections-next');
-    this.dotsContainer = document.getElementById('featured-collections-dots');
-    this.cards = document.querySelectorAll('.featured-collection-card');
-    if (this.carousel) {
-      this.currentIndex = 0;
-      this.totalCards = this.cards.length;
-      this.cardsPerView = this.calculateCardsPerView();
-      this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
-      this.init();
-    }
-  }
+<!-- Swiper JS (defer to avoid parser-blocking) -->
+<script defer src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
-  init() {
-    this.bindEvents();
-    this.createDots();
-    this.updateNavigation();
-    this.setupAutoScroll();
-  }
-
-  calculateCardsPerView() {
-    const cardWidth = 280;
-    const gap = 25;
-    const containerWidth = this.wrapper ? this.wrapper.clientWidth : window.innerWidth;
-    return Math.floor(containerWidth / (cardWidth + gap));
-  }
-
-  bindEvents() {
-    if (this.prevBtn && this.nextBtn) {
-      this.prevBtn.addEventListener('click', (e) => { e.preventDefault(); this.scrollToPrev(); });
-      this.nextBtn.addEventListener('click', (e) => { e.preventDefault(); this.scrollToNext(); });
-    }
-    if (this.wrapper) {
-      this.wrapper.addEventListener('scroll', () => { this.updateCurrentIndexFromScroll(); this.updateDots(); this.updateNavigation(); });
-      window.addEventListener('resize', () => { this.cardsPerView = this.calculateCardsPerView(); this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView); this.updateNavigation(); });
-    }
-  }
-
-  createDots() {
-    if (!this.dotsContainer || this.totalCards <= this.cardsPerView) return;
-    this.dotsContainer.innerHTML = '';
-    const dotsCount = Math.ceil(this.totalCards / this.cardsPerView);
-    for (let i = 0; i < dotsCount; i++) {
-      const dot = document.createElement('button');
-      dot.className = `featured-collections-dot ${i === 0 ? 'active' : ''}`;
-      dot.setAttribute('aria-label', `Go to page ${i + 1}`);
-      dot.addEventListener('click', () => this.goToPage(i));
-      this.dotsContainer.appendChild(dot);
-    }
-  }
-
-  updateDots() {
-    if (!this.dotsContainer || this.totalCards <= this.cardsPerView) return;
-    const dots = this.dotsContainer.querySelectorAll('.featured-collections-dot');
-    const currentPage = Math.floor(this.currentIndex / this.cardsPerView);
-    dots.forEach((dot, index) => { dot.classList.toggle('active', index === currentPage); });
-  }
-
-  updateCurrentIndexFromScroll() {
-    if (!this.wrapper || !this.cards[0]) return;
-    const cardWidth = this.cards[0].offsetWidth;
-    const gap = 25;
-    const scrollLeft = this.wrapper.scrollLeft;
-    this.currentIndex = Math.round(scrollLeft / (cardWidth + gap));
-    this.currentIndex = Math.max(0, Math.min(this.currentIndex, this.maxIndex));
-  }
-
-  scrollToPrev() { if (this.currentIndex > 0) { this.currentIndex = Math.max(0, this.currentIndex - this.cardsPerView); this.scrollToIndex(); } }
-  scrollToNext() { if (this.currentIndex < this.maxIndex) { this.currentIndex = Math.min(this.maxIndex, this.currentIndex + this.cardsPerView); this.scrollToIndex(); } }
-  scrollToIndex() {
-    if (!this.wrapper || !this.cards[0]) return;
-    const cardWidth = this.cards[0].offsetWidth;
-    const gap = 25;
-    this.wrapper.scrollTo({ left: this.currentIndex * (cardWidth + gap), behavior: 'smooth' });
-    this.updateDots(); this.updateNavigation();
-  }
-
-  goToPage(pageIndex) {
-    const dotsCount = Math.ceil(this.totalCards / this.cardsPerView);
-    if (pageIndex >= 0 && pageIndex < dotsCount) { this.currentIndex = pageIndex * this.cardsPerView; this.scrollToIndex(); }
-  }
-
-  updateNavigation() { if (!this.prevBtn || !this.nextBtn) return; this.prevBtn.disabled = this.currentIndex === 0; this.nextBtn.disabled = this.currentIndex >= this.maxIndex; }
-
-  setupAutoScroll() {
-    if (window.innerWidth <= 768) {
-      setInterval(() => { if (this.currentIndex >= this.maxIndex) this.currentIndex = 0; else this.scrollToNext(); }, 4000);
-    }
-  }
-}
-
-// Auto-rotate images inside cards
-class CollectionCardPreview {
-  constructor() {
-    this.cards = document.querySelectorAll('.featured-collection-card');
-    this.init();
-  }
-
-  init() {
-    this.cards.forEach(card => {
-      const imgContainer = card.querySelector('.featured-collection-image-container');
-      if (!imgContainer) return;
-
-      const images = [];
-      const collectionHandle = card.dataset.collectionHandle;
-      const collection = window.Shopify && Shopify.collections ? Shopify.collections[collectionHandle] : null;
-      if (collection && collection.products && collection.products.length > 0) {
-        collection.products.slice(0,5).forEach(p => { if(p.featured_image) images.push(p.featured_image); });
-      }
-
-      if (images.length > 1) {
-        let currentIndex = 0;
-        const imgElement = imgContainer.querySelector('img');
-        setInterval(() => { currentIndex = (currentIndex + 1) % images.length; imgElement.src = images[currentIndex]; }, 2500);
+<!-- Inline initialization + per-card auto-rotate (defer) -->
+<script defer>
+(function () {
+  function initSwiperAndRotators() {
+    // Init Swiper with breakpoints to behave like hybrid grid/carousel
+    const swiper = new Swiper('.featured-collections-swiper', {
+      slidesPerView: 'auto',
+      spaceBetween: 22,
+      centeredSlides: false,
+      loop: false,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true
+      },
+      breakpoints: {
+        320: { slidesPerView: 1.2, spaceBetween: 12 },
+        480: { slidesPerView: 1.6, spaceBetween: 16 },
+        768: { slidesPerView: 2.4, spaceBetween: 18 },
+        1024: { slidesPerView: 3.5, spaceBetween: 22 },
+        1400: { slidesPerView: 4.5, spaceBetween: 24 }
+      },
+      // don't block rendering
+      on: {
+        afterInit: function () { /* no-op */ }
       }
     });
-  }
-}
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('featured-collections-carousel')) new FeaturedCollectionsCarousel();
-  new CollectionCardPreview();
-});
+    // Auto-rotate images inside each card
+    const CARD_ROTATE_INTERVAL = 2600; // ms
+    const cards = document.querySelectorAll('.featured-collection-card');
+
+    cards.forEach(card => {
+      const imgs = Array.from(card.querySelectorAll('.collection-card-image'));
+      if (imgs.length <= 1) return;
+      // ensure first visible
+      imgs.forEach((i, idx) => i.classList.toggle('visible', idx === 0));
+      let idx = 0;
+      setInterval(() => {
+        imgs[idx].classList.remove('visible');
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add('visible');
+      }, CARD_ROTATE_INTERVAL);
+    });
+
+    // Accessibility: pause rotation when user focuses inside card
+    document.querySelectorAll('.featured-collection-card').forEach(card => {
+      card.addEventListener('focusin', () => {
+        // no-op: we could clear intervals and re-enable — kept simple for perf
+      });
+    });
+
+    return swiper;
+  }
+
+  // Initialize on DOMContentLoaded (defer already used)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSwiperAndRotators);
+  } else {
+    initSwiperAndRotators();
+  }
+})();
 </script>
 
 {% schema %}
 {
-  "name": "Featured Collections",
+  "name": "Featured Collections)",
   "max_blocks": 8,
   "settings": [
-    { "type": "text", "id": "title", "label": "Section Title", "default": "Shop By Collection" },
-    { "type": "textarea", "id": "description", "label": "Description", "default": "Find the perfect products for your unique curl pattern" }
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Shop By Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Find the perfect products for your unique curl pattern"
+    }
   ],
   "blocks": [
-    { "type": "collection", "name": "Collection", "settings": [ { "type": "collection", "id": "collection", "label": "Select Collection" } ] }
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select collection"
+        }
+      ]
+    }
   ],
-  "presets": [ { "name": "Featured Collections", "category": "Collections" } ]
+  "presets": [
+    {
+      "name": "Featured Collections (Hybrid)",
+      "category": "Collections"
+    }
+  ]
 }
 {% endschema %}
