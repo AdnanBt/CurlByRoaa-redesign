@@ -200,7 +200,6 @@
 
 /* Your custom hero card styles */
 .custom-hero-card {
-  background: #F3E3C5;
   padding: 20px 16px !important;
   min-height: 80vh;
   display: flex;
@@ -475,10 +474,9 @@
         <div class="card-content">
           <div class="card-text">
             <div class="card-badge">PREMIUM</div>
-            <h2 class="card-title">Luxury Hair Transformation for Every Texture</h2>
+            <h2 class="card-title">{{ section.settings.hero_title_1 | default: 'Luxury Hair Transformation for Every Texture' }}</h2>
             <p class="card-description">
-              Discover our premium smoothing & repair treatments powered by salon-grade formulas.
-              Perfect for sleek, shiny, healthy hair.
+              {{ section.settings.hero_description_1 | default: 'Discover our premium smoothing & repair treatments powered by salon-grade formulas. Perfect for sleek, shiny, healthy hair.' }}
             </p>
             <div class="card-actions">
               <a href="/pages/book-now" class="card-btn card-btn-primary">
@@ -491,16 +489,22 @@
           </div>
           
           <div class="card-image">
-            {% assign hero_image_1 = 'hero-card-1.jpg' | file_url %}
-            <img 
-              src="{{ hero_image_1 }}" 
-              alt="Luxury Hair Treatment"
-              class="product-image-large"
-              loading="lazy"
-              width="600"
-              height="auto"
-              onload="this.classList.add('loaded')"
-              onerror="this.src='https://placehold.co/600x600/F5E7D6/000000?text=Hair+Treatment';">
+            {% if section.settings.hero_image_1 %}
+              <img 
+                src="{{ section.settings.hero_image_1 | image_url: width: 600, height: 600 }}" 
+                alt="{{ section.settings.hero_title_1 | default: 'Luxury Hair Treatment' }}"
+                class="product-image-large"
+                loading="lazy"
+                width="600"
+                height="auto"
+                onload="this.classList.add('loaded')"
+                onerror="this.src='https://placehold.co/600x600/F5E7D6/000000?text=Hero+Image+1';">
+            {% else %}
+              <!-- Fallback to placeholder -->
+              <div class="image-placeholder">
+                Upload Hero Image 1 in Theme Settings
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -510,10 +514,9 @@
         <div class="card-content">
           <div class="card-text">
             <div class="card-badge">PROFESSIONAL</div>
-            <h2 class="card-title">Ultimate Shine With L'Oréal Absolut Repair</h2>
+            <h2 class="card-title">{{ section.settings.hero_title_2 | default: "Ultimate Shine With L'Oréal Absolut Repair" }}</h2>
             <p class="card-description">
-              Restore softness, repair damage, and achieve a silky, luxurious finish
-              with our salon-exclusive Absolut Repair treatment.
+              {{ section.settings.hero_description_2 | default: 'Restore softness, repair damage, and achieve a silky, luxurious finish with our salon-exclusive Absolut Repair treatment.' }}
             </p>
             <div class="card-actions">
               {% assign absolut_collection = collections['absolut-repair'] %}
@@ -542,16 +545,22 @@
           </div>
           
           <div class="card-image">
-            {% assign hero_image_2 = 'hero-card-2.jpg' | file_url %}
-            <img 
-              src="{{ hero_image_2 }}" 
-              alt="L'Oréal Absolut Repair Mask"
-              class="product-image-large"
-              loading="lazy"
-              width="600"
-              height="auto"
-              onload="this.classList.add('loaded')"
-              onerror="this.src='https://placehold.co/600x600/F3E3C5/000000?text=Absolut+Repair';">
+            {% if section.settings.hero_image_2 %}
+              <img 
+                src="{{ section.settings.hero_image_2 | image_url: width: 600, height: 600 }}" 
+                alt="{{ section.settings.hero_title_2 | default: 'Absolut Repair Mask' }}"
+                class="product-image-large"
+                loading="lazy"
+                width="600"
+                height="auto"
+                onload="this.classList.add('loaded')"
+                onerror="this.src='https://placehold.co/600x600/F3E3C5/000000?text=Hero+Image+2';">
+            {% else %}
+              <!-- Fallback to placeholder -->
+              <div class="image-placeholder">
+                Upload Hero Image 2 in Theme Settings
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -860,12 +869,60 @@ function scrollToNextSection() {
       "id": "collection",
       "label": "Featured Collection",
       "info": "Select collection to show products in carousel"
+    },
+    {
+      "type": "header",
+      "content": "First Hero Card"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_1",
+      "label": "First Hero Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_title_1",
+      "label": "First Hero Title",
+      "default": "Luxury Hair Transformation for Every Texture"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_description_1",
+      "label": "First Hero Description",
+      "default": "Discover our premium smoothing & repair treatments powered by salon-grade formulas. Perfect for sleek, shiny, healthy hair."
+    },
+    {
+      "type": "header",
+      "content": "Second Hero Card"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_2",
+      "label": "Second Hero Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_title_2",
+      "label": "Second Hero Title",
+      "default": "Ultimate Shine With L'Oréal Absolut Repair"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_description_2",
+      "label": "Second Hero Description",
+      "default": "Restore softness, repair damage, and achieve a silky, luxurious finish with our salon-exclusive Absolut Repair treatment."
     }
   ],
   "presets": [
     {
-      "name": "Hybrid Hero Carousel",
-      "category": "Homepage"
+      "name": "Hero Carousel",
+      "category": "Homepage",
+      "settings": {
+        "hero_title_1": "Luxury Hair Transformation for Every Texture",
+        "hero_description_1": "Discover our premium smoothing & repair treatments powered by salon-grade formulas. Perfect for sleek, shiny, healthy hair.",
+        "hero_title_2": "Ultimate Shine With L'Oréal Absolut Repair",
+        "hero_description_2": "Restore softness, repair damage, and achieve a silky, luxurious finish with our salon-exclusive Absolut Repair treatment."
+      }
     }
   ]
 }
