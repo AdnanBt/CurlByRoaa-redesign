@@ -142,17 +142,17 @@
   width: 100%;
 }
 
-/* IMAGE FIX - Most important fix */
+/* IMAGE STYLES - Responsive images */
 .product-image-large {
   width: 100%;
   height: auto;
   max-width: 100%;
   border-radius: 16px;
-  object-fit: cover;
   background: #f8f8f8;
   opacity: 0;
   transition: opacity 0.3s ease;
-  aspect-ratio: 1/1; /* Keep square ratio */
+  aspect-ratio: 1/1;
+  object-fit: contain;
 }
 
 .product-image-large.loaded {
@@ -170,6 +170,24 @@
   color: #666;
   font-size: 16px;
   border-radius: 16px;
+}
+
+/* Add this for responsive image heights */
+.product-image-large {
+  height: auto !important;
+  max-height: 500px;
+}
+
+@media (max-width: 768px) {
+  .product-image-large {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-image-large {
+    max-height: 300px;
+  }
 }
 
 /* Your custom hero card styles */
@@ -328,7 +346,6 @@
   .product-image-large,
   .image-placeholder {
     max-width: 100%;
-    height: auto;
   }
   
   /* Show navigation buttons */
@@ -386,7 +403,6 @@
   .product-image-large,
   .image-placeholder {
     max-width: 600px;
-    height: auto;
   }
   
   .hero-scroll-indicator {
@@ -417,24 +433,6 @@
     font-size: 4rem;
   }
 }
-/* Add this to your existing CSS */
-.product-image-large {
-  height: auto !important;
-  max-height: 500px;
-  object-fit: contain;
-}
-
-@media (max-width: 768px) {
-  .product-image-large {
-    max-height: 400px;
-  }
-}
-
-@media (max-width: 480px) {
-  .product-image-large {
-    max-height: 300px;
-  }
-}
 
 /* ANIMATION */
 @keyframes float {
@@ -461,7 +459,7 @@
   
   .product-image-large,
   .image-placeholder {
-    aspect-ratio: 4/3; /* Slightly wider on very small screens */
+    aspect-ratio: 4/3;
   }
 }
 </style>
@@ -490,7 +488,6 @@
           </div>
           
           <div class="card-image">
-            {% comment %} Use the actual URL from Shopify Files {% endcomment %}
             {% assign hero_image_1 = 'hero-card-1.jpg' | file_url %}
             <img 
               src="{{ hero_image_1 }}" 
@@ -499,6 +496,7 @@
               loading="lazy"
               width="600"
               height="auto"
+              onload="this.classList.add('loaded')"
               onerror="this.src='https://placehold.co/600x600/F5E7D6/000000?text=Hair+Treatment';">
           </div>
         </div>
@@ -515,7 +513,6 @@
               with our salon-exclusive Absolut Repair treatment.
             </p>
             <div class="card-actions">
-              {% comment %} Use dynamic collection links {% endcomment %}
               {% assign absolut_collection = collections['absolut-repair'] %}
               {% assign masks_collection = collections['hair-masks'] %}
               
@@ -550,6 +547,7 @@
               loading="lazy"
               width="600"
               height="auto"
+              onload="this.classList.add('loaded')"
               onerror="this.src='https://placehold.co/600x600/F3E3C5/000000?text=Absolut+Repair';">
           </div>
         </div>
@@ -592,25 +590,25 @@
               </div>
               
               <div class="card-image">
-  {%- if product.featured_image -%}
-    <img 
-      src="{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' }}" 
-      alt="{{ product.title | escape }}"
-      class="product-image-large"
-      width="600"
-      height="auto"
-      loading="lazy"
-      onload="this.classList.add('loaded')"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-    <div class="image-placeholder" style="display: none;">
-      {{ product.title | truncate: 20 }}
-    </div>
-  {%- else -%}
-    <div class="image-placeholder">
-      {{ product.title | truncate: 20 }}
-    </div>
-  {%- endif -%}
-</div>
+                {%- if product.featured_image -%}
+                  <img 
+                    src="{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' }}" 
+                    alt="{{ product.title | escape }}"
+                    class="product-image-large"
+                    width="600"
+                    height="auto"
+                    loading="lazy"
+                    onload="this.classList.add('loaded')"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                  <div class="image-placeholder" style="display: none;">
+                    {{ product.title | truncate: 20 }}
+                  </div>
+                {%- else -%}
+                  <div class="image-placeholder">
+                    {{ product.title | truncate: 20 }}
+                  </div>
+                {%- endif -%}
+              </div>
             </div>
           </div>
         {%- endfor -%}
@@ -674,6 +672,7 @@
     </svg>
   </div>
 </section>
+
 <script>
 class HeroCarousel {
   constructor() {
@@ -695,13 +694,14 @@ class HeroCarousel {
     this.createDots();
     this.updateNavigation();
     this.startAutoScroll();
-    this.setupImageLoading(); // Add image loading setup
+    this.setupImageLoading();
   }
 
   setupImageLoading() {
     const images = document.querySelectorAll('.product-image-large');
-    images.forEach(img => {
-      // Check if image is already loaded
+    console.log(`Found ${images.length} hero images to load`);
+    
+    images.forEach((img, index) => {
       if (img.complete) {
         img.classList.add('loaded');
       } else {
@@ -710,11 +710,15 @@ class HeroCarousel {
         });
         
         img.addEventListener('error', function() {
-          console.error('Image failed to load:', this.src);
-          this.style.display = 'none';
-          const placeholder = this.nextElementSibling;
-          if (placeholder && placeholder.classList.contains('image-placeholder')) {
-            placeholder.style.display = 'flex';
+          console.error(`Hero Image ${index + 1}: Failed to load`, this.src);
+          if (this.parentElement.classList.contains('card-image')) {
+            this.style.display = 'none';
+            if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('image-placeholder')) {
+              const placeholder = document.createElement('div');
+              placeholder.className = 'image-placeholder';
+              placeholder.innerHTML = 'Image Loading';
+              this.parentElement.appendChild(placeholder);
+            }
           }
         });
       }
@@ -805,7 +809,7 @@ class HeroCarousel {
     if (this.currentIndex < this.totalCards - 1) {
       this.goToSlide(this.currentIndex + 1);
     } else {
-      this.goToSlide(0); // Loop to first
+      this.goToSlide(0);
     }
   }
 
@@ -813,14 +817,14 @@ class HeroCarousel {
     if (this.currentIndex > 0) {
       this.goToSlide(this.currentIndex - 1);
     } else {
-      this.goToSlide(this.totalCards - 1); // Loop to last
+      this.goToSlide(this.totalCards - 1);
     }
   }
 
   startAutoScroll() {
     this.autoScrollInterval = setInterval(() => {
       this.nextSlide();
-    }, 5000); // Change slide every 5 seconds
+    }, 5000);
   }
 
   stopAutoScroll() {
@@ -843,6 +847,7 @@ function scrollToNextSection() {
   });
 }
 </script>
+
 {% schema %}
 {
   "name": "Hero Carousel",
