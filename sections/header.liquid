@@ -645,7 +645,7 @@ class HeaderWithDropdowns {
     this.dropdowns = document.querySelectorAll('.mega-dropdown');
     
     this.hoverTimeout = null;
-    this.closeTimeout = null;
+    this.leaveTimeout = null;
     this.isMobile = window.innerWidth <= 768;
     this.hasAnnouncementBar = document.querySelector('.announcement-bar') !== null;
     
@@ -665,22 +665,19 @@ class HeaderWithDropdowns {
     // Check if announcement bar exists
     const announcementBar = document.querySelector('.announcement-bar');
     
-    if (announcementBar) {
+    if (announcementBar && !this.isMobile) {
       const announcementHeight = announcementBar.offsetHeight;
       
-      // Adjust header position for desktop
-      if (!this.isMobile) {
-        this.header.style.top = announcementHeight + 'px';
-      }
+      // Set header position below announcement bar
+      this.header.style.position = 'fixed';
+      this.header.style.top = announcementHeight + 'px';
+      this.header.style.left = '0';
+      this.header.style.right = '0';
       
-      // Add class to body for CSS targeting
-      document.body.classList.add('announcement-bar-shown');
+      // Add padding to body to prevent content hiding under fixed header
+      document.body.style.paddingTop = (announcementHeight + 80) + 'px';
       
-      // Adjust main content margin
-      const mainContent = document.querySelector('main');
-      if (mainContent) {
-        mainContent.style.marginTop = (announcementHeight + 80) + 'px'; // header height + announcement
-      }
+      console.log('Announcement bar detected, header positioned at:', announcementHeight + 'px');
     }
   }
 
@@ -715,11 +712,12 @@ class HeaderWithDropdowns {
   }
 
   handleResize() {
+    const wasMobile = this.isMobile;
     this.isMobile = window.innerWidth <= 768;
     
     // Clear any timeouts on resize
     if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-    if (this.closeTimeout) clearTimeout(this.closeTimeout);
+    if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
     
     // Reset all dropdowns on resize
     this.closeAllDropdowns();
@@ -730,99 +728,122 @@ class HeaderWithDropdowns {
     }
     
     // Re-adjust for announcement bar on resize
-    this.adjustForAnnouncementBar();
+    if (wasMobile !== this.isMobile) {
+      this.adjustForAnnouncementBar();
+    }
   }
 
   setupDropdowns() {
-    if (this.isMobile) return; // Skip for mobile
-
-    this.navItems.forEach(item => {
-      const link = item.querySelector('.nav-link');
-      const dropdown = item.querySelector('.mega-dropdown');
-      
-      if (!dropdown) return;
-
-      // Mouse enter - OPEN with delay for smoothness
-      item.addEventListener('mouseenter', () => {
-        if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+    if (this.isMobile) {
+      // Mobile dropdown handling
+      this.navItems.forEach(item => {
+        const link = item.querySelector('.nav-link.has-dropdown');
+        const dropdown = item.querySelector('.mega-dropdown');
         
-        this.hoverTimeout = setTimeout(() => {
-          if (this.closeTimeout) clearTimeout(this.closeTimeout);
+        if (link && dropdown) {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Close other dropdowns
+            this.navItems.forEach(otherItem => {
+              if (otherItem !== item) {
+                const otherLink = otherItem.querySelector('.nav-link.has-dropdown');
+                const otherDropdown = otherItem.querySelector('.mega-dropdown');
+                if (otherLink) otherLink.classList.remove('active');
+                if (otherDropdown) otherDropdown.style.maxHeight = '0';
+              }
+            });
+            
+            // Toggle current dropdown
+            link.classList.toggle('active');
+            if (link.classList.contains('active')) {
+              dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+            } else {
+              dropdown.style.maxHeight = '0';
+            }
+          });
+        }
+      });
+    } else {
+      // Desktop dropdown handling with SMOOTH transitions
+      this.navItems.forEach(item => {
+        const dropdown = item.querySelector('.mega-dropdown');
+        if (!dropdown) return;
+
+        // Mouse enter - OPEN
+        item.addEventListener('mouseenter', () => {
+          if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
           
-          // Close all other dropdowns first
-          this.closeAllDropdowns();
+          this.hoverTimeout = setTimeout(() => {
+            this.closeAllDropdowns();
+            
+            // Animate in
+            dropdown.style.opacity = '0';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+            dropdown.style.pointerEvents = 'auto';
+            
+            // Force reflow
+            dropdown.offsetHeight;
+            
+            // Animate to final position
+            dropdown.style.opacity = '1';
+            dropdown.style.transform = 'translateX(-50%) translateY(0)';
+            dropdown.style.transition = 'all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)';
+          }, 100);
+        });
+
+        // Mouse leave - CLOSE
+        item.addEventListener('mouseleave', () => {
+          if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
           
-          // Open this dropdown
+          this.leaveTimeout = setTimeout(() => {
+            dropdown.style.opacity = '0';
+            dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+            
+            // Hide after animation completes
+            setTimeout(() => {
+              if (parseFloat(dropdown.style.opacity) === 0) {
+                dropdown.style.visibility = 'hidden';
+                dropdown.style.pointerEvents = 'none';
+              }
+            }, 300);
+          }, 100);
+        });
+
+        // Keep dropdown open when hovering over it
+        dropdown.addEventListener('mouseenter', () => {
+          if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+          if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
+          
           dropdown.style.opacity = '1';
           dropdown.style.visibility = 'visible';
           dropdown.style.transform = 'translateX(-50%) translateY(0)';
           dropdown.style.pointerEvents = 'auto';
-        }, 100); // Small delay for smoothness
-      });
-
-      // Mouse leave - CLOSE with delay to prevent flickering
-      item.addEventListener('mouseleave', (e) => {
-        if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-        
-        // Check if moving to dropdown
-        const relatedTarget = e.relatedTarget;
-        const isMovingToDropdown = relatedTarget && relatedTarget.closest('.mega-dropdown');
-        
-        if (!isMovingToDropdown) {
-          if (this.closeTimeout) clearTimeout(this.closeTimeout);
-          
-          this.closeTimeout = setTimeout(() => {
-            dropdown.style.opacity = '0';
-            dropdown.style.visibility = 'hidden';
-            dropdown.style.transform = 'translateX(-50%) translateY(20px)';
-            dropdown.style.pointerEvents = 'none';
-          }, 200); // Delay before closing
-        }
-      });
-
-      // Keep dropdown open when hovering over it
-      dropdown.addEventListener('mouseenter', () => {
-        if (this.closeTimeout) clearTimeout(this.closeTimeout);
-        dropdown.style.opacity = '1';
-        dropdown.style.visibility = 'visible';
-        dropdown.style.transform = 'translateX(-50%) translateY(0)';
-        dropdown.style.pointerEvents = 'auto';
-      });
-
-      dropdown.addEventListener('mouseleave', (e) => {
-        if (this.closeTimeout) clearTimeout(this.closeTimeout);
-        
-        // Check if moving back to nav item
-        const relatedTarget = e.relatedTarget;
-        const isMovingToNavItem = relatedTarget && relatedTarget.closest('.nav-item');
-        
-        if (!isMovingToNavItem) {
-          this.closeTimeout = setTimeout(() => {
-            dropdown.style.opacity = '0';
-            dropdown.style.visibility = 'hidden';
-            dropdown.style.transform = 'translateX(-50%) translateY(20px)';
-            dropdown.style.pointerEvents = 'none';
-          }, 200);
-        }
-      });
-
-      // Mobile click handler
-      if (this.isMobile) {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          link.classList.toggle('active');
         });
-      }
-    });
+
+        dropdown.addEventListener('mouseleave', () => {
+          this.leaveTimeout = setTimeout(() => {
+            dropdown.style.opacity = '0';
+            dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+            
+            setTimeout(() => {
+              if (parseFloat(dropdown.style.opacity) === 0) {
+                dropdown.style.visibility = 'hidden';
+                dropdown.style.pointerEvents = 'none';
+              }
+            }, 300);
+          }, 100);
+        });
+      });
+    }
   }
 
   setupScrollEffect() {
-    let scrollTimer = null;
-    
     window.addEventListener('scroll', () => {
       const currentScroll = window.pageYOffset;
       
-      // Add scrolled class when scrolling down
       if (currentScroll > 50) {
         this.header.classList.add('scrolled');
       } else {
@@ -831,10 +852,7 @@ class HeaderWithDropdowns {
       
       // Close dropdowns on scroll (desktop only)
       if (!this.isMobile) {
-        if (scrollTimer) clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(() => {
-          this.closeAllDropdowns();
-        }, 100);
+        this.closeAllDropdowns();
       }
     });
   }
@@ -858,7 +876,7 @@ class HeaderWithDropdowns {
             // Close dropdowns
             this.closeAllDropdowns();
             
-            // Scroll to element with offset for header
+            // Calculate header height
             let headerHeight = this.header.offsetHeight;
             
             // Add announcement bar height if exists
@@ -889,6 +907,7 @@ class HeaderWithDropdowns {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      this.closeAllMobileDropdowns();
     }
   }
 
@@ -897,36 +916,49 @@ class HeaderWithDropdowns {
       this.mainNav.classList.remove('active');
       this.mobileMenuBtn.textContent = '☰';
       document.body.style.overflow = '';
+      this.closeAllMobileDropdowns();
     }
-    
-    // Close all mobile dropdowns
+  }
+
+  closeAllMobileDropdowns() {
     this.navLinks.forEach(link => {
       link.classList.remove('active');
+    });
+    
+    this.dropdowns.forEach(dropdown => {
+      dropdown.style.maxHeight = '0';
     });
   }
 
   closeAllDropdowns() {
-    // Clear any pending timeouts
     if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-    if (this.closeTimeout) clearTimeout(this.closeTimeout);
+    if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
     
-    // Close all dropdowns
-    this.dropdowns.forEach(dropdown => {
-      dropdown.style.opacity = '0';
-      dropdown.style.visibility = 'hidden';
-      dropdown.style.transform = 'translateX(-50%) translateY(20px)';
-      dropdown.style.pointerEvents = 'none';
-    });
+    if (!this.isMobile) {
+      this.dropdowns.forEach(dropdown => {
+        dropdown.style.opacity = '0';
+        dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+        dropdown.style.pointerEvents = 'none';
+        
+        setTimeout(() => {
+          dropdown.style.visibility = 'hidden';
+        }, 300);
+      });
+    }
   }
 }
 
-// Initialize header when DOM is loaded
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Wait for announcement bar to load if it exists
+  // Wait a bit for announcement bar to load
   setTimeout(() => {
     const header = new HeaderWithDropdowns();
     window.headerInstance = header;
-    console.log('Header initialized successfully');
-  }, 300); // Increased delay to ensure announcement bar loads
+    
+    // Re-adjust after all images load
+    window.addEventListener('load', () => {
+      header.adjustForAnnouncementBar();
+    });
+  }, 500);
 });
 </script>
