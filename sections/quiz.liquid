@@ -1,362 +1,1954 @@
+{% comment %} hair-quiz.liquid - Shopify Version {% endcomment %}
+
 <style>
-  /* ===== CurlByRoaa — Hair Care Genius (Mobile-first, animation-forward) ===== */
-  .hair-quiz { padding: 48px 16px; background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%); }
-  .quiz-container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 20px; padding: 28px; box-shadow: 0 18px 48px rgba(13,20,25,0.06); overflow: hidden; }
+/* ==================== */
+/* HAIR QUIZ STYLES */
+/* ==================== */
+.hair-quiz-section {
+  padding: 60px 0;
+  background: #FAF8F6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
-  /* Progress */
-  .quiz-progress { margin-bottom: 18px; }
-  .progress-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px; }
-  .progress-text{ font-size:0.85rem; color:#6b6b6b; font-weight:600; }
-  .progress-bar{ height:6px; background:#f2f2f2; border-radius:999px; overflow:hidden; }
-  .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,#E8C4B8,#D4A59A); transition:width 450ms cubic-bezier(.2,.8,.2,1); }
+.hair-quiz-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
-  /* Steps */
-  .quiz-step{ display:none; }
-  .quiz-step.active{ display:block; animation: slideInUp 420ms cubic-bezier(.2,.8,.2,1); }
-  .quiz-question{ font-size:1.25rem; font-weight:700; color:#222; text-align:center; margin:18px 0 22px; line-height:1.2; }
+/* Language Toggle */
+.hair-quiz-lang-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+}
 
-  .quiz-options{ display:grid; gap:12px; margin-bottom:18px; }
-  .quiz-option{ display:flex; gap:12px; align-items:center; padding:14px; border-radius:14px; background:#fff; border:1px solid #f0f0f0; cursor:pointer; transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease; }
-  .quiz-option .option-image{ min-width:56px; min-height:56px; border-radius:12px; display:grid; place-items:center; font-size:1.4rem; background:#fbf9f8; }
-  .quiz-option .option-body{ flex:1; }
-  .option-text{ font-weight:700; color:#222; margin-bottom:4px; }
-  .option-description{ font-size:0.9rem; color:#666; line-height:1.3; }
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  border-radius: 20px;
+  color: #D4A574;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
 
-  .quiz-option:hover{ transform:translateY(-4px); box-shadow:0 10px 30px rgba(13,20,25,0.06); border-color:#ead1c6; }
-  .quiz-option.selected{ border-color:#E8C4B8; background:linear-gradient(180deg,#FFF8F6,#FFFFFF); box-shadow:0 14px 36px rgba(232,196,184,0.12); }
-  .quiz-option.selected::after{ content:"✓"; display:inline-grid; place-items:center; width:28px; height:28px; background:#E8C4B8; color:#fff; border-radius:999px; font-weight:700; margin-left:8px; }
+.lang-btn:hover {
+  background: white;
+}
 
-  /* Navigation */
-  .quiz-navigation{ display:flex; gap:12px; margin-top:6px; }
-  .quiz-btn{ flex:1; padding:12px 14px; border-radius:999px; font-weight:700; font-size:0.92rem; border:1px solid #E8C4B8; background:#fff; color:#E8C4B8; cursor:pointer; transition:transform 220ms ease, box-shadow 220ms ease; text-transform:uppercase; letter-spacing:.6px; }
-  .quiz-btn:disabled{ opacity:0.55; cursor:not-allowed; transform:none; }
-  .quiz-btn.next{ background:linear-gradient(90deg,#E8C4B8,#D4A59A); color:#fff; border:none; }
-  .quiz-btn.next:hover:not(:disabled){ transform:translateX(4px); box-shadow:0 12px 30px rgba(212,165,154,0.22); }
+.lang-divider {
+  width: 1px;
+  height: 12px;
+  background: rgba(212, 165, 116, 0.4);
+}
 
-  /* Results */
-  .quiz-results{ display:none; text-align:center; padding-top:8px; }
-  .quiz-results.active{ display:block; animation:fadeIn 480ms ease; }
-  .results-title{ font-size:1.6rem; font-weight:800; color:#222; margin-bottom:6px; }
-  .results-subtitle{ color:#666; margin-bottom:18px; font-size:0.98rem; line-height:1.4; }
+/* Hero Section */
+.hair-quiz-hero {
+  text-align: center;
+  margin-bottom: 60px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  .recommended-products{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:18px; }
-  .recommended-product{ display:flex; gap:12px; align-items:center; padding:12px; border-radius:12px; background:#fff; border:1px solid #f2f2f2; box-shadow:0 6px 18px rgba(13,20,25,0.04); transition:transform 260ms ease; }
-  .recommended-product:hover{ transform:translateY(-6px); }
-  .product-thumb{ width:64px; height:64px; border-radius:10px; object-fit:cover; background:#f6f6f6; }
-  .product-meta{ flex:1; text-align:left; }
-  .product-name{ font-weight:700; color:#222; margin-bottom:6px; }
-  .product-desc{ font-size:0.9rem; color:#666; margin-bottom:6px; }
-  .product-cta{ font-weight:700; color:#E8C4B8; text-decoration:none; font-size:0.95rem; }
+.hero-tagline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
 
-  .small-muted{ font-size:0.85rem; color:#8a8a8a; margin-top:8px; }
+.hero-tagline hr {
+  width: 48px;
+  height: 1px;
+  background: #D4A574;
+  border: none;
+}
 
-  /* Animations */
-  @keyframes slideInUp{ from{ transform:translateY(18px); opacity:0 } to{ transform:translateY(0); opacity:1 } }
-  @keyframes fadeIn{ from{ opacity:0 } to{ opacity:1 } }
+.hero-tagline span {
+  color: #D4A574;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 10px;
+  text-transform: uppercase;
+}
 
-  /* Mobile-first layout tweaks */
-  @media (min-width:720px){ .quiz-options{ grid-template-columns:1fr 1fr } .recommended-products{ grid-template-columns:repeat(2,1fr) } .quiz-container{ padding:36px } .quiz-question{ font-size:1.45rem } }
+.hero-title {
+  font-size: 48px;
+  color: #D4A574;
+  line-height: 1.1;
+  font-style: italic;
+  margin-bottom: 24px;
+  font-family: Georgia, serif;
+}
+
+.hero-description {
+  font-size: 18px;
+  color: rgba(45, 45, 45, 0.7);
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Progress Indicator */
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+.progress-label {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #D4A574;
+}
+
+.progress-label.consultation {
+  color: #B0B0B0;
+}
+
+.progress-steps {
+  display: flex;
+  gap: 8px;
+}
+
+.progress-step {
+  height: 2px;
+  width: 32px;
+  transition: background-color 0.5s ease;
+}
+
+.progress-step.active {
+  background: #D4A574;
+}
+
+.progress-step.inactive {
+  background: rgba(212, 165, 116, 0.2);
+}
+
+/* Form Steps */
+.quiz-step {
+  min-height: 400px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.step-title {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.step-title h2 {
+  font-size: 32px;
+  color: #D4A574;
+  font-style: italic;
+  font-family: Georgia, serif;
+  margin-bottom: 8px;
+}
+
+.step-title p {
+  color: rgba(45, 45, 45, 0.6);
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Form Fields */
+.quiz-field {
+  margin-bottom: 24px;
+}
+
+.quiz-label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: #B0B0B0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* Selection Buttons */
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.selection-button {
+  padding: 20px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.selection-button:hover {
+  border-color: #D4A574;
+  color: #D4A574;
+  background: white;
+}
+
+.selection-button.selected {
+  background: #D4A574;
+  color: white;
+  border-color: #D4A574;
+}
+
+/* Text Input */
+.quiz-input {
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(212, 165, 116, 0.3);
+  font-size: 24px;
+  font-family: Georgia, serif;
+  text-align: center;
+  background: transparent;
+  color: #2D2D2D;
+}
+
+.quiz-input:focus {
+  outline: none;
+  border-bottom-color: #D4A574;
+}
+
+.quiz-input::placeholder {
+  color: #D0D0D0;
+}
+
+/* Select Dropdown */
+.quiz-select {
+  width: 100%;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-weight: 500;
+  color: #2D2D2D;
+  appearance: none;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.quiz-select:focus {
+  outline: none;
+  border-color: #D4A574;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.select-arrow svg {
+  width: 16px;
+  height: 16px;
+  color: #B0B0B0;
+}
+
+/* Navigation Buttons */
+.quiz-navigation {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(212, 165, 116, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.nav-button {
+  padding: 16px 48px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-button.next,
+.nav-button.submit {
+  background: #D4A574;
+  color: white;
+  border: none;
+}
+
+.nav-button.next:hover,
+.nav-button.submit:hover {
+  background: #2D2D2D;
+}
+
+.nav-button.next:disabled {
+  background: rgba(255, 255, 255, 0.5);
+  color: #D0D0D0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.nav-button.back {
+  background: transparent;
+  color: #B0B0B0;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-button.back:hover {
+  color: #D4A574;
+}
+
+/* Loading Screen */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 32px;
+}
+
+.loading-spinner {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.spinner-circle {
+  position: absolute;
+  inset: 0;
+  border: 4px solid #FAF8F6;
+  border-radius: 50%;
+}
+
+.spinner-spin {
+  position: absolute;
+  inset: 0;
+  border: 4px solid transparent;
+  border-top-color: #D4A574;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-content {
+  text-align: center;
+  max-width: 300px;
+}
+
+.loading-content h3 {
+  font-size: 20px;
+  color: #D4A574;
+  margin-bottom: 8px;
+  font-family: Georgia, serif;
+}
+
+.loading-content p {
+  color: #666;
+  font-size: 14px;
+  height: 24px;
+  transition: all 0.3s ease;
+}
+
+/* Results Screen */
+.results-container {
+  background: #FAF8F6;
+  color: #2D2D2D;
+  padding: 32px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.results-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.result-tag {
+  display: inline-block;
+  padding: 4px 16px;
+  border: 1px solid #D4A574;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.result-tag span {
+  color: #D4A574;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.result-title {
+  font-size: 40px;
+  color: #D4A574;
+  font-style: italic;
+  font-family: Georgia, serif;
+  margin-bottom: 16px;
+}
+
+.result-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Results Layout */
+.results-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+}
+
+@media (min-width: 1024px) {
+  .results-layout {
+    grid-template-columns: 1fr 2fr;
+    gap: 64px;
+  }
+}
+
+/* Diagnosis Box */
+.diagnosis-box {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.diagnosis-title {
+  font-size: 24px;
+  color: #D4A574;
+  font-style: italic;
+  font-family: Georgia, serif;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+}
+
+.diagnosis-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.diagnosis-section h4 {
+  font-size: 10px;
+  font-weight: bold;
+  color: #B0B0B0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.diagnosis-section p {
+  color: #2D2D2D;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.diagnosis-tips {
+  padding-top: 16px;
+  border-top: 1px solid rgba(212, 165, 116, 0.1);
+}
+
+.diagnosis-tips h4 {
+  color: #D4A574;
+}
+
+.diagnosis-tips ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.diagnosis-tips li {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #2D2D2D;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.diagnosis-tips li:before {
+  content: "✦";
+  color: #D4A574;
+}
+
+/* Routine Section */
+.routine-section {
+  margin-bottom: 48px;
+}
+
+.routine-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.routine-header h3 {
+  font-size: 28px;
+  color: #D4A574;
+  font-family: Georgia, serif;
+}
+
+.routine-header span {
+  font-size: 12px;
+  font-weight: bold;
+  color: #B0B0B0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.routine-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 768px) {
+  .routine-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.routine-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.routine-column hr {
+  width: 32px;
+  height: 1px;
+  background: #D4A574;
+  border: none;
+}
+
+.routine-column h4 {
+  font-size: 20px;
+  color: #2D2D2D;
+  font-family: Georgia, serif;
+}
+
+.routine-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.routine-column li {
+  font-size: 14px;
+  color: rgba(45, 45, 45, 0.8);
+  line-height: 1.6;
+  padding-left: 16px;
+  border-left: 1px solid rgba(212, 165, 116, 0.2);
+  margin-bottom: 16px;
+}
+
+/* Products Section */
+.products-section {
+  margin-bottom: 48px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 640px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.product-card {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  width: 100%;
+  aspect-ratio: 4/5;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  position: relative;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #F5E7D6;
+  transition: transform 0.7s ease;
+}
+
+.product-card:hover .image-placeholder {
+  transform: scale(1.1);
+}
+
+.image-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: white;
+  opacity: 0.4;
+  filter: blur(16px);
+  transition: transform 0.7s ease;
+}
+
+.product-card:hover .image-circle {
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+.image-initials {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-initials span {
+  font-family: Georgia, serif;
+  font-size: 48px;
+  color: #D4A574;
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+}
+
+.image-hover {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+}
+
+.product-card:hover .image-hover {
+  opacity: 1;
+}
+
+.image-note {
+  font-size: 12px;
+  color: #2D2D2D;
+  font-weight: 500;
+  background: white;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: 1px solid #FAFAFA;
+  transform: translateY(16px);
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .image-note {
+  transform: translateY(0);
+}
+
+.note-label {
+  display: block;
+  font-size: 10px;
+  color: #D4A574;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.product-header h4 {
+  font-family: sans-serif;
+  font-weight: bold;
+  color: #D4A574;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex: 1;
+  padding-right: 16px;
+}
+
+.product-price {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  color: #2D2D2D;
+  font-style: italic;
+}
+
+.product-description {
+  font-size: 12px;
+  color: #666;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.product-button {
+  width: 100%;
+  padding: 12px;
+  background: #D4A574;
+  color: white;
+  border: none;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-button:hover {
+  background: #2D2D2D;
+}
+
+/* Reset Button */
+.reset-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #B0B0B0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 16px;
+}
+
+.reset-button:hover {
+  color: #D4A574;
+}
+
+.reset-button span {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.reset-divider {
+  width: 48px;
+  height: 1px;
+  background: #D0D0D0;
+  transition: background 0.3s ease;
+}
+
+.reset-button:hover .reset-divider {
+  background: #D4A574;
+}
+
+/* Error Screen */
+.error-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  gap: 32px;
+}
+
+.error-icon {
+  font-size: 32px;
+  color: #D4A574;
+  margin-bottom: 8px;
+}
+
+.error-title {
+  font-size: 28px;
+  color: #D4A574;
+  font-family: Georgia, serif;
+  font-style: italic;
+}
+
+.error-message {
+  color: rgba(45, 45, 45, 0.7);
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.retry-button {
+  padding: 16px 40px;
+  background: #D4A574;
+  color: white;
+  border: none;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #2D2D2D;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 36px;
+  }
+  
+  .result-title {
+    font-size: 32px;
+  }
+  
+  .diagnosis-box {
+    padding: 24px;
+  }
+  
+  .routine-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .hair-quiz-container {
+    padding: 0 16px;
+  }
+  
+  .hero-title {
+    font-size: 28px;
+  }
+  
+  .selection-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 
-<section class="hair-quiz">
-  <div class="quiz-container" id="hair-quiz-root">
-    <!-- PROGRESS -->
-    <div class="quiz-progress">
-      <div class="progress-header">
-        <span class="progress-text">{{ section.settings.title | default: "Find Your Perfect Routine" }}</span>
-        <span class="progress-text"><span id="current-step">1</span>/<span id="total-steps">3</span></span>
-      </div>
-      <div class="progress-bar" aria-hidden="true">
-        <div class="progress-fill" id="quiz-progress"></div>
-      </div>
+<section class="hair-quiz-section" id="hair-quiz-section">
+  <div class="hair-quiz-container">
+    
+    <!-- Language Toggle -->
+    <div class="hair-quiz-lang-toggle">
+      <button class="lang-btn" id="lang-toggle">
+        <span id="lang-text">العربية</span>
+        <span class="lang-divider"></span>
+        <span id="lang-code">AR</span>
+      </button>
     </div>
-
-    <!-- STEPS -->
-    <div class="quiz-step active" data-step="1" aria-hidden="false">
-      <h3 class="quiz-question">What's your natural curl pattern?</h3>
-      <div class="quiz-options" role="list">
-        <div class="quiz-option" role="listitem" data-value="wavy" tabindex="0">
-          <div class="option-image">🌊</div>
-          <div class="option-body"><div class="option-text">Wavy</div><div class="option-description">Loose S-shaped curls (2A–2C)</div></div>
-        </div>
-        <div class="quiz-option" role="listitem" data-value="curly" tabindex="0">
-          <div class="option-image">🌀</div>
-          <div class="option-body"><div class="option-text">Curly</div><div class="option-description">Defined spiral curls (3A–3C)</div></div>
-        </div>
-        <div class="quiz-option" role="listitem" data-value="coily" tabindex="0">
-          <div class="option-image">✨</div>
-          <div class="option-body"><div class="option-text">Coily</div><div class="option-description">Tight zig-zag pattern (4A–4C)</div></div>
-        </div>
-      </div>
-      <div class="quiz-navigation">
-        <button class="quiz-btn prev" disabled aria-disabled="true">Back</button>
-        <button class="quiz-btn next" disabled aria-disabled="true">Continue</button>
-      </div>
-    </div>
-
-    <div class="quiz-step" data-step="2" aria-hidden="true">
-      <h3 class="quiz-question">What's your biggest hair concern?</h3>
-      <div class="quiz-options" role="list">
-        <div class="quiz-option" role="listitem" data-value="frizz" tabindex="0"><div class="option-image">💨</div><div class="option-body"><div class="option-text">Frizz & Flyaways</div><div class="option-description">Humidity or dryness causing frizz</div></div></div>
-        <div class="quiz-option" role="listitem" data-value="moisture" tabindex="0"><div class="option-image">💧</div><div class="option-body"><div class="option-text">Dryness & Hydration</div><div class="option-description">Hair feels thirsty or brittle</div></div></div>
-        <div class="quiz-option" role="listitem" data-value="definition" tabindex="0"><div class="option-image">🎯</div><div class="option-body"><div class="option-text">Curl Definition</div><div class="option-description">Want springs & bounce</div></div></div>
-        <div class="quiz-option" role="listitem" data-value="volume" tabindex="0"><div class="option-image">🔼</div><div class="option-body"><div class="option-text">Volume & Lift</div><div class="option-description">Flat roots or limp hair</div></div></div>
-      </div>
-      <div class="quiz-navigation">
-        <button class="quiz-btn prev">Back</button>
-        <button class="quiz-btn next" disabled>Continue</button>
-      </div>
-    </div>
-
-    <div class="quiz-step" data-step="3" aria-hidden="true">
-      <h3 class="quiz-question">How dense is your hair?</h3>
-      <div class="quiz-options" role="list">
-        <div class="quiz-option" role="listitem" data-value="fine" tabindex="0"><div class="option-image">🍃</div><div class="option-body"><div class="option-text">Fine</div><div class="option-description">Thin strands, can get weighed down</div></div></div>
-        <div class="quiz-option" role="listitem" data-value="medium" tabindex="0"><div class="option-image">🌿</div><div class="option-body"><div class="option-text">Medium</div><div class="option-description">Balanced, versatile</div></div></div>
-        <div class="quiz-option" role="listitem" data-value="thick" tabindex="0"><div class="option-image">🌳</div><div class="option-body"><div class="option-text">Thick</div><div class="option-description">Dense hair, needs stronger hold</div></div></div>
-      </div>
-      <div class="quiz-navigation">
-        <button class="quiz-btn prev">Back</button>
-        <button class="quiz-btn next" disabled>See My Routine</button>
-      </div>
-    </div>
-
-    <div class="quiz-step quiz-results" data-step="results" aria-hidden="true">
-      <h3 class="results-title">Your Personalized Hair Routine</h3>
-      <p class="results-subtitle" id="results-summary">Our HairCare Genius analyzed your profile and created a professional routine and product picks tailored to you.</p>
-      <div id="scientific-insight" class="small-muted"></div>
-      <div class="recommended-products" id="recommended-products" aria-live="polite"></div>
-      <div class="quiz-navigation" style="margin-top:18px;">
-        <a id="shop-recommended" class="quiz-btn" href="{{ routes.all_products_collection_url }}">Shop Recommended Products</a>
-        <button class="quiz-btn next" onclick="restartQuiz()">Try Again</button>
-      </div>
-    </div>
-
+    
+    <!-- Main App Container -->
+    <div id="hair-quiz-app"></div>
+    
   </div>
 </section>
 
-<!-- ============ DYNAMIC PRODUCT JSON (THEME-CHECK SAFE) ============ -->
-{%- comment -%}
-  Inject a JSON array of products safely.
-  We use the all_products_collection_url as a fallback source; Theme Check–safe Liquid with image_url filter.
-{%- endcomment -%}
-
-<script type="application/json" id="curlbyroaa-products">
-[
-{%- assign fallback_collection = collections.all -%}
-{%- for product in fallback_collection.products limit: 50 -%}
-  {
-    "id": {{ product.id | json }},
-    "title": {{ product.title | json }},
-    "handle": {{ product.handle | json }},
-    "url": {{ product.url | json }},
-    "image": {{ product.featured_image | image_url: width: 600 | json }},
-    "price": {{ product.variants.first.price | json }},
-    "tags": {{ product.tags | json }}
-  }{%- unless forloop.last -%},{%- endunless -%}
-{%- endfor -%}
-]
-</script>
-
 <script>
-/* CurlByRoaa — HairCare Genius (Dynamic-safe)
-   - Parses product JSON injected by Liquid from collections.all (limited to 50)
-   - Mobile-first UX with instant local recommendations, optional AI override
-*/
+// ==================== //
+// HAIR QUIZ JAVASCRIPT //
+// ==================== //
 
-/* Parse products safely from the injected JSON script tag */
-function getProductsFromInjectedJSON() {
-  try {
-    const el = document.getElementById('curlbyroaa-products');
-    if (!el) return [];
-    const raw = el.textContent.trim();
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return parsed.map(p => ({
-      id: p.id || null,
-      title: p.title || 'Product',
-      handle: p.handle || '',
-      url: p.url || '',
-      image: p.image || '',
-      price: p.price || '',
-      tags: Array.isArray(p.tags) ? p.tags.map(t => t.toString().toLowerCase()) : []
-    }));
-  } catch (err) {
-    console.warn('Failed to parse injected product JSON', err);
-    return [];
+// Translations
+const TRANSLATIONS = {
+  en: {
+    // Hero
+    hero_tagline: "Exclusive AI Hair Diagnosis",
+    hero_title: "Hair Genius Tool",
+    hero_desc: "A scientific hair diagnostic tool for CurlByRoaa salon in Kuwait. Get personalized analysis, routines, and product recommendations.",
+    
+    // Progress
+    consultation: "Consultation",
+    step: "Step",
+    
+    // Step 1
+    step1_title: "Let's Begin",
+    step1_sub: "Introduce yourself to our AI hair specialist",
+    label_name: "Your First Name",
+    placeholder_name: "e.g., Sarah",
+    label_hair_type: "Hair Type",
+    label_age: "Age Range",
+    
+    // Step 2
+    step2_title: "Hair & Scalp Analysis",
+    step2_sub: "Tell us about your current hair condition",
+    label_scalp: "Scalp Condition",
+    label_problems: "Hair Concerns",
+    
+    // Step 3
+    step3_title: "Hair History & Habits",
+    step3_sub: "Share your hair care routine",
+    label_history: "Chemical History",
+    label_wash: "Wash Frequency",
+    label_heat: "Heat Usage",
+    select_option: "Select",
+    
+    // Step 4
+    step4_title: "Lifestyle & Environment",
+    step4_sub: "Your lifestyle impacts your hair health",
+    label_lifestyle: "Lifestyle Factors",
+    
+    // Buttons
+    btn_back: "Back",
+    btn_next: "Continue",
+    btn_analyze: "Analyze My Hair",
+    btn_retry: "Try Again",
+    btn_new: "Start New Consultation",
+    btn_cart: "Add to Cart",
+    
+    // Loading
+    processing: "Processing...",
+    
+    // Results
+    result_header_tag: "Your Personalized Hair Report",
+    result_title: "Hair Analysis Complete",
+    result_prepared: "Prepared for",
+    result_diagnosis: "Diagnosis",
+    result_obs: "Primary Observations",
+    result_science: "Scientific Breakdown",
+    result_kuwait: "Kuwait-Specific Tips",
+    result_ritual: "Your Ritual",
+    result_step: "Step-by-Step",
+    result_daily: "Daily",
+    result_weekly: "Weekly",
+    result_monthly: "Monthly",
+    result_regimen: "Your Regimen",
+    result_shop: "Shop Recommendations",
+    result_note: "Usage Tip",
+    
+    // Error
+    error_title: "Analysis Unavailable",
+    error_msg: "Our AI specialist is currently unavailable. Please try again later or visit our salon for a personal consultation."
+  },
+  
+  ar: {
+    // Hero
+    hero_tagline: "تشخيص الشعر بالذكاء الاصطناعي",
+    hero_title: "أداة عبقرية الشعر",
+    hero_desc: "أداة تشخيص علمية للشعر لصالون CurlByRoaa في الكويت. احصل على تحليل مخصص، روتين، وتوصيات منتجات.",
+    
+    // Progress
+    consultation: "استشارة",
+    step: "خطوة",
+    
+    // Step 1
+    step1_title: "لنبدأ",
+    step1_sub: "تعرف على أخصائي الشعر بالذكاء الاصطناعي",
+    label_name: "اسمك الأول",
+    placeholder_name: "مثال: سارة",
+    label_hair_type: "نوع الشعر",
+    label_age: "الفئة العمرية",
+    
+    // Step 2
+    step2_title: "تحليل الشعر وفروة الرأس",
+    step2_sub: "أخبرنا عن حالة شعرك الحالية",
+    label_scalp: "حالة فروة الرأس",
+    label_problems: "مشاكل الشعر",
+    
+    // Step 3
+    step3_title: "تاريخ الشعر والعادات",
+    step3_sub: "شارك روتين العناية بشعرك",
+    label_history: "التاريخ الكيميائي",
+    label_wash: "تكرار الغسيل",
+    label_heat: "استخدام الحرارة",
+    select_option: "اختر",
+    
+    // Step 4
+    step4_title: "نمط الحياة والبيئة",
+    step4_sub: "نمط حياتك يؤثر على صحة شعرك",
+    label_lifestyle: "عوامل نمط الحياة",
+    
+    // Buttons
+    btn_back: "رجوع",
+    btn_next: "التالي",
+    btn_analyze: "تحليل شعري",
+    btn_retry: "حاول مرة أخرى",
+    btn_new: "بدء استشارة جديدة",
+    btn_cart: "أضف إلى السلة",
+    
+    // Loading
+    processing: "جاري المعالجة...",
+    
+    // Results
+    result_header_tag: "تقرير الشعر المخصص",
+    result_title: "اكتمل تحليل الشعر",
+    result_prepared: "أعدّ لـ",
+    result_diagnosis: "التشخيص",
+    result_obs: "الملاحظات الأساسية",
+    result_science: "الشرح العلمي",
+    result_kuwait: "نصائح خاصة بالكويت",
+    result_ritual: "طقوسك",
+    result_step: "خطوة بخطوة",
+    result_daily: "يومي",
+    result_weekly: "أسبوعي",
+    result_monthly: "شهري",
+    result_regimen: "نظامك",
+    result_shop: "توصيات التسوق",
+    result_note: "نصيحة الاستخدام",
+    
+    // Error
+    error_title: "التحليل غير متاح",
+    error_msg: "أخصائي الذكاء الاصطناعي غير متاح حاليًا. يرجى المحاولة مرة أخرى لاحقًا أو زيارة صالوننا للحصول على استشارة شخصية."
   }
-}
+};
 
-const productsList = getProductsFromInjectedJSON();
+// Data Constants
+const DATA = {
+  hairTypes: ["Straight", "Wavy", "Curly", "Coily", "Mixed"],
+  hairTypes_ar: ["مستقيم", "مموج", "مجعد", "مجعّد بشدة", "مختلط"],
+  
+  scalpConditions: ["Dry", "Oily", "Balanced", "Sensitive", "Dandruff"],
+  scalpConditions_ar: ["جاف", "دهني", "متوازن", "حساس", "قشرة"],
+  
+  hairProblems: ["Frizz", "Breakage", "Split Ends", "Dullness", "Thinning", "Dryness"],
+  hairProblems_ar: ["تطاير", "تقصف", "تقسم الأطراف", "بهتان", "خفاقة", "جفاف"],
+  
+  chemicalHistory: ["Never", "Regular Color", "Bleach", "Perm", "Keratin", "Relaxer"],
+  chemicalHistory_ar: ["أبداً", "صبغة منتظمة", "تبييض", "تمويج دائم", "كيرياتين", "مُستقيم"],
+  
+  washFrequency: ["Daily", "Every 2-3 Days", "Weekly", "Every 10 Days", "As Needed"],
+  washFrequency_ar: ["يوميًا", "كل 2-3 أيام", "أسبوعيًا", "كل 10 أيام", "حسب الحاجة"],
+  
+  heatUsage: ["Never", "Rarely", "Weekly", "Daily", "Professional Only"],
+  heatUsage_ar: ["أبداً", "نادرًا", "أسبوعيًا", "يوميًا", "محترف فقط"],
+  
+  lifestyle: ["Active/Sports", "Outdoor Work", "Air Conditioned", "Swimmer", "Stressful Job"],
+  lifestyle_ar: ["نشط/رياضي", "عمل خارجي", "مكيف الهواء", "سباح", "عمل مرهق"],
+  
+  ageRanges: ["Under 18", "18-25", "26-35", "36-45", "46-55", "55+"],
+  ageRanges_ar: ["تحت 18", "25-18", "35-26", "45-36", "55-46", "+55"]
+};
 
-/* Local recommendation engine */
-function localRecommendationEngine(answers) {
-  const tags = new Set();
-  const concernTagMap = { 'frizz':['frizz-control','anti-frizz','humidity-shield'], 'moisture':['hydration','moisture','deep-conditioning'], 'definition':['curl-definition','styling','hold'], 'volume':['volume','root-lift','lightweight'] };
-  const typeMap = { 'wavy':['lightweight','definition'], 'curly':['hydration','definition'], 'coily':['rich','deep-conditioning','moisture'] };
-  const densityMap = { 'fine':['lightweight'], 'medium':['balanced'], 'thick':['rich','strong-hold'] };
-
-  const concern = answers.step2; const type = answers.step1; const density = answers.step3;
-  if (concern && concernTagMap[concern]) concernTagMap[concern].forEach(t => tags.add(t));
-  if (type && typeMap[type]) typeMap[type].forEach(t => tags.add(t));
-  if (density && densityMap[density]) densityMap[density].forEach(t => tags.add(t));
-  tags.add('salon-picked');
-
-  const scored = productsList.map(p => {
-    let score = 0;
-    for (let t of tags) if (p.tags.includes(t)) score++;
-    return Object.assign({}, p, { score });
-  }).filter(p => p.score > 0).sort((a,b) => b.score - a.score);
-
-  const fallback = productsList.slice(0,6).map(p => Object.assign({}, p, { score:0 }));
-  return scored.length ? scored.slice(0,6) : fallback;
-}
-
-/* Optional AI call placeholder (no Liquid) */
-async function callAIService(answers) {
-  try {
-    const endpoint = ''; // <-- set your AI endpoint URL here
-    if (!endpoint) return null;
-    const res = await fetch(endpoint, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ answers, source:'curlbyroaa-haircare-genius' }) });
-    if (!res.ok) throw new Error('AI service error');
-    return await res.json();
-  } catch (err) { console.warn('AI call failed', err); return null; }
-}
-
-/* Main UI & Interaction */
-class HairCareGenius {
-  constructor(root) {
-    this.root = root; this.currentStep = 1; this.totalSteps = 3; this.answers = {};
-    this.bind(); this.updateProgress(); this.keyboardBind();
+// Mock Products
+const MOCK_PRODUCTS = [
+  {
+    id: "CB001",
+    name: "Curl Defining Cream",
+    name_ar: "كريم تعريف التجعيد",
+    description: "Weightless hydration with flaxseed and shea butter for defined, frizz-free curls.",
+    description_ar: "ترطيب خفيف الوزن مع بذر الكتان وزبدة الشيا لتجعيدات محددة وخالية من التطاير.",
+    price: "KD 12.500",
+    imageColor: "bg-gradient-to-br from-rose-50 to-amber-50"
+  },
+  {
+    id: "CB002",
+    name: "Scalp Balancing Serum",
+    name_ar: "مصل توازن فروة الرأس",
+    description: "Tea tree and salicylic acid formula to regulate oil production and soothe irritation.",
+    description_ar: "تركيبة شجرة الشاي وحمض الساليسيليك لتنظيم إنتاج الدهون وتهدئة التهيج.",
+    price: "KD 18.750",
+    imageColor: "bg-gradient-to-br from-emerald-50 to-teal-50"
+  },
+  {
+    id: "CB003",
+    name: "Repair Bond Treatment",
+    name_ar: "علاج إصلاح الروابط",
+    description: "Bond-rebuilding complex with ceramides and amino acids for damaged hair.",
+    description_ar: "مركب إعادة بناء الروابط مع السيراميد والأحماض الأمينية للشعر التالف.",
+    price: "KD 24.000",
+    imageColor: "bg-gradient-to-br from-blue-50 to-indigo-50"
+  },
+  {
+    id: "CB004",
+    name: "Moisture Lock Mask",
+    name_ar: "قناع قفل الرطوبة",
+    description: "Intensive overnight treatment with hyaluronic acid and argan oil.",
+    description_ar: "علاج مكثف طوال الليل مع حمض الهيالورونيك وزيت الأرجان.",
+    price: "KD 15.500",
+    imageColor: "bg-gradient-to-br from-purple-50 to-pink-50"
   }
+];
 
-  bind() {
-    this.root.querySelectorAll('.quiz-option').forEach(opt => {
-      opt.addEventListener('click', (e) => this.selectOption(e.currentTarget));
-      opt.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectOption(e.currentTarget); }});
-    });
-    this.root.querySelectorAll('.quiz-btn.next').forEach(btn => btn.addEventListener('click', () => this.nextStep()));
-    this.root.querySelectorAll('.quiz-btn.prev').forEach(btn => btn.addEventListener('click', () => this.prevStep()));
+// Hair Quiz Application
+class HairQuizApp {
+  constructor() {
+    this.state = 'idle'; // idle, analyzing, results, error
+    this.currentStep = 1;
+    this.language = 'en';
+    this.formData = {
+      name: '',
+      hairType: '',
+      scalpCondition: [],
+      hairProblems: [],
+      chemicalHistory: [],
+      washFrequency: '',
+      heatUsage: '',
+      lifestyle: [],
+      ageRange: ''
+    };
+    this.results = null;
+    this.loadingTips = [];
+    this.currentTip = 0;
+    
+    this.init();
   }
-
-  keyboardBind() {
-    document.addEventListener('keydown', (e) => {
-      if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'].includes(e.key)) {
-        const activeStepEl = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`);
-        if (!activeStepEl) return;
-        const opts = Array.from(activeStepEl.querySelectorAll('.quiz-option'));
-        if (!opts.length) return;
-        const focused = document.activeElement; let idx = opts.indexOf(focused);
-        if (idx === -1) idx = 0;
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') idx = (idx + 1) % opts.length;
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') idx = (idx - 1 + opts.length) % opts.length;
-        opts[idx].focus();
+  
+  init() {
+    this.bindEvents();
+    this.render();
+    this.setupLoadingTips();
+  }
+  
+  bindEvents() {
+    // Language toggle
+    const langToggle = document.getElementById('lang-toggle');
+    if (langToggle) {
+      langToggle.addEventListener('click', () => this.toggleLanguage());
+    }
+  }
+  
+  toggleLanguage() {
+    this.language = this.language === 'en' ? 'ar' : 'en';
+    this.render();
+  }
+  
+  setupLoadingTips() {
+    this.loadingTips = this.language === 'en' ? [
+      "Analyzing protein vs moisture balance...",
+      "Checking water hardness impact...",
+      "Formulating your personalized routine...",
+      "Selecting the perfect CurlByRoaa products...",
+      "Consulting the digital dermatologist..."
+    ] : [
+      "...جاري تحليل توازن البروتين والترطيب",
+      "...التحقق من تأثير عسر الماء في الكويت",
+      "...صياغة الروتين المخصص لك",
+      "...CurlByRoaa اختيار المنتجات المثالية من",
+      "...استشارة طبيبة الجلدية الرقمية"
+    ];
+  }
+  
+  updateForm(field, value, isMulti = false) {
+    if (isMulti) {
+      const current = this.formData[field];
+      const index = current.indexOf(value);
+      if (index > -1) {
+        current.splice(index, 1);
+      } else {
+        current.push(value);
       }
-    });
-  }
-
-  selectOption(el) {
-    const value = el.getAttribute('data-value'); const step = this.currentStep;
-    el.parentElement.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected'); this.answers[`step${step}`] = value;
-    const visibleNext = this.root.querySelector(`.quiz-step[data-step="${step}"] .quiz-btn.next`);
-    if (visibleNext) { visibleNext.disabled = false; visibleNext.setAttribute('aria-disabled','false'); }
-  }
-
-  showStep(n) {
-    const prevEl = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`); if (prevEl) { prevEl.classList.remove('active'); prevEl.setAttribute('aria-hidden','true'); }
-    this.currentStep = n;
-    const el = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`); if (el) { el.classList.add('active'); el.setAttribute('aria-hidden','false');
-      const nextBtn = el.querySelector('.quiz-btn.next'); if (nextBtn) { nextBtn.disabled = !this.answers[`step${this.currentStep}`]; nextBtn.setAttribute('aria-disabled', nextBtn.disabled ? 'true':'false'); }
-    }
-    this.root.querySelectorAll('.quiz-btn.prev').forEach(b => { b.disabled = this.currentStep === 1; b.setAttribute('aria-disabled', b.disabled ? 'true':'false'); });
-    document.getElementById('current-step').textContent = this.currentStep; this.updateProgress();
-  }
-
-  nextStep() { if (this.currentStep < this.totalSteps) { this.showStep(this.currentStep + 1); } else { this.finish(); } }
-  prevStep() { if (this.currentStep > 1) this.showStep(this.currentStep - 1); }
-
-  updateProgress() { const pct = ((this.currentStep - 1) / this.totalSteps) * 100; document.getElementById('quiz-progress').style.width = pct + '%'; document.getElementById('total-steps').textContent = this.totalSteps; }
-
-  async finish() {
-    const curEl = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`); if (curEl) { curEl.classList.remove('active'); curEl.setAttribute('aria-hidden','true'); }
-    const resultsEl = this.root.querySelector('.quiz-results'); resultsEl.classList.add('active'); resultsEl.setAttribute('aria-hidden','false');
-
-    const summary = document.getElementById('results-summary'); summary.textContent = 'Analyzing your answers — generating science-backed routine...';
-
-    const localPicks = localRecommendationEngine({ step1:this.answers.step1, step2:this.answers.step2, step3:this.answers.step3 });
-    this.renderRecommendations(localPicks, 'Local recommendation (instant)');
-
-    const aiResp = await callAIService(this.answers);
-    if (aiResp && aiResp.products && aiResp.products.length) {
-      const mapped = aiResp.products.map(p => {
-        const found = productsList.find(sp => sp.handle === (p.handle || '').toString());
-        return found ? found : Object.assign({ title:p.title||'Product', image:p.image||'', reason:p.reason||'' }, p);
-      });
-      this.renderRecommendations(mapped, 'AI-generated recommendation');
-      if (aiResp.diagnosis) document.getElementById('scientific-insight').textContent = aiResp.diagnosis;
-      if (aiResp.insight) document.getElementById('results-summary').textContent = aiResp.insight;
     } else {
-      document.getElementById('scientific-insight').textContent = this.generateInsight(this.answers);
-      document.getElementById('results-summary').textContent = 'Below are salon-selected products & a professional routine tailored to your answers.';
+      this.formData[field] = value;
     }
-
-    const shopBtn = document.getElementById('shop-recommended');
-    const recommendedTags = this.extractTagsForShop(this.answers);
-    if (recommendedTags.length) {
-      const base = "{{ routes.search_url }}";
-      const q = recommendedTags.map(t => `tag:${encodeURIComponent(t)}`).join('+');
-      shopBtn.href = `${base}?q=${q}&type=product`;
+    this.renderStep();
+  }
+  
+  nextStep() {
+    if (this.currentStep < 4) {
+      this.currentStep++;
+      this.render();
     }
   }
-
-  renderRecommendations(products, sourceLabel) {
-    const container = document.getElementById('recommended-products'); container.innerHTML = '';
-    if (!products || !products.length) { container.innerHTML = '<div class="small-muted">No recommendations found. Try editing your answers or contact CurlByRoaa salon for a professional consult.</div>'; return; }
-    products.forEach(p => {
-      const img = p.image || 'https://via.placeholder.com/300x300?text=Product';
-      const productUrl = p.url || (p.handle ? `/products/${p.handle}` : '#');
-      const desc = p.reason || (p.tags && p.tags.join(', ')) || 'Salon-recommended item';
-      const el = document.createElement('div'); el.className = 'recommended-product';
-      el.innerHTML = `<img class="product-thumb" src="${img}" alt="${this.escapeHtml(p.title||'Product')}" />
-        <div class="product-meta"><div class="product-name">${this.escapeHtml(p.title||'Product')}</div>
-        <div class="product-desc">${this.escapeHtml(desc)}</div>
-        <a class="product-cta" href="${productUrl}">View product →</a></div>`;
-      container.appendChild(el);
+  
+  prevStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      this.render();
+    }
+  }
+  
+  isStepValid() {
+    if (this.currentStep === 1) {
+      return this.formData.name && this.formData.hairType;
+    }
+    if (this.currentStep === 2) {
+      return this.formData.scalpCondition.length > 0 && this.formData.hairProblems.length > 0;
+    }
+    if (this.currentStep === 3) {
+      return this.formData.washFrequency && this.formData.heatUsage;
+    }
+    return true;
+  }
+  
+  async submitForm() {
+    this.state = 'analyzing';
+    this.render();
+    
+    // Simulate API call
+    await this.simulateAnalysis();
+    
+    // Generate mock results
+    this.generateResults();
+    this.state = 'results';
+    this.render();
+  }
+  
+  simulateAnalysis() {
+    return new Promise(resolve => {
+      let tipIndex = 0;
+      const tipInterval = setInterval(() => {
+        this.currentTip = tipIndex;
+        this.renderLoading();
+        tipIndex = (tipIndex + 1) % this.loadingTips.length;
+      }, 2000);
+      
+      setTimeout(() => {
+        clearInterval(tipInterval);
+        resolve();
+      }, 8000);
     });
-    const note = document.createElement('div'); note.className = 'small-muted'; note.textContent = `Recommendations: ${sourceLabel}`; container.appendChild(note);
   }
-
-  extractTagsForShop(answers) {
-    const tags = [];
-    if (answers.step2 === 'frizz') tags.push('frizz-control');
-    if (answers.step2 === 'moisture') tags.push('hydration');
-    if (answers.step2 === 'definition') tags.push('curl-definition');
-    if (answers.step2 === 'volume') tags.push('volume');
-    if (answers.step1 === 'coily') tags.push('rich');
-    if (answers.step1 === 'wavy') tags.push('lightweight');
-    if (answers.step3 === 'fine') tags.push('lightweight');
-    return tags;
+  
+  generateResults() {
+    const t = TRANSLATIONS[this.language];
+    
+    this.results = {
+      diagnosisSummary: this.language === 'en' 
+        ? "Your hair shows signs of protein-moisture imbalance with moderate porosity. The combination of curly texture and chemical history suggests need for bond-building treatments alongside lightweight hydration to combat Kuwait's hard water effects."
+        : "يظهر شعرك علامات على اختلال توازن البروتين والرطوبة مع مسامية معتدلة. يشير مزيج الملمس المجعد والتاريخ الكيميائي إلى الحاجة إلى علاجات بناء الروابط جنبًا إلى جنب مع الترطيب خفيف الوزن لمكافحة آثار الماء العسر في الكويت.",
+      
+      scientificExplanation: this.language === 'en'
+        ? "Curly hair (Type 3) typically has higher porosity, making it prone to moisture loss. Chemical treatments further compromise the hair's cuticle layer, while Kuwait's hard water (300+ ppm) can cause mineral buildup affecting product absorption."
+        : "يمتلك الشعر المجعد (النوع 3) عادة مسامية أعلى، مما يجعله عرضة لفقدان الرطوبة. تؤثر العلاجات الكيميائية بشكل أكبر على طبقة القشرة الخاصة بالشعر، بينما يمكن أن يتسبب الماء العسر في الكويت (300+ جزء في المليون) في تراكم المعادن الذي يؤثر على امتصاص المنتج.",
+      
+      kuwaitTips: this.language === 'en' ? [
+        "Install a shower filter to reduce mineral buildup from hard water",
+        "Increase deep conditioning during summer months (45°C+)",
+        "Use chelating shampoo monthly to remove mineral deposits",
+        "Apply leave-in conditioner before outdoor exposure",
+        "Schedule trims every 8-10 weeks due to high humidity effects"
+      ] : [
+        "قم بتركيب فلتر للاستحمام لتقليل تراكم المعادن من الماء العسر",
+        "زود التكييف العميق خلال أشهر الصيف (45°م+)",
+        "استخدم شامبو مخلب شهريًا لإزالة رواسب المعادن",
+        "ضع بلسم بدون شطف قبل التعرض للخارج",
+        "حدد مواعيد تقليم كل 8-10 أسابيع بسبب تأثيرات الرطوبة العالية"
+      ],
+      
+      routine: {
+        daily: this.language === 'en' ? [
+          "Apply leave-in conditioner to damp hair",
+          "Use wide-tooth comb only",
+          "Protect with silk scarf at night"
+        ] : [
+          "ضع بلسم بدون شطف على الشعر الرطب",
+          "استخدم مشط أسنان واسعة فقط",
+          "احمِ بوشاح حريري في الليل"
+        ],
+        weekly: this.language === 'en' ? [
+          "Clarify with chelating shampoo",
+          "Deep condition for 20 minutes",
+          "Apply protein treatment bi-weekly"
+        ] : [
+          "نظف بشامبو مخلب",
+          "عناية عميقة لمدة 20 دقيقة",
+          "ضع علاج بروتين كل أسبوعين"
+        ],
+        monthly: this.language === 'en' ? [
+          "Trim ends (1/4 inch)",
+          "Scalp exfoliation treatment",
+          "Hair mask with steam"
+        ] : [
+          "قص الأطراف (1/4 بوصة)",
+          "علاج تقشير فروة الرأس",
+          "قناع شعر بالبخار"
+        ]
+      },
+      
+      recommendedProductIds: ["CB001", "CB002", "CB003", "CB004"],
+      
+      productUsageInstructions: {
+        "CB001": this.language === 'en' 
+          ? "Apply to damp hair after washing, focusing on mid-lengths to ends. Scrunch upward for definition."
+          : "ضع على الشعر الرطب بعد الغسيل، مع التركيز على المنتصف حتى الأطراف. اضغط لأعلى للتحديد.",
+        "CB002": this.language === 'en'
+          ? "Apply directly to scalp after shampooing. Massage for 2 minutes, no rinse needed."
+          : "ضع مباشرة على فروة الرأس بعد الشامبو. دلك لمدة دقيقتين، لا حاجة للشطف.",
+        "CB003": this.language === 'en'
+          ? "Use once weekly after shampoo. Leave on for 10 minutes, rinse thoroughly."
+          : "استخدم مرة أسبوعيًا بعد الشامبو. اترك لمدة 10 دقائق، اشطف جيدًا.",
+        "CB004": this.language === 'en'
+          ? "Apply to dry hair before bed, wrap with silk scarf. Rinse in morning."
+          : "ضع على الشعر الجاف قبل النوم، غط بوشاح حريري. اشطف في الصباح."
+      }
+    };
   }
-
-  generateInsight(answers) {
-    const parts = [];
-    if (answers.step2 === 'moisture') parts.push('Your curls need hydration — prioritize water-based products with humectants and occlusives to lock moisture.');
-    if (answers.step2 === 'frizz') parts.push('Humidity management: use anti-frizz emulsions and smoothing oils to reduce flyaways.');
-    if (answers.step2 === 'definition') parts.push('Use lightweight gels/creams with reactivatable humectants for definition without crunch.');
-    if (answers.step2 === 'volume') parts.push('Root-lifting sprays and lightweight mousses help volume without weighing hair down.');
-    if (!parts.length) parts.push('A balanced routine with cleansing, conditioning, targeted treatment and weekly deep care will improve results.');
-    return parts.join(' ');
+  
+  reset() {
+    this.state = 'idle';
+    this.currentStep = 1;
+    this.formData = {
+      name: '',
+      hairType: '',
+      scalpCondition: [],
+      hairProblems: [],
+      chemicalHistory: [],
+      washFrequency: '',
+      heatUsage: '',
+      lifestyle: [],
+      ageRange: ''
+    };
+    this.results = null;
+    this.render();
   }
-
-  escapeHtml(s) { return (s || '').toString().replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  
+  render() {
+    const appContainer = document.getElementById('hair-quiz-app');
+    if (!appContainer) return;
+    
+    switch(this.state) {
+      case 'idle':
+        appContainer.innerHTML = this.renderIdle();
+        break;
+      case 'analyzing':
+        appContainer.innerHTML = this.renderLoading();
+        break;
+      case 'results':
+        appContainer.innerHTML = this.renderResults();
+        break;
+      case 'error':
+        appContainer.innerHTML = this.renderError();
+        break;
+    }
+    
+    this.bindStepEvents();
+  }
+  
+  renderIdle() {
+    const t = TRANSLATIONS[this.language];
+    
+    return `
+      <div class="fade-in">
+        <!-- Hero -->
+        <div class="hair-quiz-hero">
+          <div class="hero-tagline">
+            <hr>
+            <span>${t.hero_tagline}</span>
+          </div>
+          <h1 class="hero-title">${t.hero_title}</h1>
+          <p class="hero-description">${t.hero_desc}</p>
+        </div>
+        
+        <!-- Quiz Form -->
+        ${this.renderStep()}
+      </div>
+    `;
+  }
+  
+  renderStep() {
+    const t = TRANSLATIONS[this.language];
+    const isRTL = this.language === 'ar';
+    
+    let stepContent = '';
+    
+    if (this.currentStep === 1) {
+      const hairTypes = isRTL ? DATA.hairTypes_ar : DATA.hairTypes;
+      const ages = isRTL ? DATA.ageRanges_ar : DATA.ageRanges;
+      
+      stepContent = `
+        <div class="quiz-step">
+          <div class="step-title">
+            <h2>${t.step1_title}</h2>
+            <p>${t.step1_sub}</p>
+          </div>
+          
+          <div class="max-w-xl mx-auto space-y-12">
+            <!-- Name -->
+            <div class="quiz-field">
+              <label class="quiz-label">${t.label_name}</label>
+              <input type="text" 
+                     class="quiz-input" 
+                     placeholder="${t.placeholder_name}"
+                     value="${this.formData.name}"
+                     id="quiz-name">
+            </div>
+            
+            <!-- Hair Type -->
+            <div class="quiz-field">
+              <label class="quiz-label">${t.label_hair_type}</label>
+              <div class="selection-grid">
+                ${hairTypes.map(type => `
+                  <button class="selection-button ${this.formData.hairType === type ? 'selected' : ''}" 
+                          data-field="hairType" 
+                          data-value="${type}">
+                    ${type}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Age -->
+            <div class="quiz-field">
+              <label class="quiz-label">${t.label_age}</label>
+              <div class="flex flex-wrap justify-center gap-3">
+                ${ages.map(age => `
+                  <button class="selection-button ${this.formData.ageRange === age ? 'selected' : ''}"
+                          data-field="ageRange"
+                          data-value="${age}">
+                    ${age}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    else if (this.currentStep === 2) {
+      const scalp = isRTL ? DATA.scalpConditions_ar : DATA.scalpConditions;
+      const problems = isRTL ? DATA.hairProblems_ar : DATA.hairProblems;
+      
+      stepContent = `
+        <div class="quiz-step">
+          <div class="step-title">
+            <h2>${t.step2_title}</h2>
+            <p>${t.step2_sub}</p>
+          </div>
+          
+          <div class="max-w-3xl mx-auto space-y-16">
+            <!-- Scalp -->
+            <div class="quiz-field">
+              <label class="quiz-label">${t.label_scalp}</label>
+              <div class="selection-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                ${scalp.map(cond => `
+                  <button class="selection-button ${this.formData.scalpCondition.includes(cond) ? 'selected' : ''}"
+                          data-field="scalpCondition" 
+                          data-value="${cond}"
+                          data-multi="true">
+                    ${cond}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Problems -->
+            <div class="quiz-field">
+              <label class="quiz-label">${t.label_problems}</label>
+              <div class="selection-grid" style="grid-template-columns: repeat(2, 1fr);">
+                ${problems.map(prob => `
+                  <button class="selection-button ${this.formData.hairProblems.includes(prob) ? 'selected' : ''}"
+                          data-field="hairProblems" 
+                          data-value="${prob}"
+                          data-multi="true">
+                    ${prob}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    else if (this.currentStep === 3) {
+      const history = isRTL ? DATA.chemicalHistory_ar : DATA.chemicalHistory;
+      const wash = isRTL ? DATA.washFrequency_ar : DATA.washFrequency;
+      const heat = isRTL ? DATA.heatUsage_ar : DATA.heatUsage;
+      
+      stepContent = `
+        <div class="quiz-step">
+          <div class="step-title">
+            <h2>${t.step3_title}</h2>
+            <p>${t.step3_sub}</p>
+          </div>
+          
+          <div class="max-w-3xl mx-auto space-y-16">
+            <!-- Chemical History -->
+            <div class="quiz-field">
+              <label class="quiz-label">${t.label_history}</label>
+              <div class="selection-grid">
+                ${history.map(hist => `
+                  <button class="selection-button ${this.formData.chemicalHistory.includes(hist) ? 'selected' : ''}"
+                          data-field="chemicalHistory" 
+                          data-value="${hist}"
+                          data-multi="true">
+                    ${hist}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Wash & Heat -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-12">
+              <!-- Wash Frequency -->
+              <div class="quiz-field">
+                <label class="quiz-label">${t.label_wash}</label>
+                <div class="select-wrapper">
+                  <select class="quiz-select" id="quiz-wash">
+                    <option value="">${t.select_option}</option>
+                    ${wash.map(f => `
+                      <option value="${f}" ${this.formData.washFrequency === f ? 'selected' : ''}>${f}</option>
+                    `).join('')}
+                  </select>
+                  <div class="select-arrow">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Heat Usage -->
+              <div class="quiz-field">
+                <label class="quiz-label">${t.label_heat}</label>
+                <div class="select-wrapper">
+                  <select class="quiz-select" id="quiz-heat">
+                    <option value="">${t.select_option}</option>
+                    ${heat.map(u => `
+                      <option value="${u}" ${this.formData.heatUsage === u ? 'selected' : ''}>${u}</option>
+                    `).join('')}
+                  </select>
+                  <div class="select-arrow">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    else if (this.currentStep === 4) {
+      const lifestyle = isRTL ? DATA.lifestyle_ar : DATA.lifestyle;
+      
+      stepContent = `
+        <div class="quiz-step">
+          <div class="step-title">
+            <h2>${t.step4_title}</h2>
+            <p>${t.step4_sub}</p>
+          </div>
+          
+          <div class="max-w-xl mx-auto space-y-12">
+            <!-- Lifestyle -->
+            <div class="quiz-field">
+              <label class="quiz-label">${t.label_lifestyle}</label>
+              <div class="selection-grid">
+                ${lifestyle.map(style => `
+                  <button class="selection-button ${this.formData.lifestyle.includes(style) ? 'selected' : ''}"
+                          data-field="lifestyle" 
+                          data-value="${style}"
+                          data-multi="true">
+                    ${style}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Progress indicator
+    const progress = Array.from({length: 4}, (_, i) => `
+      <div class="progress-step ${i + 1 <= this.currentStep ? 'active' : 'inactive'}"></div>
+    `).join('');
+    
+    return `
+      <!-- Progress -->
+      <div class="quiz-progress">
+        <div class="progress-label consultation">${t.consultation}</div>
+        <div class="progress-steps">${progress}</div>
+        <div class="progress-label">${t.step} ${this.currentStep}/4</div>
+      </div>
+      
+      ${stepContent}
+      
+      <!-- Navigation -->
+      <div class="quiz-navigation">
+        ${this.currentStep > 1 ? `
+          <button class="nav-button back" id="quiz-prev">
+            ${isRTL ? '→' : '←'} ${t.btn_back}
+          </button>
+        ` : '<div></div>'}
+        
+        ${this.currentStep < 4 ? `
+          <button class="nav-button next" id="quiz-next" ${!this.isStepValid() ? 'disabled' : ''}>
+            ${t.btn_next}
+          </button>
+        ` : `
+          <button class="nav-button submit" id="quiz-submit">
+            ${t.btn_analyze}
+          </button>
+        `}
+      </div>
+    `;
+  }
+  
+  renderLoading() {
+    const t = TRANSLATIONS[this.language];
+    const tip = this.loadingTips[this.currentTip] || this.loadingTips[0];
+    
+    return `
+      <div class="loading-screen">
+        <div class="loading-spinner">
+          <div class="spinner-circle"></div>
+          <div class="spinner-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-2xl animate-pulse">✨</span>
+          </div>
+        </div>
+        
+        <div class="loading-content">
+          <h3>${this.language === 'ar' ? 'التحليل العلمي قيد التقدم' : 'Scientific Analysis in Progress'}</h3>
+          <p>${tip}</p>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderResults() {
+    const t = TRANSLATIONS[this.language];
+    const isRTL = this.language === 'ar';
+    
+    if (!this.results) return '';
+    
+    const recommendedProducts = this.results.recommendedProductIds
+      .map(id => MOCK_PRODUCTS.find(p => p.id === id))
+      .filter(p => p);
+    
+    return `
+      <div class="results-container fade-in">
+        <!-- Header -->
+        <div class="results-header">
+          <div class="result-tag">
+            <span>${t.result_header_tag}</span>
+          </div>
+          <h2 class="result-title">${t.result_title}</h2>
+          <div class="result-meta">
+            <span>${t.result_prepared} ${this.formData.name}</span>
+            <span>•</span>
+            <span>${new Date().toLocaleDateString(isRTL ? 'ar-KW' : 'en-US')}</span>
+          </div>
+        </div>
+        
+        <div class="results-layout">
+          <!-- Left: Diagnosis -->
+          <div>
+            <div class="diagnosis-box">
+              <h3 class="diagnosis-title">${t.result_diagnosis}</h3>
+              
+              <div class="diagnosis-content">
+                <div class="diagnosis-section">
+                  <h4>${t.result_obs}</h4>
+                  <p>${this.results.diagnosisSummary}</p>
+                </div>
+                
+                <div class="diagnosis-section">
+                  <h4>${t.result_science}</h4>
+                  <p>${this.results.scientificExplanation}</p>
+                </div>
+                
+                <div class="diagnosis-section diagnosis-tips">
+                  <h4>${t.result_kuwait}</h4>
+                  <ul>
+                    ${this.results.kuwaitTips.map(tip => `
+                      <li>${tip}</li>
+                    `).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right: Routine & Products -->
+          <div class="space-y-20">
+            <!-- Routine -->
+            <div class="routine-section">
+              <div class="routine-header">
+                <h3>${t.result_ritual}</h3>
+                <span>${t.result_step}</span>
+              </div>
+              
+              <div class="routine-grid">
+                <div class="routine-column">
+                  <hr>
+                  <h4>${t.result_daily}</h4>
+                  <ul>
+                    ${this.results.routine.daily.map(step => `
+                      <li>${step}</li>
+                    `).join('')}
+                  </ul>
+                </div>
+                
+                <div class="routine-column">
+                  <hr>
+                  <h4>${t.result_weekly}</h4>
+                  <ul>
+                    ${this.results.routine.weekly.map(step => `
+                      <li>${step}</li>
+                    `).join('')}
+                  </ul>
+                </div>
+                
+                <div class="routine-column">
+                  <hr>
+                  <h4>${t.result_monthly}</h4>
+                  <ul>
+                    ${this.results.routine.monthly.map(step => `
+                      <li>${step}</li>
+                    `).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Products -->
+            <div class="products-section">
+              <div class="routine-header">
+                <h3>${t.result_regimen}</h3>
+                <span>${t.result_shop}</span>
+              </div>
+              
+              <div class="products-grid">
+                ${recommendedProducts.map(product => `
+                  <div class="product-card" data-product-id="${product.id}">
+                    <div class="product-image">
+                      <div class="image-placeholder ${product.imageColor}">
+                        <div class="image-circle"></div>
+                        <div class="image-initials">
+                          <span>${product.name.split(' ').pop()?.substring(0,2) || 'CB'}</span>
+                        </div>
+                        <div class="image-hover">
+                          <div class="image-note">
+                            <span class="note-label">${t.result_note}:</span>
+                            ${this.results.productUsageInstructions[product.id]}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="product-info">
+                      <div class="product-header">
+                        <h4>${isRTL ? product.name_ar : product.name}</h4>
+                        <span class="product-price">${product.price}</span>
+                      </div>
+                      <p class="product-description">
+                        ${isRTL ? product.description_ar : product.description}
+                      </p>
+                      <button class="product-button" onclick="addToCart('${product.id}')">
+                        ${t.btn_cart}
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Reset -->
+        <div class="flex justify-center pt-24 border-t border-salon-rosegold/20">
+          <button class="reset-button" id="quiz-reset">
+            <span>${t.btn_new}</span>
+            <div class="reset-divider"></div>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+  
+  renderError() {
+    const t = TRANSLATIONS[this.language];
+    
+    return `
+      <div class="error-screen fade-in">
+        <div class="error-icon">✦</div>
+        <h3 class="error-title">${t.error_title}</h3>
+        <p class="error-message">${t.error_msg}</p>
+        <button class="retry-button" id="quiz-retry">
+          ${t.btn_retry}
+        </button>
+      </div>
+    `;
+  }
+  
+  bindStepEvents() {
+    // Name input
+    const nameInput = document.getElementById('quiz-name');
+    if (nameInput) {
+      nameInput.addEventListener('input', (e) => {
+        this.formData.name = e.target.value;
+        this.renderStep();
+      });
+    }
+    
+    // Selection buttons
+    document.querySelectorAll('.selection-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const field = e.target.dataset.field;
+        const value = e.target.dataset.value;
+        const isMulti = e.target.dataset.multi === 'true';
+        this.updateForm(field, value, isMulti);
+      });
+    });
+    
+    // Select dropdowns
+    const washSelect = document.getElementById('quiz-wash');
+    if (washSelect) {
+      washSelect.addEventListener('change', (e) => {
+        this.formData.washFrequency = e.target.value;
+        this.renderStep();
+      });
+    }
+    
+    const heatSelect = document.getElementById('quiz-heat');
+    if (heatSelect) {
+      heatSelect.addEventListener('change', (e) => {
+        this.formData.heatUsage = e.target.value;
+        this.renderStep();
+      });
+    }
+    
+    // Navigation buttons
+    const prevBtn = document.getElementById('quiz-prev');
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => this.prevStep());
+    }
+    
+    const nextBtn = document.getElementById('quiz-next');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => this.nextStep());
+    }
+    
+    const submitBtn = document.getElementById('quiz-submit');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', () => this.submitForm());
+    }
+    
+    // Results buttons
+    const resetBtn = document.getElementById('quiz-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => this.reset());
+    }
+    
+    const retryBtn = document.getElementById('quiz-retry');
+    if (retryBtn) {
+      retryBtn.addEventListener('click', () => this.reset());
+    }
+  }
+  
+  renderLoading() {
+    // Re-render loading with updated tip
+    const appContainer = document.getElementById('hair-quiz-app');
+    if (appContainer && this.state === 'analyzing') {
+      appContainer.innerHTML = this.renderLoading();
+    }
+  }
 }
 
-/* Initialize after DOM ready */
-document.addEventListener('DOMContentLoaded', () => { new HairCareGenius(document.getElementById('hair-quiz-root')); });
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  window.hairQuiz = new HairQuizApp();
+});
 
-/* Simple restart helper */
-function restartQuiz() { location.reload(); }
+// Add to Cart function (to integrate with Shopify)
+function addToCart(productId) {
+  // This would integrate with Shopify's cart API
+  // For now, just show an alert
+  const product = MOCK_PRODUCTS.find(p => p.id === productId);
+  if (product) {
+    if (typeof Shopify !== 'undefined' && Shopify.addItem) {
+      // Real Shopify integration would go here
+      alert(`Added ${product.name} to cart!`);
+    } else {
+      alert(`Product: ${product.name}\nPrice: ${product.price}\n\nAdd to cart functionality will work when integrated with Shopify.`);
+    }
+  }
+}
+
+// Update language toggle text
+function updateLangToggle() {
+  const langText = document.getElementById('lang-text');
+  const langCode = document.getElementById('lang-code');
+  
+  if (window.hairQuiz && langText && langCode) {
+    if (window.hairQuiz.language === 'en') {
+      langText.textContent = 'العربية';
+      langCode.textContent = 'AR';
+    } else {
+      langText.textContent = 'English';
+      langCode.textContent = 'EN';
+    }
+  }
+}
+
+// Observe language changes
+const observer = new MutationObserver(updateLangToggle);
+const langToggle = document.getElementById('hair-quiz-app');
+if (langToggle) {
+  observer.observe(langToggle, { attributes: true, childList: true, subtree: true });
+}
 </script>
 
 {% schema %}
@@ -367,13 +1959,19 @@ function restartQuiz() { location.reload(); }
       "type": "text",
       "id": "title",
       "label": "Section Title",
-      "default": "Find Your Perfect Routine"
+      "default": "Hair Genius Tool"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "AI-powered hair analysis and personalized recommendations"
     }
   ],
   "presets": [
     {
-      "name": "Numberc Style Quiz",
-      "category": "Homepage"
+      "name": "Hair Quiz",
+      "category": "Quiz"
     }
   ]
 }
