@@ -10,6 +10,13 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
 
+  /* Adjust header position based on announcement bar */
+  {% if section.settings.show_announcement_bar %}
+  .header {
+    top: 40px; /* Height of announcement bar */
+  }
+  {% endif %}
+
   .header.scrolled {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -104,7 +111,7 @@
     transform: rotate(-90deg);
   }
 
-  /* Mega Dropdown Styles - FIXED WITH BETTER TRANSITIONS */
+  /* Mega Dropdown Styles */
   .mega-dropdown {
     position: absolute;
     top: 100%;
@@ -122,7 +129,7 @@
     pointer-events: none;
   }
 
-  /* Show dropdown on hover - FIXED TRANSITION */
+  /* Show dropdown on hover */
   .nav-item:hover .mega-dropdown {
     opacity: 1;
     visibility: visible;
@@ -146,11 +153,17 @@
     gap: 40px;
   }
 
+  /* SHOP DROPDOWN SPECIFIC STYLES - BLACK FONT */
+  .nav-item:first-child .dropdown-column h4,
+  .nav-item:first-child .dropdown-link {
+    color: #000000 !important; /* Pure black for shop dropdown */
+  }
+
   .dropdown-column h4 {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 20px;
-    color: #2D2D2D; /* Changed from white to dark */
+    color: #2D2D2D;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -163,7 +176,6 @@
 
   .dropdown-link {
     text-decoration: none;
-    color: #666; /* Changed from white to gray */
     font-size: 14px;
     transition: all 0.3s ease;
     padding: 8px 0;
@@ -171,8 +183,14 @@
     display: block;
   }
 
+  /* Default dropdown link color (for non-shop dropdowns) */
+  .dropdown-link {
+    color: #666;
+  }
+
+  /* Hover effect for all dropdown links */
   .dropdown-link:hover {
-    color: #E8C4B8;
+    color: #E8C4B8 !important; /* Important to override shop black color */
     border-bottom-color: #E8C4B8;
     transform: translateX(8px);
   }
@@ -263,6 +281,17 @@
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
 
+    {% if section.settings.show_announcement_bar %}
+    .header {
+      top: 0 !important; /* On mobile, stack normally */
+    }
+    
+    /* Add margin to main content to prevent overlap */
+    main {
+      margin-top: 40px !important;
+    }
+    {% endif %}
+
     .mobile-menu-btn {
       display: block;
     }
@@ -338,11 +367,17 @@
       gap: 20px;
     }
 
+    /* Mobile shop dropdown black text */
+    .nav-item:first-child .dropdown-column h4,
+    .nav-item:first-child .dropdown-link {
+      color: #000000 !important;
+    }
+
     .header-actions {
       gap: 12px;
     }
     
-    /* Push content down */
+    /* Push content down for fixed header */
     main {
       padding-top: 80px !important;
     }
@@ -387,18 +422,11 @@
     transform: scale(1.02);
   }
 
-  /* Fix for white text in dropdowns */
-  .dropdown-column h4,
-  .dropdown-link {
-    color: #2D2D2D !important;
-  }
-
-  .dropdown-link {
-    color: #666 !important;
-  }
-
-  .dropdown-link:hover {
-    color: #E8C4B8 !important;
+  /* Fix for mobile content spacing */
+  @media (max-width: 768px) {
+    body.announcement-bar-shown {
+      padding-top: 40px;
+    }
   }
 </style>
 
@@ -425,8 +453,8 @@
 
       <!-- Main Navigation with Mega Dropdowns -->
       <nav class="nav-main" id="main-nav">
-        <!-- Shop Dropdown -->
-        <div class="nav-item">
+        <!-- Shop Dropdown - BLACK TEXT -->
+        <div class="nav-item shop-dropdown">
           <a href="{{ routes.all_products_collection_url }}" class="nav-link">Shop</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
@@ -469,7 +497,7 @@
           </div>
         </div>
 
-        <!-- Hair Quiz Dropdown -->
+        <!-- Hair Quiz Dropdown - Normal gray text -->
         <div class="nav-item">
           <a href="#hair-quiz-section" class="nav-link">Hair Quiz</a>
           <div class="mega-dropdown">
@@ -508,7 +536,7 @@
           <a href="#services-by-concern" class="nav-link">Services by Concern</a>
         </div>
 
-        <!-- Our Story Dropdown -->
+        <!-- Our Story Dropdown - Normal gray text -->
         <div class="nav-item">
           <a href="{{ pages['about'].url | default: '#' }}" class="nav-link">Our Story</a>
           <div class="mega-dropdown">
@@ -542,7 +570,7 @@
           </div>
         </div>
 
-        <!-- Guides Dropdown -->
+        <!-- Guides Dropdown - Normal gray text -->
         <div class="nav-item">
           <a href="{{ blogs['guides'].url | default: routes.blog_url }}" class="nav-link">Guides</a>
           <div class="mega-dropdown">
@@ -619,6 +647,7 @@ class HeaderWithDropdowns {
     this.hoverTimeout = null;
     this.closeTimeout = null;
     this.isMobile = window.innerWidth <= 768;
+    this.hasAnnouncementBar = document.querySelector('.announcement-bar') !== null;
     
     this.init();
   }
@@ -629,6 +658,30 @@ class HeaderWithDropdowns {
     this.setupDropdowns();
     this.setupScrollToSections();
     this.handleResize();
+    this.adjustForAnnouncementBar();
+  }
+
+  adjustForAnnouncementBar() {
+    // Check if announcement bar exists
+    const announcementBar = document.querySelector('.announcement-bar');
+    
+    if (announcementBar) {
+      const announcementHeight = announcementBar.offsetHeight;
+      
+      // Adjust header position for desktop
+      if (!this.isMobile) {
+        this.header.style.top = announcementHeight + 'px';
+      }
+      
+      // Add class to body for CSS targeting
+      document.body.classList.add('announcement-bar-shown');
+      
+      // Adjust main content margin
+      const mainContent = document.querySelector('main');
+      if (mainContent) {
+        mainContent.style.marginTop = (announcementHeight + 80) + 'px'; // header height + announcement
+      }
+    }
   }
 
   bindEvents() {
@@ -675,6 +728,9 @@ class HeaderWithDropdowns {
     if (!this.isMobile && this.mainNav.classList.contains('active')) {
       this.closeMobileMenu();
     }
+    
+    // Re-adjust for announcement bar on resize
+    this.adjustForAnnouncementBar();
   }
 
   setupDropdowns() {
@@ -803,7 +859,14 @@ class HeaderWithDropdowns {
             this.closeAllDropdowns();
             
             // Scroll to element with offset for header
-            const headerHeight = this.header.offsetHeight;
+            let headerHeight = this.header.offsetHeight;
+            
+            // Add announcement bar height if exists
+            const announcementBar = document.querySelector('.announcement-bar');
+            if (announcementBar && !this.isMobile) {
+              headerHeight += announcementBar.offsetHeight;
+            }
+            
             const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
             const offsetPosition = targetPosition - headerHeight;
             
@@ -859,11 +922,11 @@ class HeaderWithDropdowns {
 
 // Initialize header when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // Wait a bit to ensure all elements are loaded
+  // Wait for announcement bar to load if it exists
   setTimeout(() => {
     const header = new HeaderWithDropdowns();
     window.headerInstance = header;
     console.log('Header initialized successfully');
-  }, 100);
+  }, 300); // Increased delay to ensure announcement bar loads
 });
 </script>
