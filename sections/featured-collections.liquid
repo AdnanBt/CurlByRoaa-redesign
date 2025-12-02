@@ -1,186 +1,210 @@
-{% comment %} Featured Collections - Hybrid Grid + Swiper Carousel + Auto Rotate (Theme-Check Clean) {% endcomment %}
+{% comment %} Featured Collections - Hybrid Grid + Swiper Carousel + Auto Rotate (Compact spacing, fixed) {% endcomment %}
 
 <!-- Swiper CSS via local asset -->
 {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
 
 <style>
-/* ===== Featured Collections — Hybrid Layout ===== */
-.featured-collections-section { padding: clamp(32px, 5vw, 72px) 0; background: #FAF8F6; }
-.featured-collections-header { text-align: center; margin-bottom: 28px; padding: 0 1rem; }
-.featured-collections-title { font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight:700; color:#2D2D2D; margin-bottom:6px; }
-.featured-collections-description { font-size: clamp(.9rem,1.1vw,1rem); color:#666; max-width:760px; margin:0 auto; line-height:1.6; }
+/* Compact, premium featured collections */
+.featured-collections-section { padding: clamp(28px, 4.5vw, 64px) 0; background: #FAF8F6; }
+.featured-collections-header { text-align:center; margin-bottom:20px; padding:0 1rem; }
+.featured-collections-title { font-size: clamp(1.4rem,2.2vw,2.0rem); font-weight:700; color:#2d2d2d; margin-bottom:6px; }
+.featured-collections-description { font-size: .98rem; color:#666; max-width:760px; margin:0 auto; }
 
-.featured-collections-swiper { max-width:1400px; margin: 0 auto; padding: 12px 1rem 36px; position:relative; }
-.swiper-wrapper { display:flex; gap:22px; align-items:flex-start; }
+/* Root / Swiper wrapper */
+.featured-collections-swiper { max-width:1400px; margin:0 auto; padding: 8px 1rem 28px; position:relative; }
+.swiper-wrapper { display:flex; gap:12px; align-items:flex-start; }
 
-/* Card */
+/* Card style */
 .featured-collection-card {
-  width: clamp(180px, 23%, 280px);
-  border-radius:14px;
+  width: clamp(170px, 22%, 260px);
+  border-radius:12px;
   overflow:hidden;
   background:#fff;
   box-shadow: 0 8px 20px rgba(0,0,0,0.06);
   display:flex;
   flex-direction:column;
-  scroll-snap-align:start;
-  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+  transition: transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s;
 }
-.featured-collection-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,0.10); }
+.featured-collection-card:hover { transform: translateY(-8px); box-shadow: 0 16px 36px rgba(0,0,0,0.09); }
 
-/* Image container with fade layers */
-.featured-collection-image-container {
-  position:relative;
-  width:100%;
-  height: clamp(140px, 18vw, 220px);
-  overflow:hidden;
-  background:#f6f6f6;
-}
-.featured-collection-image-container img {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0;
-  transition: opacity .6s ease-in-out, transform .6s ease-in-out;
-}
-.featured-collection-image-container img.visible { opacity:1; transform: scale(1); }
-.featured-collection-card:hover .featured-collection-image-container img.visible { transform: scale(1.04); filter: brightness(1.03); }
+/* Image stack for fade */
+.featured-collection-image-container { position:relative; width:100%; height: clamp(130px,16vw,200px); background:#f6f6f6; overflow:hidden; }
+.featured-collection-image-container img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition: opacity .55s ease-in-out, transform .55s ease; }
+.featured-collection-image-container img.visible { opacity:1; transform:scale(1); }
+.featured-collection-card:hover .featured-collection-image-container img.visible { transform: scale(1.04); filter:brightness(1.03); }
 
-.featured-collection-content { padding: 14px 14px 18px; display:flex; flex-direction:column; gap:8px; min-height:120px; }
-.featured-collection-title { font-size: 1rem; font-weight:700; color:#222; -webkit-line-clamp:2; overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical; }
+/* Content */
+.featured-collection-content { padding:12px 12px 16px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:110px; }
+.featured-collection-title { font-size:1rem; font-weight:700; color:#222; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; }
 .featured-collection-product-count { font-size:0.85rem; color:#777; }
-.featured-collection-link {
-  display:inline-block; text-align:center; padding:8px 14px;
-  background: linear-gradient(90deg,#D4A574,#B07F53);
-  color:#fff; border-radius:8px; font-weight:700;
-  text-decoration:none; border:2px solid transparent;
-  transition: all .25s ease;
-}
+.featured-collection-link { display:inline-block; text-align:center; padding:8px 12px; background: linear-gradient(90deg,#D4A574,#B07F53); color:#fff; border-radius:8px; font-weight:700; text-decoration:none; border:2px solid transparent; transition: all .2s ease; }
 .featured-collection-link:hover { background:#fff; color:#D4A574; border-color:#D4A574; }
 
-/* Controls */
-.swiper-button-next, .swiper-button-prev {
-  color:#222; width:44px; height:44px; border-radius:50%;
-  background:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.08);
-  display:grid; place-items:center;
-}
-.swiper-pagination-bullet { background: rgba(0,0,0,0.18); }
-.swiper-pagination-bullet-active { background: #D4A574; transform:scale(1.2); }
+/* Swiper controls */
+.swiper-button-next, .swiper-button-prev { color:#222; width:42px; height:42px; border-radius:50%; background:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:grid; place-items:center; }
+.swiper-pagination-bullet { background: rgba(0,0,0,0.16); }
+.swiper-pagination-bullet-active { background:#D4A574; transform:scale(1.15); }
 
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  .featured-collection-card { width: 220px; }
+  .featured-collection-image-container { height: 160px; }
+}
 @media (max-width: 768px) {
   .featured-collection-card { width: 200px; }
-  .featured-collection-image-container { height: 150px; }
+  .featured-collection-image-container { height: 140px; }
   .swiper-button-next, .swiper-button-prev { display:none; }
 }
 </style>
 
 <section class="featured-collections-section">
   <div class="featured-collections-header">
-    <h2 class="featured-collections-title">{{ section.settings.title }}</h2>
-    <p class="featured-collections-description">{{ section.settings.description }}</p>
+    <h2 class="featured-collections-title">{{ section.settings.title | default: "Shop By Collection" }}</h2>
+    <p class="featured-collections-description">{{ section.settings.description | default: "Find the perfect products for your unique curl pattern" }}</p>
   </div>
 
   <div class="swiper featured-collections-swiper">
     <div class="swiper-wrapper">
       {% for block in section.blocks %}
         {% assign collection = collections[block.settings.collection] %}
-
         {% if collection %}
-        <div class="swiper-slide">
-          <article class="featured-collection-card">
-            <div class="featured-collection-image-container">
+          {% assign prods = collection.products | slice: 0, 8 %}
+          <div class="swiper-slide">
+            <article class="featured-collection-card" aria-label="{{ collection.title | escape }}">
+              <div class="featured-collection-image-container">
+                {% assign rendered_any = false %}
+                {% for p in prods limit:5 %}
+                  {% if p.featured_image %}
+                    {% assign rendered_any = true %}
+                    <img
+                      src="{{ p.featured_image | image_url: width:800, height:600, crop:'center' }}"
+                      alt="{{ p.title | escape }}"
+                      class="collection-card-image{% if forloop.first %} visible{% endif %}"
+                      width="800"
+                      height="600"
+                      loading="lazy"
+                    >
+                  {% endif %}
+                {% endfor %}
 
-              {% assign prods = collection.products | slice: 0, 6 %}
-              {% assign any_image = false %}
-
-              {% for p in prods limit:5 %}
-                {% if p.featured_image %}
-                  {% assign any_image = true %}
-                  <img
-                    src="{{ p.featured_image | image_url: width:800, height:600, crop:'center' }}"
-                    alt="{{ p.title | escape }}"
-                    class="collection-card-image{% if forloop.first %} visible{% endif %}"
-                    width="800"
-                    height="600"
-                    loading="lazy"
-                  >
-                {% endif %}
-              {% endfor %}
-
-              {% unless any_image %}
-                {% if collection.image %}
-                  <img
-                    src="{{ collection.image | image_url: width:800, height:600, crop:'center' }}"
-                    alt="{{ collection.title | escape }}"
-                    class="collection-card-image visible"
-                    width="800"
-                    height="600"
-                    loading="lazy"
-                  >
-                {% else %}
-                  <div style="display:flex;align-items:center;justify-content:center;height:100%;background:#eee;">No image</div>
-                {% endif %}
-              {% endunless %}
-            </div>
-
-            <div class="featured-collection-content">
-              <div>
-                <h3 class="featured-collection-title">{{ collection.title }}</h3>
-                <div class="featured-collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: "product", "products" }}</div>
+                {% unless rendered_any %}
+                  {% if collection.image %}
+                    <img
+                      src="{{ collection.image | image_url: width:800, height:600, crop:'center' }}"
+                      alt="{{ collection.title | escape }}"
+                      class="collection-card-image visible"
+                      width="800"
+                      height="600"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="featured-collection-placeholder" style="height:100%;display:flex;align-items:center;justify-content:center">
+                      <div style="font-size:1.1rem;color:#777">No images</div>
+                    </div>
+                  {% endif %}
+                {% endunless %}
               </div>
-              <a class="featured-collection-link" href="{{ collection.url }}">Shop Now</a>
-            </div>
-          </article>
-        </div>
+
+              <div class="featured-collection-content">
+                <div>
+                  <h3 class="featured-collection-title">{{ collection.title }}</h3>
+                  <div class="featured-collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: "product", "products" }}</div>
+                </div>
+                <a class="featured-collection-link" href="{{ collection.url }}">Shop Now</a>
+              </div>
+            </article>
+          </div>
         {% endif %}
       {% endfor %}
     </div>
 
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-pagination"></div>
+    <!-- Controls + Pagination -->
+    <div class="swiper-button-prev" aria-label="Previous"></div>
+    <div class="swiper-button-next" aria-label="Next"></div>
+    <div class="swiper-pagination" aria-hidden="false"></div>
   </div>
 </section>
 
-<!-- Swiper JS via local asset -->
+<!-- Use local Swiper JS asset (defer) -->
 <script defer src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
 
 <script defer>
-(function(){
-  function init(){
+(function() {
+  // initialization function
+  function initFeaturedCollections() {
+    // Create Swiper
     const swiper = new Swiper('.featured-collections-swiper', {
       slidesPerView: 'auto',
-      spaceBetween: 22,
+      spaceBetween: 12,
       loop: false,
       navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
       pagination: { el: '.swiper-pagination', clickable: true },
       breakpoints: {
-        320: { slidesPerView: 1.2, spaceBetween: 12 },
-        480: { slidesPerView: 1.6, spaceBetween: 16 },
-        768: { slidesPerView: 2.4, spaceBetween: 18 },
-        1024: { slidesPerView: 3.5, spaceBetween: 22 },
-        1400: { slidesPerView: 4.5, spaceBetween: 24 }
+        320: { slidesPerView: 1.15, spaceBetween: 12 },
+        480: { slidesPerView: 1.6, spaceBetween: 12 },
+        768: { slidesPerView: 2.2, spaceBetween: 14 },
+        1024: { slidesPerView: 3.4, spaceBetween: 16 },
+        1400: { slidesPerView: 4.2, spaceBetween: 18 }
       }
     });
 
-    const INTERVAL = 2600;
-    document.querySelectorAll('.featured-collection-card').forEach(card=>{
-      const imgs = card.querySelectorAll('.collection-card-image');
-      if(imgs.length <= 1) return;
-      let idx = 0;
-      setInterval(()=>{
-        imgs[idx].classList.remove('visible');
-        idx = (idx + 1) % imgs.length;
-        imgs[idx].classList.add('visible');
-      }, INTERVAL);
+    // Auto-rotate images: only when slide/card is visible (IntersectionObserver)
+    const ROTATE_MS = 2400;
+    const cards = Array.from(document.querySelectorAll('.featured-collection-card'));
+
+    // Track intervals so we can pause when not visible
+    const cardState = new Map(); // card -> { imgs, idx, timerId }
+
+    cards.forEach(card => {
+      const imgs = Array.from(card.querySelectorAll('.collection-card-image'));
+      if (imgs.length <= 1) return;
+      // ensure initial visible state
+      imgs.forEach((im, i) => im.classList.toggle('visible', i === 0));
+      cardState.set(card, { imgs, idx: 0, timerId: null });
+    });
+
+    // IntersectionObserver to start/stop rotation
+    const ioOptions = { root: document.querySelector('.featured-collections-swiper'), rootMargin: '0px', threshold: 0.5 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const card = entry.target;
+        const state = cardState.get(card);
+        if (!state) return;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          // start rotating
+          if (!state.timerId) {
+            state.timerId = setInterval(() => {
+              const { imgs } = state;
+              imgs[state.idx].classList.remove('visible');
+              state.idx = (state.idx + 1) % imgs.length;
+              imgs[state.idx].classList.add('visible');
+            }, ROTATE_MS);
+          }
+        } else {
+          // stop rotating
+          if (state.timerId) {
+            clearInterval(state.timerId);
+            state.timerId = null;
+          }
+        }
+      });
+    }, ioOptions);
+
+    // Observe only cards that have multi images
+    cardState.forEach((v, card) => observer.observe(card));
+
+    // Responsive: re-calc swiper on resize (robustness)
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => swiper.update(), 150);
     });
   }
 
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFeaturedCollections);
   } else {
-    init();
+    initFeaturedCollections();
   }
 })();
 </script>
@@ -188,21 +212,14 @@
 {% schema %}
 {
   "name": "Featured Collections",
+  "max_blocks": 8,
   "settings": [
     { "type": "text", "id": "title", "label": "Title", "default": "Shop by Collection" },
     { "type": "textarea", "id": "description", "label": "Description", "default": "Find the perfect products for your unique curl pattern" }
   ],
   "blocks": [
-    {
-      "type": "collection",
-      "name": "Collection",
-      "settings": [
-        { "type": "collection", "id": "collection", "label": "Select collection" }
-      ]
-    }
+    { "type": "collection", "name": "Collection", "settings":[ { "type":"collection", "id":"collection", "label":"Select collection" } ] }
   ],
-  "presets": [
-    { "name": "Featured Collections Hybrid", "category": "Collections" }
-  ]
+  "presets": [ { "name":"Featured Collections Compact", "category":"Collections" } ]
 }
 {% endschema %}
