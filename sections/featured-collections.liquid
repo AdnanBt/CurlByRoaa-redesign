@@ -1,105 +1,344 @@
+{% comment %} featured-collections.liquid - Place this in a NEW section file {% endcomment %}
+
 <style>
   .featured-collections {
-    padding: var(--spacing-xl) 0;
+    padding: 80px 0;
+    background: #FAF8F6;
   }
+  
   .section-header {
     text-align: center;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 60px;
+    padding: 0 20px;
   }
+  
   .section-title {
     font-size: 2.5rem;
-    margin-bottom: var(--spacing-sm);
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2D2D2D;
   }
+  
+  .section-description {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .collections-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
   .collections-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-md);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-sm);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
   }
+  
   .collection-card {
     position: relative;
-    border-radius: var(--border-radius-lg);
+    border-radius: 20px;
     overflow: hidden;
     aspect-ratio: 3/4;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
+  
   .collection-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   }
+  
+  .collection-image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  
   .collection-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  
   .collection-card:hover .collection-image {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
+  
   .collection-content {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: var(--spacing-lg);
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    padding: 30px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
     color: white;
+    z-index: 2;
+  }
+  
+  .collection-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: white;
+  }
+  
+  .collection-product-count {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 20px;
+    display: block;
+  }
+  
+  .collection-link {
+    display: inline-block;
+    padding: 10px 24px;
+    background: white;
+    color: #2D2D2D;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+  }
+  
+  .collection-link:hover {
+    background: transparent;
+    color: white;
+  }
+  
+  /* Placeholder for collections without images */
+  .collection-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .placeholder-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  
+  /* Mobile Responsiveness */
+  @media (max-width: 1200px) {
+    .collections-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .featured-collections {
+      padding: 60px 0;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+    }
+    
+    .collections-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .collection-content {
+      padding: 20px;
+    }
+    
+    .collection-title {
+      font-size: 1.2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .collections-grid {
+      grid-template-columns: 1fr;
+      max-width: 350px;
+      margin: 0 auto;
+      gap: 15px;
+    }
+    
+    .collection-card {
+      aspect-ratio: 4/5;
+    }
   }
 </style>
 
 <section class="featured-collections">
   <div class="section-header">
-    <h2 class="section-title">Shop By Collection</h2>
-    <p class="section-description">Find the perfect products for your unique curl pattern</p>
+    <h2 class="section-title">{{ section.settings.title | default: 'Shop By Collection' }}</h2>
+    <p class="section-description">{{ section.settings.description | default: 'Find the perfect products for your unique curl pattern' }}</p>
   </div>
 
-  <div class="collections-grid">
-    {% if section.blocks.size > 0 %}
-      {% for block in section.blocks limit: 3 %}
-        {% assign collection = collections[block.settings.collection] %}
-        <div class="collection-card">
-          {% if collection.image %}
-            <img 
-              src="{{ collection.image | image_url: width: 600, height: 800, crop: 'center' }}" 
-              alt="{{ collection.title | escape }}" 
-              class="collection-image" 
-              loading="lazy"
-              width="600"
-              height="800"
-            >
-          {% else %}
-            <div class="collection-image" style="background: var(--color-secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
-              {{ collection.title | default: 'Collection' }}
+  <div class="collections-container">
+    <div class="collections-grid">
+      {% comment %} FIRST: Try to use section blocks if defined {% endcomment %}
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% assign collection = collections[block.settings.collection] %}
+          {% if collection %}
+            <div class="collection-card">
+              <div class="collection-image-container">
+                {% if collection.image %}
+                  <img 
+                    src="{{ collection.image | image_url: width: 600, height: 800, crop: 'center' }}" 
+                    alt="{{ collection.title | escape }}" 
+                    class="collection-image" 
+                    loading="lazy"
+                    width="600"
+                    height="800"
+                    onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                  >
+                {% elsif collection.products.first.featured_image %}
+                  <img 
+                    src="{{ collection.products.first.featured_image | image_url: width: 600, height: 800, crop: 'center' }}" 
+                    alt="{{ collection.title | escape }}" 
+                    class="collection-image" 
+                    loading="lazy"
+                    width="600"
+                    height="800"
+                    onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                  >
+                {% else %}
+                  <div class="collection-placeholder">
+                    <div class="placeholder-icon">📦</div>
+                    <div class="placeholder-text">{{ collection.title }}</div>
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="collection-content">
+                <h3 class="collection-title">{{ collection.title }}</h3>
+                <span class="collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
+                <a href="{{ collection.url }}" class="collection-link">Shop Now</a>
+              </div>
             </div>
           {% endif %}
-          <div class="collection-content">
-            <h3 class="collection-title" style="margin-bottom: 10px; font-size: 1.4rem;">{{ collection.title | default: 'Collection' }}</h3>
-            <a href="{{ collection.url }}" class="btn btn-outline" style="color: white; border-color: white;">Shop Now</a>
+        {% endfor %}
+      
+      {% else %}
+        {% comment %} FALLBACK: Show all collections or specific ones {% endcomment %}
+        {% assign all_collections = collections %}
+        {% assign collections_to_show = '' | split: '' %}
+        
+        {% comment %} Add specific collections you want to show {% endcomment %}
+        {% assign specific_handles = 'browsbylush,authentic-beauty-concept,alterna,schwarzkopf,keune,k18,hair-accessories' | split: ',' %}
+        
+        {% for handle in specific_handles %}
+          {% assign coll = collections[handle] %}
+          {% if coll %}
+            {% assign collections_to_show = collections_to_show | push: coll %}
+          {% endif %}
+        {% endfor %}
+        
+        {% comment %} If no specific collections found, show all except 'all' {% endcomment %}
+        {% if collections_to_show.size == 0 %}
+          {% for collection in all_collections %}
+            {% if collection.handle != 'all' and collection.products_count > 0 %}
+              {% assign collections_to_show = collections_to_show | push: collection %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        
+        {% comment %} Display the collections {% endcomment %}
+        {% for collection in collections_to_show limit: 8 %}
+          <div class="collection-card">
+            <div class="collection-image-container">
+              {% if collection.image %}
+                <img 
+                  src="{{ collection.image | image_url: width: 600, height: 800, crop: 'center' }}" 
+                  alt="{{ collection.title | escape }}" 
+                  class="collection-image" 
+                  loading="lazy"
+                  width="600"
+                  height="800"
+                  onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                >
+              {% elsif collection.products.first.featured_image %}
+                <img 
+                  src="{{ collection.products.first.featured_image | image_url: width: 600, height: 800, crop: 'center' }}" 
+                  alt="{{ collection.title | escape }}" 
+                  class="collection-image" 
+                  loading="lazy"
+                  width="600"
+                  height="800"
+                  onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                >
+              {% else %}
+                <div class="collection-placeholder">
+                  <div class="placeholder-icon">📦</div>
+                  <div class="placeholder-text">{{ collection.title }}</div>
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="collection-content">
+              <h3 class="collection-title">{{ collection.title }}</h3>
+              <span class="collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
+              <a href="{{ collection.url }}" class="collection-link">Shop Now</a>
+            </div>
           </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <!-- Fallback: Show 3 placeholder collections -->
-      {% for i in (1..3) %}
-        <div class="collection-card">
-          <div class="collection-image" style="background: linear-gradient(135deg, #E8C4B8, #D4A59A); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
-            Add Collection {{ i }}
-          </div>
-          <div class="collection-content">
-            <h3 class="collection-title" style="margin-bottom: 10px; font-size: 1.4rem;">Featured Collection</h3>
-            <a href="{{ routes.collections_url }}" class="btn btn-outline" style="color: white; border-color: white;">Shop Now</a>
-          </div>
-        </div>
-      {% endfor %}
-    {% endif %}
+        {% endfor %}
+        
+        {% comment %} If still no collections, show placeholders {% endcomment %}
+        {% if collections_to_show.size == 0 %}
+          {% for i in (1..8) %}
+            <div class="collection-card">
+              <div class="collection-placeholder">
+                <div class="placeholder-icon">✨</div>
+                <div class="placeholder-text">Collection {{ i }}</div>
+              </div>
+              <div class="collection-content">
+                <h3 class="collection-title">Featured Collection {{ i }}</h3>
+                <span class="collection-product-count">{{ i | times: 5 }} products</span>
+                <a href="{{ routes.collections_url }}" class="collection-link">Shop Now</a>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    </div>
   </div>
 </section>
 
 {% schema %}
 {
   "name": "Featured Collections",
-  "max_blocks": 3,
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Shop By Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Find the perfect products for your unique curl pattern"
+    }
+  ],
   "blocks": [
     {
       "type": "collection",
@@ -108,15 +347,21 @@
         {
           "type": "collection",
           "id": "collection",
-          "label": "Collection"
+          "label": "Select Collection"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Featured Collections",
+      "name": "Featured Collections Grid",
+      "category": "Collections",
       "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
         { "type": "collection" },
         { "type": "collection" },
         { "type": "collection" }
