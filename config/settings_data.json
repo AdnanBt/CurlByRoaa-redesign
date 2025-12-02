@@ -25,6 +25,24 @@
       "featured-collections": {
         "type": "featured-collections",
         "blocks": {
+          "collection_hMK3EM": {
+            "type": "collection",
+            "settings": {
+              "collection": "k18"
+            }
+          },
+          "collection_Jj64yg": {
+            "type": "collection",
+            "settings": {
+              "collection": "products"
+            }
+          },
+          "collection_EybTTj": {
+            "type": "collection",
+            "settings": {
+              "collection": "keune-haircare"
+            }
+          },
           "collection_fc9zDB": {
             "type": "collection",
             "settings": {
@@ -42,14 +60,27 @@
             "settings": {
               "collection": "shwarzkopf"
             }
+          },
+          "collection_rJYPgf": {
+            "type": "collection",
+            "settings": {
+              "collection": "hair-accessories"
+            }
           }
         },
         "block_order": [
+          "collection_hMK3EM",
+          "collection_Jj64yg",
+          "collection_EybTTj",
           "collection_fc9zDB",
           "collection_H7EzNQ",
-          "collection_VqpMnh"
+          "collection_VqpMnh",
+          "collection_rJYPgf"
         ],
-        "settings": {}
+        "settings": {
+          "title": "Shop By Collection",
+          "description": "Find the perfect products for your unique curl pattern"
+        }
       },
       "featured-products": {
         "type": "featured-products",

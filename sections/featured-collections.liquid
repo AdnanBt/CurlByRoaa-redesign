@@ -1,4 +1,4 @@
-{% comment %} featured-collections.liquid - Fixed Carousel Version {% endcomment %}
+{% comment %} featured-collections.liquid - Horizontal Carousel Version {% endcomment %}
 
 <style>
   .featured-collections-section {
@@ -9,7 +9,7 @@
   
   .featured-collections-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     padding: 0 20px;
   }
   
@@ -35,7 +35,7 @@
     padding: 0 60px;
   }
   
-  /* Hide scrollbar but keep functionality */
+  /* Horizontal carousel container */
   .featured-collections-carousel-wrapper {
     overflow-x: auto;
     scroll-behavior: smooth;
@@ -50,39 +50,35 @@
     display: none;
   }
   
-  /* Auto-scroll carousel with momentum */
+  /* Horizontal flex container */
   .featured-collections-carousel {
     display: flex;
     gap: 25px;
     width: max-content;
     padding: 10px 0;
-    animation: scrollFeaturedCollections 40s linear infinite;
   }
   
-  .featured-collections-carousel:hover {
-    animation-play-state: paused;
-  }
-  
+  /* Smaller, horizontal card design */
   .featured-collection-card {
     flex: 0 0 280px;
+    width: 280px;
+    height: 350px;
     position: relative;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
-    height: 380px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: white;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
   }
   
   .featured-collection-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-    z-index: 10;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
   
   .featured-collection-image-container {
     width: 100%;
-    height: 280px;
+    height: 200px;
     position: relative;
     overflow: hidden;
   }
@@ -91,54 +87,57 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s ease;
   }
   
   .featured-collection-card:hover .featured-collection-image {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
   
   .featured-collection-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     padding: 20px;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
-    color: white;
-    z-index: 2;
+    background: white;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   
   .featured-collection-title {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 8px;
-    color: white;
+    color: #2D2D2D;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   
   .featured-collection-product-count {
-    font-size: 0.8rem;
-    opacity: 0.9;
+    font-size: 0.85rem;
+    color: #666;
     margin-bottom: 15px;
     display: block;
   }
   
   .featured-collection-link {
     display: inline-block;
-    padding: 8px 18px;
-    background: white;
-    color: #2D2D2D;
+    padding: 8px 16px;
+    background: #D4A574;
+    color: white;
     text-decoration: none;
     border-radius: 6px;
     font-weight: 600;
     font-size: 0.85rem;
     transition: all 0.3s ease;
-    border: 2px solid white;
+    text-align: center;
+    border: 2px solid #D4A574;
   }
   
   .featured-collection-link:hover {
     background: transparent;
-    color: white;
+    color: #D4A574;
   }
   
   /* Placeholder for collections without images */
@@ -149,33 +148,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #E8C4B8, #D4A59A);
-    color: white;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #666;
     padding: 20px;
     text-align: center;
   }
   
   .featured-placeholder-icon {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    opacity: 0.7;
   }
   
   .featured-placeholder-text {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
   }
   
-  /* CAROUSEL ANIMATION - Unique name */
-  @keyframes scrollFeaturedCollections {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(calc(-280px * 7 - 25px * 7));
-    }
-  }
-  
-  /* Navigation buttons */
+  /* Navigation buttons - Horizontal layout */
   .featured-collections-nav-btn {
     position: absolute;
     top: 50%;
@@ -191,8 +181,8 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 20;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0.8;
+    transition: all 0.3s ease;
   }
   
   .featured-collections-carousel-container:hover .featured-collections-nav-btn {
@@ -218,13 +208,12 @@
     transform: translateY(-50%) scale(1);
   }
   
-  /* Carousel dots - hide for auto-scroll */
+  /* Carousel dots */
   .featured-collections-dots {
     display: flex;
     justify-content: center;
     gap: 8px;
     margin-top: 30px;
-    display: none;
   }
   
   .featured-collections-dot {
@@ -249,27 +238,28 @@
     }
     
     .featured-collection-card {
-      flex: 0 0 250px;
-      height: 350px;
+      flex: 0 0 240px;
+      width: 240px;
+      height: 320px;
     }
     
     .featured-collection-image-container {
-      height: 250px;
+      height: 180px;
     }
     
-    @keyframes scrollFeaturedCollections {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-250px * 7 - 25px * 7));
-      }
+    .featured-collection-content {
+      height: 140px;
+      padding: 16px;
+    }
+    
+    .featured-collection-title {
+      font-size: 1rem;
     }
   }
   
   @media (max-width: 768px) {
     .featured-collections-section {
-      padding: 50px 0;
+      padding: 40px 0;
     }
     
     .featured-collections-title {
@@ -277,66 +267,60 @@
     }
     
     .featured-collections-carousel-container {
-      padding: 0 30px;
-    }
-    
-    .featured-collection-card {
-      flex: 0 0 220px;
-      height: 320px;
-    }
-    
-    .featured-collection-image-container {
-      height: 220px;
-    }
-    
-    .featured-collection-content {
-      padding: 15px;
-    }
-    
-    .featured-collection-title {
-      font-size: 1rem;
-    }
-    
-    .featured-collections-nav-btn {
-      display: none; /* Hide buttons on mobile, use touch swipe */
-    }
-    
-    @keyframes scrollFeaturedCollections {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-220px * 7 - 25px * 7));
-      }
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .featured-collections-carousel-container {
       padding: 0 20px;
     }
     
     .featured-collection-card {
       flex: 0 0 200px;
+      width: 200px;
       height: 300px;
     }
     
     .featured-collection-image-container {
-      height: 200px;
+      height: 160px;
+    }
+    
+    .featured-collection-content {
+      height: 140px;
+      padding: 12px;
+    }
+    
+    .featured-collections-nav-btn {
+      display: none; /* Hide buttons on mobile, use touch swipe */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .featured-collections-header {
+      padding: 0 15px;
+    }
+    
+    .featured-collections-title {
+      font-size: 1.6rem;
+    }
+    
+    .featured-collection-card {
+      flex: 0 0 180px;
+      width: 180px;
+      height: 280px;
+    }
+    
+    .featured-collection-image-container {
+      height: 140px;
+    }
+    
+    .featured-collection-content {
+      height: 140px;
+      padding: 10px;
     }
     
     .featured-collection-link {
-      padding: 6px 14px;
+      padding: 6px 12px;
       font-size: 0.8rem;
     }
     
-    @keyframes scrollFeaturedCollections {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-200px * 7 - 25px * 7));
-      }
+    .featured-collections-dots {
+      margin-top: 20px;
     }
   }
 </style>
@@ -349,7 +333,9 @@
 
   <div class="featured-collections-carousel-container">
     <button class="featured-collections-nav-btn prev" id="featured-collections-prev" aria-label="Previous collections">
-      ‹
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
     </button>
     
     <div class="featured-collections-carousel-wrapper">
@@ -363,22 +349,22 @@
                 <div class="featured-collection-image-container">
                   {% if collection.image %}
                     <img 
-                      src="{{ collection.image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      src="{{ collection.image | image_url: width: 400, height: 300, crop: 'center' }}" 
                       alt="{{ collection.title | escape }}" 
                       class="featured-collection-image" 
                       loading="lazy"
                       width="400"
-                      height="400"
+                      height="300"
                       onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
                     <img 
-                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 300, crop: 'center' }}" 
                       alt="{{ collection.title | escape }}" 
                       class="featured-collection-image" 
                       loading="lazy"
                       width="400"
-                      height="400"
+                      height="300"
                       onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% else %}
@@ -415,22 +401,22 @@
                 <div class="featured-collection-image-container">
                   {% if collection.image %}
                     <img 
-                      src="{{ collection.image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      src="{{ collection.image | image_url: width: 400, height: 300, crop: 'center' }}" 
                       alt="{{ collection.title | escape }}" 
                       class="featured-collection-image" 
                       loading="lazy"
                       width="400"
-                      height="400"
+                      height="300"
                       onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
                     <img 
-                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 300, crop: 'center' }}" 
                       alt="{{ collection.title | escape }}" 
                       class="featured-collection-image" 
                       loading="lazy"
                       width="400"
-                      height="400"
+                      height="300"
                       onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
                     >
                   {% else %}
@@ -464,60 +450,17 @@
             {% endif %}
           {% endfor %}
         {% endif %}
-        
-        {% comment %} Duplicate cards for seamless loop {% endcomment %}
-        {% if section.blocks.size > 0 %}
-          {% for block in section.blocks %}
-            {% assign collection = collections[block.settings.collection] %}
-            {% if collection %}
-              <div class="featured-collection-card">
-                <div class="featured-collection-image-container">
-                  {% if collection.image %}
-                    <img 
-                      src="{{ collection.image | image_url: width: 400, height: 400, crop: 'center' }}" 
-                      alt="{{ collection.title | escape }}" 
-                      class="featured-collection-image" 
-                      loading="lazy"
-                      width="400"
-                      height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
-                    >
-                  {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
-                    <img 
-                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
-                      alt="{{ collection.title | escape }}" 
-                      class="featured-collection-image" 
-                      loading="lazy"
-                      width="400"
-                      height="400"
-                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"featured-collection-placeholder\"><div class=\"featured-placeholder-icon\">📦</div><div class=\"featured-placeholder-text\">{{ collection.title | escape }}</div></div>';"
-                    >
-                  {% else %}
-                    <div class="featured-collection-placeholder">
-                      <div class="featured-placeholder-icon">📦</div>
-                      <div class="featured-placeholder-text">{{ collection.title }}</div>
-                    </div>
-                  {% endif %}
-                </div>
-                
-                <div class="featured-collection-content">
-                  <h3 class="featured-collection-title">{{ collection.title }}</h3>
-                  <span class="featured-collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
-                  <a href="{{ collection.url }}" class="featured-collection-link">Shop Now</a>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
       </div>
     </div>
     
     <button class="featured-collections-nav-btn next" id="featured-collections-next" aria-label="Next collections">
-      ›
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
     </button>
     
     <div class="featured-collections-dots" id="featured-collections-dots">
-      <!-- Dots will be generated by JavaScript if needed -->
+      <!-- Dots will be generated by JavaScript -->
     </div>
   </div>
 </section>
@@ -526,27 +469,35 @@
 class FeaturedCollectionsCarousel {
   constructor() {
     this.carousel = document.getElementById('featured-collections-carousel');
+    this.wrapper = document.querySelector('.featured-collections-carousel-wrapper');
     this.prevBtn = document.getElementById('featured-collections-prev');
     this.nextBtn = document.getElementById('featured-collections-next');
-    this.carouselWrapper = document.querySelector('.featured-collections-carousel-wrapper');
-    this.cards = document.querySelectorAll('.featured-collection-card');
     this.dotsContainer = document.getElementById('featured-collections-dots');
+    this.cards = document.querySelectorAll('.featured-collection-card');
     
     if (this.carousel) {
       this.currentIndex = 0;
-      this.totalCards = this.cards ? this.cards.length : 0;
+      this.totalCards = this.cards.length;
+      this.cardsPerView = this.calculateCardsPerView();
+      this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
       this.init();
     }
   }
 
   init() {
     this.bindEvents();
-    this.setupAutoScroll();
+    this.createDots();
+    this.updateNavigation();
     
-    // Only setup dots if we have cards
-    if (this.totalCards > 0) {
-      this.createDots();
-    }
+    // Auto-scroll on mobile for better UX
+    this.setupAutoScroll();
+  }
+
+  calculateCardsPerView() {
+    const cardWidth = 280; // Base card width
+    const gap = 25;
+    const containerWidth = this.wrapper ? this.wrapper.clientWidth : window.innerWidth;
+    return Math.floor(containerWidth / (cardWidth + gap));
   }
 
   bindEvents() {
@@ -554,58 +505,142 @@ class FeaturedCollectionsCarousel {
     if (this.prevBtn && this.nextBtn) {
       this.prevBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        this.scrollBy(-1);
+        this.scrollToPrev();
       });
       this.nextBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        this.scrollBy(1);
+        this.scrollToNext();
       });
     }
 
     // Touch/swipe for mobile
-    if (this.carouselWrapper) {
+    if (this.wrapper) {
       let touchStartX = 0;
       let touchEndX = 0;
+      let isDragging = false;
+      let startScrollLeft = 0;
       
-      this.carouselWrapper.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        this.pauseAutoScroll();
+      this.wrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        startScrollLeft = this.wrapper.scrollLeft;
+        isDragging = true;
       });
       
-      this.carouselWrapper.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
+      this.wrapper.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const touchX = e.touches[0].clientX;
+        const walk = touchX - touchStartX;
+        this.wrapper.scrollLeft = startScrollLeft - walk;
+      });
+      
+      this.wrapper.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        touchEndX = e.changedTouches[0].clientX;
         this.handleSwipe(touchStartX, touchEndX);
-        this.resumeAutoScroll();
       });
     }
 
-    // Pause auto-scroll on hover
-    if (this.carousel) {
-      this.carousel.addEventListener('mouseenter', () => this.pauseAutoScroll());
-      this.carousel.addEventListener('mouseleave', () => this.resumeAutoScroll());
+    // Scroll event to update dots
+    if (this.wrapper) {
+      this.wrapper.addEventListener('scroll', () => {
+        this.updateCurrentIndexFromScroll();
+        this.updateDots();
+        this.updateNavigation();
+      });
     }
+
+    // Window resize
+    window.addEventListener('resize', () => {
+      this.cardsPerView = this.calculateCardsPerView();
+      this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+      this.updateNavigation();
+    });
   }
 
   createDots() {
-    if (!this.dotsContainer || this.totalCards <= 1) return;
+    if (!this.dotsContainer || this.totalCards <= this.cardsPerView) return;
     
     this.dotsContainer.innerHTML = '';
-    for (let i = 0; i < this.totalCards; i++) {
+    const dotsCount = Math.ceil(this.totalCards / this.cardsPerView);
+    
+    for (let i = 0; i < dotsCount; i++) {
       const dot = document.createElement('button');
       dot.className = `featured-collections-dot ${i === 0 ? 'active' : ''}`;
-      dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-      dot.addEventListener('click', () => this.goToSlide(i));
+      dot.setAttribute('aria-label', `Go to page ${i + 1}`);
+      dot.addEventListener('click', () => this.goToPage(i));
       this.dotsContainer.appendChild(dot);
     }
   }
 
   updateDots() {
-    if (!this.dotsContainer) return;
+    if (!this.dotsContainer || this.totalCards <= this.cardsPerView) return;
     
     const dots = this.dotsContainer.querySelectorAll('.featured-collections-dot');
+    const currentPage = Math.floor(this.currentIndex / this.cardsPerView);
+    
     dots.forEach((dot, index) => {
-      dot.classList.toggle('active', index === this.currentIndex);
+      dot.classList.toggle('active', index === currentPage);
     });
+  }
+
+  updateCurrentIndexFromScroll() {
+    if (!this.wrapper || !this.cards[0]) return;
+    
+    const cardWidth = this.cards[0].offsetWidth;
+    const gap = 25;
+    const scrollLeft = this.wrapper.scrollLeft;
+    
+    this.currentIndex = Math.round(scrollLeft / (cardWidth + gap));
+    this.currentIndex = Math.max(0, Math.min(this.currentIndex, this.maxIndex));
+  }
+
+  scrollToPrev() {
+    if (this.currentIndex > 0) {
+      this.currentIndex = Math.max(0, this.currentIndex - this.cardsPerView);
+      this.scrollToIndex();
+    }
+  }
+
+  scrollToNext() {
+    if (this.currentIndex < this.maxIndex) {
+      this.currentIndex = Math.min(this.maxIndex, this.currentIndex + this.cardsPerView);
+      this.scrollToIndex();
+    }
+  }
+
+  scrollToIndex() {
+    if (!this.wrapper || !this.cards[0]) return;
+    
+    const cardWidth = this.cards[0].offsetWidth;
+    const gap = 25;
+    const scrollPosition = this.currentIndex * (cardWidth + gap);
+    
+    this.wrapper.scrollTo({
+      left: scrollPosition,
+      behavior: 'smooth'
+    });
+    
+    this.updateDots();
+    this.updateNavigation();
+  }
+
+  goToPage(pageIndex) {
+    if (!this.dotsContainer) return;
+    
+    const dotsCount = Math.ceil(this.totalCards / this.cardsPerView);
+    if (pageIndex >= 0 && pageIndex < dotsCount) {
+      this.currentIndex = pageIndex * this.cardsPerView;
+      this.scrollToIndex();
+    }
+  }
+
+  updateNavigation() {
+    if (!this.prevBtn || !this.nextBtn) return;
+    
+    this.prevBtn.disabled = this.currentIndex === 0;
+    this.nextBtn.disabled = this.currentIndex >= this.maxIndex;
   }
 
   handleSwipe(startX, endX) {
@@ -614,81 +649,33 @@ class FeaturedCollectionsCarousel {
     
     if (Math.abs(swipeDistance) > swipeThreshold) {
       if (swipeDistance > 0) {
-        this.scrollBy(1); // Swipe left - next
+        this.scrollToNext(); // Swipe left - next
       } else {
-        this.scrollBy(-1); // Swipe right - previous
+        this.scrollToPrev(); // Swipe right - previous
       }
     }
   }
 
-  scrollBy(direction) {
-    if (!this.carouselWrapper || !this.cards || this.cards.length === 0) return;
-    
-    const card = this.cards[0];
-    if (!card) return;
-    
-    const cardWidth = card.offsetWidth;
-    const gap = 25; // Match CSS gap
-    const scrollAmount = (cardWidth + gap) * direction;
-    
-    this.carouselWrapper.scrollBy({
-      left: scrollAmount,
-      behavior: 'smooth'
-    });
-    
-    // Update current index
-    this.currentIndex = Math.max(0, Math.min(this.currentIndex + direction, this.totalCards - 1));
-    this.updateDots();
-  }
-
-  goToSlide(index) {
-    if (index < 0 || index >= this.totalCards) return;
-    
-    this.currentIndex = index;
-    
-    if (this.cards && this.cards[index]) {
-      const card = this.cards[index];
-      const cardLeft = card.offsetLeft;
-      const containerLeft = this.carouselWrapper.offsetLeft;
-      
-      this.carouselWrapper.scrollTo({
-        left: cardLeft - containerLeft - 20, // 20px padding adjustment
-        behavior: 'smooth'
-      });
-    }
-    
-    this.updateDots();
-  }
-
   setupAutoScroll() {
-    // Auto-scroll is primarily handled by CSS animation
-    // This just controls pausing/resuming
-    this.autoScrollPaused = false;
-  }
-
-  pauseAutoScroll() {
-    if (this.carousel && !this.autoScrollPaused) {
-      this.carousel.style.animationPlayState = 'paused';
-      this.autoScrollPaused = true;
-    }
-  }
-
-  resumeAutoScroll() {
-    if (this.carousel && this.autoScrollPaused) {
-      this.carousel.style.animationPlayState = 'running';
-      this.autoScrollPaused = false;
+    // Only auto-scroll on mobile for better UX
+    if (window.innerWidth <= 768) {
+      this.autoScrollInterval = setInterval(() => {
+        if (this.currentIndex >= this.maxIndex) {
+          this.currentIndex = 0;
+        } else {
+          this.scrollToNext();
+        }
+      }, 4000);
     }
   }
 }
 
-// Initialize featured collections carousel
+// Initialize carousel when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   // Check if elements exist before initializing
   if (document.getElementById('featured-collections-carousel')) {
-    new FeaturedCollectionsCarousel();
-    console.log('Featured Collections Carousel initialized successfully');
-  } else {
-    console.warn('Featured Collections Carousel elements not found');
+    const carousel = new FeaturedCollectionsCarousel();
+    console.log('Featured Collections Horizontal Carousel initialized');
   }
 });
 </script>
