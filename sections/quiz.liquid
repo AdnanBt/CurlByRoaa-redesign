@@ -1,362 +1,106 @@
 <style>
-  .hair-quiz {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
-    position: relative;
-    overflow: hidden;
-  }
+  /* ===== CurlByRoaa — Hair Care Genius (Mobile-first, animation-forward) ===== */
+  .hair-quiz { padding: 48px 16px; background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%); }
+  .quiz-container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 20px; padding: 28px; box-shadow: 0 18px 48px rgba(13,20,25,0.06); overflow: hidden; }
 
-  .quiz-container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 24px;
-    padding: 60px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-    position: relative;
-  }
+  /* Progress */
+  .quiz-progress { margin-bottom: 18px; }
+  .progress-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px; }
+  .progress-text{ font-size:0.85rem; color:#6b6b6b; font-weight:600; }
+  .progress-bar{ height:6px; background:#f2f2f2; border-radius:999px; overflow:hidden; }
+  .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,#E8C4B8,#D4A59A); transition:width 450ms cubic-bezier(.2,.8,.2,1); }
 
-  .quiz-progress {
-    margin-bottom: 40px;
-  }
+  /* Steps */
+  .quiz-step{ display:none; }
+  .quiz-step.active{ display:block; animation: slideInUp 420ms cubic-bezier(.2,.8,.2,1); }
+  .quiz-question{ font-size:1.25rem; font-weight:700; color:#222; text-align:center; margin:18px 0 22px; line-height:1.2; }
 
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
+  .quiz-options{ display:grid; gap:12px; margin-bottom:18px; }
+  .quiz-option{ display:flex; gap:12px; align-items:center; padding:14px; border-radius:14px; background:#fff; border:1px solid #f0f0f0; cursor:pointer; transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease; }
+  .quiz-option .option-image{ min-width:56px; min-height:56px; border-radius:12px; display:grid; place-items:center; font-size:1.4rem; background:#fbf9f8; }
+  .quiz-option .option-body{ flex:1; }
+  .option-text{ font-weight:700; color:#222; margin-bottom:4px; }
+  .option-description{ font-size:0.9rem; color:#666; line-height:1.3; }
 
-  .progress-text {
-    font-size: 0.9rem;
-    color: #666;
-    font-weight: 500;
-  }
+  .quiz-option:hover{ transform:translateY(-4px); box-shadow:0 10px 30px rgba(13,20,25,0.06); border-color:#ead1c6; }
+  .quiz-option.selected{ border-color:#E8C4B8; background:linear-gradient(180deg,#FFF8F6,#FFFFFF); box-shadow:0 14px 36px rgba(232,196,184,0.12); }
+  .quiz-option.selected::after{ content:"✓"; display:inline-grid; place-items:center; width:28px; height:28px; background:#E8C4B8; color:#fff; border-radius:999px; font-weight:700; margin-left:8px; }
 
-  .progress-bar {
-    height: 6px;
-    background: #F0F0F0;
-    border-radius: 3px;
-    overflow: hidden;
-  }
+  /* Navigation */
+  .quiz-navigation{ display:flex; gap:12px; margin-top:6px; }
+  .quiz-btn{ flex:1; padding:12px 14px; border-radius:999px; font-weight:700; font-size:0.92rem; border:1px solid #E8C4B8; background:#fff; color:#E8C4B8; cursor:pointer; transition:transform 220ms ease, box-shadow 220ms ease; text-transform:uppercase; letter-spacing:.6px; }
+  .quiz-btn:disabled{ opacity:0.55; cursor:not-allowed; transform:none; }
+  .quiz-btn.next{ background:linear-gradient(90deg,#E8C4B8,#D4A59A); color:#fff; border:none; }
+  .quiz-btn.next:hover:not(:disabled){ transform:translateX(4px); box-shadow:0 12px 30px rgba(212,165,154,0.22); }
 
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #E8C4B8, #D4A59A);
-    border-radius: 3px;
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 0%;
-  }
+  /* Results */
+  .quiz-results{ display:none; text-align:center; padding-top:8px; }
+  .quiz-results.active{ display:block; animation:fadeIn 480ms ease; }
+  .results-title{ font-size:1.6rem; font-weight:800; color:#222; margin-bottom:6px; }
+  .results-subtitle{ color:#666; margin-bottom:18px; font-size:0.98rem; line-height:1.4; }
 
-  .quiz-step {
-    display: none;
-  }
+  .recommended-products{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:18px; }
+  .recommended-product{ display:flex; gap:12px; align-items:center; padding:12px; border-radius:12px; background:#fff; border:1px solid #f2f2f2; box-shadow:0 6px 18px rgba(13,20,25,0.04); transition:transform 260ms ease; }
+  .recommended-product:hover{ transform:translateY(-6px); }
+  .product-thumb{ width:64px; height:64px; border-radius:10px; object-fit:cover; background:#f6f6f6; }
+  .product-meta{ flex:1; text-align:left; }
+  .product-name{ font-weight:700; color:#222; margin-bottom:6px; }
+  .product-desc{ font-size:0.9rem; color:#666; margin-bottom:6px; }
+  .product-cta{ font-weight:700; color:#E8C4B8; text-decoration:none; font-size:0.95rem; }
 
-  .quiz-step.active {
-    display: block;
-    animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+  .small-muted{ font-size:0.85rem; color:#8a8a8a; margin-top:8px; }
 
-  .quiz-question {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 40px;
-    color: #2D2D2D;
-    line-height: 1.2;
-  }
+  /* Animations */
+  @keyframes slideInUp{ from{ transform:translateY(18px); opacity:0 } to{ transform:translateY(0); opacity:1 } }
+  @keyframes fadeIn{ from{ opacity:0 } to{ opacity:1 } }
 
-  .quiz-options {
-    display: grid;
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
-  .quiz-option {
-    padding: 24px;
-    border: 2px solid #F0F0F0;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: white;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .quiz-option:hover {
-    border-color: #E8C4B8;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(232, 196, 184, 0.15);
-  }
-
-  .quiz-option.selected {
-    border-color: #E8C4B8;
-    background: linear-gradient(135deg, #FFF8F6, #FFFFFF);
-    box-shadow: 0 8px 25px rgba(232, 196, 184, 0.2);
-  }
-
-  .quiz-option.selected::before {
-    content: '✓';
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 24px;
-    height: 24px;
-    background: #E8C4B8;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  .option-image {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 16px;
-    border-radius: 50%;
-    background: #FAF8F6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-  }
-
-  .option-text {
-    text-align: center;
-    font-weight: 600;
-    color: #2D2D2D;
-    font-size: 1.1rem;
-  }
-
-  .option-description {
-    text-align: center;
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 8px;
-    line-height: 1.4;
-  }
-
-  .quiz-navigation {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .quiz-btn {
-    padding: 16px 32px;
-    border: 2px solid #E8C4B8;
-    border-radius: 50px;
-    background: white;
-    color: #E8C4B8;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.9rem;
-  }
-
-  .quiz-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
-  }
-
-  .quiz-btn.prev:hover:not(:disabled) {
-    background: #FAF8F6;
-    transform: translateX(-2px);
-  }
-
-  .quiz-btn.next {
-    background: #E8C4B8;
-    color: white;
-  }
-
-  .quiz-btn.next:hover:not(:disabled) {
-    background: #D4A59A;
-    transform: translateX(2px);
-    box-shadow: 0 8px 20px rgba(232, 196, 184, 0.4);
-  }
-
-  .quiz-results {
-    text-align: center;
-    display: none;
-  }
-
-  .quiz-results.active {
-    display: block;
-    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .results-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: #2D2D2D;
-  }
-
-  .results-subtitle {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 40px;
-    line-height: 1.6;
-  }
-
-  .recommended-products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 24px;
-    margin: 40px 0;
-  }
-
-  .recommended-product {
-    background: white;
-    padding: 24px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease;
-  }
-
-  .recommended-product:hover {
-    transform: translateY(-4px);
-  }
-
-  .product-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 16px;
-    background: linear-gradient(135deg, #E8C4B8, #D4A59A);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-  }
-
-  .product-name {
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #2D2D2D;
-  }
-
-  .product-description {
-    font-size: 0.9rem;
-    color: #666;
-    line-height: 1.4;
-  }
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateX(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .hair-quiz {
-      padding: 60px 20px;
-    }
-
-    .quiz-container {
-      padding: 40px 24px;
-    }
-
-    .quiz-question {
-      font-size: 1.5rem;
-    }
-
-    .quiz-options {
-      grid-template-columns: 1fr;
-    }
-
-    .quiz-navigation {
-      flex-direction: column;
-    }
-
-    .recommended-products {
-      grid-template-columns: 1fr;
-    }
-  }
+  /* Mobile-first layout tweaks */
+  @media (min-width:720px){ .quiz-options{ grid-template-columns:1fr 1fr } .recommended-products{ grid-template-columns:repeat(2,1fr) } .quiz-container{ padding:36px } .quiz-question{ font-size:1.45rem } }
 </style>
 
 <section class="hair-quiz">
-  <div class="quiz-container">
+  <div class="quiz-container" id="hair-quiz-root">
+    <!-- PROGRESS -->
     <div class="quiz-progress">
       <div class="progress-header">
-        <span class="progress-text">Find Your Routine</span>
-        <span class="progress-text"><span id="current-step">1</span>/3</span>
+        <span class="progress-text">{{ section.settings.title | default: "Find Your Perfect Routine" }}</span>
+        <span class="progress-text"><span id="current-step">1</span>/<span id="total-steps">3</span></span>
       </div>
-      <div class="progress-bar">
+      <div class="progress-bar" aria-hidden="true">
         <div class="progress-fill" id="quiz-progress"></div>
       </div>
     </div>
 
-    <!-- Step 1: Curl Type -->
-    <div class="quiz-step active" data-step="1">
-      <h2 class="quiz-question">What's your natural curl pattern?</h2>
-      <div class="quiz-options">
-        <div class="quiz-option" data-value="wavy">
+    <!-- STEPS -->
+    <div class="quiz-step active" data-step="1" aria-hidden="false">
+      <h3 class="quiz-question">What's your natural curl pattern?</h3>
+      <div class="quiz-options" role="list">
+        <div class="quiz-option" role="listitem" data-value="wavy" tabindex="0">
           <div class="option-image">🌊</div>
-          <div class="option-text">Wavy Hair</div>
-          <div class="option-description">Loose S-shaped curls (2A-2C)</div>
+          <div class="option-body"><div class="option-text">Wavy</div><div class="option-description">Loose S-shaped curls (2A–2C)</div></div>
         </div>
-        <div class="quiz-option" data-value="curly">
+        <div class="quiz-option" role="listitem" data-value="curly" tabindex="0">
           <div class="option-image">🌀</div>
-          <div class="option-text">Curly Hair</div>
-          <div class="option-description">Defined spiral curls (3A-3C)</div>
+          <div class="option-body"><div class="option-text">Curly</div><div class="option-description">Defined spiral curls (3A–3C)</div></div>
         </div>
-        <div class="quiz-option" data-value="coily">
+        <div class="quiz-option" role="listitem" data-value="coily" tabindex="0">
           <div class="option-image">✨</div>
-          <div class="option-text">Coily Hair</div>
-          <div class="option-description">Tight zig-zag pattern (4A-4C)</div>
+          <div class="option-body"><div class="option-text">Coily</div><div class="option-description">Tight zig-zag pattern (4A–4C)</div></div>
         </div>
       </div>
       <div class="quiz-navigation">
-        <button class="quiz-btn prev" disabled>Back</button>
-        <button class="quiz-btn next" disabled>Continue</button>
+        <button class="quiz-btn prev" disabled aria-disabled="true">Back</button>
+        <button class="quiz-btn next" disabled aria-disabled="true">Continue</button>
       </div>
     </div>
 
-    <!-- Step 2: Hair Concerns -->
-    <div class="quiz-step" data-step="2">
-      <h2 class="quiz-question">What's your biggest hair concern?</h2>
-      <div class="quiz-options">
-        <div class="quiz-option" data-value="frizz">
-          <div class="option-text">Frizz & Flyaways</div>
-          <div class="option-description">Struggling with humidity and dryness</div>
-        </div>
-        <div class="quiz-option" data-value="moisture">
-          <div class="option-text">Dryness & Moisture</div>
-          <div class="option-description">Constantly thirsty, brittle curls</div>
-        </div>
-        <div class="quiz-option" data-value="definition">
-          <div class="option-text">Curl Definition</div>
-          <div class="option-description">Want more defined, bouncy curls</div>
-        </div>
-        <div class="quiz-option" data-value="volume">
-          <div class="option-text">Volume & Lift</div>
-          <div class="option-description">Flat roots, need more body</div>
-        </div>
+    <div class="quiz-step" data-step="2" aria-hidden="true">
+      <h3 class="quiz-question">What's your biggest hair concern?</h3>
+      <div class="quiz-options" role="list">
+        <div class="quiz-option" role="listitem" data-value="frizz" tabindex="0"><div class="option-image">💨</div><div class="option-body"><div class="option-text">Frizz & Flyaways</div><div class="option-description">Humidity or dryness causing frizz</div></div></div>
+        <div class="quiz-option" role="listitem" data-value="moisture" tabindex="0"><div class="option-image">💧</div><div class="option-body"><div class="option-text">Dryness & Hydration</div><div class="option-description">Hair feels thirsty or brittle</div></div></div>
+        <div class="quiz-option" role="listitem" data-value="definition" tabindex="0"><div class="option-image">🎯</div><div class="option-body"><div class="option-text">Curl Definition</div><div class="option-description">Want springs & bounce</div></div></div>
+        <div class="quiz-option" role="listitem" data-value="volume" tabindex="0"><div class="option-image">🔼</div><div class="option-body"><div class="option-text">Volume & Lift</div><div class="option-description">Flat roots or limp hair</div></div></div>
       </div>
       <div class="quiz-navigation">
         <button class="quiz-btn prev">Back</button>
@@ -364,22 +108,12 @@
       </div>
     </div>
 
-    <!-- Step 3: Hair Density -->
-    <div class="quiz-step" data-step="3">
-      <h2 class="quiz-question">How dense is your hair?</h2>
-      <div class="quiz-options">
-        <div class="quiz-option" data-value="fine">
-          <div class="option-text">Fine & Less Dense</div>
-          <div class="option-description">Can see scalp easily, gets weighed down</div>
-        </div>
-        <div class="quiz-option" data-value="medium">
-          <div class="option-text">Medium Density</div>
-          <div class="option-description">Balanced coverage, versatile styling</div>
-        </div>
-        <div class="quiz-option" data-value="thick">
-          <div class="option-text">Thick & Very Dense</div>
-          <div class="option-description">Full coverage, needs strong hold</div>
-        </div>
+    <div class="quiz-step" data-step="3" aria-hidden="true">
+      <h3 class="quiz-question">How dense is your hair?</h3>
+      <div class="quiz-options" role="list">
+        <div class="quiz-option" role="listitem" data-value="fine" tabindex="0"><div class="option-image">🍃</div><div class="option-body"><div class="option-text">Fine</div><div class="option-description">Thin strands, can get weighed down</div></div></div>
+        <div class="quiz-option" role="listitem" data-value="medium" tabindex="0"><div class="option-image">🌿</div><div class="option-body"><div class="option-text">Medium</div><div class="option-description">Balanced, versatile</div></div></div>
+        <div class="quiz-option" role="listitem" data-value="thick" tabindex="0"><div class="option-image">🌳</div><div class="option-body"><div class="option-text">Thick</div><div class="option-description">Dense hair, needs stronger hold</div></div></div>
       </div>
       <div class="quiz-navigation">
         <button class="quiz-btn prev">Back</button>
@@ -387,150 +121,242 @@
       </div>
     </div>
 
-    <!-- Results -->
-    <div class="quiz-step quiz-results" data-step="results">
-      <h2 class="results-title">Your Perfect Routine! 🎉</h2>
-      <p class="results-subtitle">Based on your answers, we've curated this personalized routine for your curl type and concerns.</p>
-      
-      <div class="recommended-products">
-        <div class="recommended-product">
-          <div class="product-icon">🧴</div>
-          <div class="product-name">Hydrating Shampoo</div>
-          <div class="product-description">Gentle cleansing without stripping natural oils</div>
-        </div>
-        <div class="recommended-product">
-          <div class="product-icon">💫</div>
-          <div class="product-name">Curl Defining Cream</div>
-          <div class="product-description">Perfect hold and definition for your pattern</div>
-        </div>
-        <div class="recommended-product">
-          <div class="product-icon">🔒</div>
-          <div class="product-name">Moisture Lock Oil</div>
-          <div class="product-description">Seals in hydration for days of softness</div>
-        </div>
-      </div>
-      
-      <div class="quiz-navigation">
-        <button class="quiz-btn" onclick="window.location.href='/collections/all'">Shop Recommended Products</button>
-        <button class="quiz-btn next" onclick="restartQuiz()">Take Quiz Again</button>
+    <div class="quiz-step quiz-results" data-step="results" aria-hidden="true">
+      <h3 class="results-title">Your Personalized Hair Routine</h3>
+      <p class="results-subtitle" id="results-summary">Our HairCare Genius analyzed your profile and created a professional routine and product picks tailored to you.</p>
+      <div id="scientific-insight" class="small-muted"></div>
+      <div class="recommended-products" id="recommended-products" aria-live="polite"></div>
+      <div class="quiz-navigation" style="margin-top:18px;">
+        <a id="shop-recommended" class="quiz-btn" href="{{ routes.all_products_collection_url }}">Shop Recommended Products</a>
+        <button class="quiz-btn next" onclick="restartQuiz()">Try Again</button>
       </div>
     </div>
+
   </div>
 </section>
 
+<!-- ============ DYNAMIC PRODUCT JSON (THEME-CHECK SAFE) ============ -->
+{%- comment -%}
+  Inject a JSON array of products safely.
+  We use the all_products_collection_url as a fallback source; Theme Check–safe Liquid with image_url filter.
+{%- endcomment -%}
+
+<script type="application/json" id="curlbyroaa-products">
+[
+{%- assign fallback_collection = collections.all -%}
+{%- for product in fallback_collection.products limit: 50 -%}
+  {
+    "id": {{ product.id | json }},
+    "title": {{ product.title | json }},
+    "handle": {{ product.handle | json }},
+    "url": {{ product.url | json }},
+    "image": {{ product.featured_image | image_url: width: 600 | json }},
+    "price": {{ product.variants.first.price | json }},
+    "tags": {{ product.tags | json }}
+  }{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]
+</script>
+
 <script>
-class HairQuiz {
-  constructor() {
-    this.currentStep = 1;
-    this.totalSteps = 3;
-    this.answers = {};
-    this.init();
+/* CurlByRoaa — HairCare Genius (Dynamic-safe)
+   - Parses product JSON injected by Liquid from collections.all (limited to 50)
+   - Mobile-first UX with instant local recommendations, optional AI override
+*/
+
+/* Parse products safely from the injected JSON script tag */
+function getProductsFromInjectedJSON() {
+  try {
+    const el = document.getElementById('curlbyroaa-products');
+    if (!el) return [];
+    const raw = el.textContent.trim();
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return parsed.map(p => ({
+      id: p.id || null,
+      title: p.title || 'Product',
+      handle: p.handle || '',
+      url: p.url || '',
+      image: p.image || '',
+      price: p.price || '',
+      tags: Array.isArray(p.tags) ? p.tags.map(t => t.toString().toLowerCase()) : []
+    }));
+  } catch (err) {
+    console.warn('Failed to parse injected product JSON', err);
+    return [];
+  }
+}
+
+const productsList = getProductsFromInjectedJSON();
+
+/* Local recommendation engine */
+function localRecommendationEngine(answers) {
+  const tags = new Set();
+  const concernTagMap = { 'frizz':['frizz-control','anti-frizz','humidity-shield'], 'moisture':['hydration','moisture','deep-conditioning'], 'definition':['curl-definition','styling','hold'], 'volume':['volume','root-lift','lightweight'] };
+  const typeMap = { 'wavy':['lightweight','definition'], 'curly':['hydration','definition'], 'coily':['rich','deep-conditioning','moisture'] };
+  const densityMap = { 'fine':['lightweight'], 'medium':['balanced'], 'thick':['rich','strong-hold'] };
+
+  const concern = answers.step2; const type = answers.step1; const density = answers.step3;
+  if (concern && concernTagMap[concern]) concernTagMap[concern].forEach(t => tags.add(t));
+  if (type && typeMap[type]) typeMap[type].forEach(t => tags.add(t));
+  if (density && densityMap[density]) densityMap[density].forEach(t => tags.add(t));
+  tags.add('salon-picked');
+
+  const scored = productsList.map(p => {
+    let score = 0;
+    for (let t of tags) if (p.tags.includes(t)) score++;
+    return Object.assign({}, p, { score });
+  }).filter(p => p.score > 0).sort((a,b) => b.score - a.score);
+
+  const fallback = productsList.slice(0,6).map(p => Object.assign({}, p, { score:0 }));
+  return scored.length ? scored.slice(0,6) : fallback;
+}
+
+/* Optional AI call placeholder (no Liquid) */
+async function callAIService(answers) {
+  try {
+    const endpoint = ''; // <-- set your AI endpoint URL here
+    if (!endpoint) return null;
+    const res = await fetch(endpoint, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ answers, source:'curlbyroaa-haircare-genius' }) });
+    if (!res.ok) throw new Error('AI service error');
+    return await res.json();
+  } catch (err) { console.warn('AI call failed', err); return null; }
+}
+
+/* Main UI & Interaction */
+class HairCareGenius {
+  constructor(root) {
+    this.root = root; this.currentStep = 1; this.totalSteps = 3; this.answers = {};
+    this.bind(); this.updateProgress(); this.keyboardBind();
   }
 
-  init() {
-    this.bindEvents();
-    this.updateProgress();
+  bind() {
+    this.root.querySelectorAll('.quiz-option').forEach(opt => {
+      opt.addEventListener('click', (e) => this.selectOption(e.currentTarget));
+      opt.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectOption(e.currentTarget); }});
+    });
+    this.root.querySelectorAll('.quiz-btn.next').forEach(btn => btn.addEventListener('click', () => this.nextStep()));
+    this.root.querySelectorAll('.quiz-btn.prev').forEach(btn => btn.addEventListener('click', () => this.prevStep()));
   }
 
-  bindEvents() {
-    // Option selection
-    document.querySelectorAll('.quiz-option').forEach(option => {
-      option.addEventListener('click', (e) => {
-        const step = this.currentStep;
-        const value = e.currentTarget.getAttribute('data-value');
-        
-        // Remove selected class from siblings
-        e.currentTarget.parentElement.querySelectorAll('.quiz-option').forEach(opt => {
-          opt.classList.remove('selected');
-        });
-        
-        // Add selected class to current
-        e.currentTarget.classList.add('selected');
-        
-        // Store answer
-        this.answers[`step${step}`] = value;
-        
-        // Enable next button
-        document.querySelector('.quiz-btn.next').disabled = false;
+  keyboardBind() {
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'].includes(e.key)) {
+        const activeStepEl = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`);
+        if (!activeStepEl) return;
+        const opts = Array.from(activeStepEl.querySelectorAll('.quiz-option'));
+        if (!opts.length) return;
+        const focused = document.activeElement; let idx = opts.indexOf(focused);
+        if (idx === -1) idx = 0;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') idx = (idx + 1) % opts.length;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') idx = (idx - 1 + opts.length) % opts.length;
+        opts[idx].focus();
+      }
+    });
+  }
+
+  selectOption(el) {
+    const value = el.getAttribute('data-value'); const step = this.currentStep;
+    el.parentElement.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected'); this.answers[`step${step}`] = value;
+    const visibleNext = this.root.querySelector(`.quiz-step[data-step="${step}"] .quiz-btn.next`);
+    if (visibleNext) { visibleNext.disabled = false; visibleNext.setAttribute('aria-disabled','false'); }
+  }
+
+  showStep(n) {
+    const prevEl = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`); if (prevEl) { prevEl.classList.remove('active'); prevEl.setAttribute('aria-hidden','true'); }
+    this.currentStep = n;
+    const el = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`); if (el) { el.classList.add('active'); el.setAttribute('aria-hidden','false');
+      const nextBtn = el.querySelector('.quiz-btn.next'); if (nextBtn) { nextBtn.disabled = !this.answers[`step${this.currentStep}`]; nextBtn.setAttribute('aria-disabled', nextBtn.disabled ? 'true':'false'); }
+    }
+    this.root.querySelectorAll('.quiz-btn.prev').forEach(b => { b.disabled = this.currentStep === 1; b.setAttribute('aria-disabled', b.disabled ? 'true':'false'); });
+    document.getElementById('current-step').textContent = this.currentStep; this.updateProgress();
+  }
+
+  nextStep() { if (this.currentStep < this.totalSteps) { this.showStep(this.currentStep + 1); } else { this.finish(); } }
+  prevStep() { if (this.currentStep > 1) this.showStep(this.currentStep - 1); }
+
+  updateProgress() { const pct = ((this.currentStep - 1) / this.totalSteps) * 100; document.getElementById('quiz-progress').style.width = pct + '%'; document.getElementById('total-steps').textContent = this.totalSteps; }
+
+  async finish() {
+    const curEl = this.root.querySelector(`.quiz-step[data-step="${this.currentStep}"]`); if (curEl) { curEl.classList.remove('active'); curEl.setAttribute('aria-hidden','true'); }
+    const resultsEl = this.root.querySelector('.quiz-results'); resultsEl.classList.add('active'); resultsEl.setAttribute('aria-hidden','false');
+
+    const summary = document.getElementById('results-summary'); summary.textContent = 'Analyzing your answers — generating science-backed routine...';
+
+    const localPicks = localRecommendationEngine({ step1:this.answers.step1, step2:this.answers.step2, step3:this.answers.step3 });
+    this.renderRecommendations(localPicks, 'Local recommendation (instant)');
+
+    const aiResp = await callAIService(this.answers);
+    if (aiResp && aiResp.products && aiResp.products.length) {
+      const mapped = aiResp.products.map(p => {
+        const found = productsList.find(sp => sp.handle === (p.handle || '').toString());
+        return found ? found : Object.assign({ title:p.title||'Product', image:p.image||'', reason:p.reason||'' }, p);
       });
-    });
-
-    // Navigation
-    document.querySelectorAll('.quiz-btn.next').forEach(btn => {
-      btn.addEventListener('click', () => this.nextStep());
-    });
-
-    document.querySelectorAll('.quiz-btn.prev').forEach(btn => {
-      btn.addEventListener('click', () => this.prevStep());
-    });
-  }
-
-  nextStep() {
-    if (this.currentStep < this.totalSteps) {
-      this.hideStep(this.currentStep);
-      this.currentStep++;
-      this.showStep(this.currentStep);
+      this.renderRecommendations(mapped, 'AI-generated recommendation');
+      if (aiResp.diagnosis) document.getElementById('scientific-insight').textContent = aiResp.diagnosis;
+      if (aiResp.insight) document.getElementById('results-summary').textContent = aiResp.insight;
     } else {
-      this.showResults();
+      document.getElementById('scientific-insight').textContent = this.generateInsight(this.answers);
+      document.getElementById('results-summary').textContent = 'Below are salon-selected products & a professional routine tailored to your answers.';
     }
-    this.updateProgress();
-  }
 
-  prevStep() {
-    if (this.currentStep > 1) {
-      this.hideStep(this.currentStep);
-      this.currentStep--;
-      this.showStep(this.currentStep);
+    const shopBtn = document.getElementById('shop-recommended');
+    const recommendedTags = this.extractTagsForShop(this.answers);
+    if (recommendedTags.length) {
+      const base = "{{ routes.search_url }}";
+      const q = recommendedTags.map(t => `tag:${encodeURIComponent(t)}`).join('+');
+      shopBtn.href = `${base}?q=${q}&type=product`;
     }
-    this.updateProgress();
   }
 
-  hideStep(step) {
-    const stepElement = document.querySelector(`[data-step="${step}"]`);
-    stepElement.style.animation = 'slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) reverse';
-    setTimeout(() => {
-      stepElement.classList.remove('active');
-      stepElement.style.animation = '';
-    }, 300);
+  renderRecommendations(products, sourceLabel) {
+    const container = document.getElementById('recommended-products'); container.innerHTML = '';
+    if (!products || !products.length) { container.innerHTML = '<div class="small-muted">No recommendations found. Try editing your answers or contact CurlByRoaa salon for a professional consult.</div>'; return; }
+    products.forEach(p => {
+      const img = p.image || 'https://via.placeholder.com/300x300?text=Product';
+      const productUrl = p.url || (p.handle ? `/products/${p.handle}` : '#');
+      const desc = p.reason || (p.tags && p.tags.join(', ')) || 'Salon-recommended item';
+      const el = document.createElement('div'); el.className = 'recommended-product';
+      el.innerHTML = `<img class="product-thumb" src="${img}" alt="${this.escapeHtml(p.title||'Product')}" />
+        <div class="product-meta"><div class="product-name">${this.escapeHtml(p.title||'Product')}</div>
+        <div class="product-desc">${this.escapeHtml(desc)}</div>
+        <a class="product-cta" href="${productUrl}">View product →</a></div>`;
+      container.appendChild(el);
+    });
+    const note = document.createElement('div'); note.className = 'small-muted'; note.textContent = `Recommendations: ${sourceLabel}`; container.appendChild(note);
   }
 
-  showStep(step) {
-    const stepElement = document.querySelector(`[data-step="${step}"]`);
-    stepElement.classList.add('active');
-    
-    // Update button states
-    const prevBtn = document.querySelector('.quiz-btn.prev');
-    const nextBtn = document.querySelector('.quiz-btn.next');
-    
-    prevBtn.disabled = step === 1;
-    nextBtn.textContent = step === this.totalSteps ? 'See My Routine' : 'Continue';
-    nextBtn.disabled = !this.answers[`step${step}`];
-
-    // Update step counter
-    document.getElementById('current-step').textContent = step;
+  extractTagsForShop(answers) {
+    const tags = [];
+    if (answers.step2 === 'frizz') tags.push('frizz-control');
+    if (answers.step2 === 'moisture') tags.push('hydration');
+    if (answers.step2 === 'definition') tags.push('curl-definition');
+    if (answers.step2 === 'volume') tags.push('volume');
+    if (answers.step1 === 'coily') tags.push('rich');
+    if (answers.step1 === 'wavy') tags.push('lightweight');
+    if (answers.step3 === 'fine') tags.push('lightweight');
+    return tags;
   }
 
-  showResults() {
-    this.hideStep(this.currentStep);
-    setTimeout(() => {
-      document.querySelector('.quiz-results').classList.add('active');
-    }, 300);
+  generateInsight(answers) {
+    const parts = [];
+    if (answers.step2 === 'moisture') parts.push('Your curls need hydration — prioritize water-based products with humectants and occlusives to lock moisture.');
+    if (answers.step2 === 'frizz') parts.push('Humidity management: use anti-frizz emulsions and smoothing oils to reduce flyaways.');
+    if (answers.step2 === 'definition') parts.push('Use lightweight gels/creams with reactivatable humectants for definition without crunch.');
+    if (answers.step2 === 'volume') parts.push('Root-lifting sprays and lightweight mousses help volume without weighing hair down.');
+    if (!parts.length) parts.push('A balanced routine with cleansing, conditioning, targeted treatment and weekly deep care will improve results.');
+    return parts.join(' ');
   }
 
-  updateProgress() {
-    const progress = (this.currentStep - 1) / this.totalSteps * 100;
-    document.getElementById('quiz-progress').style.width = `${progress}%`;
-  }
+  escapeHtml(s) { return (s || '').toString().replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 }
 
-function restartQuiz() {
-  window.location.reload();
-}
+/* Initialize after DOM ready */
+document.addEventListener('DOMContentLoaded', () => { new HairCareGenius(document.getElementById('hair-quiz-root')); });
 
-// Initialize quiz
-document.addEventListener('DOMContentLoaded', () => {
-  new HairQuiz();
-});
+/* Simple restart helper */
+function restartQuiz() { location.reload(); }
 </script>
 
 {% schema %}
