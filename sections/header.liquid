@@ -453,9 +453,9 @@
 
       <!-- Main Navigation with Mega Dropdowns -->
       <nav class="nav-main" id="main-nav">
-        <!-- Shop Dropdown - BLACK TEXT -->
-        <div class="nav-item shop-dropdown">
-          <a href="{{ routes.all_products_collection_url }}" class="nav-link">Shop</a>
+        <!-- Shop Dropdown -->
+        <div class="nav-item">
+          <a href="{{ routes.all_products_collection_url }}" class="nav-link has-dropdown">Shop</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
@@ -497,9 +497,9 @@
           </div>
         </div>
 
-        <!-- Hair Quiz Dropdown - Normal gray text -->
+        <!-- Hair Quiz Dropdown -->
         <div class="nav-item">
-          <a href="#hair-quiz-section" class="nav-link">Hair Quiz</a>
+          <a href="#hair-quiz-section" class="nav-link has-dropdown">Hair Quiz</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
@@ -531,14 +531,14 @@
           </div>
         </div>
 
-        <!-- Services by Concern - Scroll to Section -->
+        <!-- Services by Concern - No dropdown -->
         <div class="nav-item">
           <a href="#services-by-concern" class="nav-link">Services by Concern</a>
         </div>
 
-        <!-- Our Story Dropdown - Normal gray text -->
+        <!-- Our Story Dropdown -->
         <div class="nav-item">
-          <a href="{{ pages['about'].url | default: '#' }}" class="nav-link">Our Story</a>
+          <a href="{{ pages['about'].url | default: '#' }}" class="nav-link has-dropdown">Our Story</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
@@ -570,9 +570,9 @@
           </div>
         </div>
 
-        <!-- Guides Dropdown - Normal gray text -->
+        <!-- Guides Dropdown -->
         <div class="nav-item">
-          <a href="{{ blogs['guides'].url | default: routes.blog_url }}" class="nav-link">Guides</a>
+          <a href="{{ blogs['guides'].url | default: routes.blog_url }}" class="nav-link has-dropdown">Guides</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
               <div class="dropdown-column">
