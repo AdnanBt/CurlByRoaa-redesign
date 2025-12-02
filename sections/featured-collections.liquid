@@ -1,16 +1,15 @@
-{% comment %} Featured Collections - Hybrid Grid + Swiper Carousel + Card Auto-Rotate (Version C) {% endcomment %}
+{% comment %} Featured Collections - Hybrid Grid + Swiper Carousel + Auto Rotate (Theme-Check Clean) {% endcomment %}
 
-<!-- Swiper CSS (non-blocking; CSS link is fine) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+<!-- Swiper CSS via local asset -->
+{{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
 
 <style>
-/* ===== Featured Collections — Hybrid (Grid on desktop, Carousel on mobile) ===== */
+/* ===== Featured Collections — Hybrid Layout ===== */
 .featured-collections-section { padding: clamp(32px, 5vw, 72px) 0; background: #FAF8F6; }
 .featured-collections-header { text-align: center; margin-bottom: 28px; padding: 0 1rem; }
 .featured-collections-title { font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight:700; color:#2D2D2D; margin-bottom:6px; }
 .featured-collections-description { font-size: clamp(.9rem,1.1vw,1rem); color:#666; max-width:760px; margin:0 auto; line-height:1.6; }
 
-/* Swiper container behaves like carousel on small screens and grid-like on large screens */
 .featured-collections-swiper { max-width:1400px; margin: 0 auto; padding: 12px 1rem 36px; position:relative; }
 .swiper-wrapper { display:flex; gap:22px; align-items:flex-start; }
 
@@ -28,221 +27,182 @@
 }
 .featured-collection-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,0.10); }
 
-/* Image container: stacked images (absolute) for fade-in/out */
-.featured-collection-image-container { position:relative; width:100%; padding:0; height: clamp(140px, 18vw, 220px); overflow:hidden; background:#f6f6f6; }
-.featured-collection-image-container img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition: opacity .6s ease-in-out, transform .6s ease-in-out; }
+/* Image container with fade layers */
+.featured-collection-image-container {
+  position:relative;
+  width:100%;
+  height: clamp(140px, 18vw, 220px);
+  overflow:hidden;
+  background:#f6f6f6;
+}
+.featured-collection-image-container img {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition: opacity .6s ease-in-out, transform .6s ease-in-out;
+}
 .featured-collection-image-container img.visible { opacity:1; transform: scale(1); }
 .featured-collection-card:hover .featured-collection-image-container img.visible { transform: scale(1.04); filter: brightness(1.03); }
 
-/* Content */
-.featured-collection-content { padding: 14px 14px 18px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:120px; }
-.featured-collection-title { font-size: 1rem; font-weight:700; color:#222; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; }
+.featured-collection-content { padding: 14px 14px 18px; display:flex; flex-direction:column; gap:8px; min-height:120px; }
+.featured-collection-title { font-size: 1rem; font-weight:700; color:#222; -webkit-line-clamp:2; overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical; }
 .featured-collection-product-count { font-size:0.85rem; color:#777; }
-.featured-collection-link { display:inline-block; text-align:center; padding:8px 14px; background: linear-gradient(90deg,#D4A574,#B07F53); color:#fff; border-radius:8px; font-weight:700; text-decoration:none; border:2px solid transparent; transition: all .25s ease; }
+.featured-collection-link {
+  display:inline-block; text-align:center; padding:8px 14px;
+  background: linear-gradient(90deg,#D4A574,#B07F53);
+  color:#fff; border-radius:8px; font-weight:700;
+  text-decoration:none; border:2px solid transparent;
+  transition: all .25s ease;
+}
 .featured-collection-link:hover { background:#fff; color:#D4A574; border-color:#D4A574; }
 
-/* Swiper controls (visible on desktop/tablet for UX) */
-.swiper-button-next, .swiper-button-prev { color:#222; width:44px; height:44px; border-radius:50%; background:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:grid; place-items:center; }
+/* Controls */
+.swiper-button-next, .swiper-button-prev {
+  color:#222; width:44px; height:44px; border-radius:50%;
+  background:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.08);
+  display:grid; place-items:center;
+}
 .swiper-pagination-bullet { background: rgba(0,0,0,0.18); }
 .swiper-pagination-bullet-active { background: #D4A574; transform:scale(1.2); }
 
-/* Responsive: Desktop grid-ish layout */
-@media (min-width: 1100px) {
-  /* Make Swiper show multiple slides and leave them visible like a grid */
-  .swiper { padding-bottom:28px; }
-}
-
-/* Mobile adjustments */
 @media (max-width: 768px) {
   .featured-collection-card { width: 200px; }
   .featured-collection-image-container { height: 150px; }
-  .swiper-button-next, .swiper-button-prev { display:none; } /* rely on swipe & pagination */
+  .swiper-button-next, .swiper-button-prev { display:none; }
 }
 </style>
 
 <section class="featured-collections-section">
   <div class="featured-collections-header">
-    <h2 class="featured-collections-title">{{ section.settings.title | default: "Shop By Collection" }}</h2>
-    <p class="featured-collections-description">{{ section.settings.description | default: "Find the perfect products for your unique curl pattern" }}</p>
+    <h2 class="featured-collections-title">{{ section.settings.title }}</h2>
+    <p class="featured-collections-description">{{ section.settings.description }}</p>
   </div>
 
-  <!-- Swiper root -->
   <div class="swiper featured-collections-swiper">
     <div class="swiper-wrapper">
-      {% comment %} Render one slide per block/collection. Each slide contains up to 5 product featured images (pre-rendered) {% endcomment %}
       {% for block in section.blocks %}
         {% assign collection = collections[block.settings.collection] %}
+
         {% if collection %}
-          {% assign product_images = '' %}
-          {% assign prods = collection.products | slice: 0, 6 %}
-          <div class="swiper-slide">
-            <article class="featured-collection-card" aria-label="{{ collection.title | escape }}">
-              <div class="featured-collection-image-container" role="img" aria-label="{{ collection.title | escape }}">
-                {% comment %} Pre-render up to 5 images; first is visible {% endcomment %}
-                {% assign img_index = 0 %}
-                {% for p in prods limit:5 %}
-                  {% if p.featured_image %}
-                    {% assign img_url = p.featured_image | image_url: width: 800, height: 600, crop: 'center' %}
-                    <img
-                      src="{{ img_url }}"
-                      alt="{{ p.title | escape }}"
-                      class="collection-card-image{% if forloop.first %} visible{% endif %}"
-                      width="800"
-                      height="600"
-                      loading="lazy"
-                    >
-                  {% endif %}
-                {% endfor %}
+        <div class="swiper-slide">
+          <article class="featured-collection-card">
+            <div class="featured-collection-image-container">
 
-                {% comment %} If no product images rendered, fallback to collection image or placeholder {% endcomment %}
-                {% if prods.size == 0 or collection.products.size == 0 %}
-                  {% if collection.image %}
-                    <img
-                      src="{{ collection.image | image_url: width:800, height:600, crop:'center' }}"
-                      alt="{{ collection.title | escape }}"
-                      class="collection-card-image visible"
-                      width="800"
-                      height="600"
-                      loading="lazy"
-                    >
-                  {% else %}
-                    <div class="featured-collection-placeholder">
-                      <div class="featured-placeholder-icon">📦</div>
-                      <div class="featured-placeholder-text">{{ collection.title }}</div>
-                    </div>
-                  {% endif %}
+              {% assign prods = collection.products | slice: 0, 6 %}
+              {% assign any_image = false %}
+
+              {% for p in prods limit:5 %}
+                {% if p.featured_image %}
+                  {% assign any_image = true %}
+                  <img
+                    src="{{ p.featured_image | image_url: width:800, height:600, crop:'center' }}"
+                    alt="{{ p.title | escape }}"
+                    class="collection-card-image{% if forloop.first %} visible{% endif %}"
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                  >
                 {% endif %}
-              </div>
+              {% endfor %}
 
-              <div class="featured-collection-content">
-                <div>
-                  <h3 class="featured-collection-title">{{ collection.title }}</h3>
-                  <div class="featured-collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</div>
-                </div>
+              {% unless any_image %}
+                {% if collection.image %}
+                  <img
+                    src="{{ collection.image | image_url: width:800, height:600, crop:'center' }}"
+                    alt="{{ collection.title | escape }}"
+                    class="collection-card-image visible"
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div style="display:flex;align-items:center;justify-content:center;height:100%;background:#eee;">No image</div>
+                {% endif %}
+              {% endunless %}
+            </div>
 
-                <a class="featured-collection-link" href="{{ collection.url | default: routes.collections_url }}">Shop Now</a>
+            <div class="featured-collection-content">
+              <div>
+                <h3 class="featured-collection-title">{{ collection.title }}</h3>
+                <div class="featured-collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: "product", "products" }}</div>
               </div>
-            </article>
-          </div>
+              <a class="featured-collection-link" href="{{ collection.url }}">Shop Now</a>
+            </div>
+          </article>
+        </div>
         {% endif %}
       {% endfor %}
     </div>
 
-    <!-- Controls -->
-    <div class="swiper-button-prev" aria-label="Previous"></div>
-    <div class="swiper-button-next" aria-label="Next"></div>
-
-    <!-- Pagination -->
-    <div class="swiper-pagination" aria-hidden="false"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-pagination"></div>
   </div>
 </section>
 
-<!-- Swiper JS (defer to avoid parser-blocking) -->
-<script defer src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<!-- Swiper JS via local asset -->
+<script defer src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
 
-<!-- Inline initialization + per-card auto-rotate (defer) -->
 <script defer>
-(function () {
-  function initSwiperAndRotators() {
-    // Init Swiper with breakpoints to behave like hybrid grid/carousel
+(function(){
+  function init(){
     const swiper = new Swiper('.featured-collections-swiper', {
       slidesPerView: 'auto',
       spaceBetween: 22,
-      centeredSlides: false,
       loop: false,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      },
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true
-      },
+      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+      pagination: { el: '.swiper-pagination', clickable: true },
       breakpoints: {
         320: { slidesPerView: 1.2, spaceBetween: 12 },
         480: { slidesPerView: 1.6, spaceBetween: 16 },
         768: { slidesPerView: 2.4, spaceBetween: 18 },
         1024: { slidesPerView: 3.5, spaceBetween: 22 },
         1400: { slidesPerView: 4.5, spaceBetween: 24 }
-      },
-      // don't block rendering
-      on: {
-        afterInit: function () { /* no-op */ }
       }
     });
 
-    // Auto-rotate images inside each card
-    const CARD_ROTATE_INTERVAL = 2600; // ms
-    const cards = document.querySelectorAll('.featured-collection-card');
-
-    cards.forEach(card => {
-      const imgs = Array.from(card.querySelectorAll('.collection-card-image'));
-      if (imgs.length <= 1) return;
-      // ensure first visible
-      imgs.forEach((i, idx) => i.classList.toggle('visible', idx === 0));
+    const INTERVAL = 2600;
+    document.querySelectorAll('.featured-collection-card').forEach(card=>{
+      const imgs = card.querySelectorAll('.collection-card-image');
+      if(imgs.length <= 1) return;
       let idx = 0;
-      setInterval(() => {
+      setInterval(()=>{
         imgs[idx].classList.remove('visible');
         idx = (idx + 1) % imgs.length;
         imgs[idx].classList.add('visible');
-      }, CARD_ROTATE_INTERVAL);
+      }, INTERVAL);
     });
-
-    // Accessibility: pause rotation when user focuses inside card
-    document.querySelectorAll('.featured-collection-card').forEach(card => {
-      card.addEventListener('focusin', () => {
-        // no-op: we could clear intervals and re-enable — kept simple for perf
-      });
-    });
-
-    return swiper;
   }
 
-  // Initialize on DOMContentLoaded (defer already used)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSwiperAndRotators);
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initSwiperAndRotators();
+    init();
   }
 })();
 </script>
 
 {% schema %}
 {
-  "name": "Featured Collections)",
-  "max_blocks": 8,
+  "name": "Featured Collections",
   "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Section Title",
-      "default": "Shop By Collection"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "Find the perfect products for your unique curl pattern"
-    }
+    { "type": "text", "id": "title", "label": "Title", "default": "Shop by Collection" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Find the perfect products for your unique curl pattern" }
   ],
   "blocks": [
     {
       "type": "collection",
       "name": "Collection",
       "settings": [
-        {
-          "type": "collection",
-          "id": "collection",
-          "label": "Select collection"
-        }
+        { "type": "collection", "id": "collection", "label": "Select collection" }
       ]
     }
   ],
   "presets": [
-    {
-      "name": "Featured Collections (Hybrid)",
-      "category": "Collections"
-    }
+    { "name": "Featured Collections Hybrid", "category": "Collections" }
   ]
 }
 {% endschema %}
