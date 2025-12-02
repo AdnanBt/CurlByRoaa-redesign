@@ -1,83 +1,88 @@
-{% comment %} featured-collections.liquid - With Animation {% endcomment %}
+{% comment %} featured-collections.liquid - Carousel Version {% endcomment %}
 
 <style>
   .featured-collections {
-    padding: 80px 0;
+    padding: 60px 0;
     background: #FAF8F6;
     overflow: hidden;
   }
   
   .section-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
     padding: 0 20px;
   }
   
   .section-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     color: #2D2D2D;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s ease forwards;
   }
   
   .section-description {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #666;
     max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s ease 0.2s forwards;
   }
   
-  .collections-container {
+  .collections-carousel-container {
+    position: relative;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 60px;
   }
   
-  .collections-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
+  /* Hide scrollbar but keep functionality */
+  .collections-carousel-wrapper {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 20px 10px;
+    margin: -20px -10px;
+  }
+  
+  .collections-carousel-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Auto-scroll carousel with momentum */
+  .collections-carousel {
+    display: flex;
+    gap: 25px;
+    width: max-content;
+    padding: 10px 0;
+    animation: scrollCarousel 40s linear infinite;
+  }
+  
+  .collections-carousel:hover {
+    animation-play-state: paused;
   }
   
   .collection-card {
+    flex: 0 0 280px;
     position: relative;
-    border-radius: 20px;
+    border-radius: 16px;
     overflow: hidden;
-    aspect-ratio: 3/4;
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 380px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: white;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-    animation: cardSlideIn 2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   }
   
-  /* Staggered animation for each card */
-  .collection-card:nth-child(1) { animation-delay: 0.1s; }
-  .collection-card:nth-child(2) { animation-delay: 0.2s; }
-  .collection-card:nth-child(3) { animation-delay: 0.3s; }
-  .collection-card:nth-child(4) { animation-delay: 0.4s; }
-  .collection-card:nth-child(5) { animation-delay: 0.5s; }
-  .collection-card:nth-child(6) { animation-delay: 0.6s; }
-  .collection-card:nth-child(7) { animation-delay: 0.7s; }
-  .collection-card:nth-child(8) { animation-delay: 0.8s; }
-  
   .collection-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
     z-index: 10;
   }
   
   .collection-image-container {
     width: 100%;
-    height: 100%;
+    height: 280px;
     position: relative;
     overflow: hidden;
   }
@@ -86,14 +91,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: scale(1.1);
-    filter: brightness(0.9);
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .collection-card:hover .collection-image {
-    transform: scale(1.15);
-    filter: brightness(1);
+    transform: scale(1.1);
   }
   
   .collection-content {
@@ -101,77 +103,42 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 30px;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
     color: white;
     z-index: 2;
-    transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .collection-card:hover .collection-content {
-    transform: translateY(0);
-    opacity: 1;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
   }
   
   .collection-title {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     color: white;
-    transform: translateY(10px);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-  }
-  
-  .collection-card:hover .collection-title {
-    transform: translateY(0);
-    opacity: 1;
   }
   
   .collection-product-count {
-    font-size: 0.9rem;
-    opacity: 0;
-    margin-bottom: 20px;
-    display: block;
-    transform: translateY(10px);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
-  }
-  
-  .collection-card:hover .collection-product-count {
-    transform: translateY(0);
+    font-size: 0.8rem;
     opacity: 0.9;
+    margin-bottom: 15px;
+    display: block;
   }
   
   .collection-link {
     display: inline-block;
-    padding: 10px 24px;
+    padding: 8px 18px;
     background: white;
     color: #2D2D2D;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 6px;
     font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
     border: 2px solid white;
-    transform: translateY(10px) scale(0.95);
-    opacity: 0;
-  }
-  
-  .collection-card:hover .collection-link {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-    background: white;
-    color: #2D2D2D;
   }
   
   .collection-link:hover {
-    background: transparent !important;
-    color: white !important;
-    transform: translateY(-2px) scale(1.05) !important;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: white;
   }
   
   /* Placeholder for collections without images */
@@ -186,121 +153,190 @@
     color: white;
     padding: 20px;
     text-align: center;
-    animation: placeholderPulse 2s ease-in-out infinite;
   }
   
   .placeholder-icon {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    animation: iconFloat 3s ease-in-out infinite;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
   }
   
   .placeholder-text {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
   }
   
-  /* ANIMATIONS */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes cardSlideIn {
+  /* CAROUSEL ANIMATION */
+  @keyframes scrollCarousel {
     0% {
-      opacity: 0;
-      transform: translateY(50px) scale(0.9);
-    }
-    40% {
-      opacity: 0.5;
-      transform: translateY(10px) scale(0.98);
-    }
-    70% {
-      opacity: 0.8;
-      transform: translateY(-5px) scale(1.02);
+      transform: translateX(0);
     }
     100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateX(calc(-280px * 7 - 25px * 7)); /* Adjust based on card count */
     }
   }
   
-  @keyframes placeholderPulse {
-    0%, 100% {
-      opacity: 0.9;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.02);
-    }
+  /* Navigation buttons */
+  .carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 20;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
   
-  @keyframes iconFloat {
-    0%, 100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    33% {
-      transform: translateY(-5px) rotate(5deg);
-    }
-    66% {
-      transform: translateY(5px) rotate(-5deg);
-    }
+  .collections-carousel-container:hover .carousel-nav-btn {
+    opacity: 1;
+  }
+  
+  .carousel-nav-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .carousel-nav-btn.prev {
+    left: 10px;
+  }
+  
+  .carousel-nav-btn.next {
+    right: 10px;
+  }
+  
+  .carousel-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: translateY(-50%) scale(1);
+  }
+  
+  /* Carousel dots */
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+    display: none; /* Hide dots for auto-scroll carousel */
+  }
+  
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .carousel-dot.active {
+    background: #D4A574;
+    transform: scale(1.3);
   }
   
   /* Mobile Responsiveness */
-  @media (max-width: 1200px) {
-    .collections-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
+  @media (max-width: 1024px) {
+    .collections-carousel-container {
+      padding: 0 40px;
+    }
+    
+    .collection-card {
+      flex: 0 0 250px;
+      height: 350px;
+    }
+    
+    .collection-image-container {
+      height: 250px;
+    }
+    
+    @keyframes scrollCarousel {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-250px * 7 - 25px * 7));
+      }
     }
   }
   
   @media (max-width: 768px) {
     .featured-collections {
-      padding: 60px 0;
+      padding: 50px 0;
     }
     
     .section-title {
-      font-size: 2rem;
+      font-size: 1.8rem;
     }
     
-    .collections-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+    .collections-carousel-container {
+      padding: 0 30px;
+    }
+    
+    .collection-card {
+      flex: 0 0 220px;
+      height: 320px;
+    }
+    
+    .collection-image-container {
+      height: 220px;
     }
     
     .collection-content {
-      padding: 20px;
+      padding: 15px;
     }
     
     .collection-title {
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
     
-    /* Faster animations on mobile */
-    .collection-card {
-      animation-duration: 1.5s;
+    .carousel-nav-btn {
+      display: none; /* Hide buttons on mobile, use touch swipe */
+    }
+    
+    @keyframes scrollCarousel {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-220px * 7 - 25px * 7));
+      }
     }
   }
   
   @media (max-width: 480px) {
-    .collections-grid {
-      grid-template-columns: 1fr;
-      max-width: 350px;
-      margin: 0 auto;
-      gap: 15px;
+    .collections-carousel-container {
+      padding: 0 20px;
     }
     
     .collection-card {
-      aspect-ratio: 4/5;
-      animation-duration: 1.2s;
+      flex: 0 0 200px;
+      height: 300px;
+    }
+    
+    .collection-image-container {
+      height: 200px;
+    }
+    
+    .collection-link {
+      padding: 6px 14px;
+      font-size: 0.8rem;
+    }
+    
+    @keyframes scrollCarousel {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-200px * 7 - 25px * 7));
+      }
     }
   }
 </style>
@@ -311,203 +347,277 @@
     <p class="section-description">{{ section.settings.description | default: 'Find the perfect products for your unique curl pattern' }}</p>
   </div>
 
-  <div class="collections-container">
-    <div class="collections-grid">
-      {% comment %} DEBUG: Check what collections exist {% endcomment %}
-      {% assign debug_mode = false %}
-      
-      {% if debug_mode %}
-        <div style="display: none;">
-          <h3>Debug - All Collections:</h3>
-          {% for collection in collections %}
-            <p>{{ collection.handle }} - {{ collection.title }} ({{ collection.products_count }} products) - Has image: {{ collection.image | default: 'NO' }}</p>
+  <div class="collections-carousel-container">
+    <button class="carousel-nav-btn prev" id="collections-prev" aria-label="Previous collections">
+      ‹
+    </button>
+    
+    <div class="collections-carousel-wrapper">
+      <div class="collections-carousel" id="collections-carousel">
+        {% comment %} OPTION 1: Use blocks if configured {% endcomment %}
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign collection = collections[block.settings.collection] %}
+            {% if collection %}
+              <div class="collection-card">
+                <div class="collection-image-container">
+                  {% if collection.image %}
+                    <img 
+                      src="{{ collection.image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      alt="{{ collection.title | escape }}" 
+                      class="collection-image" 
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                    >
+                  {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
+                    <img 
+                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      alt="{{ collection.title | escape }}" 
+                      class="collection-image" 
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                    >
+                  {% else %}
+                    <div class="collection-placeholder">
+                      <div class="placeholder-icon">📦</div>
+                      <div class="placeholder-text">{{ collection.title }}</div>
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="collection-content">
+                  <h3 class="collection-title">{{ collection.title }}</h3>
+                  <span class="collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
+                  <a href="{{ collection.url }}" class="collection-link">Shop Now</a>
+                </div>
+              </div>
+            {% endif %}
           {% endfor %}
-        </div>
-      {% endif %}
-      
-      {% comment %} OPTION 1: Use blocks if configured {% endcomment %}
-      {% if section.blocks.size > 0 %}
-        {% for block in section.blocks %}
-          {% assign collection = collections[block.settings.collection] %}
-          {% if collection %}
-            <div class="collection-card" data-animation-delay="{{ forloop.index | times: 0.1 }}">
-              <div class="collection-image-container">
-                {% if collection.image %}
-                  <img 
-                    src="{{ collection.image | image_url: width: 600, height: 800, crop: 'center' }}" 
-                    alt="{{ collection.title | escape }}" 
-                    class="collection-image" 
-                    loading="lazy"
-                    width="600"
-                    height="800"
-                    onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
-                  >
-                {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
-                  <img 
-                    src="{{ collection.products.first.featured_image | image_url: width: 600, height: 800, crop: 'center' }}" 
-                    alt="{{ collection.title | escape }}" 
-                    class="collection-image" 
-                    loading="lazy"
-                    width="600"
-                    height="800"
-                    onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
-                  >
-                {% else %}
-                  <div class="collection-placeholder">
-                    <div class="placeholder-icon">📦</div>
-                    <div class="placeholder-text">{{ collection.title }}</div>
-                  </div>
-                {% endif %}
-              </div>
-              
-              <div class="collection-content">
-                <h3 class="collection-title">{{ collection.title }}</h3>
-                <span class="collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
-                <a href="{{ collection.url }}" class="collection-link">Shop Now</a>
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
-      
-      {% comment %} OPTION 2: Show specific collections automatically {% endcomment %}
-      {% else %}
-        {% comment %} List of collections to show - UPDATE THESE HANDLES {% endcomment %}
-        {% assign collection_handles_to_show = 'browsbylush,authentic-beauty-concept,alterna,schwarzkopf,keune,k18,hair-accessories,absolut-repair' | split: ',' %}
         
-        {% assign displayed_count = 0 %}
-        
-        {% for handle in collection_handles_to_show %}
-          {% assign collection = collections[handle] %}
+        {% comment %} OPTION 2: Show specific collections automatically {% endcomment %}
+        {% else %}
+          {% comment %} List of collections to show {% endcomment %}
+          {% assign collection_handles_to_show = 'browsbylush,authentic-beauty-concept,alterna,schwarzkopf,keune,k18,hair-accessories,absolut-repair' | split: ',' %}
           
-          {% if collection %}
-            {% assign displayed_count = displayed_count | plus: 1 %}
+          {% assign displayed_count = 0 %}
+          
+          {% for handle in collection_handles_to_show %}
+            {% assign collection = collections[handle] %}
             
-            <div class="collection-card" data-animation-delay="{{ forloop.index | times: 0.1 }}">
-              <div class="collection-image-container">
-                {% comment %} TRY 1: Collection's own image {% endcomment %}
-                {% if collection.image %}
-                  <img 
-                    src="{{ collection.image | image_url: width: 600, height: 800, crop: 'center' }}" 
-                    alt="{{ collection.title | escape }}" 
-                    class="collection-image" 
-                    loading="lazy"
-                    width="600"
-                    height="800"
-                    onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
-                  >
-                
-                {% comment %} TRY 2: First product's image {% endcomment %}
-                {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
-                  <img 
-                    src="{{ collection.products.first.featured_image | image_url: width: 600, height: 800, crop: 'center' }}" 
-                    alt="{{ collection.title | escape }}" 
-                    class="collection-image" 
-                    loading="lazy"
-                    width="600"
-                    height="800"
-                    onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
-                  >
-                
-                {% comment %} TRY 3: Placeholder with collection name {% endcomment %}
-                {% else %}
-                  <div class="collection-placeholder">
-                    <div class="placeholder-icon">📦</div>
-                    <div class="placeholder-text">{{ collection.title }}</div>
-                  </div>
-                {% endif %}
-              </div>
+            {% if collection %}
+              {% assign displayed_count = displayed_count | plus: 1 %}
               
-              <div class="collection-content">
-                <h3 class="collection-title">{{ collection.title }}</h3>
-                <span class="collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
-                <a href="{{ collection.url }}" class="collection-link">Shop Now</a>
+              <div class="collection-card">
+                <div class="collection-image-container">
+                  {% if collection.image %}
+                    <img 
+                      src="{{ collection.image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      alt="{{ collection.title | escape }}" 
+                      class="collection-image" 
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                    >
+                  {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
+                    <img 
+                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      alt="{{ collection.title | escape }}" 
+                      class="collection-image" 
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                    >
+                  {% else %}
+                    <div class="collection-placeholder">
+                      <div class="placeholder-icon">📦</div>
+                      <div class="placeholder-text">{{ collection.title }}</div>
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="collection-content">
+                  <h3 class="collection-title">{{ collection.title }}</h3>
+                  <span class="collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
+                  <a href="{{ collection.url }}" class="collection-link">Shop Now</a>
+                </div>
               </div>
-            </div>
-          
-          {% comment %} Collection doesn't exist - show placeholder {% endcomment %}
-          {% else %}
-            <div class="collection-card" data-animation-delay="{{ forloop.index | times: 0.1 }}">
-              <div class="collection-placeholder">
-                <div class="placeholder-icon">❓</div>
-                <div class="placeholder-text">{{ handle | replace: '-', ' ' | capitalize }}</div>
+            
+            {% comment %} Collection doesn't exist - show placeholder {% endcomment %}
+            {% else %}
+              <div class="collection-card">
+                <div class="collection-placeholder">
+                  <div class="placeholder-icon">❓</div>
+                  <div class="placeholder-text">{{ handle | replace: '-', ' ' | capitalize }}</div>
+                </div>
+                <div class="collection-content">
+                  <h3 class="collection-title">{{ handle | replace: '-', ' ' | capitalize }}</h3>
+                  <span class="collection-product-count">0 products</span>
+                  <a href="{{ routes.collections_url }}" class="collection-link">Coming Soon</a>
+                </div>
               </div>
-              <div class="collection-content">
-                <h3 class="collection-title">{{ handle | replace: '-', ' ' | capitalize }}</h3>
-                <span class="collection-product-count">0 products</span>
-                <a href="{{ routes.collections_url }}" class="collection-link">Coming Soon</a>
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
-        
-        {% comment %} If NO collections were found at all {% endcomment %}
-        {% if displayed_count == 0 %}
-          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; animation: fadeInUp 1s ease forwards;">
-            <p>No collections found. Please:</p>
-            <ol style="text-align: left; display: inline-block; margin: 20px auto;">
-              <li>Create collections in Shopify Admin</li>
-              <li>Add products to collections</li>
-              <li>Set collection images or add product images</li>
-              <li>Update collection handles in this section's code</li>
-            </ol>
-          </div>
+            {% endif %}
+          {% endfor %}
         {% endif %}
-      {% endif %}
+        
+        {% comment %} Duplicate cards for seamless loop {% endcomment %}
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign collection = collections[block.settings.collection] %}
+            {% if collection %}
+              <div class="collection-card">
+                <div class="collection-image-container">
+                  {% if collection.image %}
+                    <img 
+                      src="{{ collection.image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      alt="{{ collection.title | escape }}" 
+                      class="collection-image" 
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                    >
+                  {% elsif collection.products_count > 0 and collection.products.first.featured_image %}
+                    <img 
+                      src="{{ collection.products.first.featured_image | image_url: width: 400, height: 400, crop: 'center' }}" 
+                      alt="{{ collection.title | escape }}" 
+                      class="collection-image" 
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\"collection-placeholder\"><div class=\"placeholder-icon\">📦</div><div class=\"placeholder-text\">{{ collection.title }}</div></div>';"
+                    >
+                  {% else %}
+                    <div class="collection-placeholder">
+                      <div class="placeholder-icon">📦</div>
+                      <div class="placeholder-text">{{ collection.title }}</div>
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="collection-content">
+                  <h3 class="collection-title">{{ collection.title }}</h3>
+                  <span class="collection-product-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</span>
+                  <a href="{{ collection.url }}" class="collection-link">Shop Now</a>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
     </div>
+    
+    <button class="carousel-nav-btn next" id="collections-next" aria-label="Next collections">
+      ›
+    </button>
   </div>
 </section>
 
 <script>
-// Add enhanced animations
-document.addEventListener('DOMContentLoaded', function() {
-  // Check if user prefers reduced motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  
-  if (!prefersReducedMotion) {
-    // Add scroll-based animations
-    const collectionCards = document.querySelectorAll('.collection-card');
+class CollectionsCarousel {
+  constructor() {
+    this.carousel = document.getElementById('collections-carousel');
+    this.prevBtn = document.getElementById('collections-prev');
+    this.nextBtn = document.getElementById('collections-next');
+    this.carouselWrapper = document.querySelector('.collections-carousel-wrapper');
+    this.cards = document.querySelectorAll('.collection-card');
     
-    // Create Intersection Observer for scroll animations
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.animationPlayState = 'running';
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
-    
-    // Observe each card
-    collectionCards.forEach(card => {
-      observer.observe(card);
+    if (this.carousel) {
+      this.init();
+    }
+  }
+
+  init() {
+    this.bindEvents();
+    this.setupAutoScroll();
+  }
+
+  bindEvents() {
+    // Navigation buttons
+    if (this.prevBtn && this.nextBtn) {
+      this.prevBtn.addEventListener('click', () => this.scrollBy(-1));
+      this.nextBtn.addEventListener('click', () => this.scrollBy(1));
+    }
+
+    // Touch/swipe for mobile
+    if (this.carouselWrapper) {
+      let touchStartX = 0;
+      let touchEndX = 0;
       
-      // Add hover effect with GSAP-like smoothness
-      card.addEventListener('mouseenter', function() {
-        this.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+      this.carouselWrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        this.pauseAutoScroll();
       });
       
-      card.addEventListener('mouseleave', function() {
-        this.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+      this.carouselWrapper.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        this.handleSwipe(touchStartX, touchEndX);
+        this.resumeAutoScroll();
       });
-    });
+    }
+
+    // Pause auto-scroll on hover
+    if (this.carousel) {
+      this.carousel.addEventListener('mouseenter', () => this.pauseAutoScroll());
+      this.carousel.addEventListener('mouseleave', () => this.resumeAutoScroll());
+    }
+  }
+
+  handleSwipe(startX, endX) {
+    const swipeThreshold = 50;
+    const swipeDistance = startX - endX;
     
-    // Image load effects
-    const collectionImages = document.querySelectorAll('.collection-image');
-    collectionImages.forEach(img => {
-      img.addEventListener('load', function() {
-        this.style.transition = 'transform 1.2s cubic-bezier(0.23, 1, 0.32, 1), filter 1.2s ease';
-      });
-    });
-  } else {
-    // Disable animations for users who prefer reduced motion
-    document.querySelectorAll('.collection-card').forEach(card => {
-      card.style.animation = 'none';
-      card.style.opacity = '1';
-      card.style.transform = 'none';
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      if (swipeDistance > 0) {
+        this.scrollBy(1); // Swipe left - next
+      } else {
+        this.scrollBy(-1); // Swipe right - previous
+      }
+    }
+  }
+
+  scrollBy(direction) {
+    if (!this.carouselWrapper) return;
+    
+    const cardWidth = 280; // Match CSS card width
+    const gap = 25; // Match CSS gap
+    const scrollAmount = (cardWidth + gap) * direction;
+    
+    this.carouselWrapper.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
     });
   }
+
+  setupAutoScroll() {
+    // Auto-scroll is handled by CSS animation
+    // This just controls pausing/resuming
+    this.autoScrollPaused = false;
+  }
+
+  pauseAutoScroll() {
+    if (this.carousel && !this.autoScrollPaused) {
+      this.carousel.style.animationPlayState = 'paused';
+      this.autoScrollPaused = true;
+    }
+  }
+
+  resumeAutoScroll() {
+    if (this.carousel && this.autoScrollPaused) {
+      this.carousel.style.animationPlayState = 'running';
+      this.autoScrollPaused = false;
+    }
+  }
+}
+
+// Initialize carousel
+document.addEventListener('DOMContentLoaded', () => {
+  new CollectionsCarousel();
 });
 </script>
 
@@ -544,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function() {
   ],
   "presets": [
     {
-      "name": "Featured Collections Grid",
+      "name": "Featured Collections",
       "category": "Collections",
       "blocks": [
         { "type": "collection" },
