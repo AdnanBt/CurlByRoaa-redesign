@@ -1,16 +1,23 @@
-{% comment %} Featured Collections - Simple Auto-Rotating Image Carousel {% endcomment %}
+{% comment %} Featured Collections - Working Carousel with Auto-Rotating Images {% endcomment %}
 
 <style>
-/* Section Styling */
+/* Reset and Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Section */
 .featured-collections-section {
-  padding: 60px 0;
-  background: linear-gradient(135deg, #FAF8F6 0%, #F5F1ED 100%);
+  padding: 60px 20px;
+  background: #FAF8F6;
+  position: relative;
 }
 
 .featured-collections-header {
   text-align: center;
   margin-bottom: 40px;
-  padding: 0 20px;
 }
 
 .featured-collections-title {
@@ -18,7 +25,6 @@
   font-weight: 700;
   color: #2d2d2d;
   margin-bottom: 12px;
-  letter-spacing: -0.5px;
 }
 
 .featured-collections-description {
@@ -26,54 +32,55 @@
   color: #666;
   max-width: 700px;
   margin: 0 auto;
-  line-height: 1.6;
 }
 
-/* Main Carousel Container */
+/* Carousel Container */
 .featured-collections-carousel {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
   position: relative;
+  overflow: hidden;
 }
 
-.carousel-track-container {
+.carousel-container {
+  width: 100%;
   overflow: hidden;
-  padding: 20px 0;
+  position: relative;
 }
 
 .carousel-track {
   display: flex;
+  transition: transform 0.5s ease-in-out;
   gap: 30px;
-  transition: transform 0.5s ease-out;
+  padding: 10px 0;
 }
 
-/* Collection Card */
+/* Card Styles */
 .collection-card {
-  flex: 0 0 320px;
+  min-width: 300px;
   background: white;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .collection-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
-/* Image Container with Auto-Rotate */
-.collection-image-container {
+/* Image Container - Auto Rotate */
+.image-rotate-container {
   position: relative;
   width: 100%;
   height: 280px;
-  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+  background: #f5f5f5;
   overflow: hidden;
 }
 
-.collection-image {
+.rotating-image {
   position: absolute;
   top: 0;
   left: 0;
@@ -84,17 +91,13 @@
   transition: opacity 0.8s ease-in-out;
 }
 
-.collection-image.active {
+.rotating-image.active {
   opacity: 1;
 }
 
-.collection-image.fade-out {
-  opacity: 0;
-}
-
-/* Content Area */
-.collection-content {
-  padding: 24px;
+/* Content */
+.card-content {
+  padding: 20px;
 }
 
 .collection-title {
@@ -102,46 +105,38 @@
   font-weight: 700;
   color: #222;
   margin-bottom: 8px;
-  line-height: 1.4;
 }
 
-.collection-product-count {
+.collection-count {
   font-size: 0.95rem;
   color: #777;
   margin-bottom: 20px;
 }
 
-.collection-link {
+.shop-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 12px 24px;
+  width: 100%;
+  padding: 12px;
   background: linear-gradient(135deg, #D4A574 0%, #B07F53 100%);
   color: white;
-  border-radius: 12px;
+  border: none;
+  border-radius: 10px;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
 }
 
-.collection-link:hover {
+.shop-button:hover {
   background: white;
   color: #D4A574;
-  border-color: #D4A574;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(212, 165, 116, 0.2);
+  box-shadow: 0 0 0 2px #D4A574;
 }
 
-.collection-link svg {
-  transition: transform 0.3s ease;
-}
-
-.collection-link:hover svg {
-  transform: translateX(4px);
-}
-
-/* Navigation Arrows */
+/* Navigation Buttons */
 .carousel-nav {
   display: flex;
   justify-content: center;
@@ -149,58 +144,52 @@
   margin-top: 30px;
 }
 
-.carousel-btn {
+.nav-button {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   background: white;
-  border: none;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid #eee;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  font-size: 20px;
   color: #333;
 }
 
-.carousel-btn:hover {
+.nav-button:hover {
   background: #D4A574;
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+  border-color: #D4A574;
+  transform: scale(1.1);
 }
 
-.carousel-btn:active {
-  transform: translateY(0);
+.nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .collection-card {
-    flex: 0 0 280px;
-  }
-  
-  .collection-image-container {
-    height: 240px;
-  }
+.nav-button:disabled:hover {
+  background: white;
+  color: #333;
+  border-color: #eee;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .featured-collections-section {
-    padding: 40px 0;
-  }
-  
-  .featured-collections-header {
-    margin-bottom: 30px;
+    padding: 40px 15px;
   }
   
   .collection-card {
-    flex: 0 0 260px;
+    min-width: 280px;
   }
   
-  .collection-image-container {
-    height: 220px;
+  .image-rotate-container {
+    height: 240px;
   }
   
   .carousel-track {
@@ -210,99 +199,78 @@
 
 @media (max-width: 480px) {
   .collection-card {
-    flex: 0 0 240px;
+    min-width: 260px;
   }
   
-  .collection-image-container {
-    height: 200px;
-  }
-  
-  .collection-content {
-    padding: 20px;
+  .image-rotate-container {
+    height: 220px;
   }
   
   .carousel-nav {
     margin-top: 20px;
   }
   
-  .carousel-btn {
+  .nav-button {
     width: 44px;
     height: 44px;
   }
 }
-
-/* Animation for auto-rotation */
-@keyframes fadeInOut {
-  0%, 20% { opacity: 1; }
-  25%, 100% { opacity: 0; }
-}
-
-/* Loading animation */
-@keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
-}
-
-.loading-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite linear;
-}
 </style>
 
-<section class="featured-collections-section" aria-labelledby="collections-title">
+<section class="featured-collections-section">
   <div class="featured-collections-header">
-    <h2 id="collections-title" class="featured-collections-title">
-      {{ section.settings.title | default: "Shop By Collection" }}
-    </h2>
-    <p class="featured-collections-description">
-      {{ section.settings.description | default: "Discover curated products for your unique hair journey" }}
-    </p>
+    <h2 class="featured-collections-title">{{ section.settings.title | default: "Shop By Collection" }}</h2>
+    <p class="featured-collections-description">{{ section.settings.description | default: "Discover curated products for your unique hair journey" }}</p>
   </div>
 
   <div class="featured-collections-carousel">
-    <div class="carousel-track-container">
-      <div class="carousel-track" id="carousel-track">
+    <div class="carousel-container">
+      <div class="carousel-track" id="carouselTrack">
         {% for block in section.blocks %}
           {% assign collection = collections[block.settings.collection] %}
           {% if collection %}
-            {% assign products = collection.products | slice: 0, 5 %}
+            {% assign products = collection.products %}
             <div class="collection-card" data-collection-id="{{ collection.id }}">
-              <div class="collection-image-container">
-                {% comment %} Collection image as fallback {% endcomment %}
+              <div class="image-rotate-container" data-collection-index="{{ forloop.index0 }}">
+                {% comment %} Collection Image as Fallback {% endcomment %}
                 {% if collection.image %}
                   <img 
                     src="{{ collection.image | image_url: width: 600 }}"
                     alt="{{ collection.title | escape }}"
-                    class="collection-image active"
+                    class="rotating-image active"
                     loading="lazy"
                     width="600"
                     height="400"
                   >
                 {% endif %}
                 
-                {% comment %} Product images for rotation {% endcomment %}
-                {% for product in products %}
+                {% comment %} Product Images for Rotation {% endcomment %}
+                {% for product in products limit: 4 %}
                   {% if product.featured_image %}
                     <img 
                       src="{{ product.featured_image | image_url: width: 600 }}"
                       alt="{{ product.title | escape }}"
-                      class="collection-image"
-                      data-index="{{ forloop.index0 }}"
+                      class="rotating-image"
                       loading="lazy"
                       width="600"
                       height="400"
+                      data-index="{{ forloop.index }}"
                     >
                   {% endif %}
                 {% endfor %}
+                
+                {% comment %} Fallback if no images {% endcomment %}
+                {% unless collection.image or products.first.featured_image %}
+                  <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f0f0f0, #e0e0e0);">
+                    <span style="color: #999; font-size: 1.1rem;">No Image</span>
+                  </div>
+                {% endunless %}
               </div>
               
-              <div class="collection-content">
+              <div class="card-content">
                 <h3 class="collection-title">{{ collection.title }}</h3>
-                <p class="collection-product-count">
-                  {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
-                </p>
-                <a href="{{ collection.url }}" class="collection-link" aria-label="Shop {{ collection.title }}">
+                <p class="collection-count">{{ collection.products_count }} products</p>
+                <a href="{{ collection.url }}" class="shop-button">
                   Shop Now
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                     <path d="M8.781 8l-3.3-3.3.943-.943L10.667 8l-4.243 4.243-.943-.943 3.3-3.3z"/>
@@ -315,165 +283,191 @@
       </div>
     </div>
     
-    <div class="carousel-nav">
-      <button class="carousel-btn prev-btn" aria-label="Previous collections">
-        <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M10.667 8l-4.243-4.243.943-.943L12.553 8l-5.186 5.186-.943-.943L10.667 8z"/>
-        </svg>
-      </button>
-      <button class="carousel-btn next-btn" aria-label="Next collections">
-        <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M5.333 8l4.243 4.243-.943.943L3.447 8l5.186-5.186.943.943L5.333 8z"/>
-        </svg>
-      </button>
-    </div>
+    {% if section.blocks.size > 1 %}
+      <div class="carousel-nav">
+        <button class="nav-button prev-button" id="prevButton" aria-label="Previous collections">
+          ←
+        </button>
+        <button class="nav-button next-button" id="nextButton" aria-label="Next collections">
+          →
+        </button>
+      </div>
+    {% endif %}
   </div>
 </section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const carouselTrack = document.getElementById('carousel-track');
-  const cards = Array.from(document.querySelectorAll('.collection-card'));
-  const prevBtn = document.querySelector('.prev-btn');
-  const nextBtn = document.querySelector('.next-btn');
+  // Carousel Elements
+  const carouselTrack = document.getElementById('carouselTrack');
+  const prevButton = document.getElementById('prevButton');
+  const nextButton = document.getElementById('nextButton');
+  const cards = document.querySelectorAll('.collection-card');
   
   if (!carouselTrack || cards.length === 0) return;
   
-  // Carousel Navigation
-  let currentPosition = 0;
+  // Carousel State
+  let currentSlide = 0;
   const cardWidth = cards[0].offsetWidth + 30; // width + gap
+  const maxSlides = cards.length;
   
+  // Update carousel position
   function updateCarouselPosition() {
-    carouselTrack.style.transform = `translateX(-${currentPosition}px)`;
+    if (!carouselTrack) return;
+    
+    const translateX = currentSlide * cardWidth;
+    carouselTrack.style.transform = `translateX(-${translateX}px)`;
+    
+    // Update button states
+    if (prevButton) {
+      prevButton.disabled = currentSlide === 0;
+    }
+    if (nextButton) {
+      nextButton.disabled = currentSlide >= maxSlides - Math.floor(carouselTrack.parentElement.clientWidth / cardWidth);
+    }
   }
   
+  // Next slide
   function nextSlide() {
-    const maxScroll = carouselTrack.scrollWidth - carouselTrack.parentElement.clientWidth;
-    currentPosition = Math.min(currentPosition + cardWidth * 2, maxScroll);
-    updateCarouselPosition();
+    const maxVisible = Math.floor(carouselTrack.parentElement.clientWidth / cardWidth);
+    const maxScroll = maxSlides - maxVisible;
+    
+    if (currentSlide < maxScroll) {
+      currentSlide++;
+      updateCarouselPosition();
+    }
   }
   
+  // Previous slide
   function prevSlide() {
-    currentPosition = Math.max(currentPosition - cardWidth * 2, 0);
-    updateCarouselPosition();
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateCarouselPosition();
+    }
   }
   
-  if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-  if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+  // Button event listeners
+  if (nextButton) {
+    nextButton.addEventListener('click', nextSlide);
+  }
   
-  // Auto-rotate images for each collection card (2 seconds)
-  cards.forEach(card => {
-    const images = card.querySelectorAll('.collection-image');
-    if (images.length <= 1) return;
+  if (prevButton) {
+    prevButton.addEventListener('click', prevSlide);
+  }
+  
+  // Auto-Rotate Images Function (2 seconds)
+  function startImageRotation() {
+    const imageContainers = document.querySelectorAll('.image-rotate-container');
     
-    let currentImageIndex = 0;
-    
-    // Set initial active image
-    images[currentImageIndex].classList.add('active');
-    
-    // Start rotation every 2 seconds
-    const rotateInterval = setInterval(() => {
-      // Fade out current image
-      images[currentImageIndex].classList.remove('active');
-      images[currentImageIndex].classList.add('fade-out');
+    imageContainers.forEach(container => {
+      const images = container.querySelectorAll('.rotating-image');
+      if (images.length <= 1) return; // Skip if only one image
       
-      // Move to next image
-      currentImageIndex = (currentImageIndex + 1) % images.length;
+      let currentImageIndex = 0;
+      let rotationInterval;
       
-      // Fade in next image
-      setTimeout(() => {
-        images.forEach(img => {
-          img.classList.remove('fade-out');
+      // Initialize: show first image, hide others
+      images.forEach((img, index) => {
+        if (index === 0) {
+          img.classList.add('active');
+        } else {
           img.classList.remove('active');
-        });
-        images[currentImageIndex].classList.add('active');
-      }, 300);
+        }
+      });
       
-    }, 2000); // Rotate every 2 seconds
-    
-    // Pause rotation on hover
-    card.addEventListener('mouseenter', () => {
-      clearInterval(rotateInterval);
-    });
-    
-    // Resume rotation when mouse leaves
-    card.addEventListener('mouseleave', () => {
-      clearInterval(rotateInterval);
-      
-      // Restart rotation
-      const newInterval = setInterval(() => {
+      // Start rotation
+      function rotateImage() {
+        // Hide current image
         images[currentImageIndex].classList.remove('active');
-        images[currentImageIndex].classList.add('fade-out');
         
+        // Move to next image
         currentImageIndex = (currentImageIndex + 1) % images.length;
         
-        setTimeout(() => {
-          images.forEach(img => {
-            img.classList.remove('fade-out');
-            img.classList.remove('active');
-          });
-          images[currentImageIndex].classList.add('active');
-        }, 300);
-      }, 2000);
+        // Show next image
+        images[currentImageIndex].classList.add('active');
+      }
       
-      // Store new interval ID (optional)
-      card.dataset.rotateInterval = newInterval;
+      // Start interval
+      rotationInterval = setInterval(rotateImage, 2000); // Rotate every 2 seconds
+      
+      // Pause on hover
+      container.addEventListener('mouseenter', () => {
+        if (rotationInterval) {
+          clearInterval(rotationInterval);
+          rotationInterval = null;
+        }
+      });
+      
+      // Resume on mouse leave
+      container.addEventListener('mouseleave', () => {
+        if (!rotationInterval && images.length > 1) {
+          rotationInterval = setInterval(rotateImage, 2000);
+        }
+      });
+      
+      // Store interval reference
+      container.dataset.intervalId = rotationInterval;
     });
+  }
+  
+  // Start image rotation after a short delay
+  setTimeout(startImageRotation, 1000);
+  
+  // Handle window resize
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      updateCarouselPosition();
+    }, 250);
   });
   
-  // Touch/swipe support for mobile
-  let startX = 0;
-  let isDragging = false;
+  // Initialize carousel position
+  updateCarouselPosition();
+  
+  // Touch swipe support
+  let touchStartX = 0;
+  let touchEndX = 0;
   
   carouselTrack.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-    isDragging = true;
+    touchStartX = e.changedTouches[0].screenX;
   });
   
-  carouselTrack.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const currentX = e.touches[0].clientX;
-    const diff = startX - currentX;
+  carouselTrack.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+  
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
     
-    if (Math.abs(diff) > 50) {
+    if (Math.abs(diff) > swipeThreshold) {
       if (diff > 0) {
         nextSlide();
       } else {
         prevSlide();
       }
-      isDragging = false;
     }
-  });
-  
-  carouselTrack.addEventListener('touchend', () => {
-    isDragging = false;
-  });
+  }
   
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') {
+      e.preventDefault();
       nextSlide();
     } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
       prevSlide();
     }
   });
-  
-  // Responsive adjustments
-  function handleResize() {
-    cardWidth = cards[0] ? cards[0].offsetWidth + 30 : 350;
-    updateCarouselPosition();
-  }
-  
-  window.addEventListener('resize', handleResize);
-  handleResize(); // Initial call
 });
 </script>
 
 {% schema %}
 {
   "name": "Featured Collections",
-  "max_blocks": 8,
+  "max_blocks": 10,
   "settings": [
     {
       "type": "text",
@@ -504,7 +498,21 @@ document.addEventListener('DOMContentLoaded', function() {
   "presets": [
     {
       "name": "Featured Collections",
-      "category": "Collections"
+      "category": "Collections",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
     }
   ]
 }
