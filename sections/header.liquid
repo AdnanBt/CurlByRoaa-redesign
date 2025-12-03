@@ -154,8 +154,9 @@
   }
 
   /* ALL DROPDOWN CONTENT - SAME FONT COLOR (BLACK) */
-  .mega-dropdown * {
-    color: #000000 !important; /* Force black color for ALL elements inside dropdown */
+  .dropdown-column h4,
+  .dropdown-link {
+    color: #000000 !important; /* Pure black for ALL dropdowns */
   }
 
   .dropdown-column h4 {
@@ -164,7 +165,6 @@
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #000000 !important;
   }
 
   .dropdown-links {
@@ -267,33 +267,8 @@
     background: rgba(232, 196, 184, 0.1);
   }
 
-  /* Mobile Menu Styles - RESPONSIVE FIXES */
-  @media (max-width: 1100px) {
-    /* Tablet size adjustments */
-    .mega-dropdown {
-      width: 700px;
-      padding: 30px;
-    }
-    
-    .nav-main {
-      gap: 25px;
-    }
-  }
-
-  @media (max-width: 900px) {
-    /* Smaller tablet adjustments */
-    .mega-dropdown {
-      width: 600px;
-      padding: 25px;
-    }
-    
-    .dropdown-grid {
-      gap: 30px;
-    }
-  }
-
+  /* Mobile Menu Styles */
   @media (max-width: 768px) {
-    /* MOBILE RESPONSIVE FIXES */
     .header {
       background: white !important;
       backdrop-filter: none !important;
@@ -356,40 +331,32 @@
       transform: rotate(180deg);
     }
 
-    /* MOBILE DROPDOWN FIXES */
     .mega-dropdown {
       display: none;
-      position: static !important;
-      width: 100% !important;
-      box-shadow: none !important;
-      padding: 20px !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      transform: none !important;
+      position: static;
+      width: 100%;
+      box-shadow: none;
+      padding: 20px;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-      background: #f9f9f9 !important;
-      border-radius: 8px !important;
-      margin-top: 10px !important;
-      pointer-events: auto !important;
-      left: auto !important;
-    }
-
-    /* Force black text on mobile too */
-    .mega-dropdown * {
-      color: #000000 !important;
+      transition: max-height 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      background: #f9f9f9;
+      border-radius: 8px;
+      margin-top: 10px;
+      pointer-events: auto;
     }
 
     .nav-link.active + .mega-dropdown {
-      display: block !important;
-      max-height: 800px !important; /* Increased for mobile */
-      overflow-y: auto !important;
+      display: block;
+      max-height: 500px;
     }
 
     .dropdown-grid {
-      grid-template-columns: 1fr !important;
-      gap: 20px !important;
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
 
     /* Mobile dropdown text - ALL BLACK */
@@ -405,27 +372,6 @@
     /* Push content down for fixed header on mobile */
     main {
       padding-top: 80px !important;
-    }
-  }
-
-  @media (max-width: 480px) {
-    /* Small mobile adjustments */
-    .dropdown-grid {
-      gap: 15px !important;
-    }
-    
-    .dropdown-column h4 {
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-    
-    .dropdown-link {
-      font-size: 13px;
-      padding: 6px 0;
-    }
-    
-    .mega-dropdown {
-      padding: 15px !important;
     }
   }
 
@@ -698,21 +644,6 @@ class HeaderWithDropdowns {
     this.setupScrollToSections();
     this.handleResize();
     this.adjustForAnnouncementBar();
-    
-    // Force black text in dropdowns on load
-    setTimeout(() => this.forceBlackTextInDropdowns(), 100);
-  }
-
-  forceBlackTextInDropdowns() {
-    // Force all dropdown text to be black
-    this.dropdowns.forEach(dropdown => {
-      const allElements = dropdown.querySelectorAll('*');
-      allElements.forEach(el => {
-        if (el.tagName !== 'IMG' && el.tagName !== 'SVG' && el.tagName !== 'PATH') {
-          el.style.color = '#000000 !important';
-        }
-      });
-    });
   }
 
   adjustForAnnouncementBar() {
@@ -729,8 +660,9 @@ class HeaderWithDropdowns {
       this.header.style.right = '0';
       
       // Add padding to body to prevent content hiding under fixed header
-      const existingPadding = parseInt(window.getComputedStyle(document.body).paddingTop) || 0;
-      document.body.style.paddingTop = (existingPadding + announcementHeight + 80) + 'px';
+      document.body.style.paddingTop = (announcementHeight + 80) + 'px';
+      
+      console.log('Announcement bar detected, header positioned at:', announcementHeight + 'px');
     }
   }
 
@@ -762,15 +694,6 @@ class HeaderWithDropdowns {
     window.addEventListener('resize', () => {
       this.handleResize();
     });
-
-    // Fix for touch devices
-    document.addEventListener('touchstart', (e) => {
-      if (this.isMobile && this.mainNav.classList.contains('active')) {
-        if (!e.target.closest('.header') && !e.target.closest('.nav-main')) {
-          this.closeMobileMenu();
-        }
-      }
-    });
   }
 
   handleResize() {
@@ -781,34 +704,21 @@ class HeaderWithDropdowns {
     if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
     if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
     
-    if (wasMobile !== this.isMobile) {
-      // Reset all dropdowns on resize
-      this.closeAllDropdowns();
+    // Reset all dropdowns on resize
+    this.closeAllDropdowns();
+    
+    // Close mobile menu on resize to desktop
+    if (!this.isMobile && this.mainNav.classList.contains('active')) {
       this.closeMobileMenu();
-      
-      // Re-adjust for announcement bar
+    }
+    
+    // Re-adjust for announcement bar on resize
+    if (wasMobile !== this.isMobile) {
       this.adjustForAnnouncementBar();
-      
-      // Re-initialize dropdowns for new screen size
-      this.setupDropdowns();
-      
-      // Force black text again
-      this.forceBlackTextInDropdowns();
     }
   }
 
   setupDropdowns() {
-    // Remove all existing event listeners first
-    this.navItems.forEach(item => {
-      const link = item.querySelector('.nav-link.has-dropdown');
-      const dropdown = item.querySelector('.mega-dropdown');
-      
-      if (link) {
-        const newLink = link.cloneNode(true);
-        link.parentNode.replaceChild(newLink, link);
-      }
-    });
-
     if (this.isMobile) {
       // Mobile dropdown handling
       this.navItems.forEach(item => {
@@ -826,41 +736,22 @@ class HeaderWithDropdowns {
                 const otherLink = otherItem.querySelector('.nav-link.has-dropdown');
                 const otherDropdown = otherItem.querySelector('.mega-dropdown');
                 if (otherLink) otherLink.classList.remove('active');
-                if (otherDropdown) {
-                  otherDropdown.style.maxHeight = '0';
-                  otherDropdown.style.overflow = 'hidden';
-                }
+                if (otherDropdown) otherDropdown.style.maxHeight = '0';
               }
             });
             
             // Toggle current dropdown
-            const isActive = link.classList.contains('active');
             link.classList.toggle('active');
-            
-            if (!isActive) {
+            if (link.classList.contains('active')) {
               dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
-              dropdown.style.overflow = 'visible';
-              
-              // Scroll to show the dropdown on mobile
-              setTimeout(() => {
-                dropdown.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-              }, 100);
             } else {
               dropdown.style.maxHeight = '0';
-              dropdown.style.overflow = 'hidden';
             }
           });
         }
       });
-      
-      // Close dropdowns when clicking on non-dropdown links
-      document.querySelectorAll('.nav-link:not(.has-dropdown)').forEach(link => {
-        link.addEventListener('click', () => {
-          this.closeAllMobileDropdowns();
-        });
-      });
     } else {
-      // Desktop dropdown handling
+      // Desktop dropdown handling with SMOOTH transitions
       this.navItems.forEach(item => {
         const dropdown = item.querySelector('.mega-dropdown');
         if (!dropdown) return;
@@ -878,7 +769,7 @@ class HeaderWithDropdowns {
             dropdown.style.transform = 'translateX(-50%) translateY(10px)';
             dropdown.style.pointerEvents = 'auto';
             
-            // Force reflow for animation
+            // Force reflow
             dropdown.offsetHeight;
             
             // Animate to final position
@@ -895,7 +786,6 @@ class HeaderWithDropdowns {
           this.leaveTimeout = setTimeout(() => {
             dropdown.style.opacity = '0';
             dropdown.style.transform = 'translateX(-50%) translateY(10px)';
-            dropdown.style.transition = 'all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)';
             
             // Hide after animation completes
             setTimeout(() => {
@@ -904,7 +794,7 @@ class HeaderWithDropdowns {
                 dropdown.style.pointerEvents = 'none';
               }
             }, 300);
-          }, 150);
+          }, 100);
         });
 
         // Keep dropdown open when hovering over it
@@ -922,7 +812,6 @@ class HeaderWithDropdowns {
           this.leaveTimeout = setTimeout(() => {
             dropdown.style.opacity = '0';
             dropdown.style.transform = 'translateX(-50%) translateY(10px)';
-            dropdown.style.transition = 'all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)';
             
             setTimeout(() => {
               if (parseFloat(dropdown.style.opacity) === 0) {
@@ -930,7 +819,7 @@ class HeaderWithDropdowns {
                 dropdown.style.pointerEvents = 'none';
               }
             }, 300);
-          }, 150);
+          }, 100);
         });
       });
     }
@@ -982,7 +871,7 @@ class HeaderWithDropdowns {
             }
             
             const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = Math.max(0, targetPosition - headerHeight);
+            const offsetPosition = targetPosition - headerHeight;
             
             window.scrollTo({
               top: offsetPosition,
@@ -995,12 +884,11 @@ class HeaderWithDropdowns {
   }
 
   toggleMobileMenu() {
-    const isOpening = !this.mainNav.classList.contains('active');
     this.mainNav.classList.toggle('active');
     this.mobileMenuBtn.textContent = this.mainNav.classList.contains('active') ? '✕' : '☰';
     
     // Toggle body scroll
-    if (isOpening) {
+    if (this.mainNav.classList.contains('active')) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -1024,7 +912,6 @@ class HeaderWithDropdowns {
     
     this.dropdowns.forEach(dropdown => {
       dropdown.style.maxHeight = '0';
-      dropdown.style.overflow = 'hidden';
     });
   }
 
@@ -1037,7 +924,6 @@ class HeaderWithDropdowns {
         dropdown.style.opacity = '0';
         dropdown.style.transform = 'translateX(-50%) translateY(10px)';
         dropdown.style.pointerEvents = 'none';
-        dropdown.style.transition = 'all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)';
         
         setTimeout(() => {
           dropdown.style.visibility = 'hidden';
@@ -1049,31 +935,15 @@ class HeaderWithDropdowns {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Wait for everything to load
-  const initHeader = () => {
+  // Wait a bit for announcement bar to load
+  setTimeout(() => {
     const header = new HeaderWithDropdowns();
     window.headerInstance = header;
     
-    // Re-check after a short delay to ensure everything is loaded
-    setTimeout(() => {
-      header.forceBlackTextInDropdowns();
+    // Re-adjust after all images load
+    window.addEventListener('load', () => {
       header.adjustForAnnouncementBar();
-    }, 500);
-  };
-
-  // Check if DOM is already loaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHeader);
-  } else {
-    initHeader();
-  }
-  
-  // Re-adjust on window load
-  window.addEventListener('load', () => {
-    if (window.headerInstance) {
-      window.headerInstance.forceBlackTextInDropdowns();
-      window.headerInstance.adjustForAnnouncementBar();
-    }
-  });
+    });
+  }, 500);
 });
 </script>
