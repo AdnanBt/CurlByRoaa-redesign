@@ -442,7 +442,7 @@
         </a>
       </div>
 
-      <!-- Main Navigation with Mega Dropdowns -->
+      <!-- Main Navigation -->
       <nav class="nav-main" id="main-nav">
         <!-- Shop Dropdown -->
         <div class="nav-item">
@@ -452,29 +452,33 @@
               <div class="dropdown-column">
                 <h4>By Product Type</h4>
                 <div class="dropdown-links">
-                  {% assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' %}
-                  {% for handle in collections_to_show %}
-                    {% assign collection = collections[handle] %}
-                    {% if collection %}
-                      <a href="{{ collection.url }}" class="dropdown-link">{{ collection.title }}</a>
-                    {% else %}
-                      <a href="{{ routes.collections_url }}" class="dropdown-link">{{ handle | replace: '-', ' ' | capitalize }}</a>
-                    {% endif %}
-                  {% endfor %}
+                  {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
+                  {%- for handle in collections_to_show -%}
+                    {%- assign collection = collections[handle] -%}
+                    <a href="{{ collection.url | default: routes.collections_url }}" class="dropdown-link">
+                      {%- if collection -%}
+                        {{ collection.title }}
+                      {%- else -%}
+                        {{ handle | replace: '-', ' ' | capitalize }}
+                      {%- endif -%}
+                    </a>
+                  {%- endfor -%}
                 </div>
               </div>
               <div class="dropdown-column">
                 <h4>By Curl Type</h4>
                 <div class="dropdown-links">
-                  {% assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' %}
-                  {% for handle in curl_collections %}
-                    {% assign collection = collections[handle] %}
-                    {% if collection %}
-                      <a href="{{ collection.url }}" class="dropdown-link">{{ collection.title }}</a>
-                    {% else %}
-                      <a href="{{ routes.collections_url }}" class="dropdown-link">{{ handle | replace: '-', ' ' | capitalize }}</a>
-                    {% endif %}
-                  {% endfor %}
+                  {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
+                  {%- for handle in curl_collections -%}
+                    {%- assign collection = collections[handle] -%}
+                    <a href="{{ collection.url | default: routes.collections_url }}" class="dropdown-link">
+                      {%- if collection -%}
+                        {{ collection.title }}
+                      {%- else -%}
+                        {{ handle | replace: '-', ' ' | capitalize }}
+                      {%- endif -%}
+                    </a>
+                  {%- endfor -%}
                 </div>
               </div>
             </div>
@@ -488,7 +492,7 @@
           </div>
         </div>
 
-        <!-- Hair Quiz Dropdown -->
+        <!-- Hair Quiz -->
         <div class="nav-item">
           <a href="#hair-quiz-section" class="nav-link has-dropdown">Hair Quiz</a>
           <div class="mega-dropdown">
@@ -512,22 +516,15 @@
                 </div>
               </div>
             </div>
-            <div class="dropdown-image">
-              <a href="#hair-quiz-section" class="dropdown-image-link">
-                <div class="dropdown-image-content" style="background: linear-gradient(135deg, #A8D8EA, #78C2DC);">
-                  Start Your Hair Journey
-                </div>
-              </a>
-            </div>
           </div>
         </div>
 
-        <!-- Services by Concern - No dropdown -->
+        <!-- Services by Concern -->
         <div class="nav-item">
           <a href="#services-by-concern" class="nav-link">Services by Concern</a>
         </div>
 
-        <!-- Our Story Dropdown -->
+        <!-- Our Story -->
         <div class="nav-item">
           <a href="{{ pages['about'].url | default: '#' }}" class="nav-link has-dropdown">Our Story</a>
           <div class="mega-dropdown">
@@ -551,17 +548,10 @@
                 </div>
               </div>
             </div>
-            <div class="dropdown-image">
-              <a href="{{ pages['about'].url | default: '#' }}" class="dropdown-image-link">
-                <div class="dropdown-image-content" style="background: linear-gradient(135deg, #95E1D3, #6DCFB7);">
-                  Join Our Community
-                </div>
-              </a>
-            </div>
           </div>
         </div>
 
-        <!-- Guides Dropdown -->
+        <!-- Guides -->
         <div class="nav-item">
           <a href="{{ blogs['guides'].url | default: routes.blog_url }}" class="nav-link has-dropdown">Guides</a>
           <div class="mega-dropdown">
@@ -569,16 +559,16 @@
               <div class="dropdown-column">
                 <h4>Hair Care Guides</h4>
                 <div class="dropdown-links">
-                  {% if blogs.guides.articles.size > 0 %}
-                    {% for article in blogs.guides.articles limit: 4 %}
+                  {%- if blogs.guides.articles.size > 0 -%}
+                    {%- for article in blogs.guides.articles limit: 4 -%}
                       <a href="{{ article.url }}" class="dropdown-link">{{ article.title }}</a>
-                    {% endfor %}
-                  {% else %}
+                    {%- endfor -%}
+                  {%- else -%}
                     <a href="{{ routes.blog_url }}" class="dropdown-link">Wash Day Routine</a>
                     <a href="{{ routes.blog_url }}" class="dropdown-link">Styling Techniques</a>
                     <a href="{{ routes.blog_url }}" class="dropdown-link">Night Time Routine</a>
                     <a href="{{ routes.blog_url }}" class="dropdown-link">Seasonal Hair Care</a>
-                  {% endif %}
+                  {%- endif -%}
                 </div>
               </div>
               <div class="dropdown-column">
@@ -590,13 +580,6 @@
                   <a href="{{ routes.blog_url }}" class="dropdown-link">Professional Tips</a>
                 </div>
               </div>
-            </div>
-            <div class="dropdown-image">
-              <a href="{{ routes.blog_url }}" class="dropdown-image-link">
-                <div class="dropdown-image-content" style="background: linear-gradient(135deg, #FF9A9E, #FAD0C4);">
-                  Learn & Grow
-                </div>
-              </a>
             </div>
           </div>
         </div>
@@ -624,234 +607,182 @@
     </div>
   </div>
 </header>
-
-<script>
-class HeaderWithDropdowns {
-  constructor() {
-    this.header = document.getElementById('main-header');
-    this.mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    this.mainNav = document.getElementById('main-nav');
-    this.navItems = document.querySelectorAll('.nav-item');
-    this.navLinks = document.querySelectorAll('.nav-link');
-    this.dropdowns = document.querySelectorAll('.mega-dropdown');
-    
-    this.hoverTimeout = null;
-    this.leaveTimeout = null;
-    this.isMobile = window.innerWidth <= 768;
-    this.hasAnnouncementBar = document.querySelector('.announcement-bar') !== null;
-    
-    this.init();
-  }
-
-  init() {
-    this.bindEvents();
-    this.setupScrollEffect();
-    this.setupDropdowns();
-    this.setupScrollToSections();
-    this.handleResize();
-    this.adjustForAnnouncementBar();
-  }
-
-  adjustForAnnouncementBar() {
-    // Check if announcement bar exists
-    const announcementBar = document.querySelector('.announcement-bar');
-    
-    if (announcementBar && !this.isMobile) {
-      const announcementHeight = announcementBar.offsetHeight;
+document.addEventListener('DOMContentLoaded', function() {
+  // Elements
+  const header = document.getElementById('main-header');
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mainNav = document.getElementById('main-nav');
+  const navItems = document.querySelectorAll('.nav-item');
+  const navLinks = document.querySelectorAll('.nav-link');
+  
+  // State
+  let isMobile = window.innerWidth <= 768;
+  
+  // Initialize
+  initHeader();
+  
+  function initHeader() {
+    // Setup mobile menu toggle
+    if (mobileMenuBtn && mainNav) {
+      mobileMenuBtn.addEventListener('click', toggleMobileMenu);
       
-      // Set header position below announcement bar
-      this.header.style.position = 'fixed';
-      this.header.style.top = announcementHeight + 'px';
-      this.header.style.left = '0';
-      this.header.style.right = '0';
-      
-      // Add padding to body to prevent content hiding under fixed header
-      document.body.style.paddingTop = (announcementHeight + 80) + 'px';
-      
-      console.log('Announcement bar detected, header positioned at:', announcementHeight + 'px');
-    }
-  }
-
-  bindEvents() {
-    // Mobile menu toggle
-    if (this.mobileMenuBtn && this.mainNav) {
-      this.mobileMenuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.toggleMobileMenu();
-      });
-
       // Close menu when clicking outside
       document.addEventListener('click', (e) => {
-        if (!e.target.closest('.header') && this.mainNav.classList.contains('active')) {
-          this.closeMobileMenu();
+        if (!e.target.closest('.header') && mainNav.classList.contains('active')) {
+          closeMobileMenu();
         }
       });
     }
-
-    // Escape key to close dropdowns
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        this.closeAllDropdowns();
-        this.closeMobileMenu();
-      }
-    });
-
-    // Window resize
-    window.addEventListener('resize', () => {
-      this.handleResize();
-    });
+    
+    // Setup dropdowns
+    setupDropdowns();
+    
+    // Setup scroll effect
+    window.addEventListener('scroll', handleScroll);
+    
+    // Setup resize handler
+    window.addEventListener('resize', handleResize);
+    
+    // Setup scroll to sections
+    setupScrollToSections();
+    
+    // Force black text in dropdowns
+    forceBlackText();
   }
-
-  handleResize() {
-    const wasMobile = this.isMobile;
-    this.isMobile = window.innerWidth <= 768;
+  
+  // Mobile Menu Functions
+  function toggleMobileMenu() {
+    const isOpening = !mainNav.classList.contains('active');
+    mainNav.classList.toggle('active');
+    mobileMenuBtn.textContent = mainNav.classList.contains('active') ? '✕' : '☰';
     
-    // Clear any timeouts on resize
-    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-    if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
+    // Toggle body scroll
+    document.body.style.overflow = isOpening ? 'hidden' : '';
     
-    // Reset all dropdowns on resize
-    this.closeAllDropdowns();
-    
-    // Close mobile menu on resize to desktop
-    if (!this.isMobile && this.mainNav.classList.contains('active')) {
-      this.closeMobileMenu();
-    }
-    
-    // Re-adjust for announcement bar on resize
-    if (wasMobile !== this.isMobile) {
-      this.adjustForAnnouncementBar();
+    if (!isOpening) {
+      closeAllMobileDropdowns();
     }
   }
-
-  setupDropdowns() {
-    if (this.isMobile) {
-      // Mobile dropdown handling
-      this.navItems.forEach(item => {
+  
+  function closeMobileMenu() {
+    if (mainNav.classList.contains('active')) {
+      mainNav.classList.remove('active');
+      mobileMenuBtn.textContent = '☰';
+      document.body.style.overflow = '';
+      closeAllMobileDropdowns();
+    }
+  }
+  
+  // Dropdown Functions
+  function setupDropdowns() {
+    if (isMobile) {
+      // Mobile dropdowns
+      navItems.forEach(item => {
         const link = item.querySelector('.nav-link.has-dropdown');
         const dropdown = item.querySelector('.mega-dropdown');
         
         if (link && dropdown) {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Close other dropdowns
-            this.navItems.forEach(otherItem => {
-              if (otherItem !== item) {
-                const otherLink = otherItem.querySelector('.nav-link.has-dropdown');
-                const otherDropdown = otherItem.querySelector('.mega-dropdown');
-                if (otherLink) otherLink.classList.remove('active');
-                if (otherDropdown) otherDropdown.style.maxHeight = '0';
-              }
-            });
-            
-            // Toggle current dropdown
-            link.classList.toggle('active');
-            if (link.classList.contains('active')) {
-              dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
-            } else {
-              dropdown.style.maxHeight = '0';
-            }
-          });
+          // Remove existing listeners
+          link.removeEventListener('click', handleMobileDropdownClick);
+          link.addEventListener('click', handleMobileDropdownClick);
         }
       });
+      
+      // Close dropdowns when clicking non-dropdown links
+      document.querySelectorAll('.nav-link:not(.has-dropdown)').forEach(link => {
+        link.addEventListener('click', closeAllMobileDropdowns);
+      });
     } else {
-      // Desktop dropdown handling with SMOOTH transitions
-      this.navItems.forEach(item => {
+      // Desktop dropdowns
+      navItems.forEach(item => {
         const dropdown = item.querySelector('.mega-dropdown');
         if (!dropdown) return;
-
-        // Mouse enter - OPEN
-        item.addEventListener('mouseenter', () => {
-          if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
-          
-          this.hoverTimeout = setTimeout(() => {
-            this.closeAllDropdowns();
-            
-            // Animate in
-            dropdown.style.opacity = '0';
-            dropdown.style.visibility = 'visible';
-            dropdown.style.transform = 'translateX(-50%) translateY(10px)';
-            dropdown.style.pointerEvents = 'auto';
-            
-            // Force reflow
-            dropdown.offsetHeight;
-            
-            // Animate to final position
-            dropdown.style.opacity = '1';
-            dropdown.style.transform = 'translateX(-50%) translateY(0)';
-            dropdown.style.transition = 'all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)';
-          }, 100);
-        });
-
-        // Mouse leave - CLOSE
-        item.addEventListener('mouseleave', () => {
-          if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-          
-          this.leaveTimeout = setTimeout(() => {
-            dropdown.style.opacity = '0';
-            dropdown.style.transform = 'translateX(-50%) translateY(10px)';
-            
-            // Hide after animation completes
-            setTimeout(() => {
-              if (parseFloat(dropdown.style.opacity) === 0) {
-                dropdown.style.visibility = 'hidden';
-                dropdown.style.pointerEvents = 'none';
-              }
-            }, 300);
-          }, 100);
-        });
-
-        // Keep dropdown open when hovering over it
-        dropdown.addEventListener('mouseenter', () => {
-          if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-          if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
-          
-          dropdown.style.opacity = '1';
-          dropdown.style.visibility = 'visible';
-          dropdown.style.transform = 'translateX(-50%) translateY(0)';
-          dropdown.style.pointerEvents = 'auto';
-        });
-
-        dropdown.addEventListener('mouseleave', () => {
-          this.leaveTimeout = setTimeout(() => {
-            dropdown.style.opacity = '0';
-            dropdown.style.transform = 'translateX(-50%) translateY(10px)';
-            
-            setTimeout(() => {
-              if (parseFloat(dropdown.style.opacity) === 0) {
-                dropdown.style.visibility = 'hidden';
-                dropdown.style.pointerEvents = 'none';
-              }
-            }, 300);
-          }, 100);
-        });
+        
+        item.addEventListener('mouseenter', () => openDropdown(dropdown));
+        item.addEventListener('mouseleave', () => closeDropdown(dropdown));
+        dropdown.addEventListener('mouseenter', () => openDropdown(dropdown));
+        dropdown.addEventListener('mouseleave', () => closeDropdown(dropdown));
       });
     }
   }
-
-  setupScrollEffect() {
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-      
-      if (currentScroll > 50) {
-        this.header.classList.add('scrolled');
-      } else {
-        this.header.classList.remove('scrolled');
-      }
-      
-      // Close dropdowns on scroll (desktop only)
-      if (!this.isMobile) {
-        this.closeAllDropdowns();
+  
+  function handleMobileDropdownClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const link = this;
+    const dropdown = link.nextElementSibling;
+    const isActive = link.classList.contains('active');
+    
+    // Close other dropdowns
+    navItems.forEach(otherItem => {
+      if (otherItem !== link.parentElement) {
+        const otherLink = otherItem.querySelector('.nav-link.has-dropdown');
+        const otherDropdown = otherItem.querySelector('.mega-dropdown');
+        if (otherLink) otherLink.classList.remove('active');
+        if (otherDropdown) otherDropdown.style.maxHeight = '0';
       }
     });
+    
+    // Toggle current dropdown
+    link.classList.toggle('active');
+    
+    if (!isActive) {
+      dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+    } else {
+      dropdown.style.maxHeight = '0';
+    }
   }
-
-  setupScrollToSections() {
-    this.navLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        const href = link.getAttribute('href');
+  
+  function openDropdown(dropdown) {
+    if (isMobile) return;
+    
+    dropdown.style.opacity = '1';
+    dropdown.style.visibility = 'visible';
+    dropdown.style.transform = 'translateX(-50%) translateY(0)';
+    dropdown.style.pointerEvents = 'auto';
+  }
+  
+  function closeDropdown(dropdown) {
+    if (isMobile) return;
+    
+    dropdown.style.opacity = '0';
+    dropdown.style.visibility = 'hidden';
+    dropdown.style.transform = 'translateX(-50%) translateY(10px)';
+    dropdown.style.pointerEvents = 'none';
+  }
+  
+  function closeAllMobileDropdowns() {
+    navLinks.forEach(link => link.classList.remove('active'));
+    document.querySelectorAll('.mega-dropdown').forEach(dropdown => {
+      dropdown.style.maxHeight = '0';
+    });
+  }
+  
+  function closeAllDropdowns() {
+    if (!isMobile) {
+      document.querySelectorAll('.mega-dropdown').forEach(closeDropdown);
+    }
+  }
+  
+  // Scroll Functions
+  function handleScroll() {
+    if (window.pageYOffset > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+    
+    // Close dropdowns on scroll (desktop only)
+    if (!isMobile) {
+      closeAllDropdowns();
+    }
+  }
+  
+  function setupScrollToSections() {
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
         
         if (href && href.startsWith('#')) {
           e.preventDefault();
@@ -860,24 +791,22 @@ class HeaderWithDropdowns {
           
           if (targetElement) {
             // Close mobile menu if open
-            if (this.isMobile) {
-              this.closeMobileMenu();
+            if (isMobile) {
+              closeMobileMenu();
             }
             
             // Close dropdowns
-            this.closeAllDropdowns();
+            closeAllDropdowns();
             
-            // Calculate header height
-            let headerHeight = this.header.offsetHeight;
-            
-            // Add announcement bar height if exists
+            // Calculate scroll position
+            let headerHeight = header.offsetHeight;
             const announcementBar = document.querySelector('.announcement-bar');
-            if (announcementBar && !this.isMobile) {
+            if (announcementBar && !isMobile) {
               headerHeight += announcementBar.offsetHeight;
             }
             
             const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = targetPosition - headerHeight;
+            const offsetPosition = Math.max(0, targetPosition - headerHeight);
             
             window.scrollTo({
               top: offsetPosition,
@@ -888,68 +817,35 @@ class HeaderWithDropdowns {
       });
     });
   }
-
-  toggleMobileMenu() {
-    this.mainNav.classList.toggle('active');
-    this.mobileMenuBtn.textContent = this.mainNav.classList.contains('active') ? '✕' : '☰';
+  
+  // Utility Functions
+  function handleResize() {
+    const wasMobile = isMobile;
+    isMobile = window.innerWidth <= 768;
     
-    // Toggle body scroll
-    if (this.mainNav.classList.contains('active')) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-      this.closeAllMobileDropdowns();
+    if (wasMobile !== isMobile) {
+      // Reset states
+      closeMobileMenu();
+      closeAllDropdowns();
+      
+      // Re-setup dropdowns for new screen size
+      setupDropdowns();
+      
+      // Force black text again
+      forceBlackText();
     }
   }
-
-  closeMobileMenu() {
-    if (this.mainNav.classList.contains('active')) {
-      this.mainNav.classList.remove('active');
-      this.mobileMenuBtn.textContent = '☰';
-      document.body.style.overflow = '';
-      this.closeAllMobileDropdowns();
-    }
-  }
-
-  closeAllMobileDropdowns() {
-    this.navLinks.forEach(link => {
-      link.classList.remove('active');
-    });
-    
-    this.dropdowns.forEach(dropdown => {
-      dropdown.style.maxHeight = '0';
+  
+  function forceBlackText() {
+    // Force black text in all dropdowns
+    document.querySelectorAll('.mega-dropdown, .mega-dropdown *').forEach(el => {
+      if (el.tagName !== 'IMG' && el.tagName !== 'SVG' && el.tagName !== 'PATH') {
+        el.style.color = '#000000';
+      }
     });
   }
-
-  closeAllDropdowns() {
-    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-    if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
-    
-    if (!this.isMobile) {
-      this.dropdowns.forEach(dropdown => {
-        dropdown.style.opacity = '0';
-        dropdown.style.transform = 'translateX(-50%) translateY(10px)';
-        dropdown.style.pointerEvents = 'none';
-        
-        setTimeout(() => {
-          dropdown.style.visibility = 'hidden';
-        }, 300);
-      });
-    }
-  }
-}
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  // Wait a bit for announcement bar to load
-  setTimeout(() => {
-    const header = new HeaderWithDropdowns();
-    window.headerInstance = header;
-    
-    // Re-adjust after all images load
-    window.addEventListener('load', () => {
-      header.adjustForAnnouncementBar();
-    });
-  }, 500);
+  
+  // Initial black text enforcement
+  setTimeout(forceBlackText, 100);
 });
 </script>
