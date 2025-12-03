@@ -217,6 +217,85 @@
 }
 </style>
 
+<section class="featured-collections-section">
+  <div class="featured-collections-header">
+    <h2 class="featured-collections-title">{{ section.settings.title | default: "Shop By Collection" }}</h2>
+    <p class="featured-collections-description">{{ section.settings.description | default: "Discover curated products for your unique hair journey" }}</p>
+  </div>
+
+  <div class="featured-collections-carousel">
+    <div class="carousel-container">
+      <div class="carousel-track" id="carouselTrack">
+        {% for block in section.blocks %}
+          {% assign collection = collections[block.settings.collection] %}
+          {% if collection %}
+            {% assign products = collection.products %}
+            <div class="collection-card" data-collection-id="{{ collection.id }}">
+              <div class="image-rotate-container" data-collection-index="{{ forloop.index0 }}">
+                {% comment %} Collection Image as Fallback {% endcomment %}
+                {% if collection.image %}
+                  <img 
+                    src="{{ collection.image | image_url: width: 600 }}"
+                    alt="{{ collection.title | escape }}"
+                    class="rotating-image active"
+                    loading="lazy"
+                    width="600"
+                    height="400"
+                  >
+                {% endif %}
+                
+                {% comment %} Product Images for Rotation {% endcomment %}
+                {% for product in products limit: 4 %}
+                  {% if product.featured_image %}
+                    <img 
+                      src="{{ product.featured_image | image_url: width: 600 }}"
+                      alt="{{ product.title | escape }}"
+                      class="rotating-image"
+                      loading="lazy"
+                      width="600"
+                      height="400"
+                      data-index="{{ forloop.index }}"
+                    >
+                  {% endif %}
+                {% endfor %}
+                
+                {% comment %} Fallback if no images {% endcomment %}
+                {% unless collection.image or products.first.featured_image %}
+                  <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f0f0f0, #e0e0e0);">
+                    <span style="color: #999; font-size: 1.1rem;">No Image</span>
+                  </div>
+                {% endunless %}
+              </div>
+              
+              <div class="card-content">
+                <h3 class="collection-title">{{ collection.title }}</h3>
+                <p class="collection-count">{{ collection.products_count }} products</p>
+                <a href="{{ collection.url }}" class="shop-button">
+                  Shop Now
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8.781 8l-3.3-3.3.943-.943L10.667 8l-4.243 4.243-.943-.943 3.3-3.3z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    {% if section.blocks.size > 1 %}
+      <div class="carousel-nav">
+        <button class="nav-button prev-button" id="prevButton" aria-label="Previous collections">
+          ←
+        </button>
+        <button class="nav-button next-button" id="nextButton" aria-label="Next collections">
+          →
+        </button>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Carousel Elements
