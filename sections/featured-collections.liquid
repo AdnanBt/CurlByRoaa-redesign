@@ -291,108 +291,222 @@
   </div>
 </section>
 
-<script>
+<script defer>
 document.addEventListener('DOMContentLoaded', function() {
   // Carousel Elements
   const carouselTrack = document.getElementById('carouselTrack');
   const prevButton = document.getElementById('prevButton');
   const nextButton = document.getElementById('nextButton');
-  const cards = document.querySelectorAll('.collection-card');
-  
+  const cards = Array.from(document.querySelectorAll('.collection-card'));
   if (!carouselTrack || cards.length === 0) return;
-  
-  // Carousel State
-  let currentPosition = 0;
-  const gap = 30;
-  let cardWidth = cards[0].offsetWidth + gap;
-  const container = carouselTrack.parentElement;
-  
-  // Ensure transition is set
-  carouselTrack.style.transition = 'transform 0.5s ease-in-out';
-  
-  // Calculate max scroll
+
+  // Settings
+  const GAP = 30; // must match your CSS .carousel-track gap
+  const AUTOPLAY_MS = 2000; // auto-advance every 2000ms (2s)
+  let currentSlide = 0;
+  let autoplayTimer = null;
+  let isHovered = false;
+  let isFocused = false;
+
+  // Utility: compute sizes dynamically
+  function getCardWidth() {
+    // get bounding width of first card (includes padding/border)
+    return (cards[0] ? cards[0].getBoundingClientRect().width : 0) + GAP;
+  }
+  function getMaxVisible() {
+    const viewportWidth = carouselTrack.parentElement.clientWidth;
+    const cardW = getCardWidth();
+    return Math.max(1, Math.floor(viewportWidth / cardW));
+  }
   function getMaxScroll() {
-    const containerWidth = container.clientWidth;
-    const trackWidth = carouselTrack.scrollWidth;
-    return Math.max(0, trackWidth - containerWidth);
+    return Math.max(0, cards.length - getMaxVisible());
   }
-  
-  // Update carousel position
-  function updateCarousel() {
-    // Ensure we don't scroll past limits
-    const maxScroll = getMaxScroll();
-    currentPosition = Math.min(currentPosition, maxScroll);
-    currentPosition = Math.max(currentPosition, 0);
-    
-    // Apply transform
-    carouselTrack.style.transform = `translateX(-${currentPosition}px)`;
-    
-    // Update button states
-    if (prevButton) {
-      prevButton.disabled = currentPosition === 0;
+
+  // Update carousel position using currentSlide
+  function updateCarouselPosition(animate = true) {
+    const cardW = getCardWidth();
+    const translateX = currentSlide * cardW;
+    if (!animate) {
+      carouselTrack.style.transition = 'none';
+    } else {
+      carouselTrack.style.transition = 'transform 0.5s ease-in-out';
     }
-    if (nextButton) {
-      nextButton.disabled = currentPosition >= maxScroll;
+    carouselTrack.style.transform = `translateX(-${translateX}px)`;
+
+    // restore transition after disabling it briefly
+    if (!animate) {
+      // force reflow then restore
+      void carouselTrack.offsetWidth;
+      carouselTrack.style.transition = 'transform 0.5s ease-in-out';
     }
+
+    // Update button states (if exist)
+    if (prevButton) prevButton.disabled = currentSlide === 0;
+    if (nextButton) nextButton.disabled = currentSlide >= getMaxScroll();
   }
-  
-  // Next slide
+
+  // Next / Prev with dynamic bounds
   function nextSlide() {
-    const containerWidth = container.clientWidth;
-    currentPosition += containerWidth * 0.8; // Move 80% of container width
-    updateCarousel();
+    const maxScroll = getMaxScroll();
+    if (currentSlide < maxScroll) {
+      currentSlide = Math.min(maxScroll, currentSlide + 1);
+    } else {
+      // loop back to start for continuous feel
+      currentSlide = 0;
+    }
+    updateCarouselPosition();
   }
-  
-  // Previous slide
   function prevSlide() {
-    const containerWidth = container.clientWidth;
-    currentPosition -= containerWidth * 0.8; // Move 80% of container width
-    updateCarousel();
+    if (currentSlide > 0) {
+      currentSlide = Math.max(0, currentSlide - 1);
+    } else {
+      // jump to end
+      currentSlide = getMaxScroll();
+    }
+    updateCarouselPosition();
   }
-  
+
+  // Autoplay control
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayTimer = setInterval(() => {
+      if (!isHovered && !isFocused) nextSlide();
+    }, AUTOPLAY_MS);
+  }
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
   // Button listeners
-  if (nextButton) nextButton.addEventListener('click', nextSlide);
-  if (prevButton) prevButton.addEventListener('click', prevSlide);
-  
-  // Initialize
-  updateCarousel();
-  
-  // Handle resize
-  window.addEventListener('resize', updateCarousel);
-  
-  // Your image rotation code here...
-  function startImageRotation() {
-    const imageContainers = document.querySelectorAll('.image-rotate-container');
-    
-    imageContainers.forEach(container => {
-      const images = container.querySelectorAll('.rotating-image');
-      if (images.length <= 1) return;
-      
-      let currentIndex = 0;
-      
-      // Show first image
-      images.forEach((img, i) => {
-        img.classList.toggle('active', i === 0);
-      });
-      
-      const rotate = () => {
-        images[currentIndex].classList.remove('active');
-        currentIndex = (currentIndex + 1) % images.length;
-        images[currentIndex].classList.add('active');
-      };
-      
-      let interval = setInterval(rotate, 2000);
-      
-      container.addEventListener('mouseenter', () => clearInterval(interval));
-      container.addEventListener('mouseleave', () => {
-        interval = setInterval(rotate, 2000);
-      });
-    });
+  if (nextButton) nextButton.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
+  if (prevButton) prevButton.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
+
+  // Pause/resume helpers
+  function resetAutoplay() {
+    stopAutoplay();
+    // small delay before restart to avoid immediate jump after manual nav
+    setTimeout(() => startAutoplay(), 900);
   }
-  
-  setTimeout(startImageRotation, 1000);
+
+  // Pause on hover over the carousel viewport or when focusing any card
+  const viewport = carouselTrack.parentElement;
+  viewport.addEventListener('mouseenter', () => { isHovered = true; stopAutoplay(); });
+  viewport.addEventListener('mouseleave', () => { isHovered = false; startAutoplay(); });
+
+  cards.forEach(card => {
+    card.addEventListener('focusin', () => { isFocused = true; stopAutoplay(); });
+    card.addEventListener('focusout', () => { isFocused = false; startAutoplay(); });
+  });
+
+  // Touch support (keep simple: allow manual swipe gestures on the track)
+  let touchStartX = 0;
+  let touchCurrentX = 0;
+  let isTouching = false;
+  carouselTrack.addEventListener('touchstart', (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    isTouching = true;
+    touchStartX = e.touches[0].clientX;
+    touchCurrentX = touchStartX;
+    stopAutoplay();
+    carouselTrack.style.transition = 'none';
+  }, { passive: true });
+
+  carouselTrack.addEventListener('touchmove', (e) => {
+    if (!isTouching) return;
+    touchCurrentX = e.touches[0].clientX;
+    const dx = touchStartX - touchCurrentX;
+    // translate visually during swipe
+    const previewTranslate = (currentSlide * getCardWidth()) + dx;
+    carouselTrack.style.transform = `translateX(-${previewTranslate}px)`;
+  }, { passive: true });
+
+  carouselTrack.addEventListener('touchend', (e) => {
+    if (!isTouching) return;
+    isTouching = false;
+    const diff = touchStartX - touchCurrentX;
+    const threshold = 50; // px
+    // restore transition
+    carouselTrack.style.transition = 'transform 0.5s ease-in-out';
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) nextSlide(); else prevSlide();
+    } else {
+      // small swipe: snap back
+      updateCarouselPosition();
+    }
+    setTimeout(() => startAutoplay(), 600);
+  });
+
+  // Keyboard controls
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { nextSlide(); resetAutoplay(); }
+    if (e.key === 'ArrowLeft') { prevSlide(); resetAutoplay(); }
+  });
+
+  // Recalculate on resize and keep currentSlide valid
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      // clamp currentSlide to available max after resize
+      const max = getMaxScroll();
+      if (currentSlide > max) currentSlide = max;
+      updateCarouselPosition(false); // jump without animation to new clamped pos
+    }, 120);
+  });
+
+  // --- Inner image rotation (per-card) --- //
+  // We make rotation robust, store intervals, pause on hover of that image container
+  const rotateContainers = Array.from(document.querySelectorAll('.image-rotate-container'));
+  const rotateState = new Map();
+
+  rotateContainers.forEach(container => {
+    const imgs = Array.from(container.querySelectorAll('.rotating-image'));
+    if (imgs.length <= 1) return;
+    // ensure first image visible
+    imgs.forEach((im, i) => im.classList.toggle('active', i === 0));
+    let idx = 0;
+    function rotateOnce() {
+      imgs[idx].classList.remove('active');
+      idx = (idx + 1) % imgs.length;
+      imgs[idx].classList.add('active');
+    }
+    // start interval
+    const id = setInterval(rotateOnce, 2000);
+    rotateState.set(container, { intervalId: id, rotateOnce });
+
+    // pause on hover/focus
+    container.addEventListener('mouseenter', () => {
+      const s = rotateState.get(container);
+      if (s && s.intervalId) { clearInterval(s.intervalId); s.intervalId = null; rotateState.set(container, s); }
+    });
+    container.addEventListener('mouseleave', () => {
+      const s = rotateState.get(container);
+      if (s && !s.intervalId) { s.intervalId = setInterval(s.rotateOnce, 2000); rotateState.set(container, s); }
+    });
+
+    // accessibility: pause when focused inside
+    container.addEventListener('focusin', () => {
+      const s = rotateState.get(container);
+      if (s && s.intervalId) { clearInterval(s.intervalId); s.intervalId = null; rotateState.set(container, s); }
+    });
+    container.addEventListener('focusout', () => {
+      const s = rotateState.get(container);
+      if (s && !s.intervalId) { s.intervalId = setInterval(s.rotateOnce, 2000); rotateState.set(container, s); }
+    });
+  });
+
+  // Init: set starting sizes and start autoplay
+  // Wait a tick in case fonts/images affect sizing
+  setTimeout(() => {
+    updateCarouselPosition(false);
+    startAutoplay();
+  }, 120);
 });
 </script>
+
 
 {% schema %}
 {
