@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     container.addEventListener('mouseleave', () => {
       const s = rotateState.get(container);
-      if (s && !s.intervalId) { s.intervalId = setInterval(s.rotateOnce, 4000); rotateState.set(container, s); }
+      if (s && !s.intervalId) { s.intervalId = setInterval(s.rotateOnce, 2000); rotateState.set(container, s); }
     });
 
     // accessibility: pause when focused inside
