@@ -86,6 +86,7 @@
     display: flex;
     gap: 40px;
     align-items: center;
+    position: relative;
   }
 
   .nav-item {
@@ -122,37 +123,55 @@
     color: var(--primary-color);
   }
 
-  /* Mega Dropdown - DESKTOP - SMOOTHER ANIMATION */
+  /* Mega Dropdown - CENTERED POSITIONING */
   .mega-dropdown {
     position: absolute;
     top: 100%;
     left: 50%;
-    transform: translateX(-50%) translateY(8px);
+    transform: translateX(-50%) translateY(12px);
     width: 800px;
     background: var(--white);
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 1001;
     padding: 40px;
     pointer-events: none;
   }
 
-  .nav-item:hover .mega-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-    pointer-events: auto;
-    transition-delay: 0.05s;
-  }
-
+  /* Show dropdown on hover - STAYS VISIBLE WHEN HOVERING OVER DROPDOWN */
+  .nav-item:hover .mega-dropdown,
   .mega-dropdown:hover {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
     pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  /* For left-side menus, ensure dropdown doesn't go off-screen */
+  .nav-item:first-child .mega-dropdown {
+    left: 0;
+    transform: translateX(0) translateY(12px);
+  }
+
+  .nav-item:first-child:hover .mega-dropdown,
+  .nav-item:first-child .mega-dropdown:hover {
+    transform: translateX(0) translateY(0);
+  }
+
+  /* For right-side menus, adjust positioning */
+  .nav-item:nth-last-child(-n+2) .mega-dropdown {
+    left: auto;
+    right: 0;
+    transform: translateX(0) translateY(12px);
+  }
+
+  .nav-item:nth-last-child(-n+2):hover .mega-dropdown,
+  .nav-item:nth-last-child(-n+2) .mega-dropdown:hover {
+    transform: translateX(0) translateY(0);
   }
 
   /* Dropdown Content - BLACK TEXT FOR ALL INCLUDING SHOP */
@@ -295,17 +314,17 @@
       background: var(--white) !important;
       backdrop-filter: none !important;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      top: 0 !important; /* On mobile, header goes to top */
+      top: 0 !important;
     }
 
     .announcement-bar {
-      position: relative !important; /* On mobile, announcement is part of flow */
+      position: relative !important;
       top: auto !important;
       height: auto;
     }
 
     body {
-      padding-top: var(--header-height) !important; /* Remove announcement padding on mobile */
+      padding-top: var(--header-height) !important;
     }
 
     .mobile-menu-btn {
@@ -356,13 +375,15 @@
 
     /* Mobile Dropdown */
     .mega-dropdown {
-      position: static;
+      position: static !important;
+      left: auto !important;
+      right: auto !important;
+      transform: none !important;
       width: 100% !important;
       box-shadow: none !important;
       padding: 20px !important;
       opacity: 1 !important;
       visibility: visible !important;
-      transform: none !important;
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
@@ -463,7 +484,7 @@
 
       <!-- Main Navigation -->
       <nav class="nav-main" id="main-nav">
-        <!-- Shop Dropdown - WITH BLACK TEXT -->
+        <!-- Shop Dropdown - LEFT-SIDE (aligned to left) -->
         <div class="nav-item">
           <a href="{{ routes.all_products_collection_url }}" class="nav-link has-dropdown">Shop</a>
           <div class="mega-dropdown">
@@ -511,7 +532,7 @@
           </div>
         </div>
 
-        <!-- Hair Quiz -->
+        <!-- Hair Quiz - CENTERED -->
         <div class="nav-item">
           <a href="#hair-quiz" class="nav-link has-dropdown">Hair Quiz</a>
           <div class="mega-dropdown">
@@ -538,12 +559,12 @@
           </div>
         </div>
 
-        <!-- Services by Concern -->
+        <!-- Services by Concern - CENTERED -->
         <div class="nav-item">
           <a href="#services-by-concern" class="nav-link">Services by Concern</a>
         </div>
 
-        <!-- Our Story -->
+        <!-- Our Story - RIGHT-SIDE (aligned to right) -->
         <div class="nav-item">
           <a href="{{ pages['about'].url | default: '/pages/about' }}" class="nav-link has-dropdown">Our Story</a>
           <div class="mega-dropdown">
@@ -570,7 +591,7 @@
           </div>
         </div>
 
-        <!-- Guides -->
+        <!-- Guides - RIGHT-SIDE (aligned to right) -->
         <div class="nav-item">
           <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="nav-link has-dropdown">Guides</a>
           <div class="mega-dropdown">
@@ -654,7 +675,6 @@ class HeaderWithDropdowns {
   }
 
   checkAnnouncementBar() {
-    // Check if announcement bar exists and add class to body
     const announcementBar = document.querySelector('.announcement-bar');
     if (announcementBar) {
       document.body.classList.add('has-announcement');
@@ -739,7 +759,7 @@ class HeaderWithDropdowns {
         }
       });
     } else {
-      // Desktop dropdown handling - SMOOTHER
+      // Desktop dropdown handling - DROPDOWN STAYS VISIBLE WHEN HOVERING OVER IT
       this.navItems.forEach(item => {
         const dropdown = item.querySelector('.mega-dropdown');
         if (!dropdown) return;
@@ -754,51 +774,82 @@ class HeaderWithDropdowns {
           this.hoverTimeout = setTimeout(() => {
             this.closeAllDropdowns();
             
-            // Show dropdown with animation
-            dropdown.style.transition = 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            // Show dropdown
+            dropdown.style.transition = 'all 0.25s ease';
             dropdown.style.opacity = '1';
             dropdown.style.visibility = 'visible';
-            dropdown.style.transform = 'translateX(-50%) translateY(0)';
             dropdown.style.pointerEvents = 'auto';
+            
+            // Set appropriate transform based on position
+            if (item === this.navItems[0]) {
+              // First item (Shop) - left aligned
+              dropdown.style.transform = 'translateX(0) translateY(0)';
+            } else if (item === this.navItems[this.navItems.length - 1] || 
+                       item === this.navItems[this.navItems.length - 2]) {
+              // Last two items - right aligned
+              dropdown.style.transform = 'translateX(0) translateY(0)';
+            } else {
+              // Middle items - centered
+              dropdown.style.transform = 'translateX(-50%) translateY(0)';
+            }
           }, 100);
         });
 
-        // Mouse leave - CLOSE
+        // Mouse leave - CLOSE with delay
         item.addEventListener('mouseleave', () => {
           if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
           
           this.leaveTimeout = setTimeout(() => {
-            dropdown.style.opacity = '0';
-            dropdown.style.transform = 'translateX(-50%) translateY(8px)';
-            
-            setTimeout(() => {
-              if (parseFloat(dropdown.style.opacity) === 0) {
-                dropdown.style.visibility = 'hidden';
-                dropdown.style.pointerEvents = 'none';
-              }
-            }, 300);
+            // Only close if mouse is not over dropdown
+            if (!dropdown.matches(':hover')) {
+              this.closeDropdown(dropdown);
+            }
           }, 150);
         });
 
-        // Keep dropdown open when hovering over it
+        // Dropdown mouse enter - CANCEL CLOSE
         dropdown.addEventListener('mouseenter', () => {
-          if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
           if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
+          if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+          
+          // Ensure dropdown stays visible
+          dropdown.style.opacity = '1';
+          dropdown.style.visibility = 'visible';
+          dropdown.style.pointerEvents = 'auto';
         });
 
+        // Dropdown mouse leave - CLOSE
         dropdown.addEventListener('mouseleave', () => {
           this.leaveTimeout = setTimeout(() => {
-            dropdown.style.opacity = '0';
-            dropdown.style.transform = 'translateX(-50%) translateY(8px)';
-            
-            setTimeout(() => {
-              dropdown.style.visibility = 'hidden';
-              dropdown.style.pointerEvents = 'none';
-            }, 300);
-          }, 150);
+            this.closeDropdown(dropdown);
+          }, 100);
         });
       });
     }
+  }
+
+  closeDropdown(dropdown) {
+    dropdown.style.opacity = '0';
+    dropdown.style.pointerEvents = 'none';
+    
+    // Set appropriate transform for hiding
+    const item = dropdown.parentElement;
+    const navItems = this.navItems;
+    
+    if (item === navItems[0]) {
+      dropdown.style.transform = 'translateX(0) translateY(12px)';
+    } else if (item === navItems[navItems.length - 1] || 
+               item === navItems[navItems.length - 2]) {
+      dropdown.style.transform = 'translateX(0) translateY(12px)';
+    } else {
+      dropdown.style.transform = 'translateX(-50%) translateY(12px)';
+    }
+    
+    setTimeout(() => {
+      if (parseFloat(dropdown.style.opacity) === 0) {
+        dropdown.style.visibility = 'hidden';
+      }
+    }, 300);
   }
 
   setupNavigation() {
@@ -897,13 +948,7 @@ class HeaderWithDropdowns {
     
     if (!this.isMobile) {
       this.dropdowns.forEach(dropdown => {
-        dropdown.style.opacity = '0';
-        dropdown.style.transform = 'translateX(-50%) translateY(8px)';
-        dropdown.style.pointerEvents = 'none';
-        
-        setTimeout(() => {
-          dropdown.style.visibility = 'hidden';
-        }, 300);
+        this.closeDropdown(dropdown);
       });
     }
   }
