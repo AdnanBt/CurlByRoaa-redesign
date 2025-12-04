@@ -8,37 +8,173 @@
   
   {{ content_for_header }}
   {{ 'theme.css' | asset_url | stylesheet_tag }}
+  
   {% comment %} Add this in theme.liquid head section {% endcomment %}
-<!-- Responsive Image Support -->
-<link rel="preconnect" href="https://cdn.shopify.com">
-<link rel="dns-prefetch" href="https://cdn.shopify.com">
+  <!-- Responsive Image Support -->
+  <link rel="preconnect" href="https://cdn.shopify.com">
+  <link rel="dns-prefetch" href="https://cdn.shopify.com">
 
-<!-- Mobile viewport fix -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <!-- Mobile viewport fix -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 
-<!-- Mobile specific CSS -->
-<style>
-  @media (max-width: 767px) {
-    /* Prevent horizontal scrolling */
-    html, body {
-      overflow-x: hidden;
-      width: 100%;
+  <!-- Mobile specific CSS -->
+  <style>
+    @media (max-width: 767px) {
+      /* Prevent horizontal scrolling */
+      html, body {
+        overflow-x: hidden;
+        width: 100%;
+      }
+      
+      /* Improve tap highlights */
+      * {
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+      }
+      
+      /* Better scrolling on iOS */
+      .scrollable {
+        -webkit-overflow-scrolling: touch;
+      }
     }
     
-    /* Improve tap highlights */
-    * {
-      -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    /* Sidebar CSS */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
     }
-    
-    /* Better scrolling on iOS */
-    .scrollable {
-      -webkit-overflow-scrolling: touch;
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
     }
-  }
-</style>
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -350px;
+      width: 320px;
+      height: 100vh;
+      background: #fff;
+      z-index: 9999;
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+      transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafafa;
+    }
+
+    .sidebar-close {
+      background: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #333;
+      border-radius: 50%;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar-close:hover {
+      background: #f5f5f5;
+    }
+
+    .sidebar-logo img {
+      height: 30px;
+      width: auto;
+      max-width: 120px;
+    }
+
+    .sidebar-content {
+      padding: 20px;
+    }
+
+    /* Responsive Sidebar */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 300px;
+        left: -300px;
+      }
+      
+      /* Push content when sidebar is open */
+      body.sidebar-open {
+        overflow: hidden;
+      }
+      
+      body.sidebar-open .header,
+      body.sidebar-open main {
+        transform: translateX(300px);
+        transition: transform 0.3s ease;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 280px;
+        left: -280px;
+      }
+      
+      body.sidebar-open .header,
+      body.sidebar-open main {
+        transform: translateX(280px);
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  
+  <!-- Left Sidebar -->
+  <aside class="sidebar" id="mainSidebar">
+    <div class="sidebar-header">
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="sidebar-logo">
+        <a href="{{ routes.root_url }}">
+          <img 
+            src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
+            alt="{{ shop.name }}"
+            width="120"
+            height="30"
+            loading="eager"
+          >
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-content">
+      {% comment %} Include sidebar navigation snippet {% endcomment %}
+      {% render 'sidebar-navigation' %}
+    </div>
+  </aside>
+
   {% section 'announcement-bar' %}
   {% section 'header' %}
   
@@ -49,5 +185,92 @@
   {% section 'footer' %}
   
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  
+  <!-- Sidebar JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Sidebar Elements
+      const sidebar = document.getElementById('mainSidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const closeBtn = document.getElementById('sidebarClose');
+      const body = document.body;
+      
+      // Function to open sidebar
+      function openSidebar() {
+        if (sidebar) {
+          sidebar.classList.add('active');
+          if (overlay) overlay.classList.add('active');
+          body.classList.add('sidebar-open');
+          body.style.overflow = 'hidden';
+        }
+      }
+      
+      // Function to close sidebar
+      function closeSidebar() {
+        if (sidebar) {
+          sidebar.classList.remove('active');
+          if (overlay) overlay.classList.remove('active');
+          body.classList.remove('sidebar-open');
+          body.style.overflow = '';
+        }
+      }
+      
+      // Function to toggle sidebar
+      function toggleSidebar() {
+        if (sidebar && sidebar.classList.contains('active')) {
+          closeSidebar();
+        } else {
+          openSidebar();
+        }
+      }
+      
+      // Make functions available globally
+      window.openSidebar = openSidebar;
+      window.closeSidebar = closeSidebar;
+      window.toggleSidebar = toggleSidebar;
+      
+      // Event Listeners
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeSidebar);
+      }
+      
+      if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+      }
+      
+      // Close sidebar on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
+          closeSidebar();
+        }
+      });
+      
+      // Close sidebar when clicking a link (for mobile)
+      const sidebarLinks = document.querySelectorAll('.sidebar-menu-link');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 768) {
+            setTimeout(closeSidebar, 300);
+          }
+        });
+      });
+      
+      // Close sidebar on resize to desktop
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('active')) {
+            closeSidebar();
+          }
+        }, 250);
+      });
+      
+      // Listen for sidebar toggle events from header
+      document.addEventListener('openSidebar', openSidebar);
+      document.addEventListener('closeSidebar', closeSidebar);
+      document.addEventListener('toggleSidebar', toggleSidebar);
+    });
+  </script>
 </body>
 </html>
