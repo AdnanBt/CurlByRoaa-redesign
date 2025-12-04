@@ -32,10 +32,12 @@
     z-index: 1000;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transform: translateY(0);
   }
 
   body {
     padding-top: calc(var(--header-height) + var(--announcement-height));
+    transition: padding-top 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
   .header.scrolled {
@@ -54,6 +56,25 @@
     padding-top: var(--header-height);
   }
 
+  /* IMPORTANT: When sidebar shows on desktop, remove header space */
+  @media (min-width: 1025px) {
+    body.sidebar-desktop-visible {
+      padding-top: 0 !important;
+    }
+    
+    body.sidebar-desktop-visible .header {
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    body.sidebar-desktop-visible .announcement-bar {
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
   .header-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -61,7 +82,7 @@
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
-  /* NEW: Adjust header container when sidebar is visible on desktop */
+  /* Adjust header container when sidebar is visible on desktop */
   @media (min-width: 1025px) {
     body.sidebar-desktop-visible .header-container {
       margin-left: var(--sidebar-width);
@@ -586,12 +607,14 @@ class HeaderWithDropdowns {
     this.navItems = document.querySelectorAll('.nav-item');
     this.navLinks = document.querySelectorAll('.nav-link');
     this.dropdowns = document.querySelectorAll('.mega-dropdown');
+    this.announcementBar = document.querySelector('.announcement-bar');
     
     this.hoverTimeout = null;
     this.leaveTimeout = null;
     this.isMobile = window.innerWidth <= 1024;
     this.scrollThreshold = window.innerHeight;
     this.lastScrollTop = 0;
+    this.sidebarVisible = false;
     
     this.init();
   }
@@ -604,6 +627,14 @@ class HeaderWithDropdowns {
     this.handleResize();
     this.checkAnnouncementBar();
     this.setupSidebarToggle();
+    this.listenToSidebarEvents();
+  }
+
+  listenToSidebarEvents() {
+    // Listen for sidebar state changes
+    document.addEventListener('sidebarStateChanged', (e) => {
+      this.sidebarVisible = e.detail.visible;
+    });
   }
 
   setupSidebarToggle() {
@@ -615,8 +646,7 @@ class HeaderWithDropdowns {
   }
 
   checkAnnouncementBar() {
-    const announcementBar = document.querySelector('.announcement-bar');
-    if (announcementBar) {
+    if (this.announcementBar) {
       document.body.classList.add('has-announcement');
     } else {
       document.body.classList.remove('has-announcement');
@@ -646,8 +676,7 @@ class HeaderWithDropdowns {
       
       // Reset header for desktop
       if (!this.isMobile) {
-        this.header.style.transform = 'translateY(0)';
-        this.header.classList.add('scrolled');
+        this.resetHeader();
       }
     }
   }
@@ -750,21 +779,35 @@ class HeaderWithDropdowns {
           if (targetElement) {
             this.closeAllDropdowns();
             
-            const headerHeight = this.header.offsetHeight;
-            const announcementBar = document.querySelector('.announcement-bar');
-            const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0;
-            const totalOffset = headerHeight + announcementHeight;
-            
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = Math.max(0, targetPosition - totalOffset);
-            
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
+            // If sidebar is visible on desktop, hide it before scrolling
+            if (this.sidebarVisible && !this.isMobile) {
+              document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
+              
+              // Wait for sidebar to hide before scrolling
+              setTimeout(() => {
+                this.scrollToElement(targetElement);
+              }, 400);
+            } else {
+              this.scrollToElement(targetElement);
+            }
           }
         }
       });
+    });
+  }
+
+  scrollToElement(element) {
+    const headerHeight = this.header.offsetHeight;
+    const announcementBar = document.querySelector('.announcement-bar');
+    const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0;
+    const totalOffset = headerHeight + announcementHeight;
+    
+    const targetPosition = element.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = Math.max(0, targetPosition - totalOffset);
+    
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
     });
   }
 
@@ -781,37 +824,18 @@ class HeaderWithDropdowns {
         this.header.classList.remove('scrolled');
       }
       
-      // Desktop behavior
+      // Desktop behavior - hide header and show sidebar on scroll
       if (isDesktop) {
         const sidebarVisible = document.body.classList.contains('sidebar-desktop-visible');
         
-        if (currentScroll > this.scrollThreshold) {
-          // Hide main header when scrolling down past threshold
-          if (scrollDirection === 'down') {
-            this.header.style.transform = 'translateY(-100%)';
-            this.header.style.transition = 'transform 0.3s ease';
-            
-            // Show sidebar if not already visible
-            if (!sidebarVisible) {
-              document.dispatchEvent(new CustomEvent('showSidebarOnScroll'));
-            }
-          } else {
-            // Show header when scrolling up
-            this.header.style.transform = 'translateY(0)';
-            
-            // Hide sidebar when close to top
-            if (currentScroll < this.scrollThreshold && sidebarVisible) {
-              document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
-            }
-          }
-        } else {
-          // Always show header at top
-          this.header.style.transform = 'translateY(0)';
-          
-          // Hide sidebar when at top
-          if (sidebarVisible) {
-            document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
-          }
+        // Show sidebar when scrolling down past threshold
+        if (currentScroll > this.scrollThreshold && scrollDirection === 'down' && !sidebarVisible) {
+          document.dispatchEvent(new CustomEvent('showSidebarOnScroll'));
+        }
+        
+        // Hide sidebar when scrolling up near top
+        if (currentScroll < (this.scrollThreshold / 2) && scrollDirection === 'up' && sidebarVisible) {
+          document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
         }
       }
       
@@ -822,6 +846,42 @@ class HeaderWithDropdowns {
       
       this.lastScrollTop = currentScroll;
     });
+  }
+
+  hideHeader() {
+    this.header.style.transform = 'translateY(-100%)';
+    this.header.style.opacity = '0';
+    this.header.style.visibility = 'hidden';
+    if (this.announcementBar) {
+      this.announcementBar.style.transform = 'translateY(-100%)';
+      this.announcementBar.style.opacity = '0';
+      this.announcementBar.style.visibility = 'hidden';
+    }
+    document.body.style.paddingTop = '0';
+  }
+
+  showHeader() {
+    this.header.style.transform = 'translateY(0)';
+    this.header.style.opacity = '1';
+    this.header.style.visibility = 'visible';
+    if (this.announcementBar) {
+      this.announcementBar.style.transform = 'translateY(0)';
+      this.announcementBar.style.opacity = '1';
+      this.announcementBar.style.visibility = 'visible';
+    }
+    const announcementHeight = this.announcementBar ? this.announcementBar.offsetHeight : 0;
+    document.body.style.paddingTop = `${this.header.offsetHeight + announcementHeight}px`;
+  }
+
+  resetHeader() {
+    this.header.style.transform = 'translateY(0)';
+    this.header.style.opacity = '1';
+    this.header.style.visibility = 'visible';
+    if (this.announcementBar) {
+      this.announcementBar.style.transform = 'translateY(0)';
+      this.announcementBar.style.opacity = '1';
+      this.announcementBar.style.visibility = 'visible';
+    }
   }
 
   closeAllDropdowns() {
