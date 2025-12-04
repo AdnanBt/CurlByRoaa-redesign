@@ -1,0 +1,164 @@
+
+{% comment %} 
+  Sidebar Navigation Component
+  File: snippets/sidebar-navigation.liquid
+{% endcomment %}
+
+<nav class="sidebar-nav" aria-label="Sidebar navigation">
+  <ul class="sidebar-menu">
+    <!-- Shop Collections -->
+    <li class="sidebar-menu-title">Shop Collections</li>
+    {% for collection in collections %}
+      {% if collection.all_products_count > 0 %}
+        <li class="sidebar-menu-item">
+          <a href="{{ collection.url }}" class="sidebar-menu-link">
+            <span class="sidebar-menu-text">{{ collection.title }}</span>
+            <span class="sidebar-menu-count">{{ collection.all_products_count }}</span>
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+    
+    <!-- Featured Collections from header -->
+    <li class="sidebar-menu-title">Featured Collections</li>
+    <li class="sidebar-menu-item">
+      <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link">
+        <span class="sidebar-menu-text">All Products</span>
+      </a>
+    </li>
+    
+    {% assign featured_collections = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' %}
+    {% for handle in featured_collections %}
+      {% assign collection = collections[handle] %}
+      {% if collection %}
+        <li class="sidebar-menu-item">
+          <a href="{{ collection.url }}" class="sidebar-menu-link">
+            <span class="sidebar-menu-text">{{ collection.title }}</span>
+            <span class="sidebar-menu-count">{{ collection.all_products_count }}</span>
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+    
+    <!-- Pages -->
+    <li class="sidebar-menu-title">Information</li>
+    {% for page in pages %}
+      {% unless page.handle contains 'policy' %}
+        <li class="sidebar-menu-item">
+          <a href="{{ page.url }}" class="sidebar-menu-link">
+            <span class="sidebar-menu-text">{{ page.title }}</span>
+          </a>
+        </li>
+      {% endunless %}
+    {% endfor %}
+    
+    <!-- Policy Pages -->
+    <li class="sidebar-menu-title">Legal</li>
+    {% for page in pages %}
+      {% if page.handle contains 'policy' %}
+        <li class="sidebar-menu-item">
+          <a href="{{ page.url }}" class="sidebar-menu-link">
+            <span class="sidebar-menu-text">{{ page.title }}</span>
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+    
+    <!-- Blog Links -->
+    {% if blogs.size > 0 %}
+      <li class="sidebar-menu-title">Blog & Guides</li>
+      {% for blog in blogs %}
+        <li class="sidebar-menu-item">
+          <a href="{{ blog.url }}" class="sidebar-menu-link">
+            <span class="sidebar-menu-text">{{ blog.title }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    {% endif %}
+    
+    <!-- Account Links -->
+    <li class="sidebar-menu-title">Your Account</li>
+    {% if customer %}
+      <li class="sidebar-menu-item">
+        <a href="{{ routes.account_url }}" class="sidebar-menu-link">
+          <span class="sidebar-menu-text">My Account</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ routes.account_logout_url }}" class="sidebar-menu-link">
+          <span class="sidebar-menu-text">Logout</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="sidebar-menu-item">
+        <a href="{{ routes.account_login_url }}" class="sidebar-menu-link">
+          <span class="sidebar-menu-text">Login</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ routes.account_register_url }}" class="sidebar-menu-link">
+          <span class="sidebar-menu-text">Register</span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
+<style>
+  /* Sidebar Navigation Styles */
+  .sidebar-nav {
+    margin-top: 10px;
+  }
+
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-menu-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 25px 0 15px;
+    padding: 0 10px;
+  }
+
+  .sidebar-menu-item {
+    margin-bottom: 5px;
+  }
+
+  .sidebar-menu-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+  }
+
+  .sidebar-menu-link:hover {
+    background: #f8f8f8;
+    color: #E8C4B8;
+    transform: translateX(5px);
+  }
+
+  .sidebar-menu-text {
+    flex: 1;
+  }
+
+  .sidebar-menu-count {
+    font-size: 11px;
+    color: #999;
+    background: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 10px;
+    min-width: 24px;
+    text-align: center;
+  }
+</style>
