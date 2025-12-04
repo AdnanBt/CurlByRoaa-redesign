@@ -9,7 +9,7 @@
     --text-black: #000000;
     --white: #FFFFFF;
     --gray-light: #f9f9f9;
-    --sidebar-width: 350px;
+    --sidebar-width: 280px; /* Professional sidebar width */
   }
 
   /* Announcement Bar */
@@ -30,14 +30,13 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.3s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    transform: translateY(0);
   }
 
   body {
     padding-top: calc(var(--header-height) + var(--announcement-height));
-    transition: padding-top 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: padding-top 0.3s ease;
   }
 
   .header.scrolled {
@@ -56,38 +55,10 @@
     padding-top: var(--header-height);
   }
 
-  /* IMPORTANT: When sidebar shows on desktop, remove header space */
-  @media (min-width: 1025px) {
-    body.sidebar-desktop-visible {
-      padding-top: 0 !important;
-    }
-    
-    body.sidebar-desktop-visible .header {
-      transform: translateY(-100%);
-      opacity: 0;
-      visibility: hidden;
-    }
-    
-    body.sidebar-desktop-visible .announcement-bar {
-      transform: translateY(-100%);
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-
   .header-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-
-  /* Adjust header container when sidebar is visible on desktop */
-  @media (min-width: 1025px) {
-    body.sidebar-desktop-visible .header-container {
-      margin-left: var(--sidebar-width);
-      max-width: calc(1400px - var(--sidebar-width));
-    }
   }
 
   .header-inner {
@@ -335,7 +306,240 @@
   }
 
   /* ==================== */
-  /* RESPONSIVE STYLES - FIXED */
+  /* PROFESSIONAL SIDEBAR STYLES */
+  /* ==================== */
+
+  /* Desktop Sidebar - Like modern websites */
+  @media (min-width: 1025px) {
+    /* Sidebar Container */
+    .desktop-sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px; /* Hidden by default */
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--white);
+      z-index: 9999;
+      transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .desktop-sidebar.active {
+      left: 0;
+    }
+
+    /* Sidebar Header */
+    .sidebar-header {
+      padding: 25px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-logo img {
+      height: 35px;
+      width: auto;
+      max-width: 120px;
+      object-fit: contain;
+    }
+
+    .sidebar-close {
+      background: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      font-size: 20px;
+    }
+
+    .sidebar-close:hover {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+      transform: rotate(90deg);
+    }
+
+    /* Sidebar Content */
+    .sidebar-content {
+      flex: 1;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar-nav {
+      padding: 0;
+    }
+
+    .sidebar-section {
+      margin-bottom: 25px;
+    }
+
+    .sidebar-section-title {
+      padding: 0 20px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      margin-bottom: 12px;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu-item {
+      margin: 0;
+    }
+
+    .sidebar-menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-menu-link:hover {
+      background: rgba(232, 196, 184, 0.08);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+    }
+
+    .sidebar-menu-link.active {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+    }
+
+    .sidebar-menu-count {
+      font-size: 11px;
+      color: var(--text-light);
+      background: rgba(0, 0, 0, 0.05);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Sidebar Footer */
+    .sidebar-footer {
+      padding: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--white);
+    }
+
+    .sidebar-account {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      text-decoration: none;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-account:hover {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+    }
+
+    .sidebar-account-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-account-text {
+      flex: 1;
+    }
+
+    .sidebar-account-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .sidebar-account-email {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Adjust content when sidebar is active */
+    body.desktop-sidebar-active {
+      margin-left: var(--sidebar-width);
+    }
+
+    body.desktop-sidebar-active .header-container,
+    body.desktop-sidebar-active main .page-width,
+    body.desktop-sidebar-active main .container,
+    body.desktop-sidebar-active main .shopify-section > .section {
+      margin-left: var(--sidebar-width);
+      max-width: calc(100% - var(--sidebar-width));
+      transition: margin-left 0.3s ease, max-width 0.3s ease;
+    }
+
+    /* Hide header when sidebar is active */
+    body.desktop-sidebar-active .header {
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    body.desktop-sidebar-active .announcement-bar {
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    body.desktop-sidebar-active {
+      padding-top: 0 !important;
+    }
+
+    /* Scrollbar styling */
+    .sidebar-content::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar-content::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+
+    .sidebar-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  /* ==================== */
+  /* RESPONSIVE STYLES */
   /* ==================== */
 
   /* Tablet (768px - 1024px) */
@@ -359,6 +563,11 @@
 
     /* Hide desktop navigation on mobile/tablet */
     .nav-main {
+      display: none !important;
+    }
+
+    /* Hide desktop sidebar on mobile */
+    .desktop-sidebar {
       display: none !important;
     }
 
@@ -482,7 +691,7 @@
         </div>
 
         <!-- Hair Quiz -->
-        <div class="nav-item" id="hair-quiz"> 
+        <div class="nav-item">
           <a href="#hair-quiz" class="nav-link has-dropdown">Hair Quiz</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
@@ -509,12 +718,12 @@
         </div>
 
         <!-- Services by Concern -->
-        <div class="nav-item" id="services-by-concern">
+        <div class="nav-item">
           <a href="#services-by-concern" class="nav-link">Services by Concern</a>
         </div>
 
         <!-- Our Story -->
-        <div class="nav-item" id="our-story">
+        <div class="nav-item">
           <a href="{{ pages['about'].url | default: '/pages/about' }}" class="nav-link has-dropdown">Our Story</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
@@ -541,7 +750,7 @@
         </div>
 
         <!-- Guides -->
-        <div class="nav-item" id="guides">
+        <div class="nav-item">
           <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="nav-link has-dropdown">Guides</a>
           <div class="mega-dropdown">
             <div class="dropdown-grid">
@@ -597,24 +806,162 @@
   </div>
 </header>
 
+<!-- Desktop Sidebar HTML -->
+<aside class="desktop-sidebar" id="desktopSidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <img 
+        src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
+        alt="{{ shop.name }}"
+        width="120"
+        height="35"
+      >
+    </div>
+    <button class="sidebar-close" id="desktopSidebarClose" aria-label="Close sidebar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar-content">
+    <nav class="sidebar-nav">
+      <!-- Shop Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Shop</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link">
+              All Products
+              <span class="sidebar-menu-count">{% if collections.all.products_count %}{{ collections.all.products_count }}{% else %}0{% endif %}</span>
+            </a>
+          </li>
+          
+          <!-- By Product Type -->
+          {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
+          {%- for handle in collections_to_show -%}
+            {%- assign collection = collections[handle] -%}
+            <li class="sidebar-menu-item">
+              <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-menu-link">
+                {%- if collection -%}
+                  {{ collection.title }}
+                {%- else -%}
+                  {{ handle | replace: '-', ' ' | capitalize }}
+                {%- endif -%}
+                <span class="sidebar-menu-count">
+                  {% if collection and collection.all_products_count %}{{ collection.all_products_count }}{% else %}0{% endif %}
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <!-- By Curl Type -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">By Curl Type</div>
+        <ul class="sidebar-menu">
+          {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
+          {%- for handle in curl_collections -%}
+            {%- assign collection = collections[handle] -%}
+            <li class="sidebar-menu-item">
+              <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-menu-link">
+                {%- if collection -%}
+                  {{ collection.title }}
+                {%- else -%}
+                  {{ handle | replace: '-', ' ' | capitalize }}
+                {%- endif -%}
+                <span class="sidebar-menu-count">
+                  {% if collection and collection.all_products_count %}{{ collection.all_products_count }}{% else %}0{% endif %}
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <!-- Guides Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Guides & Resources</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="#hair-quiz" class="sidebar-menu-link">Hair Quiz</a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="sidebar-menu-link">Hair Care Guides</a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#services-by-concern" class="sidebar-menu-link">Services by Concern</a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="{{ pages['about'].url | default: '/pages/about' }}" class="sidebar-menu-link">Our Story</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Information Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Information</div>
+        <ul class="sidebar-menu">
+          {% for page in pages %}
+            {% unless page.handle contains 'policy' %}
+              <li class="sidebar-menu-item">
+                <a href="{{ page.url }}" class="sidebar-menu-link">{{ page.title }}</a>
+              </li>
+            {% endunless %}
+          {% endfor %}
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+    {% if customer %}
+      <a href="{{ routes.account_url }}" class="sidebar-account">
+        <div class="sidebar-account-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="sidebar-account-text">
+          <div class="sidebar-account-name">{{ customer.name }}</div>
+          <div class="sidebar-account-email">{{ customer.email }}</div>
+        </div>
+      </a>
+    {% else %}
+      <a href="{{ routes.account_login_url }}" class="sidebar-account">
+        <div class="sidebar-account-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="sidebar-account-text">
+          <div class="sidebar-account-name">Sign In</div>
+          <div class="sidebar-account-email">Access your account</div>
+        </div>
+      </a>
+    {% endif %}
+  </div>
+</aside>
+
 <script>
 class HeaderWithDropdowns {
   constructor() {
     this.header = document.getElementById('main-header');
-    this.headerContainer = document.querySelector('.header-container');
     this.sidebarToggle = document.getElementById('sidebarToggle');
+    this.desktopSidebar = document.getElementById('desktopSidebar');
+    this.desktopSidebarClose = document.getElementById('desktopSidebarClose');
     this.mainNav = document.getElementById('main-nav');
     this.navItems = document.querySelectorAll('.nav-item');
     this.navLinks = document.querySelectorAll('.nav-link');
     this.dropdowns = document.querySelectorAll('.mega-dropdown');
-    this.announcementBar = document.querySelector('.announcement-bar');
     
     this.hoverTimeout = null;
     this.leaveTimeout = null;
     this.isMobile = window.innerWidth <= 1024;
     this.scrollThreshold = window.innerHeight;
     this.lastScrollTop = 0;
-    this.sidebarVisible = false;
+    this.desktopSidebarActive = false;
     
     this.init();
   }
@@ -627,26 +974,150 @@ class HeaderWithDropdowns {
     this.handleResize();
     this.checkAnnouncementBar();
     this.setupSidebarToggle();
-    this.listenToSidebarEvents();
+    this.setupDesktopSidebar();
   }
 
-  listenToSidebarEvents() {
-    // Listen for sidebar state changes
-    document.addEventListener('sidebarStateChanged', (e) => {
-      this.sidebarVisible = e.detail.visible;
+  setupDesktopSidebar() {
+    if (this.desktopSidebarClose) {
+      this.desktopSidebarClose.addEventListener('click', () => {
+        this.closeDesktopSidebar();
+      });
+    }
+
+    // Close sidebar when clicking outside (desktop only)
+    document.addEventListener('click', (e) => {
+      if (this.desktopSidebarActive && !this.isMobile) {
+        const isClickInsideSidebar = this.desktopSidebar.contains(e.target);
+        const isClickOnToggle = e.target.closest('.sidebar-toggle');
+        
+        if (!isClickInsideSidebar && !isClickOnToggle) {
+          this.closeDesktopSidebar();
+        }
+      }
     });
+
+    // Escape key to close sidebar
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.desktopSidebarActive) {
+        this.closeDesktopSidebar();
+      }
+    });
+
+    // Mark active links in sidebar
+    this.setupSidebarActiveLinks();
+  }
+
+  setupSidebarActiveLinks() {
+    const currentUrl = window.location.pathname;
+    const sidebarLinks = this.desktopSidebar?.querySelectorAll('.sidebar-menu-link');
+    
+    if (sidebarLinks) {
+      sidebarLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && currentUrl.includes(href.replace(/^\//, '').split('?')[0])) {
+          link.classList.add('active');
+        }
+        
+        // Remove active class from other links
+        link.addEventListener('click', () => {
+          sidebarLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+    }
   }
 
   setupSidebarToggle() {
     if (this.sidebarToggle) {
       this.sidebarToggle.addEventListener('click', () => {
-        document.dispatchEvent(new CustomEvent('toggleSidebar'));
+        if (this.isMobile) {
+          // Mobile behavior - use existing mobile sidebar
+          document.dispatchEvent(new CustomEvent('toggleSidebar'));
+        } else {
+          // Desktop behavior - toggle desktop sidebar
+          if (this.desktopSidebarActive) {
+            this.closeDesktopSidebar();
+          } else {
+            this.openDesktopSidebar();
+          }
+        }
       });
     }
   }
 
+  openDesktopSidebar() {
+    if (this.desktopSidebar) {
+      this.desktopSidebar.classList.add('active');
+      document.body.classList.add('desktop-sidebar-active');
+      this.desktopSidebarActive = true;
+      
+      // Adjust content containers
+      this.adjustContentContainers();
+    }
+  }
+
+  closeDesktopSidebar() {
+    if (this.desktopSidebar) {
+      this.desktopSidebar.classList.remove('active');
+      document.body.classList.remove('desktop-sidebar-active');
+      this.desktopSidebarActive = false;
+      
+      // Reset content containers
+      this.resetContentContainers();
+    }
+  }
+
+  adjustContentContainers() {
+    // Find and adjust all content containers
+    const containerSelectors = [
+      '.page-width',
+      '.container',
+      '.shopify-section > div[class*="container"]',
+      '.shopify-section > .section',
+      '[class*="__container"]'
+    ];
+    
+    containerSelectors.forEach(selector => {
+      const containers = document.querySelectorAll(selector);
+      containers.forEach(container => {
+        if (!container.hasAttribute('data-original-margin')) {
+          container.setAttribute('data-original-margin', container.style.marginLeft || '');
+        }
+        if (!container.hasAttribute('data-original-max-width')) {
+          container.setAttribute('data-original-max-width', container.style.maxWidth || '');
+        }
+        
+        container.style.marginLeft = '280px';
+        container.style.maxWidth = 'calc(100% - 280px)';
+        container.style.transition = 'margin-left 0.3s ease, max-width 0.3s ease';
+      });
+    });
+  }
+
+  resetContentContainers() {
+    const containerSelectors = [
+      '.page-width',
+      '.container',
+      '.shopify-section > div[class*="container"]',
+      '.shopify-section > .section',
+      '[class*="__container"]'
+    ];
+    
+    containerSelectors.forEach(selector => {
+      const containers = document.querySelectorAll(selector);
+      containers.forEach(container => {
+        const originalMargin = container.getAttribute('data-original-margin');
+        const originalMaxWidth = container.getAttribute('data-original-max-width');
+        
+        container.style.marginLeft = originalMargin || '';
+        container.style.maxWidth = originalMaxWidth || '';
+      });
+    });
+  }
+
   checkAnnouncementBar() {
-    if (this.announcementBar) {
+    const announcementBar = document.querySelector('.announcement-bar');
+    if (announcementBar) {
       document.body.classList.add('has-announcement');
     } else {
       document.body.classList.remove('has-announcement');
@@ -673,6 +1144,11 @@ class HeaderWithDropdowns {
     if (wasMobile !== this.isMobile) {
       this.closeAllDropdowns();
       this.setupDropdowns();
+      
+      // Close desktop sidebar on mobile
+      if (this.isMobile && this.desktopSidebarActive) {
+        this.closeDesktopSidebar();
+      }
       
       // Reset header for desktop
       if (!this.isMobile) {
@@ -779,14 +1255,14 @@ class HeaderWithDropdowns {
           if (targetElement) {
             this.closeAllDropdowns();
             
-            // If sidebar is visible on desktop, hide it before scrolling
-            if (this.sidebarVisible && !this.isMobile) {
-              document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
+            // Close desktop sidebar before scrolling
+            if (this.desktopSidebarActive && !this.isMobile) {
+              this.closeDesktopSidebar();
               
-              // Wait for sidebar to hide before scrolling
+              // Wait for sidebar to close before scrolling
               setTimeout(() => {
                 this.scrollToElement(targetElement);
-              }, 400);
+              }, 300);
             } else {
               this.scrollToElement(targetElement);
             }
@@ -824,18 +1300,20 @@ class HeaderWithDropdowns {
         this.header.classList.remove('scrolled');
       }
       
-      // Desktop behavior - hide header and show sidebar on scroll
+      // Desktop behavior - show sidebar on scroll
       if (isDesktop) {
-        const sidebarVisible = document.body.classList.contains('sidebar-desktop-visible');
-        
         // Show sidebar when scrolling down past threshold
-        if (currentScroll > this.scrollThreshold && scrollDirection === 'down' && !sidebarVisible) {
-          document.dispatchEvent(new CustomEvent('showSidebarOnScroll'));
+        if (currentScroll > this.scrollThreshold && 
+            scrollDirection === 'down' && 
+            !this.desktopSidebarActive) {
+          this.openDesktopSidebar();
         }
         
         // Hide sidebar when scrolling up near top
-        if (currentScroll < (this.scrollThreshold / 2) && scrollDirection === 'up' && sidebarVisible) {
-          document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
+        if (currentScroll < (this.scrollThreshold / 2) && 
+            scrollDirection === 'up' && 
+            this.desktopSidebarActive) {
+          this.closeDesktopSidebar();
         }
       }
       
@@ -848,40 +1326,10 @@ class HeaderWithDropdowns {
     });
   }
 
-  hideHeader() {
-    this.header.style.transform = 'translateY(-100%)';
-    this.header.style.opacity = '0';
-    this.header.style.visibility = 'hidden';
-    if (this.announcementBar) {
-      this.announcementBar.style.transform = 'translateY(-100%)';
-      this.announcementBar.style.opacity = '0';
-      this.announcementBar.style.visibility = 'hidden';
-    }
-    document.body.style.paddingTop = '0';
-  }
-
-  showHeader() {
-    this.header.style.transform = 'translateY(0)';
-    this.header.style.opacity = '1';
-    this.header.style.visibility = 'visible';
-    if (this.announcementBar) {
-      this.announcementBar.style.transform = 'translateY(0)';
-      this.announcementBar.style.opacity = '1';
-      this.announcementBar.style.visibility = 'visible';
-    }
-    const announcementHeight = this.announcementBar ? this.announcementBar.offsetHeight : 0;
-    document.body.style.paddingTop = `${this.header.offsetHeight + announcementHeight}px`;
-  }
-
   resetHeader() {
     this.header.style.transform = 'translateY(0)';
     this.header.style.opacity = '1';
     this.header.style.visibility = 'visible';
-    if (this.announcementBar) {
-      this.announcementBar.style.transform = 'translateY(0)';
-      this.announcementBar.style.opacity = '1';
-      this.announcementBar.style.visibility = 'visible';
-    }
   }
 
   closeAllDropdowns() {
