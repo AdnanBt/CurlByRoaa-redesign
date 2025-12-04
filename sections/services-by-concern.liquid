@@ -42,57 +42,19 @@
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 60px;
+    padding: 0 20px;
   }
   
   @media (max-width: 768px) {
     .concern-carousel-container {
-      padding: 0 40px;
+      padding: 0 15px;
     }
   }
   
   @media (max-width: 480px) {
     .concern-carousel-container {
-      padding: 0 20px;
+      padding: 0 10px;
     }
-  }
-  
-  /* Carousel Navigation */
-  .carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background: white;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    z-index: 10;
-    color: #2D2D2D;
-  }
-  
-  .carousel-nav:hover {
-    background: var(--color-accent);
-    color: white;
-    transform: translateY(-50%) scale(1.1);
-  }
-  
-  .carousel-nav.prev {
-    left: 0;
-  }
-  
-  .carousel-nav.next {
-    right: 0;
-  }
-  
-  .carousel-nav.hidden {
-    display: none;
   }
   
   /* Carousel */
@@ -927,11 +889,6 @@
     .booking-actions {
       flex-direction: column;
     }
-    
-    /* Hide navigation arrows on mobile */
-    .carousel-nav {
-      display: none;
-    }
   }
   
   @media (max-width: 480px) {
@@ -968,6 +925,20 @@
       transform: none;
     }
   }
+  
+  /* Ensure no arrow buttons appear */
+  .carousel-nav,
+  .carousel-nav.prev,
+  .carousel-nav.next {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
 </style>
 
 <section class="concern-services-section">
@@ -978,9 +949,6 @@
     </div>
     
     <div class="concern-carousel-container">
-      <!-- Navigation Arrows -->
-     
-      
       <div class="concern-carousel" id="concern-carousel">
         <!-- Concern 1: Dry / Frizzy / Dull Hair -->
         <div class="concern-card">
@@ -1633,10 +1601,7 @@
     
     initCarousel() {
       const carousel = document.getElementById('concern-carousel');
-      const prevBtn = document.querySelector('.carousel-nav.prev');
-      const nextBtn = document.querySelector('.carousel-nav.next');
-      
-      if (!carousel || !prevBtn || !nextBtn) return;
+      if (!carousel) return;
       
       // Original infinite animation for desktop
       if (window.innerWidth >= 1024) {
@@ -1671,48 +1636,9 @@
             carousel.style.animationPlayState = 'running';
           }, 1000);
         });
-        
-        // Hide navigation arrows for desktop infinite scroll
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
       } else {
-        // For mobile/tablet: use scroll-snap with navigation
-        const cards = document.querySelectorAll('.concern-card');
-        if (cards.length === 0) return;
-        
-        let currentSlide = 0;
-        const totalSlides = cards.length;
-        const cardWidth = cards[0].offsetWidth + 30;
-        
-        const updateCarousel = () => {
-          carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
-          prevBtn.classList.toggle('hidden', currentSlide === 0);
-          nextBtn.classList.toggle('hidden', currentSlide >= totalSlides - 1);
-        };
-        
-        // Navigation
-        prevBtn.addEventListener('click', () => {
-          if (currentSlide > 0) {
-            currentSlide--;
-            updateCarousel();
-          }
-        });
-        
-        nextBtn.addEventListener('click', () => {
-          if (currentSlide < totalSlides - 1) {
-            currentSlide++;
-            updateCarousel();
-          }
-        });
-        
-        // Initialize
-        updateCarousel();
-        
-        // Hide arrows on very small screens
-        if (window.innerWidth <= 768) {
-          prevBtn.style.display = 'none';
-          nextBtn.style.display = 'none';
-        }
+        // For mobile/tablet: just use scroll-snap
+        // No arrows needed
       }
     }
     
