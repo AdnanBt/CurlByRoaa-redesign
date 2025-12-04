@@ -51,17 +51,62 @@
     }
   }
   
-  /* Carousel with Auto-scroll */
+  /* Carousel Navigation */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+  
+  .carousel-nav:hover {
+    background: var(--color-accent);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .carousel-nav.prev {
+    left: 0;
+  }
+  
+  .carousel-nav.next {
+    right: 0;
+  }
+  
+  .carousel-nav.hidden {
+    display: none;
+  }
+  
+  /* Carousel */
   .concern-carousel {
     display: flex;
     gap: 30px;
     padding: 20px 0;
-    width: max-content;
-    animation: concernCarouselScroll 60s linear infinite;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  .concern-carousel:hover {
-    animation-play-state: paused;
+  @media (max-width: 768px) {
+    .concern-carousel {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+    
+    .concern-carousel::-webkit-scrollbar {
+      display: none;
+    }
   }
   
   /* PROFESSIONAL CONCERN CARD DESIGN */
@@ -74,6 +119,20 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     border: 1px solid rgba(232, 196, 184, 0.15);
+  }
+  
+  @media (max-width: 768px) {
+    .concern-card {
+      flex: 0 0 calc(100vw - 60px);
+      scroll-snap-align: center;
+      margin: 0 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .concern-card {
+      flex: 0 0 calc(100vw - 40px);
+    }
   }
   
   .concern-card:hover {
@@ -179,6 +238,7 @@
     border-radius: 16px;
     transition: all 0.3s ease;
     border: 1px solid rgba(232, 196, 184, 0.1);
+    position: relative;
   }
   
   .service-item:hover {
@@ -213,6 +273,22 @@
     color: #666;
     line-height: 1.5;
     font-weight: 400;
+    margin-bottom: 8px;
+  }
+  
+  /* Service Duration */
+  .service-duration {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  
+  .service-duration svg {
+    width: 16px;
+    height: 16px;
   }
   
   /* Related Products */
@@ -220,6 +296,7 @@
     border-top: 1px solid rgba(232, 196, 184, 0.15);
     padding-top: 28px;
     margin-top: 28px;
+    position: relative;
   }
   
   .products-header {
@@ -250,6 +327,7 @@
     padding: 10px 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    position: relative;
   }
   
   .products-carousel::-webkit-scrollbar {
@@ -374,16 +452,6 @@
     transform: translateY(-3px);
   }
   
-  /* Carousel Animation */
-  @keyframes concernCarouselScroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(calc(-380px * 7 - 30px * 7));
-    }
-  }
-  
   /* BOOKING MODAL - Professional Design */
   .booking-overlay {
     position: fixed;
@@ -426,6 +494,37 @@
     display: block;
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .booking-modal.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 28px;
+    z-index: 1;
+  }
+  
+  .booking-modal.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(232, 196, 184, 0.3);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: bookingLoading 1s linear infinite;
+    z-index: 2;
+  }
+  
+  @keyframes bookingLoading {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
   }
   
   .booking-header {
@@ -723,6 +822,25 @@
     line-height: 1.6;
   }
   
+  .confirmation-email {
+    background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
+    padding: 16px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid rgba(232, 196, 184, 0.15);
+  }
+  
+  .confirmation-email p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  
+  #confirmationEmail {
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-top: 4px;
+  }
+  
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -731,26 +849,12 @@
   
   /* Mobile Styles */
   @media (max-width: 768px) {
-    .concern-card {
-      flex: 0 0 340px;
+    .concern-carousel-container {
+      padding: 0 40px;
     }
     
-    .concern-card-header {
-      min-height: 200px;
-      padding: 30px 25px;
-    }
-    
-    .concern-card-content {
-      padding: 30px 25px;
-    }
-    
-    .concern-card-actions {
-      flex-direction: column;
-    }
-    
-    .booking-modal {
-      width: 95%;
-      max-height: 85vh;
+    .carousel-nav {
+      display: none;
     }
     
     .form-row {
@@ -765,32 +869,14 @@
       flex-direction: column;
     }
     
-    @keyframes concernCarouselScroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-340px * 7 - 30px * 7));
-      }
+    .concern-card-actions {
+      flex-direction: column;
     }
   }
   
   @media (max-width: 480px) {
-    .concern-carousel {
-      animation-duration: 90s;
-    }
-    
-    .concern-card {
-      flex: 0 0 320px;
-    }
-    
-    .concern-card-header {
-      min-height: 180px;
-      padding: 25px 20px;
-    }
-    
-    .concern-card-content {
-      padding: 25px 20px;
+    .concern-carousel-container {
+      padding: 0 20px;
     }
   }
   
@@ -804,6 +890,10 @@
     .products-btn:hover {
       transform: none;
     }
+    
+    .time-slot:hover {
+      transform: none;
+    }
   }
 </style>
 
@@ -815,6 +905,18 @@
     </div>
     
     <div class="concern-carousel-container">
+      <button class="carousel-nav prev hidden">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+      </button>
+      
+      <button class="carousel-nav next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        </svg>
+      </button>
+      
       <div class="concern-carousel" id="concern-carousel">
         <!-- Concern 1: Dry / Frizzy / Dull Hair -->
         <div class="concern-card">
@@ -840,6 +942,12 @@
                 <div class="service-info">
                   <div class="service-name">ABC Replenish Ritual</div>
                   <div class="service-description">Deep hydration treatment for extremely dry hair</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>90 min</span>
+                  </div>
                 </div>
               </div>
               
@@ -850,6 +958,12 @@
                 <div class="service-info">
                   <div class="service-name">ABC Hydrate Ritual</div>
                   <div class="service-description">Moisture infusion for frizzy, dull hair</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>60 min</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -933,6 +1047,12 @@
                 <div class="service-info">
                   <div class="service-name">Fiber Clinix Bond Builder</div>
                   <div class="service-description">Repairs internal hair bonds, strengthens structure</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>120 min</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -992,9 +1112,245 @@
           </div>
         </div>
         
-        <!-- Continue with other concern cards in the same professional style... -->
-        <!-- (The other 5 cards would follow the same pattern) -->
+        <!-- Concern 3: Oily / Greasy Scalp -->
+        <div class="concern-card">
+          <div class="concern-card-header">
+            <div class="concern-number">3</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M16 16c0 1.104-.896 2-2 2-1.105 0-2-.896-2-2s.895-2 2-2c1.104 0 2 .896 2 2zm-2-14c-3.314 0-6 2.686-6 6 0 1.105.895 2 2 2s2-.895 2-2c0-1.104.896-2 2-2s2 .896 2 2c0 1.105.895 2 2 2s2-.895 2-2c0-3.314-2.686-6-6-6z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Oily Scalp</h3>
+              <p class="concern-symptoms">Excess sebum, greasy roots, flat hair</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Scalp Detox Treatment</div>
+                  <div class="service-description">Deep cleansing to regulate oil production</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>45 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Oily Scalp" data-service="Scalp Detox Treatment" data-price="75">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
+        </div>
         
+        <!-- Concern 4: Thinning / Hair Loss -->
+        <div class="concern-card">
+          <div class="concern-card-header">
+            <div class="concern-number">4</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Thinning Hair</h3>
+              <p class="concern-symptoms">Reduced density, visible scalp, hair fall</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Hair Growth Therapy</div>
+                  <div class="service-description">Stimulates follicles for thicker, fuller hair</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>60 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Thinning Hair" data-service="Hair Growth Therapy" data-price="120">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Concern 5: Color-Treated Hair -->
+        <div class="concern-card">
+          <div class="concern-card-header">
+            <div class="concern-number">5</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M17.66 7.93L12 2.27 6.34 7.93c-3.12 3.12-3.12 8.19 0 11.31C7.9 20.8 9.95 21.58 12 21.58s4.1-.78 5.66-2.34c3.12-3.12 3.12-8.19 0-11.31zM12 19.59c-1.6 0-3.11-.62-4.24-1.76C6.62 16.69 6 15.19 6 13.59s.62-3.11 1.76-4.24L12 5.1v14.49z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Color-Treated Hair</h3>
+              <p class="concern-symptoms">Fading color, brassiness, compromised condition</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Color Protection Treatment</div>
+                  <div class="service-description">Seals in color, prevents fading & brassiness</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>75 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Color-Treated Hair" data-service="Color Protection Treatment" data-price="85">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Concern 6: Curly / Coily Hair -->
+        <div class="concern-card">
+          <div class="concern-card-header">
+            <div class="concern-number">6</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Curly Hair Care</h3>
+              <p class="concern-symptoms">Definition, moisture balance, frizz control</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Curl Definition Ritual</div>
+                  <div class="service-description">Enhances natural curl pattern, reduces frizz</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>90 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Curly Hair Care" data-service="Curl Definition Ritual" data-price="95">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Concern 7: Sensitive Scalp -->
+        <div class="concern-card">
+          <div class="concern-card-header">
+            <div class="concern-number">7</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Sensitive Scalp</h3>
+              <p class="concern-symptoms">Itching, redness, irritation, dandruff</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Soothing Scalp Treatment</div>
+                  <div class="service-description">Calms irritation, reduces inflammation & flakes</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>60 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Sensitive Scalp" data-service="Soothing Scalp Treatment" data-price="80">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -1009,7 +1365,6 @@
     </div>
   </div>
 </section>
-
 
 <!-- Booking Modal -->
 <div class="booking-overlay" id="bookingOverlay"></div>
@@ -1123,6 +1478,12 @@
       </div>
       <h3>Booking Confirmed!</h3>
       <p>Thank you for booking with us. We've sent a confirmation email with all the details.</p>
+      
+      <div class="confirmation-email">
+        <p class="text-sm text-gray-600">A confirmation has been sent to:</p>
+        <p id="confirmationEmail" class="font-bold"></p>
+      </div>
+      
       <p>A member of our team will contact you shortly to confirm your appointment.</p>
       <button class="book-btn" id="closeSuccess">Close</button>
     </div>
@@ -1141,6 +1502,7 @@
       this.summaryService = document.getElementById('summaryService');
       this.summaryConcern = document.getElementById('summaryConcern');
       this.summaryPrice = document.getElementById('summaryPrice');
+      this.confirmationEmail = document.getElementById('confirmationEmail');
       this.selectedConcernInput = document.getElementById('selectedConcern');
       this.selectedServiceInput = document.getElementById('selectedService');
       this.selectedPriceInput = document.getElementById('selectedPrice');
@@ -1157,13 +1519,13 @@
       this.bindEvents();
       this.setupTimeSlots();
       this.setupDatePicker();
+      this.initCarousel();
     }
     
     bindEvents() {
       // Book buttons
       document.querySelectorAll('.book-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-          // Check if button has the correct data attributes
           if (!e.target.closest('.book-btn')) return;
           
           const btn = e.target.closest('.book-btn');
@@ -1190,10 +1552,10 @@
         }
       });
       
-      // Form submission - Fixed: Using button click instead of form submit
+      // Form submission
       document.getElementById('submitBooking').addEventListener('click', (e) => this.handleSubmit(e));
       
-      // Input validation on blur
+      // Input validation
       document.querySelectorAll('.form-input').forEach(input => {
         input.addEventListener('blur', () => this.validateField(input));
         input.addEventListener('input', () => this.clearFieldError(input));
@@ -1205,20 +1567,77 @@
       });
     }
     
+    initCarousel() {
+      const carousel = document.getElementById('concern-carousel');
+      const prevBtn = document.querySelector('.carousel-nav.prev');
+      const nextBtn = document.querySelector('.carousel-nav.next');
+      const cards = document.querySelectorAll('.concern-card');
+      
+      if (!carousel || cards.length === 0) return;
+      
+      let currentSlide = 0;
+      const totalSlides = cards.length;
+      const cardWidth = cards[0].offsetWidth + 30; // width + gap
+      
+      const updateCarousel = () => {
+        carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+        prevBtn.classList.toggle('hidden', currentSlide === 0);
+        nextBtn.classList.toggle('hidden', currentSlide >= totalSlides - 3);
+      };
+      
+      // Navigation
+      prevBtn.addEventListener('click', () => {
+        if (currentSlide > 0) {
+          currentSlide--;
+          updateCarousel();
+        }
+      });
+      
+      nextBtn.addEventListener('click', () => {
+        if (currentSlide < totalSlides - 3) {
+          currentSlide++;
+          updateCarousel();
+        }
+      });
+      
+      // Touch/swipe for mobile
+      let startX = 0;
+      let scrollLeft = 0;
+      
+      carousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX;
+        scrollLeft = carousel.scrollLeft;
+      });
+      
+      carousel.addEventListener('touchmove', (e) => {
+        const x = e.touches[0].pageX;
+        const walk = (x - startX) * 2;
+        carousel.scrollLeft = scrollLeft - walk;
+      });
+      
+      // Initialize
+      updateCarousel();
+      
+      // Resize handling
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const newCardWidth = cards[0].offsetWidth + 30;
+          if (newCardWidth !== cardWidth) {
+            updateCarousel();
+          }
+        }, 250);
+      });
+    }
+    
     setupTimeSlots() {
       const timeSlots = document.querySelectorAll('.time-slot');
       timeSlots.forEach(slot => {
         slot.addEventListener('click', () => {
-          // Remove selected class from all slots
           timeSlots.forEach(s => s.classList.remove('selected'));
-          
-          // Add selected class to clicked slot
           slot.classList.add('selected');
-          
-          // Update hidden input
           this.bookingTimeInput.value = slot.dataset.time;
-          
-          // Clear error
           document.getElementById('timeError').classList.remove('show');
         });
       });
@@ -1229,15 +1648,12 @@
       const today = new Date();
       const minDate = today.toISOString().split('T')[0];
       
-      // Set min date to today
       dateInput.min = minDate;
       
-      // Set max date to 90 days from now
       const maxDate = new Date();
       maxDate.setDate(today.getDate() + 90);
       dateInput.max = maxDate.toISOString().split('T')[0];
       
-      // Set default date to tomorrow
       const tomorrow = new Date();
       tomorrow.setDate(today.getDate() + 1);
       dateInput.value = tomorrow.toISOString().split('T')[0];
@@ -1279,8 +1695,11 @@
         input.classList.remove('error');
       });
       
-      // Setup date picker again
+      // Setup date picker
       this.setupDatePicker();
+      
+      // Track booking event
+      this.trackBookingEvent('booking_started', { concern, service, price });
       
       // Show modal
       this.modal.classList.add('active');
@@ -1293,7 +1712,6 @@
       this.overlay.classList.remove('active');
       document.body.style.overflow = '';
       
-      // Reset after animation
       setTimeout(() => {
         this.selectedConcern = null;
         this.selectedService = null;
@@ -1335,11 +1753,11 @@
       
       // Phone validation
       if (fieldId === 'phone') {
-        const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
         const digits = value.replace(/\D/g, '');
         if (digits.length < 10) {
           field.classList.add('error');
-          error.textContent = 'Please enter at least 10 digits';
+          const needed = 10 - digits.length;
+          error.textContent = `Please enter a valid phone number (${needed} more digit${needed !== 1 ? 's' : ''} needed)`;
           error.classList.add('show');
           return false;
         }
@@ -1371,6 +1789,15 @@
         return false;
       }
       
+      // Business day validation (closed on Sundays)
+      const dayOfWeek = selectedDate.getDay();
+      if (dayOfWeek === 0) {
+        dateInput.classList.add('error');
+        error.textContent = 'We\'re closed on Sundays. Please select another date.';
+        error.classList.add('show');
+        return false;
+      }
+      
       dateInput.classList.remove('error');
       error.classList.remove('show');
       return true;
@@ -1391,9 +1818,7 @@
     validateForm() {
       let isValid = true;
       
-      // Validate all required fields
       const requiredFields = ['firstName', 'lastName', 'email', 'phone'];
-      
       requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (!this.validateField(field)) {
@@ -1401,15 +1826,8 @@
         }
       });
       
-      // Validate date
-      if (!this.validateDate()) {
-        isValid = false;
-      }
-      
-      // Validate time slot
-      if (!this.validateTimeSlot()) {
-        isValid = false;
-      }
+      if (!this.validateDate()) isValid = false;
+      if (!this.validateTimeSlot()) isValid = false;
       
       return isValid;
     }
@@ -1417,20 +1835,16 @@
     async handleSubmit(e) {
       e.preventDefault();
       
-      console.log('Form submission started');
-      
-      // Validate form
       if (!this.validateForm()) {
-        console.log('Form validation failed');
         return;
       }
       
       const submitButton = document.getElementById('submitBooking');
       submitButton.disabled = true;
       submitButton.innerHTML = '<span>Processing...</span>';
+      this.modal.classList.add('loading');
       
       try {
-        // Collect form data
         const formData = {
           concern: this.selectedConcern,
           service: this.selectedService,
@@ -1446,21 +1860,21 @@
           source: 'Services by Concern Section'
         };
         
-        console.log('Form data collected:', formData);
+        // Track conversion
+        this.trackBookingEvent('booking_completed', formData);
         
-        // Simulate API call (replace with real API)
+        // Simulate API call
         await this.simulateAPICall(formData);
         
-        console.log('API call successful');
+        // Store booking locally
+        this.storeBooking(formData);
+        
+        // Show confirmation email
+        this.confirmationEmail.textContent = formData.email;
         
         // Show success screen
         this.form.style.display = 'none';
         this.successScreen.classList.add('active');
-        
-        // Store booking
-        this.storeBooking(formData);
-        
-        console.log('Booking completed successfully');
         
         // Auto-close after 5 seconds
         setTimeout(() => {
@@ -1473,122 +1887,73 @@
       } finally {
         submitButton.disabled = false;
         submitButton.innerHTML = '<span>Confirm Booking</span><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+        this.modal.classList.remove('loading');
       }
     }
     
     simulateAPICall(data) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         setTimeout(() => {
-          // Simulate random success/failure for testing
-          const shouldFail = Math.random() < 0.1; // 10% chance of failure
-          
-          if (shouldFail) {
-            reject(new Error('Simulated API failure'));
-          } else {
-            console.log('Booking processed:', data);
-            resolve({ success: true, bookingId: 'BK' + Date.now() });
-          }
+          console.log('Booking processed:', data);
+          resolve({ success: true, bookingId: 'BK' + Date.now() });
         }, 1500);
       });
     }
     
     storeBooking(data) {
       try {
-        // Get existing bookings from localStorage
         const existingBookings = JSON.parse(localStorage.getItem('hairSalonBookings') || '[]');
-        
-        // Add new booking with ID
         const bookingWithId = {
           ...data,
           id: 'BK' + Date.now(),
-          status: 'pending'
+          status: 'pending',
+          createdAt: new Date().toISOString()
         };
         
         existingBookings.push(bookingWithId);
-        
-        // Save back to localStorage
         localStorage.setItem('hairSalonBookings', JSON.stringify(existingBookings));
         
         console.log('Booking stored locally with ID:', bookingWithId.id);
-        
-        // For debugging: Show stored bookings
-        console.log('All stored bookings:', existingBookings);
-        
       } catch (error) {
         console.error('Error storing booking:', error);
       }
+    }
+    
+    trackBookingEvent(eventName, data) {
+      // Google Analytics
+      if (typeof gtag === 'function') {
+        gtag('event', eventName, {
+          event_category: 'booking',
+          event_label: data.service,
+          value: parseFloat(data.price)
+        });
+      }
+      
+      // Facebook Pixel
+      if (typeof fbq === 'function') {
+        fbq('track', eventName === 'booking_completed' ? 'Purchase' : 'InitiateCheckout', {
+          value: data.price,
+          currency: 'USD',
+          content_name: data.service,
+          content_type: 'product'
+        });
+      }
+      
+      // Custom event for analytics
+      window.dispatchEvent(new CustomEvent('bookingEvent', {
+        detail: { eventName, data }
+      }));
     }
   }
   
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing booking system...');
-    
     setTimeout(() => {
       try {
         const bookingSystem = new ProfessionalBookingSystem();
         window.bookingSystem = bookingSystem;
         
-        console.log('Booking system initialized successfully');
-        
-        // Test: Log all book buttons to ensure they're found
-        const bookButtons = document.querySelectorAll('.book-btn');
-        console.log(`Found ${bookButtons.length} book buttons`);
-        
-        // Initialize carousel interactions
-        const carousel = document.querySelector('.concern-carousel');
-        
-        if (carousel) {
-          // Pause animation on hover
-          carousel.addEventListener('mouseenter', () => {
-            carousel.style.animationPlayState = 'paused';
-          });
-          
-          carousel.addEventListener('mouseleave', () => {
-            carousel.style.animationPlayState = 'running';
-          });
-          
-          // Add swipe support for mobile
-          let startX;
-          let scrollLeft;
-          
-          carousel.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].pageX - carousel.offsetLeft;
-            scrollLeft = carousel.scrollLeft;
-          });
-          
-          carousel.addEventListener('touchmove', (e) => {
-            if (!startX) return;
-            const x = e.touches[0].pageX - carousel.offsetLeft;
-            const walk = (x - startX) * 2;
-            carousel.scrollLeft = scrollLeft - walk;
-          });
-        }
-        
-        // Add quick test button for debugging
-        const debugDiv = document.createElement('div');
-        debugDiv.style.position = 'fixed';
-        debugDiv.style.bottom = '10px';
-        debugDiv.style.right = '10px';
-        debugDiv.style.zIndex = '10000';
-        debugDiv.style.background = 'white';
-        debugDiv.style.padding = '10px';
-        debugDiv.style.borderRadius = '5px';
-        debugDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-        debugDiv.innerHTML = `
-          <button onclick="testBooking()" style="padding: 5px 10px; background: #E8C4B8; border: none; border-radius: 3px; cursor: pointer;">Test Booking</button>
-        `;
-        document.body.appendChild(debugDiv);
-        
-        window.testBooking = function() {
-          if (window.bookingSystem) {
-            window.bookingSystem.openBookingModal(
-              'Test Concern',
-              'Test Service',
-              '99'
-            );
-          }
-        };
+        console.log('Professional booking system initialized successfully');
         
       } catch (error) {
         console.error('Error initializing booking system:', error);
