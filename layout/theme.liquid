@@ -37,7 +37,7 @@
       }
     }
     
-    /* Sidebar CSS */
+    /* Sidebar CSS - Add this */
     .sidebar-overlay {
       position: fixed;
       top: 0;
@@ -110,11 +110,86 @@
       padding: 20px;
     }
 
+    /* Sidebar Navigation */
+    .sidebar-nav {
+      margin-top: 10px;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 25px 0 15px;
+      padding: 0 10px;
+    }
+
+    .sidebar-menu-item {
+      margin-bottom: 5px;
+    }
+
+    .sidebar-menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 15px;
+      color: #333;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    .sidebar-menu-link:hover {
+      background: #f8f8f8;
+      color: #E8C4B8;
+      transform: translateX(5px);
+    }
+
+    .sidebar-menu-count {
+      font-size: 11px;
+      color: #999;
+      background: #f0f0f0;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Sidebar Toggle in Header */
+    .sidebar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #2D2D2D;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-toggle:hover {
+      background: rgba(232, 196, 184, 0.1);
+      color: #E8C4B8;
+    }
+
     /* Responsive Sidebar */
     @media (max-width: 768px) {
       .sidebar {
         width: 300px;
         left: -300px;
+      }
+      
+      .sidebar-toggle {
+        display: flex;
       }
       
       /* Push content when sidebar is open */
@@ -170,8 +245,70 @@
     </div>
     
     <div class="sidebar-content">
-      {% comment %} Include sidebar navigation snippet {% endcomment %}
-      {% render 'sidebar-navigation' %}
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <!-- Shop Collections -->
+          <li class="sidebar-menu-title">Shop Collections</li>
+          {% for collection in collections %}
+            {% if collection.all_products_count > 0 %}
+              <li class="sidebar-menu-item">
+                <a href="{{ collection.url }}" class="sidebar-menu-link">
+                  {{ collection.title }}
+                  <span class="sidebar-menu-count">{{ collection.all_products_count }}</span>
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          
+          <!-- Pages -->
+          <li class="sidebar-menu-title">Information</li>
+          {% for page in pages %}
+            {% unless page.handle contains 'policy' %}
+              <li class="sidebar-menu-item">
+                <a href="{{ page.url }}" class="sidebar-menu-link">{{ page.title }}</a>
+              </li>
+            {% endunless %}
+          {% endfor %}
+          
+          <!-- Policy Pages -->
+          <li class="sidebar-menu-title">Legal</li>
+          {% for page in pages %}
+            {% if page.handle contains 'policy' %}
+              <li class="sidebar-menu-item">
+                <a href="{{ page.url }}" class="sidebar-menu-link">{{ page.title }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          
+          <!-- Blog Links -->
+          {% if blogs.size > 0 %}
+            <li class="sidebar-menu-title">Blog & Guides</li>
+            {% for blog in blogs %}
+              <li class="sidebar-menu-item">
+                <a href="{{ blog.url }}" class="sidebar-menu-link">{{ blog.title }}</a>
+              </li>
+            {% endfor %}
+          {% endif %}
+          
+          <!-- Account Links -->
+          <li class="sidebar-menu-title">Your Account</li>
+          {% if customer %}
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.account_url }}" class="sidebar-menu-link">My Account</a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.account_logout_url }}" class="sidebar-menu-link">Logout</a>
+            </li>
+          {% else %}
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.account_login_url }}" class="sidebar-menu-link">Login</a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.account_register_url }}" class="sidebar-menu-link">Register</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
     </div>
   </aside>
 
@@ -192,84 +329,102 @@
       // Sidebar Elements
       const sidebar = document.getElementById('mainSidebar');
       const overlay = document.getElementById('sidebarOverlay');
+      const toggleBtn = document.getElementById('sidebarToggle');
       const closeBtn = document.getElementById('sidebarClose');
       const body = document.body;
       
-      // Function to open sidebar
-      function openSidebar() {
-        if (sidebar) {
+      // Initialize sidebar if elements exist
+      if (sidebar) {
+        // Function to open sidebar
+        function openSidebar() {
           sidebar.classList.add('active');
           if (overlay) overlay.classList.add('active');
           body.classList.add('sidebar-open');
           body.style.overflow = 'hidden';
         }
-      }
-      
-      // Function to close sidebar
-      function closeSidebar() {
-        if (sidebar) {
+        
+        // Function to close sidebar
+        function closeSidebar() {
           sidebar.classList.remove('active');
           if (overlay) overlay.classList.remove('active');
           body.classList.remove('sidebar-open');
           body.style.overflow = '';
         }
-      }
-      
-      // Function to toggle sidebar
-      function toggleSidebar() {
-        if (sidebar && sidebar.classList.contains('active')) {
-          closeSidebar();
-        } else {
-          openSidebar();
-        }
-      }
-      
-      // Make functions available globally
-      window.openSidebar = openSidebar;
-      window.closeSidebar = closeSidebar;
-      window.toggleSidebar = toggleSidebar;
-      
-      // Event Listeners
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeSidebar);
-      }
-      
-      if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
-      }
-      
-      // Close sidebar on escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
-          closeSidebar();
-        }
-      });
-      
-      // Close sidebar when clicking a link (for mobile)
-      const sidebarLinks = document.querySelectorAll('.sidebar-menu-link');
-      sidebarLinks.forEach(link => {
-        link.addEventListener('click', function() {
-          if (window.innerWidth <= 768) {
-            setTimeout(closeSidebar, 300);
+        
+        // Function to toggle sidebar
+        function toggleSidebar() {
+          if (sidebar.classList.contains('active')) {
+            closeSidebar();
+          } else {
+            openSidebar();
           }
-        });
-      });
-      
-      // Close sidebar on resize to desktop
-      let resizeTimer;
-      window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-          if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('active')) {
+        }
+        
+        // Event Listeners
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', toggleSidebar);
+        }
+        
+        if (closeBtn) {
+          closeBtn.addEventListener('click', closeSidebar);
+        }
+        
+        if (overlay) {
+          overlay.addEventListener('click', closeSidebar);
+        }
+        
+        // Close sidebar on escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && sidebar.classList.contains('active')) {
             closeSidebar();
           }
-        }, 250);
-      });
+        });
+        
+        // Close sidebar when clicking a link (for mobile)
+        const sidebarLinks = sidebar.querySelectorAll('.sidebar-menu-link');
+        sidebarLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+              setTimeout(closeSidebar, 300);
+            }
+          });
+        });
+        
+        // Close sidebar on resize to desktop
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function() {
+            if (window.innerWidth > 768 && sidebar.classList.contains('active')) {
+              closeSidebar();
+            }
+          }, 250);
+        });
+      }
       
-      // Listen for sidebar toggle events from header
-      document.addEventListener('openSidebar', openSidebar);
-      document.addEventListener('closeSidebar', closeSidebar);
-      document.addEventListener('toggleSidebar', toggleSidebar);
+      // Add sidebar toggle button to header if it doesn't exist
+      const headerActions = document.querySelector('.header-actions');
+      if (headerActions && !document.getElementById('sidebarToggle')) {
+        const sidebarToggleBtn = document.createElement('button');
+        sidebarToggleBtn.className = 'sidebar-toggle';
+        sidebarToggleBtn.id = 'sidebarToggle';
+        sidebarToggleBtn.setAttribute('aria-label', 'Open menu');
+        sidebarToggleBtn.innerHTML = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        `;
+        
+        // Insert at the beginning of header actions
+        headerActions.insertBefore(sidebarToggleBtn, headerActions.firstChild);
+        
+        // Add click event to newly created button
+        sidebarToggleBtn.addEventListener('click', function() {
+          if (sidebar && typeof toggleSidebar === 'function') {
+            toggleSidebar();
+          }
+        });
+      }
     });
   </script>
 </body>
