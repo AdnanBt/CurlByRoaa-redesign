@@ -9,6 +9,7 @@
     --text-black: #000000;
     --white: #FFFFFF;
     --gray-light: #f9f9f9;
+    --sidebar-width: 350px;
   }
 
   /* Announcement Bar */
@@ -29,7 +30,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
 
@@ -57,6 +58,15 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  /* NEW: Adjust header container when sidebar is visible on desktop */
+  @media (min-width: 1025px) {
+    body.sidebar-desktop-visible .header-container {
+      margin-left: var(--sidebar-width);
+      max-width: calc(1400px - var(--sidebar-width));
+    }
   }
 
   .header-inner {
@@ -570,6 +580,7 @@
 class HeaderWithDropdowns {
   constructor() {
     this.header = document.getElementById('main-header');
+    this.headerContainer = document.querySelector('.header-container');
     this.sidebarToggle = document.getElementById('sidebarToggle');
     this.mainNav = document.getElementById('main-nav');
     this.navItems = document.querySelectorAll('.nav-item');
@@ -579,7 +590,8 @@ class HeaderWithDropdowns {
     this.hoverTimeout = null;
     this.leaveTimeout = null;
     this.isMobile = window.innerWidth <= 1024;
-    this.scrollThreshold = window.innerHeight; // Hide header after 1 screen height
+    this.scrollThreshold = window.innerHeight;
+    this.lastScrollTop = 0;
     
     this.init();
   }
@@ -597,13 +609,7 @@ class HeaderWithDropdowns {
   setupSidebarToggle() {
     if (this.sidebarToggle) {
       this.sidebarToggle.addEventListener('click', () => {
-        // Dispatch custom event to open sidebar
         document.dispatchEvent(new CustomEvent('toggleSidebar'));
-        
-        // If sidebar script isn't loaded, show alert
-        if (typeof window.toggleSidebar === 'undefined') {
-          console.log('Sidebar toggle clicked - sidebar functionality should be in theme.liquid');
-        }
       });
     }
   }
@@ -618,14 +624,12 @@ class HeaderWithDropdowns {
   }
 
   bindEvents() {
-    // Escape key to close dropdowns
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeAllDropdowns();
       }
     });
 
-    // Window resize
     window.addEventListener('resize', () => {
       this.handleResize();
     });
@@ -637,9 +641,7 @@ class HeaderWithDropdowns {
     this.scrollThreshold = window.innerHeight;
     
     if (wasMobile !== this.isMobile) {
-      // Reset all dropdowns on resize
       this.closeAllDropdowns();
-      // Re-setup dropdowns for new screen size
       this.setupDropdowns();
       
       // Reset header for desktop
@@ -666,29 +668,23 @@ class HeaderWithDropdowns {
         const dropdown = item.querySelector('.mega-dropdown');
         if (!dropdown) return;
 
-        // Desktop hover events
         item.addEventListener('mouseenter', () => {
           if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
           
           this.hoverTimeout = setTimeout(() => {
             this.closeAllDropdowns();
             
-            // Show dropdown
             dropdown.style.transition = 'all 0.25s ease';
             dropdown.style.opacity = '1';
             dropdown.style.visibility = 'visible';
             dropdown.style.pointerEvents = 'auto';
             
-            // Set appropriate transform based on position
             if (item === this.navItems[0]) {
-              // First item (Shop) - left aligned
               dropdown.style.transform = 'translateX(0) translateY(0)';
             } else if (item === this.navItems[this.navItems.length - 1] || 
                        item === this.navItems[this.navItems.length - 2]) {
-              // Last two items - right aligned
               dropdown.style.transform = 'translateX(0) translateY(0)';
             } else {
-              // Middle items - centered
               dropdown.style.transform = 'translateX(-50%) translateY(0)';
             }
           }, 100);
@@ -698,14 +694,12 @@ class HeaderWithDropdowns {
           if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
           
           this.leaveTimeout = setTimeout(() => {
-            // Only close if mouse is not over dropdown
             if (!dropdown.matches(':hover')) {
               this.closeDropdown(dropdown);
             }
           }, 150);
         });
 
-        // Keep dropdown open when hovering over it
         dropdown.addEventListener('mouseenter', () => {
           if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
           if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
@@ -724,7 +718,6 @@ class HeaderWithDropdowns {
     dropdown.style.opacity = '0';
     dropdown.style.pointerEvents = 'none';
     
-    // Set appropriate transform for hiding
     const item = dropdown.parentElement;
     const navItems = this.navItems;
     
@@ -745,22 +738,18 @@ class HeaderWithDropdowns {
   }
 
   setupNavigation() {
-    // Handle all navigation clicks
     this.navLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         const href = link.getAttribute('href');
         
-        // If it's a hash link (section on same page)
         if (href && href.startsWith('#')) {
           e.preventDefault();
           const targetId = href.substring(1);
           const targetElement = document.getElementById(targetId);
           
           if (targetElement) {
-            // Close dropdowns
             this.closeAllDropdowns();
             
-            // Calculate scroll position
             const headerHeight = this.header.offsetHeight;
             const announcementBar = document.querySelector('.announcement-bar');
             const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0;
@@ -780,35 +769,49 @@ class HeaderWithDropdowns {
   }
 
   setupScrollEffect() {
-    let lastScrollTop = 0;
-    const desktopBreakpoint = 1024;
-    
     window.addEventListener('scroll', () => {
       const currentScroll = window.pageYOffset;
-      const isDesktop = window.innerWidth > desktopBreakpoint;
+      const isDesktop = window.innerWidth > 1024;
+      const scrollDirection = currentScroll > this.lastScrollTop ? 'down' : 'up';
       
-      // Add/remove scrolled class for background
+      // Add/remove scrolled class
       if (currentScroll > 50) {
         this.header.classList.add('scrolled');
       } else {
         this.header.classList.remove('scrolled');
       }
       
-      // Desktop behavior: hide top header and show sidebar on scroll
+      // Desktop behavior
       if (isDesktop) {
+        const sidebarVisible = document.body.classList.contains('sidebar-desktop-visible');
+        
         if (currentScroll > this.scrollThreshold) {
-          // Hide main header
-          this.header.style.transform = 'translateY(-100%)';
-          this.header.style.transition = 'transform 0.3s ease';
-          
-          // Show sidebar (dispatch event for sidebar to appear)
-          document.dispatchEvent(new CustomEvent('showSidebarOnScroll'));
+          // Hide main header when scrolling down past threshold
+          if (scrollDirection === 'down') {
+            this.header.style.transform = 'translateY(-100%)';
+            this.header.style.transition = 'transform 0.3s ease';
+            
+            // Show sidebar if not already visible
+            if (!sidebarVisible) {
+              document.dispatchEvent(new CustomEvent('showSidebarOnScroll'));
+            }
+          } else {
+            // Show header when scrolling up
+            this.header.style.transform = 'translateY(0)';
+            
+            // Hide sidebar when close to top
+            if (currentScroll < this.scrollThreshold && sidebarVisible) {
+              document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
+            }
+          }
         } else {
-          // Show main header
+          // Always show header at top
           this.header.style.transform = 'translateY(0)';
           
-          // Hide sidebar (dispatch event for sidebar to hide)
-          document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
+          // Hide sidebar when at top
+          if (sidebarVisible) {
+            document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
+          }
         }
       }
       
@@ -817,7 +820,7 @@ class HeaderWithDropdowns {
         this.closeAllDropdowns();
       }
       
-      lastScrollTop = currentScroll;
+      this.lastScrollTop = currentScroll;
     });
   }
 
