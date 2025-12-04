@@ -1,7 +1,6 @@
 {%- comment -%}
   services-by-concern.liquid
-  Beautiful carousel layout for services by concern
-  Updated with image_url filter
+  Professional booking form implementation
 {%- endcomment -%}
 
 <style>
@@ -343,6 +342,322 @@
     }
   }
   
+  /* BOOKING MODAL STYLES */
+  .booking-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(5px);
+  }
+  
+  .booking-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+  
+  .booking-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    display: none;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .booking-modal.active {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .booking-header {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 24px 24px 0 0;
+    position: relative;
+  }
+  
+  .booking-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .booking-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+  }
+  
+  .booking-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  
+  .booking-header p {
+    opacity: 0.9;
+    margin: 0;
+  }
+  
+  .booking-content {
+    padding: 30px;
+  }
+  
+  .booking-form {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 0.9rem;
+  }
+  
+  .form-group.required label::after {
+    content: " *";
+    color: #ff4444;
+  }
+  
+  .form-input {
+    padding: 14px 16px;
+    border: 2px solid var(--color-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(232, 196, 184, 0.2);
+  }
+  
+  .form-input.error {
+    border-color: #ff4444;
+  }
+  
+  .error-message {
+    color: #ff4444;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: none;
+  }
+  
+  .error-message.show {
+    display: block;
+  }
+  
+  .form-select {
+    padding: 14px 16px;
+    border: 2px solid var(--color-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: white;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232D2D2D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 20px;
+    cursor: pointer;
+  }
+  
+  .form-select:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(232, 196, 184, 0.2);
+  }
+  
+  .booking-time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+  }
+  
+  .time-slot {
+    padding: 12px;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    font-weight: 500;
+  }
+  
+  .time-slot:hover {
+    border-color: var(--color-accent);
+    background: rgba(232, 196, 184, 0.1);
+  }
+  
+  .time-slot.selected {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+  
+  .booking-summary {
+    background: var(--color-background-alt);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+  
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .summary-item.total {
+    border-top: 1px solid var(--color-border);
+    padding-top: 10px;
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+  }
+  
+  .booking-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+  }
+  
+  .submit-booking {
+    flex: 1;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 18px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .submit-booking:hover:not(:disabled) {
+    background: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(232, 196, 184, 0.4);
+  }
+  
+  .submit-booking:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .cancel-booking {
+    background: transparent;
+    color: var(--color-text-light);
+    border: 2px solid var(--color-border);
+    padding: 18px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .cancel-booking:hover {
+    background: var(--color-border);
+  }
+  
+  .booking-success {
+    text-align: center;
+    padding: 40px 30px;
+    display: none;
+  }
+  
+  .booking-success.active {
+    display: block;
+  }
+  
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--color-accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+  }
+  
+  .booking-success h3 {
+    font-size: 1.8rem;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
+  
+  .booking-success p {
+    color: var(--color-text-light);
+    margin-bottom: 30px;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .booking-modal {
+      width: 95%;
+      max-height: 85vh;
+    }
+  }
+  
   /* Mobile Styles */
   @media (max-width: 768px) {
     .concern-card {
@@ -369,6 +684,14 @@
       100% {
         transform: translateX(calc(-320px * 7 - 30px * 7));
       }
+    }
+    
+    .booking-time-slots {
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    
+    .booking-actions {
+      flex-direction: column;
     }
   }
   
@@ -490,8 +813,8 @@
             {% endif %}
             
             <div class="concern-card-actions">
-              <button class="book-btn" onclick="bookConcernService('Dry/Frizzy Hair', 'ABC Replenish Ritual')">
-                Book Now
+              <button class="book-btn" data-concern="Dry / Frizzy / Dull Hair" data-service="ABC Replenish Ritual" data-price="89">
+                Book Now - $89
               </button>
               <a href="{{ collections['authentic-beauty-concept'].url | default: routes.all_products_collection_url }}" class="products-btn">
                 View Products
@@ -571,8 +894,8 @@
             {% endif %}
             
             <div class="concern-card-actions">
-              <button class="book-btn" onclick="bookConcernService('Damaged Hair', 'Fiber Clinix Bond Builder')">
-                Book Now
+              <button class="book-btn" data-concern="Damaged or Weak Hair" data-service="Fiber Clinix Bond Builder" data-price="99">
+                Book Now - $99
               </button>
               <a href="{{ collections['schwarzkopf'].url | default: routes.all_products_collection_url }}" class="products-btn">
                 View Products
@@ -650,8 +973,8 @@
             {% endif %}
             
             <div class="concern-card-actions">
-              <button class="book-btn" onclick="bookConcernService('Hair Fall', 'Fiber Clinix Fortify')">
-                Book Now
+              <button class="book-btn" data-concern="Hair Fall / Breakage" data-service="Fiber Clinix Fortify" data-price="89">
+                Book Now - $89
               </button>
               <a href="{{ collections['schwarzkopf'].url | default: routes.all_products_collection_url }}" class="products-btn">
                 View Products
@@ -739,8 +1062,8 @@
             {% endif %}
             
             <div class="concern-card-actions">
-              <button class="book-btn" onclick="bookConcernService('Scalp Issues', 'Scalp Clinix Purifying')">
-                Book Now
+              <button class="book-btn" data-concern="Scalp Issues" data-service="Scalp Clinix Purifying" data-price="79">
+                Book Now - $79
               </button>
               <a href="{{ collections['schwarzkopf'].url | default: routes.all_products_collection_url }}" class="products-btn">
                 View Products
@@ -778,8 +1101,8 @@
             </div>
             
             <div class="concern-card-actions">
-              <button class="book-btn" onclick="bookConcernService('Sensitive Scalp', 'Scalp Clinix Soothing')">
-                Book Now
+              <button class="book-btn" data-concern="Sensitive Scalp" data-service="Scalp Clinix Soothing" data-price="89">
+                Book Now - $89
               </button>
               <a href="{{ collections['schwarzkopf'].url | default: routes.all_products_collection_url }}" class="products-btn">
                 View Products
@@ -857,8 +1180,8 @@
             {% endif %}
             
             <div class="concern-card-actions">
-              <button class="book-btn" onclick="bookConcernService('Curly Hair', 'ABC Hydrate + Curl Styling')">
-                Book Now
+              <button class="book-btn" data-concern="Curly Hair Care" data-service="ABC Hydrate + Curl Styling" data-price="99">
+                Book Now - $99
               </button>
               <a href="{{ collections['authentic-beauty-concept'].url | default: routes.all_products_collection_url }}" class="products-btn">
                 View Products
@@ -946,8 +1269,8 @@
             {% endif %}
             
             <div class="concern-card-actions">
-              <button class="book-btn" onclick="bookConcernService('Color Protection', 'ABC Glow Ritual')">
-                Book Now
+              <button class="book-btn" data-concern="Color Protection" data-service="ABC Glow Ritual" data-price="109">
+                Book Now - $109
               </button>
               <a href="{{ collections['authentic-beauty-concept'].url | default: routes.all_products_collection_url }}" class="products-btn">
                 View Products
@@ -967,68 +1290,487 @@
   </div>
 </section>
 
+<!-- Booking Modal -->
+<div class="booking-overlay" id="bookingOverlay"></div>
+
+<div class="booking-modal" id="bookingModal">
+  <div class="booking-header">
+    <button class="booking-close" id="bookingClose">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+    <h3 id="bookingTitle">Book Your Appointment</h3>
+    <p id="bookingSubtitle">Complete the form below to schedule your treatment</p>
+  </div>
+  
+  <div class="booking-content">
+    <!-- Booking Form -->
+    <form id="bookingForm" class="booking-form">
+      <div class="form-row">
+        <div class="form-group required">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" class="form-input" required>
+          <div class="error-message" id="firstNameError">Please enter your first name</div>
+        </div>
+        
+        <div class="form-group required">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" class="form-input" required>
+          <div class="error-message" id="lastNameError">Please enter your last name</div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group required">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" class="form-input" required>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+        
+        <div class="form-group required">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" class="form-input" required>
+          <div class="error-message" id="phoneError">Please enter your phone number</div>
+        </div>
+      </div>
+      
+      <div class="form-group required">
+        <label for="bookingDate">Preferred Date</label>
+        <input type="date" id="bookingDate" name="bookingDate" class="form-input" required min="{{ 'now' | date: '%Y-%m-%d' }}">
+        <div class="error-message" id="dateError">Please select a date</div>
+      </div>
+      
+      <div class="form-group required">
+        <label for="bookingTime">Preferred Time</label>
+        <div class="booking-time-slots" id="timeSlots">
+          <!-- Time slots will be generated by JavaScript -->
+          <div class="time-slot" data-time="09:00">9:00 AM</div>
+          <div class="time-slot" data-time="10:00">10:00 AM</div>
+          <div class="time-slot" data-time="11:00">11:00 AM</div>
+          <div class="time-slot" data-time="13:00">1:00 PM</div>
+          <div class="time-slot" data-time="14:00">2:00 PM</div>
+          <div class="time-slot" data-time="15:00">3:00 PM</div>
+          <div class="time-slot" data-time="16:00">4:00 PM</div>
+          <div class="time-slot" data-time="17:00">5:00 PM</div>
+        </div>
+        <input type="hidden" id="bookingTime" name="bookingTime" required>
+        <div class="error-message" id="timeError">Please select a time slot</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="notes">Additional Notes</label>
+        <textarea id="notes" name="notes" class="form-input" rows="3" placeholder="Any special requirements or concerns..."></textarea>
+      </div>
+      
+      <!-- Hidden fields for selected service -->
+      <input type="hidden" id="selectedConcern" name="selectedConcern">
+      <input type="hidden" id="selectedService" name="selectedService">
+      <input type="hidden" id="selectedPrice" name="selectedPrice">
+      
+      <div class="booking-summary">
+        <div class="summary-item">
+          <span>Service:</span>
+          <span id="summaryService">-</span>
+        </div>
+        <div class="summary-item">
+          <span>For Concern:</span>
+          <span id="summaryConcern">-</span>
+        </div>
+        <div class="summary-item total">
+          <span>Total:</span>
+          <span id="summaryPrice">-</span>
+        </div>
+      </div>
+      
+      <div class="booking-actions">
+        <button type="submit" class="submit-booking" id="submitBooking">
+          <span>Confirm Booking</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+        </button>
+        <button type="button" class="cancel-booking" id="cancelBooking">Cancel</button>
+      </div>
+    </form>
+    
+    <!-- Success Message -->
+    <div class="booking-success" id="bookingSuccess">
+      <div class="success-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+      </div>
+      <h3>Booking Confirmed!</h3>
+      <p>Thank you for booking with us. We've sent a confirmation email with all the details.</p>
+      <p>A member of our team will contact you shortly to confirm your appointment.</p>
+      <button class="book-btn" id="closeSuccess">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  function bookConcernService(concern, service) {
-    // Store in localStorage for booking page
-    localStorage.setItem('selectedConcern', concern);
-    localStorage.setItem('selectedService', service);
+  class BookingSystem {
+    constructor() {
+      this.modal = document.getElementById('bookingModal');
+      this.overlay = document.getElementById('bookingOverlay');
+      this.form = document.getElementById('bookingForm');
+      this.successScreen = document.getElementById('bookingSuccess');
+      this.bookingTitle = document.getElementById('bookingTitle');
+      this.bookingSubtitle = document.getElementById('bookingSubtitle');
+      this.summaryService = document.getElementById('summaryService');
+      this.summaryConcern = document.getElementById('summaryConcern');
+      this.summaryPrice = document.getElementById('summaryPrice');
+      this.selectedConcernInput = document.getElementById('selectedConcern');
+      this.selectedServiceInput = document.getElementById('selectedService');
+      this.selectedPriceInput = document.getElementById('selectedPrice');
+      this.bookingTimeInput = document.getElementById('bookingTime');
+      
+      this.selectedConcern = null;
+      this.selectedService = null;
+      this.selectedPrice = null;
+      
+      this.init();
+    }
     
-    // Create booking URL
-    const bookingUrl = `/pages/book-now?concern=${encodeURIComponent(concern)}&service=${encodeURIComponent(service)}`;
+    init() {
+      this.bindEvents();
+      this.setupTimeSlots();
+      this.setupDatePicker();
+    }
     
-    // Smooth scroll to top before redirect
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    bindEvents() {
+      // Book buttons
+      document.querySelectorAll('.book-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const concern = e.target.dataset.concern;
+          const service = e.target.dataset.service;
+          const price = e.target.dataset.price;
+          
+          this.openBookingModal(concern, service, price);
+        });
+      });
+      
+      // Close modal
+      document.getElementById('bookingClose').addEventListener('click', () => this.closeBookingModal());
+      document.getElementById('bookingOverlay').addEventListener('click', () => this.closeBookingModal());
+      document.getElementById('cancelBooking').addEventListener('click', () => this.closeBookingModal());
+      document.getElementById('closeSuccess').addEventListener('click', () => this.closeBookingModal());
+      
+      // Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.modal.classList.contains('active')) {
+          this.closeBookingModal();
+        }
+      });
+      
+      // Form submission
+      this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+    }
     
-    // Redirect after a short delay
-    setTimeout(() => {
-      window.location.href = bookingUrl;
-    }, 300);
+    setupTimeSlots() {
+      const timeSlots = document.querySelectorAll('.time-slot');
+      timeSlots.forEach(slot => {
+        slot.addEventListener('click', () => {
+          // Remove selected class from all slots
+          timeSlots.forEach(s => s.classList.remove('selected'));
+          
+          // Add selected class to clicked slot
+          slot.classList.add('selected');
+          
+          // Update hidden input
+          this.bookingTimeInput.value = slot.dataset.time;
+          
+          // Clear error
+          document.getElementById('timeError').classList.remove('show');
+        });
+      });
+    }
+    
+    setupDatePicker() {
+      const dateInput = document.getElementById('bookingDate');
+      const today = new Date();
+      const minDate = today.toISOString().split('T')[0];
+      
+      // Set min date to today
+      dateInput.min = minDate;
+      
+      // Set max date to 90 days from now
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 90);
+      dateInput.max = maxDate.toISOString().split('T')[0];
+      
+      // Set default date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      dateInput.value = tomorrow.toISOString().split('T')[0];
+    }
+    
+    openBookingModal(concern, service, price) {
+      this.selectedConcern = concern;
+      this.selectedService = service;
+      this.selectedPrice = price;
+      
+      // Update modal content
+      this.bookingTitle.textContent = `Book: ${service}`;
+      this.bookingSubtitle.textContent = `For: ${concern}`;
+      this.summaryService.textContent = service;
+      this.summaryConcern.textContent = concern;
+      this.summaryPrice.textContent = `$${price}`;
+      
+      // Update hidden inputs
+      this.selectedConcernInput.value = concern;
+      this.selectedServiceInput.value = service;
+      this.selectedPriceInput.value = price;
+      
+      // Reset form
+      this.form.reset();
+      this.successScreen.classList.remove('active');
+      this.form.style.display = 'block';
+      
+      // Reset time slots
+      document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.classList.remove('selected');
+      });
+      this.bookingTimeInput.value = '';
+      
+      // Reset errors
+      document.querySelectorAll('.error-message').forEach(error => {
+        error.classList.remove('show');
+      });
+      document.querySelectorAll('.form-input').forEach(input => {
+        input.classList.remove('error');
+      });
+      
+      // Setup date picker again
+      this.setupDatePicker();
+      
+      // Show modal
+      this.modal.classList.add('active');
+      this.overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    closeBookingModal() {
+      this.modal.classList.remove('active');
+      this.overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      
+      // Reset after animation
+      setTimeout(() => {
+        this.selectedConcern = null;
+        this.selectedService = null;
+        this.selectedPrice = null;
+      }, 300);
+    }
+    
+    validateForm() {
+      let isValid = true;
+      
+      // Required fields
+      const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'bookingDate', 'bookingTime'];
+      
+      requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        const error = document.getElementById(`${fieldId}Error`);
+        
+        if (!field.value.trim()) {
+          field.classList.add('error');
+          error.classList.add('show');
+          isValid = false;
+        } else {
+          field.classList.remove('error');
+          error.classList.remove('show');
+        }
+      });
+      
+      // Email validation
+      const emailField = document.getElementById('email');
+      const emailError = document.getElementById('emailError');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (emailField.value && !emailRegex.test(emailField.value)) {
+        emailField.classList.add('error');
+        emailError.textContent = 'Please enter a valid email address';
+        emailError.classList.add('show');
+        isValid = false;
+      }
+      
+      // Phone validation (basic)
+      const phoneField = document.getElementById('phone');
+      const phoneError = document.getElementById('phoneError');
+      const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+      
+      if (phoneField.value && !phoneRegex.test(phoneField.value.replace(/\D/g, ''))) {
+        phoneField.classList.add('error');
+        phoneError.textContent = 'Please enter a valid phone number';
+        phoneError.classList.add('show');
+        isValid = false;
+      }
+      
+      return isValid;
+    }
+    
+    async handleSubmit(e) {
+      e.preventDefault();
+      
+      if (!this.validateForm()) {
+        return;
+      }
+      
+      const submitButton = document.getElementById('submitBooking');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<span>Processing...</span>';
+      
+      try {
+        // Collect form data
+        const formData = {
+          concern: this.selectedConcern,
+          service: this.selectedService,
+          price: this.selectedPrice,
+          firstName: document.getElementById('firstName').value,
+          lastName: document.getElementById('lastName').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          date: document.getElementById('bookingDate').value,
+          time: this.bookingTimeInput.value,
+          notes: document.getElementById('notes').value,
+          timestamp: new Date().toISOString(),
+          source: 'Services by Concern Section'
+        };
+        
+        // In a real implementation, you would send this data to your backend
+        // For demo purposes, we'll simulate an API call
+        await this.simulateAPICall(formData);
+        
+        // Show success screen
+        this.form.style.display = 'none';
+        this.successScreen.classList.add('active');
+        
+        // Send confirmation email (in real implementation)
+        this.sendConfirmationEmail(formData);
+        
+        // Store in localStorage for admin view
+        this.storeBooking(formData);
+        
+      } catch (error) {
+        console.error('Booking error:', error);
+        alert('Sorry, there was an error processing your booking. Please try again.');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<span>Confirm Booking</span><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+      }
+    }
+    
+    simulateAPICall(data) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log('Booking data received:', data);
+          resolve({ success: true });
+        }, 1000);
+      });
+    }
+    
+    sendConfirmationEmail(data) {
+      // In a real implementation, this would connect to your email service
+      const emailBody = `
+        New Booking Request:
+        
+        Service: ${data.service}
+        For Concern: ${data.concern}
+        Price: $${data.price}
+        
+        Customer Details:
+        Name: ${data.firstName} ${data.lastName}
+        Email: ${data.email}
+        Phone: ${data.phone}
+        
+        Appointment Details:
+        Date: ${data.date}
+        Time: ${data.time}
+        
+        Notes: ${data.notes || 'None'}
+        
+        Received: ${new Date().toLocaleString()}
+      `;
+      
+      console.log('Confirmation email would be sent with:', emailBody);
+      
+      // You could integrate with:
+      // - Shopify's email system
+      // - EmailJS
+      // - SendGrid
+      // - Your custom backend
+    }
+    
+    storeBooking(data) {
+      try {
+        // Get existing bookings from localStorage
+        const existingBookings = JSON.parse(localStorage.getItem('hairSalonBookings') || '[]');
+        
+        // Add new booking
+        existingBookings.push(data);
+        
+        // Save back to localStorage
+        localStorage.setItem('hairSalonBookings', JSON.stringify(existingBookings));
+        
+        console.log('Booking stored locally:', data);
+      } catch (error) {
+        console.error('Error storing booking:', error);
+      }
+    }
   }
   
-  // Initialize carousel interactions
-  document.addEventListener('DOMContentLoaded', function() {
-    const concernCards = document.querySelectorAll('.concern-card');
-    const carousel = document.querySelector('.concern-carousel');
-    
-    // Add hover effects
-    concernCards.forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        card.style.zIndex = '10';
+  // Initialize booking system when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      const bookingSystem = new BookingSystem();
+      window.bookingSystem = bookingSystem;
+      
+      // Initialize carousel interactions
+      const concernCards = document.querySelectorAll('.concern-card');
+      const carousel = document.querySelector('.concern-carousel');
+      
+      // Add hover effects
+      concernCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.zIndex = '10';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          card.style.zIndex = '1';
+        });
       });
       
-      card.addEventListener('mouseleave', () => {
-        card.style.zIndex = '1';
-      });
-    });
-    
-    // Pause animation on hover
-    if (carousel) {
-      carousel.addEventListener('mouseenter', () => {
-        carousel.style.animationPlayState = 'paused';
-      });
+      // Pause animation on hover
+      if (carousel) {
+        carousel.addEventListener('mouseenter', () => {
+          carousel.style.animationPlayState = 'paused';
+        });
+        
+        carousel.addEventListener('mouseleave', () => {
+          carousel.style.animationPlayState = 'running';
+        });
+      }
       
-      carousel.addEventListener('mouseleave', () => {
-        carousel.style.animationPlayState = 'running';
-      });
-    }
-    
-    // Add swipe support for mobile
-    let startX;
-    let scrollLeft;
-    
-    if (carousel) {
-      carousel.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].pageX - carousel.offsetLeft;
-        scrollLeft = carousel.scrollLeft;
-      });
+      // Add swipe support for mobile
+      let startX;
+      let scrollLeft;
       
-      carousel.addEventListener('touchmove', (e) => {
-        if (!startX) return;
-        const x = e.touches[0].pageX - carousel.offsetLeft;
-        const walk = (x - startX) * 2;
-        carousel.scrollLeft = scrollLeft - walk;
-      });
-    }
+      if (carousel) {
+        carousel.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].pageX - carousel.offsetLeft;
+          scrollLeft = carousel.scrollLeft;
+        });
+        
+        carousel.addEventListener('touchmove', (e) => {
+          if (!startX) return;
+          const x = e.touches[0].pageX - carousel.offsetLeft;
+          const walk = (x - startX) * 2;
+          carousel.scrollLeft = scrollLeft - walk;
+        });
+      }
+    }, 100);
   });
 </script>
 
