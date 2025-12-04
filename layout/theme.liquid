@@ -9,30 +9,43 @@
   {{ content_for_header }}
   {{ 'theme.css' | asset_url | stylesheet_tag }}
   
-  <!-- Responsive Image Support -->
   <link rel="preconnect" href="https://cdn.shopify.com">
   <link rel="dns-prefetch" href="https://cdn.shopify.com">
-
-  <!-- Mobile viewport fix -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 
-  <!-- Mobile specific CSS -->
   <style>
     @media (max-width: 767px) {
-      /* Prevent horizontal scrolling */
       html, body {
         overflow-x: hidden;
         width: 100%;
       }
-      
-      /* Improve tap highlights */
       * {
         -webkit-tap-highlight-color: rgba(0,0,0,0.1);
       }
-      
-      /* Better scrolling on iOS */
       .scrollable {
         -webkit-overflow-scrolling: touch;
+      }
+    }
+    
+    /* NEW: Main content wrapper for desktop adjustment */
+    .content-wrapper {
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    /* When sidebar is visible on desktop, shift content */
+    @media (min-width: 1025px) {
+      body.sidebar-desktop-visible .content-wrapper {
+        margin-left: 350px; /* Same as sidebar width */
+      }
+      
+      /* Smooth transition for content */
+      main, .header-container {
+        transition: margin-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+      
+      body.sidebar-desktop-visible main,
+      body.sidebar-desktop-visible .header-container {
+        margin-left: 350px;
       }
     }
   </style>
@@ -230,14 +243,17 @@
     </div>
   </aside>
 
-  {% section 'announcement-bar' %}
-  {% section 'header' %}
-  
-  <main>
-    {{ content_for_layout }}
-  </main>
+  <!-- NEW: Content Wrapper -->
+  <div class="content-wrapper">
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
+    
+    <main>
+      {{ content_for_layout }}
+    </main>
 
-  {% section 'footer' %}
+    {% section 'footer' %}
+  </div>
   
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   
@@ -293,10 +309,38 @@
       .sidebar.desktop-auto-show {
         transform: translateX(0);
         left: 0;
+        box-shadow: none;
+        border-right: 1px solid rgba(0, 0, 0, 0.08);
       }
 
       .sidebar-overlay {
-        display: none; /* No overlay on desktop */
+        display: none;
+      }
+      
+      /* NEW: Adjust header width on desktop when sidebar is visible */
+      .header-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+        transition: margin-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+      
+      body.sidebar-desktop-visible .header-container {
+        margin-left: 350px;
+        max-width: calc(1400px - 350px);
+      }
+      
+      /* NEW: Adjust main content containers */
+      main .shopify-section > .section-container,
+      main .page-width,
+      main .container {
+        transition: margin-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+      
+      body.sidebar-desktop-visible main .shopify-section > .section-container,
+      body.sidebar-desktop-visible main .page-width,
+      body.sidebar-desktop-visible main .container {
+        margin-left: 350px;
       }
     }
 
@@ -452,7 +496,7 @@
     }
 
     /* Mobile specific */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .sidebar {
         width: 300px;
       }
@@ -471,13 +515,12 @@
         font-size: 15px;
       }
       
-      /* Push content when sidebar is open */
+      /* Mobile overlay behavior */
       body.sidebar-open {
         overflow: hidden;
       }
       
-      body.sidebar-open .header,
-      body.sidebar-open main {
+      body.sidebar-open .content-wrapper {
         transform: translateX(300px);
         transition: transform 0.3s ease;
       }
@@ -489,13 +532,12 @@
         max-width: 85%;
       }
       
-      body.sidebar-open .header,
-      body.sidebar-open main {
+      body.sidebar-open .content-wrapper {
         transform: translateX(280px);
       }
     }
 
-    /* Hide scrollbar for clean look */
+    /* Hide scrollbar */
     .sidebar-content::-webkit-scrollbar {
       width: 0;
       background: transparent;
@@ -529,14 +571,12 @@
       }
 
       bindEvents() {
-        // Close sidebar when clicking overlay
         if (this.sidebarOverlay) {
           this.sidebarOverlay.addEventListener('click', () => {
             this.closeSidebar();
           });
         }
 
-        // Close sidebar button
         if (this.sidebarClose) {
           this.sidebarClose.addEventListener('click', () => {
             this.closeSidebar();
@@ -552,14 +592,12 @@
               const parent = link.parentElement;
               const isActive = parent.classList.contains('active');
               
-              // Close other dropdowns
               this.sidebarItems.forEach(item => {
                 if (item !== parent) {
                   item.classList.remove('active');
                 }
               });
               
-              // Toggle current dropdown
               parent.classList.toggle('active');
               
               if (!isActive) {
@@ -572,7 +610,6 @@
           }
         });
 
-        // Escape key to close sidebar
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && this.isSidebarVisible) {
             this.closeSidebar();
@@ -581,19 +618,16 @@
       }
 
       listenToHeaderEvents() {
-        // Toggle sidebar when header button is clicked
         document.addEventListener('toggleSidebar', () => {
           this.toggleSidebar();
         });
 
-        // Show sidebar on scroll (desktop)
         document.addEventListener('showSidebarOnScroll', () => {
           if (this.isDesktop) {
             this.showSidebarDesktop();
           }
         });
 
-        // Hide sidebar on scroll (desktop)
         document.addEventListener('hideSidebarOnScroll', () => {
           if (this.isDesktop) {
             this.hideSidebarDesktop();
@@ -612,7 +646,9 @@
       openSidebar() {
         this.sidebar.classList.add('active');
         if (this.sidebarOverlay) this.sidebarOverlay.classList.add('active');
-        document.body.classList.add('sidebar-open');
+        if (!this.isDesktop) {
+          document.body.classList.add('sidebar-open');
+        }
         document.body.style.overflow = 'hidden';
         this.isSidebarVisible = true;
       }
@@ -620,11 +656,10 @@
       closeSidebar() {
         this.sidebar.classList.remove('active');
         if (this.sidebarOverlay) this.sidebarOverlay.classList.remove('active');
-        document.body.classList.remove('sidebar-open');
+        document.body.classList.remove('sidebar-open', 'sidebar-desktop-visible');
         document.body.style.overflow = '';
         this.isSidebarVisible = false;
         
-        // Close all dropdowns
         this.sidebarItems.forEach(item => {
           item.classList.remove('active');
           const dropdown = item.querySelector('.sidebar-dropdown');
@@ -636,12 +671,14 @@
         if (!this.isDesktop) return;
         
         this.sidebar.classList.add('desktop-auto-show');
+        document.body.classList.add('sidebar-desktop-visible');
         this.isSidebarVisible = true;
         
-        // Don't add overlay on desktop
         if (this.sidebarOverlay) this.sidebarOverlay.style.display = 'none';
         
-        // Close dropdowns when auto-showing
+        // Adjust container widths
+        this.adjustContentContainers();
+        
         this.sidebarItems.forEach(item => {
           item.classList.remove('active');
           const dropdown = item.querySelector('.sidebar-dropdown');
@@ -653,10 +690,68 @@
         if (!this.isDesktop) return;
         
         this.sidebar.classList.remove('desktop-auto-show');
+        document.body.classList.remove('sidebar-desktop-visible');
         this.isSidebarVisible = false;
         
-        // Restore overlay display for mobile
         if (this.sidebarOverlay) this.sidebarOverlay.style.display = 'block';
+        
+        // Reset container widths
+        this.resetContentContainers();
+      }
+
+      adjustContentContainers() {
+        // Find common container classes and adjust them
+        const containerSelectors = [
+          '.page-width',
+          '.container',
+          '.shopify-section > div[class*="container"]',
+          '.shopify-section > .section',
+          '[class*="__container"]'
+        ];
+        
+        containerSelectors.forEach(selector => {
+          const containers = document.querySelectorAll(selector);
+          containers.forEach(container => {
+            if (!container.hasAttribute('data-original-margin')) {
+              container.setAttribute('data-original-margin', container.style.marginLeft || '');
+            }
+            container.style.marginLeft = '350px';
+            container.style.transition = 'margin-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
+            
+            // Adjust width if needed
+            const currentWidth = container.style.width || getComputedStyle(container).width;
+            if (!container.hasAttribute('data-original-width')) {
+              container.setAttribute('data-original-width', currentWidth);
+            }
+            if (container.classList.contains('page-width')) {
+              container.style.maxWidth = `calc(100% - 350px)`;
+            }
+          });
+        });
+      }
+
+      resetContentContainers() {
+        const containerSelectors = [
+          '.page-width',
+          '.container',
+          '.shopify-section > div[class*="container"]',
+          '.shopify-section > .section',
+          '[class*="__container"]'
+        ];
+        
+        containerSelectors.forEach(selector => {
+          const containers = document.querySelectorAll(selector);
+          containers.forEach(container => {
+            const originalMargin = container.getAttribute('data-original-margin');
+            container.style.marginLeft = originalMargin || '';
+            
+            const originalWidth = container.getAttribute('data-original-width');
+            if (originalWidth) {
+              container.style.width = originalWidth;
+              container.style.maxWidth = originalWidth.includes('max-width') ? originalWidth : '';
+            }
+          });
+        });
       }
 
       handleResize() {
@@ -665,11 +760,11 @@
           this.isDesktop = window.innerWidth > 1024;
           
           if (wasDesktop !== this.isDesktop) {
-            // Reset sidebar state on breakpoint change
             this.closeSidebar();
             this.sidebar.classList.remove('desktop-auto-show');
+            document.body.classList.remove('sidebar-desktop-visible');
+            this.resetContentContainers();
             
-            // Restore overlay for mobile
             if (this.sidebarOverlay) {
               this.sidebarOverlay.style.display = 'block';
             }
@@ -678,7 +773,7 @@
       }
     }
 
-    // Initialize sidebar when DOM is ready
+    // Initialize sidebar
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         const sidebar = new SidebarMenu();
