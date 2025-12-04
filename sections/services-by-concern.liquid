@@ -1010,6 +1010,7 @@
   </div>
 </section>
 
+
 <!-- Booking Modal -->
 <div class="booking-overlay" id="bookingOverlay"></div>
 
@@ -1103,7 +1104,7 @@
       </div>
       
       <div class="booking-actions">
-        <button type="submit" class="submit-booking" id="submitBooking">
+        <button type="button" class="submit-booking" id="submitBooking">
           <span>Confirm Booking</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
@@ -1162,11 +1163,17 @@
       // Book buttons
       document.querySelectorAll('.book-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-          const concern = e.target.closest('.book-btn').dataset.concern;
-          const service = e.target.closest('.book-btn').dataset.service;
-          const price = e.target.closest('.book-btn').dataset.price;
+          // Check if button has the correct data attributes
+          if (!e.target.closest('.book-btn')) return;
           
-          this.openBookingModal(concern, service, price);
+          const btn = e.target.closest('.book-btn');
+          const concern = btn.dataset.concern;
+          const service = btn.dataset.service;
+          const price = btn.dataset.price;
+          
+          if (concern && service && price) {
+            this.openBookingModal(concern, service, price);
+          }
         });
       });
       
@@ -1183,12 +1190,18 @@
         }
       });
       
-      // Form submission - FIXED: Proper event binding
-      this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+      // Form submission - Fixed: Using button click instead of form submit
+      document.getElementById('submitBooking').addEventListener('click', (e) => this.handleSubmit(e));
       
       // Input validation on blur
       document.querySelectorAll('.form-input').forEach(input => {
         input.addEventListener('blur', () => this.validateField(input));
+        input.addEventListener('input', () => this.clearFieldError(input));
+      });
+      
+      // Date validation
+      document.getElementById('bookingDate').addEventListener('change', () => {
+        this.validateDate();
       });
     }
     
@@ -1279,13 +1292,31 @@
       this.modal.classList.remove('active');
       this.overlay.classList.remove('active');
       document.body.style.overflow = '';
+      
+      // Reset after animation
+      setTimeout(() => {
+        this.selectedConcern = null;
+        this.selectedService = null;
+        this.selectedPrice = null;
+      }, 300);
+    }
+    
+    clearFieldError(field) {
+      const fieldId = field.id;
+      const error = document.getElementById(`${fieldId}Error`);
+      
+      if (field.value.trim()) {
+        field.classList.remove('error');
+        error.classList.remove('show');
+      }
     }
     
     validateField(field) {
       const fieldId = field.id;
       const error = document.getElementById(`${fieldId}Error`);
+      const value = field.value.trim();
       
-      if (!field.value.trim()) {
+      if (!value) {
         field.classList.add('error');
         error.classList.add('show');
         return false;
@@ -1294,7 +1325,7 @@
       // Email validation
       if (fieldId === 'email') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(field.value)) {
+        if (!emailRegex.test(value)) {
           field.classList.add('error');
           error.textContent = 'Please enter a valid email address';
           error.classList.add('show');
@@ -1305,9 +1336,10 @@
       // Phone validation
       if (fieldId === 'phone') {
         const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
-        if (!phoneRegex.test(field.value.replace(/\D/g, ''))) {
+        const digits = value.replace(/\D/g, '');
+        if (digits.length < 10) {
           field.classList.add('error');
-          error.textContent = 'Please enter a valid phone number';
+          error.textContent = 'Please enter at least 10 digits';
           error.classList.add('show');
           return false;
         }
@@ -1318,11 +1350,49 @@
       return true;
     }
     
+    validateDate() {
+      const dateInput = document.getElementById('bookingDate');
+      const error = document.getElementById('dateError');
+      
+      if (!dateInput.value) {
+        dateInput.classList.add('error');
+        error.classList.add('show');
+        return false;
+      }
+      
+      const selectedDate = new Date(dateInput.value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (selectedDate < today) {
+        dateInput.classList.add('error');
+        error.textContent = 'Please select a future date';
+        error.classList.add('show');
+        return false;
+      }
+      
+      dateInput.classList.remove('error');
+      error.classList.remove('show');
+      return true;
+    }
+    
+    validateTimeSlot() {
+      const error = document.getElementById('timeError');
+      
+      if (!this.bookingTimeInput.value) {
+        error.classList.add('show');
+        return false;
+      }
+      
+      error.classList.remove('show');
+      return true;
+    }
+    
     validateForm() {
       let isValid = true;
       
-      // Required fields
-      const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'bookingDate'];
+      // Validate all required fields
+      const requiredFields = ['firstName', 'lastName', 'email', 'phone'];
       
       requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
@@ -1331,9 +1401,13 @@
         }
       });
       
-      // Time slot validation
-      if (!this.bookingTimeInput.value) {
-        document.getElementById('timeError').classList.add('show');
+      // Validate date
+      if (!this.validateDate()) {
+        isValid = false;
+      }
+      
+      // Validate time slot
+      if (!this.validateTimeSlot()) {
         isValid = false;
       }
       
@@ -1345,6 +1419,7 @@
       
       console.log('Form submission started');
       
+      // Validate form
       if (!this.validateForm()) {
         console.log('Form validation failed');
         return;
@@ -1360,13 +1435,13 @@
           concern: this.selectedConcern,
           service: this.selectedService,
           price: this.selectedPrice,
-          firstName: document.getElementById('firstName').value,
-          lastName: document.getElementById('lastName').value,
-          email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value,
+          firstName: document.getElementById('firstName').value.trim(),
+          lastName: document.getElementById('lastName').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
           date: document.getElementById('bookingDate').value,
           time: this.bookingTimeInput.value,
-          notes: document.getElementById('notes').value,
+          notes: document.getElementById('notes').value.trim(),
           timestamp: new Date().toISOString(),
           source: 'Services by Concern Section'
         };
@@ -1387,6 +1462,11 @@
         
         console.log('Booking completed successfully');
         
+        // Auto-close after 5 seconds
+        setTimeout(() => {
+          this.closeBookingModal();
+        }, 5000);
+        
       } catch (error) {
         console.error('Booking error:', error);
         alert('Sorry, there was an error processing your booking. Please try again.');
@@ -1397,10 +1477,17 @@
     }
     
     simulateAPICall(data) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         setTimeout(() => {
-          console.log('Booking processed:', data);
-          resolve({ success: true });
+          // Simulate random success/failure for testing
+          const shouldFail = Math.random() < 0.1; // 10% chance of failure
+          
+          if (shouldFail) {
+            reject(new Error('Simulated API failure'));
+          } else {
+            console.log('Booking processed:', data);
+            resolve({ success: true, bookingId: 'BK' + Date.now() });
+          }
         }, 1500);
       });
     }
@@ -1410,13 +1497,23 @@
         // Get existing bookings from localStorage
         const existingBookings = JSON.parse(localStorage.getItem('hairSalonBookings') || '[]');
         
-        // Add new booking
-        existingBookings.push(data);
+        // Add new booking with ID
+        const bookingWithId = {
+          ...data,
+          id: 'BK' + Date.now(),
+          status: 'pending'
+        };
+        
+        existingBookings.push(bookingWithId);
         
         // Save back to localStorage
         localStorage.setItem('hairSalonBookings', JSON.stringify(existingBookings));
         
-        console.log('Booking stored locally');
+        console.log('Booking stored locally with ID:', bookingWithId.id);
+        
+        // For debugging: Show stored bookings
+        console.log('All stored bookings:', existingBookings);
+        
       } catch (error) {
         console.error('Error storing booking:', error);
       }
@@ -1428,68 +1525,74 @@
     console.log('DOM loaded, initializing booking system...');
     
     setTimeout(() => {
-      const bookingSystem = new ProfessionalBookingSystem();
-      window.bookingSystem = bookingSystem;
-      
-      console.log('Booking system initialized');
-      
-      // Initialize carousel interactions
-      const carousel = document.querySelector('.concern-carousel');
-      
-      // Pause animation on hover
-      if (carousel) {
-        carousel.addEventListener('mouseenter', () => {
-          carousel.style.animationPlayState = 'paused';
-        });
+      try {
+        const bookingSystem = new ProfessionalBookingSystem();
+        window.bookingSystem = bookingSystem;
         
-        carousel.addEventListener('mouseleave', () => {
-          carousel.style.animationPlayState = 'running';
-        });
-      }
-      
-      // Add swipe support for mobile
-      if (carousel) {
-        let startX;
-        let scrollLeft;
+        console.log('Booking system initialized successfully');
         
-        carousel.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].pageX - carousel.offsetLeft;
-          scrollLeft = carousel.scrollLeft;
-        });
+        // Test: Log all book buttons to ensure they're found
+        const bookButtons = document.querySelectorAll('.book-btn');
+        console.log(`Found ${bookButtons.length} book buttons`);
         
-        carousel.addEventListener('touchmove', (e) => {
-          if (!startX) return;
-          const x = e.touches[0].pageX - carousel.offsetLeft;
-          const walk = (x - startX) * 2;
-          carousel.scrollLeft = scrollLeft - walk;
-        });
+        // Initialize carousel interactions
+        const carousel = document.querySelector('.concern-carousel');
+        
+        if (carousel) {
+          // Pause animation on hover
+          carousel.addEventListener('mouseenter', () => {
+            carousel.style.animationPlayState = 'paused';
+          });
+          
+          carousel.addEventListener('mouseleave', () => {
+            carousel.style.animationPlayState = 'running';
+          });
+          
+          // Add swipe support for mobile
+          let startX;
+          let scrollLeft;
+          
+          carousel.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+          });
+          
+          carousel.addEventListener('touchmove', (e) => {
+            if (!startX) return;
+            const x = e.touches[0].pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 2;
+            carousel.scrollLeft = scrollLeft - walk;
+          });
+        }
+        
+        // Add quick test button for debugging
+        const debugDiv = document.createElement('div');
+        debugDiv.style.position = 'fixed';
+        debugDiv.style.bottom = '10px';
+        debugDiv.style.right = '10px';
+        debugDiv.style.zIndex = '10000';
+        debugDiv.style.background = 'white';
+        debugDiv.style.padding = '10px';
+        debugDiv.style.borderRadius = '5px';
+        debugDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+        debugDiv.innerHTML = `
+          <button onclick="testBooking()" style="padding: 5px 10px; background: #E8C4B8; border: none; border-radius: 3px; cursor: pointer;">Test Booking</button>
+        `;
+        document.body.appendChild(debugDiv);
+        
+        window.testBooking = function() {
+          if (window.bookingSystem) {
+            window.bookingSystem.openBookingModal(
+              'Test Concern',
+              'Test Service',
+              '99'
+            );
+          }
+        };
+        
+      } catch (error) {
+        console.error('Error initializing booking system:', error);
       }
     }, 100);
   });
 </script>
-
-{% schema %}
-{
-  "name": "services-by-concern",
-  "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Section Title",
-      "default": "services-by-concern"
-    },
-    {
-      "type": "textarea",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Expert treatments tailored to your specific hair concerns"
-    }
-  ],
-  "presets": [
-    {
-      "name": "services-by-concern",
-      "category": "Homepage"
-    }
-  ]
-}
-{% endschema %}
