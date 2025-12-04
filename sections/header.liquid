@@ -955,23 +955,7 @@ class HeaderWithDropdowns {
 }
 
 
-// In your header.js (the script at the bottom of your header.liquid)
-// Look for the setupSidebarToggle method and update it:
 
-setupSidebarToggle() {
-  const sidebarToggle = document.getElementById('sidebarToggle');
-  if (sidebarToggle) {
-    sidebarToggle.addEventListener('click', () => {
-      // Dispatch custom event to open sidebar
-      document.dispatchEvent(new CustomEvent('toggleSidebar'));
-      
-      // Or call directly if available
-      if (typeof window.toggleSidebar === 'function') {
-        window.toggleSidebar();
-      }
-    });
-  }
-}
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
