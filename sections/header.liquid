@@ -11,7 +11,7 @@
     --gray-light: #f9f9f9;
   }
 
-  /* Announcement Bar - AT THE TOP of page */
+  /* Announcement Bar */
   .announcement-bar {
     position: fixed;
     top: 0;
@@ -21,11 +21,11 @@
     height: var(--announcement-height);
   }
 
-  /* Header - BELOW announcement bar */
+  /* Header */
   .header {
     background: transparent;
     position: fixed;
-    top: var(--announcement-height); /* This puts it BELOW announcement bar */
+    top: var(--announcement-height);
     left: 0;
     right: 0;
     z-index: 1000;
@@ -33,7 +33,6 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  /* Add body padding to account for fixed header + announcement */
   body {
     padding-top: calc(var(--header-height) + var(--announcement-height));
   }
@@ -46,7 +45,6 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
 
-  /* If no announcement bar, adjust header position */
   body:not(.has-announcement) .header {
     top: 0;
   }
@@ -123,7 +121,7 @@
     color: var(--primary-color);
   }
 
-  /* Mega Dropdown - CENTERED POSITIONING */
+  /* Mega Dropdown - DESKTOP */
   .mega-dropdown {
     position: absolute;
     top: 100%;
@@ -141,7 +139,6 @@
     pointer-events: none;
   }
 
-  /* Show dropdown on hover - STAYS VISIBLE WHEN HOVERING OVER DROPDOWN */
   .nav-item:hover .mega-dropdown,
   .mega-dropdown:hover {
     opacity: 1;
@@ -151,7 +148,7 @@
     transition-delay: 0s;
   }
 
-  /* For left-side menus, ensure dropdown doesn't go off-screen */
+  /* Left-side dropdown (Shop) */
   .nav-item:first-child .mega-dropdown {
     left: 0;
     transform: translateX(0) translateY(12px);
@@ -162,7 +159,7 @@
     transform: translateX(0) translateY(0);
   }
 
-  /* For right-side menus, adjust positioning */
+  /* Right-side dropdowns */
   .nav-item:nth-last-child(-n+2) .mega-dropdown {
     left: auto;
     right: 0;
@@ -174,7 +171,7 @@
     transform: translateX(0) translateY(0);
   }
 
-  /* Dropdown Content - BLACK TEXT FOR ALL INCLUDING SHOP */
+  /* Dropdown Content */
   .mega-dropdown,
   .mega-dropdown *:not(.dropdown-image-content) {
     color: var(--text-black) !important;
@@ -280,7 +277,7 @@
     right: -2px;
   }
 
-  /* Mobile Menu Button */
+  /* Mobile Menu Button - FOR MOBILE NAVIGATION */
   .mobile-menu-btn {
     display: none;
     background: none;
@@ -292,11 +289,37 @@
     z-index: 1002;
   }
 
+  /* Sidebar Toggle Button - FOR SIDEBAR */
+  .sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    z-index: 1002;
+  }
+
+  .sidebar-toggle:hover {
+    background: rgba(232, 196, 184, 0.1);
+    color: var(--primary-color);
+  }
+
+  /* Services by Concern Link - No dropdown arrow */
+  .nav-link[href="#services-by-concern"]::after {
+    display: none !important;
+  }
+
   /* ==================== */
-  /* RESPONSIVE STYLES */
+  /* RESPONSIVE STYLES - FIXED */
   /* ==================== */
 
-  /* Tablet */
+  /* Tablet (768px - 1024px) */
   @media (max-width: 1024px) {
     .mega-dropdown {
       width: 700px;
@@ -308,32 +331,21 @@
     }
   }
 
-  /* Mobile */
-  @media (max-width: 768px) {
-    .header {
-      background: var(--white) !important;
-      backdrop-filter: none !important;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      top: 0 !important;
+  /* MOBILE & TABLET (≤ 1024px) */
+  @media (max-width: 1024px) {
+    /* Show both mobile menu button and sidebar toggle on tablet & mobile */
+    .mobile-menu-btn,
+    .sidebar-toggle {
+      display: flex;
     }
 
-    .announcement-bar {
-      position: relative !important;
-      top: auto !important;
-      height: auto;
-    }
-
-    body {
-      padding-top: var(--header-height) !important;
-    }
-
-    .mobile-menu-btn {
-      display: block;
-    }
-
-    /* Mobile Navigation */
+    /* Hide desktop navigation */
     .nav-main {
-      display: none;
+      display: none !important;
+    }
+
+    /* Mobile Navigation Menu */
+    .nav-main {
       position: fixed;
       top: var(--header-height);
       left: 0;
@@ -345,10 +357,11 @@
       gap: 0;
       overflow-y: auto;
       z-index: 1001;
+      width: 100%;
     }
 
     .nav-main.active {
-      display: flex;
+      display: flex !important;
     }
 
     .nav-item {
@@ -393,12 +406,6 @@
       pointer-events: auto !important;
     }
 
-    /* Force black text on mobile for ALL dropdowns */
-    .mega-dropdown,
-    .mega-dropdown *:not(.dropdown-image-content) {
-      color: var(--text-black) !important;
-    }
-
     .nav-link.active + .mega-dropdown {
       display: block !important;
       max-height: 600px !important;
@@ -412,6 +419,26 @@
 
     .header-actions {
       gap: 12px;
+    }
+
+    /* Mobile specific */
+    @media (max-width: 768px) {
+      .header {
+        background: var(--white) !important;
+        backdrop-filter: none !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        top: 0 !important;
+      }
+
+      .announcement-bar {
+        position: relative !important;
+        top: auto !important;
+        height: auto;
+      }
+
+      body {
+        padding-top: var(--header-height) !important;
+      }
     }
   }
 
@@ -444,11 +471,6 @@
     }
   }
 
-  /* Services by Concern Link - No dropdown arrow */
-  .nav-link[href="#services-by-concern"]::after {
-    display: none !important;
-  }
-
   /* Hide scrollbar for clean look */
   .nav-main::-webkit-scrollbar {
     width: 0;
@@ -464,9 +486,16 @@
 <header class="header" id="main-header">
   <div class="header-container">
     <div class="header-inner">
-      <!-- Mobile Menu Button -->
-      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+      <!-- Mobile Menu Button (For navigation menu) -->
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu">
         ☰
+      </button>
+
+      <!-- Sidebar Toggle Button (For sidebar) -->
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open sidebar menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
       </button>
 
       <!-- Logo -->
@@ -482,9 +511,9 @@
         </a>
       </div>
 
-      <!-- Main Navigation -->
+      <!-- Main Navigation - Desktop only -->
       <nav class="nav-main" id="main-nav">
-        <!-- Shop Dropdown - LEFT-SIDE (aligned to left) -->
+        <!-- Shop Dropdown -->
         <div class="nav-item">
           <a href="{{ routes.all_products_collection_url }}" class="nav-link has-dropdown">Shop</a>
           <div class="mega-dropdown">
@@ -532,7 +561,7 @@
           </div>
         </div>
 
-        <!-- Hair Quiz - CENTERED -->
+        <!-- Hair Quiz -->
         <div class="nav-item">
           <a href="#hair-quiz" class="nav-link has-dropdown">Hair Quiz</a>
           <div class="mega-dropdown">
@@ -559,12 +588,12 @@
           </div>
         </div>
 
-        <!-- Services by Concern - CENTERED -->
+        <!-- Services by Concern -->
         <div class="nav-item">
           <a href="#services-by-concern" class="nav-link">Services by Concern</a>
         </div>
 
-        <!-- Our Story - RIGHT-SIDE (aligned to right) -->
+        <!-- Our Story -->
         <div class="nav-item">
           <a href="{{ pages['about'].url | default: '/pages/about' }}" class="nav-link has-dropdown">Our Story</a>
           <div class="mega-dropdown">
@@ -591,7 +620,7 @@
           </div>
         </div>
 
-        <!-- Guides - RIGHT-SIDE (aligned to right) -->
+        <!-- Guides -->
         <div class="nav-item">
           <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="nav-link has-dropdown">Guides</a>
           <div class="mega-dropdown">
@@ -637,9 +666,6 @@
             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
           </svg>
         </a>
-        <a href="{{ routes.search_url }}" class="header-action search-btn" aria-label="Search">...</a>
-  <a href="{{ routes.account_login_url }}" class="header-action account-btn" aria-label="Account">...</a>
-  <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">...</a>
         <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
             <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
@@ -656,6 +682,7 @@ class HeaderWithDropdowns {
   constructor() {
     this.header = document.getElementById('main-header');
     this.mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    this.sidebarToggle = document.getElementById('sidebarToggle');
     this.mainNav = document.getElementById('main-nav');
     this.navItems = document.querySelectorAll('.nav-item');
     this.navLinks = document.querySelectorAll('.nav-link');
@@ -663,7 +690,7 @@ class HeaderWithDropdowns {
     
     this.hoverTimeout = null;
     this.leaveTimeout = null;
-    this.isMobile = window.innerWidth <= 768;
+    this.isMobile = window.innerWidth <= 1024; // Changed to 1024px
     
     this.init();
   }
@@ -675,6 +702,21 @@ class HeaderWithDropdowns {
     this.setupNavigation();
     this.handleResize();
     this.checkAnnouncementBar();
+    this.setupSidebarToggle();
+  }
+
+  setupSidebarToggle() {
+    if (this.sidebarToggle) {
+      this.sidebarToggle.addEventListener('click', () => {
+        // Dispatch custom event to open sidebar
+        document.dispatchEvent(new CustomEvent('toggleSidebar'));
+        
+        // If sidebar script isn't loaded, show alert
+        if (typeof window.toggleSidebar === 'undefined') {
+          console.log('Sidebar toggle clicked - sidebar functionality should be in theme.liquid');
+        }
+      });
+    }
   }
 
   checkAnnouncementBar() {
@@ -718,23 +760,29 @@ class HeaderWithDropdowns {
 
   handleResize() {
     const wasMobile = this.isMobile;
-    this.isMobile = window.innerWidth <= 768;
+    this.isMobile = window.innerWidth <= 1024; // Changed to 1024px
     
     if (wasMobile !== this.isMobile) {
       // Reset all dropdowns on resize
       this.closeAllDropdowns();
       this.closeMobileMenu();
+      // Re-setup dropdowns for new screen size
+      this.setupDropdowns();
     }
   }
 
   setupDropdowns() {
     if (this.isMobile) {
-      // Mobile dropdown handling
+      // Mobile dropdown handling (for tablet & mobile)
       this.navItems.forEach(item => {
         const link = item.querySelector('.nav-link.has-dropdown');
         const dropdown = item.querySelector('.mega-dropdown');
         
         if (link && dropdown) {
+          // Remove desktop event listeners
+          link.removeEventListener('mouseenter', this.handleDesktopEnter);
+          link.removeEventListener('mouseleave', this.handleDesktopLeave);
+          
           link.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -762,17 +810,20 @@ class HeaderWithDropdowns {
         }
       });
     } else {
-      // Desktop dropdown handling - DROPDOWN STAYS VISIBLE WHEN HOVERING OVER IT
+      // Desktop dropdown handling
       this.navItems.forEach(item => {
         const dropdown = item.querySelector('.mega-dropdown');
         if (!dropdown) return;
 
-        // Mouse enter - OPEN
+        // Remove mobile event listeners
+        const link = item.querySelector('.nav-link.has-dropdown');
+        if (link) {
+          link.removeEventListener('click', this.handleMobileClick);
+        }
+
+        // Desktop hover events
         item.addEventListener('mouseenter', () => {
           if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
-          
-          // Clear any pending close timeout
-          clearTimeout(this.hoverTimeout);
           
           this.hoverTimeout = setTimeout(() => {
             this.closeAllDropdowns();
@@ -798,7 +849,6 @@ class HeaderWithDropdowns {
           }, 100);
         });
 
-        // Mouse leave - CLOSE with delay
         item.addEventListener('mouseleave', () => {
           if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
           
@@ -810,18 +860,12 @@ class HeaderWithDropdowns {
           }, 150);
         });
 
-        // Dropdown mouse enter - CANCEL CLOSE
+        // Keep dropdown open when hovering over it
         dropdown.addEventListener('mouseenter', () => {
           if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
           if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-          
-          // Ensure dropdown stays visible
-          dropdown.style.opacity = '1';
-          dropdown.style.visibility = 'visible';
-          dropdown.style.pointerEvents = 'auto';
         });
 
-        // Dropdown mouse leave - CLOSE
         dropdown.addEventListener('mouseleave', () => {
           this.leaveTimeout = setTimeout(() => {
             this.closeDropdown(dropdown);
@@ -869,7 +913,7 @@ class HeaderWithDropdowns {
           
           if (targetElement) {
             // Close mobile menu if open
-            if (this.isMobile) {
+            if (this.isMobile && this.mainNav.classList.contains('active')) {
               this.closeMobileMenu();
             }
             
@@ -956,8 +1000,6 @@ class HeaderWithDropdowns {
     }
   }
 }
-
-
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
