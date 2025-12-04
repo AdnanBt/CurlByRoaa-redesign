@@ -277,19 +277,7 @@
     right: -2px;
   }
 
-  /* Mobile Menu Button - FOR MOBILE NAVIGATION */
-  .mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 8px;
-    color: var(--text-dark);
-    z-index: 1002;
-  }
-
-  /* Sidebar Toggle Button - FOR SIDEBAR */
+  /* Sidebar Toggle Button - FOR MOBILE & TABLET */
   .sidebar-toggle {
     display: none;
     background: none;
@@ -333,88 +321,14 @@
 
   /* MOBILE & TABLET (≤ 1024px) */
   @media (max-width: 1024px) {
-    /* Show both mobile menu button and sidebar toggle on tablet & mobile */
-    .mobile-menu-btn,
+    /* Show only sidebar toggle on tablet & mobile */
     .sidebar-toggle {
       display: flex;
     }
 
-    /* Hide desktop navigation */
+    /* Hide desktop navigation on mobile/tablet */
     .nav-main {
       display: none !important;
-    }
-
-    /* Mobile Navigation Menu */
-    .nav-main {
-      position: fixed;
-      top: var(--header-height);
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--white);
-      flex-direction: column;
-      padding: 20px;
-      gap: 0;
-      overflow-y: auto;
-      z-index: 1001;
-      width: 100%;
-    }
-
-    .nav-main.active {
-      display: flex !important;
-    }
-
-    .nav-item {
-      width: 100%;
-    }
-
-    .nav-link {
-      justify-content: space-between;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      font-size: 16px;
-      text-transform: none;
-      width: 100%;
-      color: var(--text-dark) !important;
-    }
-
-    .nav-link.has-dropdown::after {
-      transform: rotate(0deg);
-    }
-
-    .nav-link.active::after {
-      transform: rotate(180deg);
-    }
-
-    /* Mobile Dropdown */
-    .mega-dropdown {
-      position: static !important;
-      left: auto !important;
-      right: auto !important;
-      transform: none !important;
-      width: 100% !important;
-      box-shadow: none !important;
-      padding: 20px !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-      background: var(--gray-light) !important;
-      border-radius: 8px !important;
-      margin-top: 10px !important;
-      pointer-events: auto !important;
-    }
-
-    .nav-link.active + .mega-dropdown {
-      display: block !important;
-      max-height: 600px !important;
-      overflow-y: auto !important;
-    }
-
-    .dropdown-grid {
-      grid-template-columns: 1fr !important;
-      gap: 20px !important;
     }
 
     .header-actions {
@@ -452,46 +366,21 @@
       height: 35px;
     }
     
-    .dropdown-grid {
-      gap: 15px;
+    .header-actions {
+      gap: 8px;
     }
     
-    .dropdown-column h4 {
-      font-size: 14px;
-      margin-bottom: 15px;
+    .header-action {
+      width: 36px;
+      height: 36px;
     }
-    
-    .dropdown-link {
-      font-size: 13px;
-      padding: 6px 0;
-    }
-    
-    .mega-dropdown {
-      padding: 15px !important;
-    }
-  }
-
-  /* Hide scrollbar for clean look */
-  .nav-main::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-  }
-
-  .nav-main {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
   }
 </style>
 
 <header class="header" id="main-header">
   <div class="header-container">
     <div class="header-inner">
-      <!-- Mobile Menu Button (For navigation menu) -->
-      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu">
-        ☰
-      </button>
-
-      <!-- Sidebar Toggle Button (For sidebar) -->
+      <!-- Sidebar Toggle Button (For mobile & tablet) -->
       <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open sidebar menu">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
           <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
@@ -681,7 +570,6 @@
 class HeaderWithDropdowns {
   constructor() {
     this.header = document.getElementById('main-header');
-    this.mobileMenuBtn = document.getElementById('mobile-menu-btn');
     this.sidebarToggle = document.getElementById('sidebarToggle');
     this.mainNav = document.getElementById('main-nav');
     this.navItems = document.querySelectorAll('.nav-item');
@@ -690,7 +578,8 @@ class HeaderWithDropdowns {
     
     this.hoverTimeout = null;
     this.leaveTimeout = null;
-    this.isMobile = window.innerWidth <= 1024; // Changed to 1024px
+    this.isMobile = window.innerWidth <= 1024;
+    this.scrollThreshold = window.innerHeight; // Hide header after 1 screen height
     
     this.init();
   }
@@ -729,26 +618,10 @@ class HeaderWithDropdowns {
   }
 
   bindEvents() {
-    // Mobile menu toggle
-    if (this.mobileMenuBtn && this.mainNav) {
-      this.mobileMenuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.toggleMobileMenu();
-      });
-
-      // Close menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('.header') && this.mainNav.classList.contains('active')) {
-          this.closeMobileMenu();
-        }
-      });
-    }
-
     // Escape key to close dropdowns
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeAllDropdowns();
-        this.closeMobileMenu();
       }
     });
 
@@ -760,53 +633,31 @@ class HeaderWithDropdowns {
 
   handleResize() {
     const wasMobile = this.isMobile;
-    this.isMobile = window.innerWidth <= 1024; // Changed to 1024px
+    this.isMobile = window.innerWidth <= 1024;
+    this.scrollThreshold = window.innerHeight;
     
     if (wasMobile !== this.isMobile) {
       // Reset all dropdowns on resize
       this.closeAllDropdowns();
-      this.closeMobileMenu();
       // Re-setup dropdowns for new screen size
       this.setupDropdowns();
+      
+      // Reset header for desktop
+      if (!this.isMobile) {
+        this.header.style.transform = 'translateY(0)';
+        this.header.classList.add('scrolled');
+      }
     }
   }
 
   setupDropdowns() {
     if (this.isMobile) {
-      // Mobile dropdown handling (for tablet & mobile)
+      // Remove desktop event listeners for mobile
       this.navItems.forEach(item => {
         const link = item.querySelector('.nav-link.has-dropdown');
-        const dropdown = item.querySelector('.mega-dropdown');
-        
-        if (link && dropdown) {
-          // Remove desktop event listeners
+        if (link) {
           link.removeEventListener('mouseenter', this.handleDesktopEnter);
           link.removeEventListener('mouseleave', this.handleDesktopLeave);
-          
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Close other dropdowns
-            this.navItems.forEach(otherItem => {
-              if (otherItem !== item) {
-                const otherLink = otherItem.querySelector('.nav-link.has-dropdown');
-                const otherDropdown = otherItem.querySelector('.mega-dropdown');
-                if (otherLink) otherLink.classList.remove('active');
-                if (otherDropdown) otherDropdown.style.maxHeight = '0';
-              }
-            });
-            
-            // Toggle current dropdown
-            const isActive = link.classList.contains('active');
-            link.classList.toggle('active');
-            
-            if (!isActive) {
-              dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
-            } else {
-              dropdown.style.maxHeight = '0';
-            }
-          });
         }
       });
     } else {
@@ -814,12 +665,6 @@ class HeaderWithDropdowns {
       this.navItems.forEach(item => {
         const dropdown = item.querySelector('.mega-dropdown');
         if (!dropdown) return;
-
-        // Remove mobile event listeners
-        const link = item.querySelector('.nav-link.has-dropdown');
-        if (link) {
-          link.removeEventListener('click', this.handleMobileClick);
-        }
 
         // Desktop hover events
         item.addEventListener('mouseenter', () => {
@@ -912,11 +757,6 @@ class HeaderWithDropdowns {
           const targetElement = document.getElementById(targetId);
           
           if (targetElement) {
-            // Close mobile menu if open
-            if (this.isMobile && this.mainNav.classList.contains('active')) {
-              this.closeMobileMenu();
-            }
-            
             // Close dropdowns
             this.closeAllDropdowns();
             
@@ -940,52 +780,44 @@ class HeaderWithDropdowns {
   }
 
   setupScrollEffect() {
+    let lastScrollTop = 0;
+    const desktopBreakpoint = 1024;
+    
     window.addEventListener('scroll', () => {
       const currentScroll = window.pageYOffset;
+      const isDesktop = window.innerWidth > desktopBreakpoint;
       
-      // Add/remove scrolled class
+      // Add/remove scrolled class for background
       if (currentScroll > 50) {
         this.header.classList.add('scrolled');
       } else {
         this.header.classList.remove('scrolled');
       }
       
+      // Desktop behavior: hide top header and show sidebar on scroll
+      if (isDesktop) {
+        if (currentScroll > this.scrollThreshold) {
+          // Hide main header
+          this.header.style.transform = 'translateY(-100%)';
+          this.header.style.transition = 'transform 0.3s ease';
+          
+          // Show sidebar (dispatch event for sidebar to appear)
+          document.dispatchEvent(new CustomEvent('showSidebarOnScroll'));
+        } else {
+          // Show main header
+          this.header.style.transform = 'translateY(0)';
+          
+          // Hide sidebar (dispatch event for sidebar to hide)
+          document.dispatchEvent(new CustomEvent('hideSidebarOnScroll'));
+        }
+      }
+      
       // Close dropdowns on scroll (desktop only)
       if (!this.isMobile) {
         this.closeAllDropdowns();
       }
-    });
-  }
-
-  toggleMobileMenu() {
-    const isOpening = !this.mainNav.classList.contains('active');
-    this.mainNav.classList.toggle('active');
-    this.mobileMenuBtn.textContent = this.mainNav.classList.contains('active') ? '✕' : '☰';
-    
-    // Toggle body scroll
-    document.body.style.overflow = isOpening ? 'hidden' : '';
-    
-    if (!isOpening) {
-      this.closeAllMobileDropdowns();
-    }
-  }
-
-  closeMobileMenu() {
-    if (this.mainNav.classList.contains('active')) {
-      this.mainNav.classList.remove('active');
-      this.mobileMenuBtn.textContent = '☰';
-      document.body.style.overflow = '';
-      this.closeAllMobileDropdowns();
-    }
-  }
-
-  closeAllMobileDropdowns() {
-    this.navLinks.forEach(link => {
-      link.classList.remove('active');
-    });
-    
-    this.dropdowns.forEach(dropdown => {
-      dropdown.style.maxHeight = '0';
+      
+      lastScrollTop = currentScroll;
     });
   }
 
