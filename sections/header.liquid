@@ -1,816 +1,819 @@
-{%- comment -%}
-UNIFIED PROFESSIONAL SIDEBAR
-- Works with existing header
-- Responsive for all devices
-- Clean, modern design
-- No conflicts with existing code
-{%- endcomment -%}
-
-<style>
-  /* ==================== */
-  /* UNIFIED SIDEBAR STYLES */
-  /* ==================== */
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="preconnect" href="https://cdn.shopify.com">
+  {{ content_for_header }}
   
-  :root {
-    --sidebar-width: 320px;
-    --sidebar-bg: #FFFFFF;
-    --sidebar-text: #2D2D2D;
-    --sidebar-accent: #E8C4B8;
-    --sidebar-border: rgba(0, 0, 0, 0.08);
-    --sidebar-shadow: 2px 0 40px rgba(0, 0, 0, 0.12);
-  }
+  <style>
+    /* ==================== */
+    /* HEADER STYLES */
+    /* ==================== */
+    
+    :root {
+      --header-height: 80px;
+      --announcement-height: 40px;
+      --primary-color: #E8C4B8;
+      --text-dark: #2D2D2D;
+      --text-light: #666666;
+      --text-black: #000000;
+      --white: #FFFFFF;
+      --gray-light: #f9f9f9;
+      --sidebar-width: 320px;
+    }
 
-  /* Sidebar Container */
-  .unified-sidebar {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100vh;
-    background: var(--sidebar-bg);
-    z-index: 99999;
-    transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    overflow: hidden;
-    visibility: hidden;
-  }
+    /* Reset body padding */
+    body {
+      padding-top: var(--header-height);
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-  @media (min-width: 768px) {
+    /* Announcement Bar */
+    .announcement-bar {
+      background: #f5f5f5;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 14px;
+      position: relative;
+      z-index: 1002;
+    }
+
+    /* Main Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: var(--white);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      z-index: 1001;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    body.has-announcement .header {
+      top: var(--announcement-height);
+    }
+
+    body.has-announcement {
+      padding-top: calc(var(--header-height) + var(--announcement-height));
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 100%;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    /* Logo */
+    .logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1002;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+      max-width: 120px;
+      object-fit: contain;
+    }
+
+    /* Sidebar Toggle Button */
+    .sidebar-toggle {
+      background: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      z-index: 1002;
+      padding: 0;
+    }
+
+    .sidebar-toggle:hover {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+    }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1002;
+    }
+
+    .header-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      text-decoration: none;
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .header-action:hover {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+    }
+
+    .cart-count {
+      background: var(--primary-color);
+      color: var(--white);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -2px;
+      right: -2px;
+    }
+
+    /* Hide desktop nav on mobile */
+    .nav-main {
+      display: none;
+    }
+
+    @media (min-width: 1025px) {
+      .nav-main {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+      }
+      
+      .logo {
+        position: static;
+        transform: none;
+      }
+      
+      .header-inner {
+        justify-content: space-between;
+      }
+    }
+
+    /* ==================== */
+    /* UNIFIED SIDEBAR STYLES */
+    /* ==================== */
+    
     .unified-sidebar {
-      width: var(--sidebar-width);
-      left: calc(-1 * var(--sidebar-width));
-      box-shadow: var(--sidebar-shadow);
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100vh;
+      background: var(--white);
+      z-index: 99999;
+      transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow: hidden;
+      visibility: hidden;
     }
-  }
 
-  .unified-sidebar.active {
-    left: 0;
-    visibility: visible;
-  }
-
-  /* Sidebar Overlay */
-  .unified-sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 99998;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(4px);
-  }
-
-  .unified-sidebar-overlay.active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  /* Sidebar Inner */
-  .unified-sidebar__inner {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: var(--sidebar-bg);
-  }
-
-  /* Sidebar Header */
-  .unified-sidebar__header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--sidebar-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-    background: var(--sidebar-bg);
-  }
-
-  .unified-sidebar__logo {
-    display: block;
-  }
-
-  .unified-sidebar__logo img {
-    height: 35px;
-    width: auto;
-    max-width: 140px;
-    object-fit: contain;
-  }
-
-  .unified-sidebar__close {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--sidebar-text);
-    font-size: 24px;
-    transition: all 0.3s ease;
-    padding: 0;
-  }
-
-  .unified-sidebar__close:hover {
-    background: rgba(232, 196, 184, 0.1);
-    color: var(--sidebar-accent);
-    transform: rotate(90deg);
-  }
-
-  /* Sidebar Content - Scrollable Area */
-  .unified-sidebar__content {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 0 0 40px 0;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Sidebar Navigation */
-  .unified-nav {
-    padding: 0;
-  }
-
-  /* Main Menu Items */
-  .unified-nav__section {
-    padding: 0;
-  }
-
-  .unified-nav__title {
-    padding: 16px 24px 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0;
-  }
-
-  .unified-nav__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .unified-nav__item {
-    margin: 0;
-    position: relative;
-  }
-
-  .unified-nav__link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    text-decoration: none;
-    color: var(--sidebar-text);
-    font-size: 15px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
-    position: relative;
-  }
-
-  .unified-nav__link:hover,
-  .unified-nav__link.active {
-    background: rgba(232, 196, 184, 0.08);
-    color: var(--sidebar-accent);
-    border-left-color: var(--sidebar-accent);
-  }
-
-  .unified-nav__link.has-children::after {
-    content: '›';
-    font-size: 18px;
-    transform: rotate(90deg);
-    transition: transform 0.3s ease;
-  }
-
-  .unified-nav__link.has-children.expanded::after {
-    transform: rotate(-90deg);
-  }
-
-  .unified-nav__count {
-    font-size: 12px;
-    color: #888;
-    background: rgba(0, 0, 0, 0.05);
-    padding: 2px 10px;
-    border-radius: 12px;
-    margin-left: 8px;
-  }
-
-  /* Submenu */
-  .unified-nav__submenu {
-    background: rgba(0, 0, 0, 0.02);
-    border-left: 4px solid rgba(232, 196, 184, 0.3);
-    display: none;
-    animation: slideDown 0.3s ease;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .unified-nav__submenu.active {
-    display: block;
-  }
-
-  .unified-nav__subitem {
-    margin: 0;
-  }
-
-  .unified-nav__sublink {
-    display: flex;
-    align-items: center;
-    padding: 14px 24px 14px 48px;
-    text-decoration: none;
-    color: #666;
-    font-size: 14px;
-    font-weight: 400;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-
-  .unified-nav__sublink:hover,
-  .unified-nav__sublink.active {
-    color: var(--sidebar-accent);
-    background: rgba(232, 196, 184, 0.05);
-  }
-
-  .unified-nav__sublink::before {
-    content: '';
-    position: absolute;
-    left: 32px;
-    top: 50%;
-    width: 6px;
-    height: 6px;
-    background: currentColor;
-    border-radius: 50%;
-    transform: translateY(-50%);
-    opacity: 0.3;
-  }
-
-  /* Sidebar Footer */
-  .unified-sidebar__footer {
-    padding: 20px 24px;
-    border-top: 1px solid var(--sidebar-border);
-    background: var(--sidebar-bg);
-    flex-shrink: 0;
-  }
-
-  .unified-sidebar__account {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    text-decoration: none;
-    color: var(--sidebar-text);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    background: rgba(0, 0, 0, 0.02);
-  }
-
-  .unified-sidebar__account:hover {
-    background: rgba(232, 196, 184, 0.1);
-    color: var(--sidebar-accent);
-    transform: translateY(-1px);
-  }
-
-  .unified-sidebar__account-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--sidebar-accent), #D4A59A);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-
-  .unified-sidebar__account-text {
-    flex: 1;
-  }
-
-  .unified-sidebar__account-name {
-    font-size: 14px;
-    font-weight: 600;
-    display: block;
-  }
-
-  .unified-sidebar__account-email {
-    font-size: 12px;
-    color: #888;
-    display: block;
-  }
-
-  /* Cart Summary in Sidebar */
-  .unified-sidebar__cart {
-    margin-top: 16px;
-    padding: 16px;
-    background: rgba(232, 196, 184, 0.05);
-    border-radius: 8px;
-    border: 1px solid rgba(232, 196, 184, 0.2);
-  }
-
-  .unified-sidebar__cart-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    text-decoration: none;
-    color: var(--sidebar-text);
-    font-weight: 500;
-  }
-
-  .unified-sidebar__cart-count {
-    background: var(--sidebar-accent);
-    color: white;
-    border-radius: 12px;
-    padding: 4px 12px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  /* Scrollbar Styling */
-  .unified-sidebar__content::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .unified-sidebar__content::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .unified-sidebar__content::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-  }
-
-  .unified-sidebar__content::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  /* Body lock when sidebar is open */
-  body.unified-sidebar-active {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Desktop specific adjustments */
-  @media (min-width: 1025px) {
-    .unified-sidebar {
-      width: var(--sidebar-width);
-      left: calc(-1 * var(--sidebar-width));
+    @media (min-width: 768px) {
+      .unified-sidebar {
+        width: var(--sidebar-width);
+        left: calc(-1 * var(--sidebar-width));
+        box-shadow: 2px 0 40px rgba(0, 0, 0, 0.12);
+      }
     }
 
     .unified-sidebar.active {
       left: 0;
+      visibility: visible;
     }
 
-    body.unified-sidebar-active {
+    /* Sidebar Overlay */
+    .unified-sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 99998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .unified-sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Sidebar Inner */
+    .unified-sidebar__inner {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+    }
+
+    /* Sidebar Header */
+    .unified-sidebar__header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      background: var(--white);
+    }
+
+    .unified-sidebar__logo {
+      display: block;
+    }
+
+    .unified-sidebar__logo img {
+      height: 35px;
+      width: auto;
+      max-width: 140px;
+      object-fit: contain;
+    }
+
+    .unified-sidebar__close {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-dark);
+      font-size: 24px;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .unified-sidebar__close:hover {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+    }
+
+    /* Sidebar Content */
+    .unified-sidebar__content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 0 40px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Sidebar Navigation */
+    .unified-nav {
+      padding: 0;
+    }
+
+    .unified-nav__section {
+      padding: 0;
+    }
+
+    .unified-nav__title {
+      padding: 16px 24px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
+    .unified-nav__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .unified-nav__item {
+      margin: 0;
+    }
+
+    .unified-nav__link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .unified-nav__link:hover,
+    .unified-nav__link.active {
+      background: rgba(232, 196, 184, 0.08);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+    }
+
+    .unified-nav__link.has-children::after {
+      content: '›';
+      font-size: 18px;
+      transform: rotate(90deg);
+      transition: transform 0.3s ease;
+    }
+
+    .unified-nav__link.has-children.expanded::after {
+      transform: rotate(-90deg);
+    }
+
+    .unified-nav__count {
+      font-size: 12px;
+      color: #888;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-left: 8px;
+    }
+
+    /* Submenu */
+    .unified-nav__submenu {
+      background: rgba(0, 0, 0, 0.02);
+      border-left: 4px solid rgba(232, 196, 184, 0.3);
+      display: none;
+    }
+
+    .unified-nav__submenu.active {
+      display: block;
+    }
+
+    .unified-nav__subitem {
+      margin: 0;
+    }
+
+    .unified-nav__sublink {
+      display: flex;
+      align-items: center;
+      padding: 14px 24px 14px 48px;
+      text-decoration: none;
+      color: #666;
+      font-size: 14px;
+      font-weight: 400;
+      transition: all 0.3s ease;
+    }
+
+    .unified-nav__sublink:hover {
+      color: var(--primary-color);
+      background: rgba(232, 196, 184, 0.05);
+    }
+
+    /* Sidebar Footer */
+    .unified-sidebar__footer {
+      padding: 20px 24px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--white);
+      flex-shrink: 0;
+    }
+
+    .unified-sidebar__account {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      text-decoration: none;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .unified-sidebar__account:hover {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+    }
+
+    .unified-sidebar__account-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), #D4A59A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .unified-sidebar__cart {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(232, 196, 184, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(232, 196, 184, 0.2);
+    }
+
+    .unified-sidebar__cart-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .unified-sidebar__cart-count {
+      background: var(--primary-color);
+      color: white;
+      border-radius: 12px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Body lock when sidebar is open */
+    body.sidebar-open {
       overflow: hidden;
     }
-  }
 
-  /* Mobile specific adjustments */
-  @media (max-width: 767px) {
-    .unified-sidebar {
-      width: 85%;
-      max-width: 320px;
-      left: -100%;
+    /* Scrollbar */
+    .unified-sidebar__content::-webkit-scrollbar {
+      width: 4px;
     }
 
-    .unified-sidebar.active {
-      left: 0;
+    .unified-sidebar__content::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
     }
-  }
 
-  /* ==================== */
-  /* UPDATE EXISTING HEADER TOGGLE */
-  /* ==================== */
-  
-  /* Ensure toggle button works */
-  .sidebar-toggle {
-    display: flex !important; /* Force show on all devices */
-  }
-
-  /* Hide the old desktop sidebar */
-  .desktop-sidebar {
-    display: none !important;
-  }
-
-  /* Hide the ChatGPT sidebar */
-  #chatgptSidebar,
-  .chatgpt-sidebar,
-  .chatgpt-sidebar-overlay {
-    display: none !important;
-  }
-</style>
-
-<!-- Unified Sidebar HTML -->
-<aside class="unified-sidebar" id="unifiedSidebar" aria-hidden="true" role="dialog" aria-label="Main navigation menu">
-  <div class="unified-sidebar__inner">
-    <!-- Header -->
-    <div class="unified-sidebar__header">
-      <a href="{{ routes.root_url }}" class="unified-sidebar__logo">
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
-          alt="{{ shop.name }}"
-          width="140"
-          height="35"
-          loading="eager"
-        >
-      </a>
-      <button class="unified-sidebar__close" id="unifiedSidebarClose" aria-label="Close menu">
-        &times;
-      </button>
+    /* Mobile adjustments */
+    @media (max-width: 767px) {
+      .unified-sidebar {
+        width: 85%;
+        max-width: 320px;
+      }
+      
+      .logo img {
+        height: 35px;
+      }
+      
+      .header-action {
+        width: 36px;
+        height: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Announcement Bar -->
+  {%- if section.settings.announcement_text != blank -%}
+    <div class="announcement-bar">
+      <p>{{ section.settings.announcement_text }}</p>
     </div>
+  {%- endif -%}
 
-    <!-- Scrollable Content -->
-    <div class="unified-sidebar__content">
-      <!-- Main Navigation -->
-      <nav class="unified-nav" aria-label="Sidebar navigation">
-        <!-- Shop Section -->
-        <div class="unified-nav__section">
-          <h3 class="unified-nav__title">Shop</h3>
-          <ul class="unified-nav__list">
-            <li class="unified-nav__item">
-              <a href="{{ routes.all_products_collection_url }}" class="unified-nav__link">
-                All Products
-                <span class="unified-nav__count">{{ collections.all.products_count | default: 0 }}</span>
-              </a>
-            </li>
+  <!-- Main Header -->
+  <header class="header" id="main-header">
+    <div class="header-container">
+      <div class="header-inner">
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open sidebar menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
 
-            <!-- Product Type Dropdown -->
-            <li class="unified-nav__item">
-              <button class="unified-nav__link has-children" data-toggle="submenu" data-target="product-type">
-                By Product Type
-              </button>
-              <div class="unified-nav__submenu" id="product-type">
-                {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
-                {%- for handle in collections_to_show -%}
-                  {%- assign collection = collections[handle] -%}
-                  <div class="unified-nav__subitem">
-                    <a href="{{ collection.url | default: routes.collections_url }}" class="unified-nav__sublink">
-                      {%- if collection -%}
-                        {{ collection.title }}
-                      {%- else -%}
-                        {{ handle | replace: '-', ' ' | capitalize }}
-                      {%- endif -%}
-                    </a>
-                  </div>
-                {%- endfor -%}
-              </div>
-            </li>
-
-            <!-- Curl Type Dropdown -->
-            <li class="unified-nav__item">
-              <button class="unified-nav__link has-children" data-toggle="submenu" data-target="curl-type">
-                By Curl Type
-              </button>
-              <div class="unified-nav__submenu" id="curl-type">
-                {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
-                {%- for handle in curl_collections -%}
-                  {%- assign collection = collections[handle] -%}
-                  <div class="unified-nav__subitem">
-                    <a href="{{ collection.url | default: routes.collections_url }}" class="unified-nav__sublink">
-                      {%- if collection -%}
-                        {{ collection.title }}
-                      {%- else -%}
-                        {{ handle | replace: '-', ' ' | capitalize }}
-                      {%- endif -%}
-                    </a>
-                  </div>
-                {%- endfor -%}
-              </div>
-            </li>
-          </ul>
+        <!-- Logo -->
+        <div class="logo">
+          <a href="{{ routes.root_url }}">
+            <img 
+              src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
+              alt="{{ shop.name }}"
+              width="120"
+              height="40"
+              loading="eager"
+            >
+          </a>
         </div>
 
-        <!-- Guides & Resources -->
-        <div class="unified-nav__section">
-          <h3 class="unified-nav__title">Guides & Resources</h3>
-          <ul class="unified-nav__list">
-            <li class="unified-nav__item">
-              <a href="#hair-quiz" class="unified-nav__link">Hair Quiz</a>
-            </li>
-            <li class="unified-nav__item">
-              <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="unified-nav__link">
-                Hair Care Guides
-              </a>
-            </li>
-            <li class="unified-nav__item">
-              <a href="#services-by-concern" class="unified-nav__link">Services by Concern</a>
-            </li>
-            <li class="unified-nav__item">
-              <a href="{{ pages['about'].url | default: '/pages/about' }}" class="unified-nav__link">Our Story</a>
-            </li>
-          </ul>
-        </div>
+        <!-- Desktop Navigation (optional) -->
+        <nav class="nav-main" id="main-nav">
+          <!-- Add desktop navigation items here if needed -->
+        </nav>
 
-        <!-- Information -->
-        <div class="unified-nav__section">
-          <h3 class="unified-nav__title">Information</h3>
-          <ul class="unified-nav__list">
-            {%- for page in pages -%}
-              {%- unless page.handle contains 'policy' -%}
-                <li class="unified-nav__item">
-                  <a href="{{ page.url }}" class="unified-nav__link">{{ page.title }}</a>
-                </li>
-              {%- endunless -%}
-            {%- endfor -%}
-            <li class="unified-nav__item">
-              <a href="{{ routes.search_url }}" class="unified-nav__link">Search</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-
-    <!-- Footer -->
-    <div class="unified-sidebar__footer">
-      {% if customer %}
-        <a href="{{ routes.account_url }}" class="unified-sidebar__account">
-          <div class="unified-sidebar__account-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <a href="{{ routes.search_url }}" class="header-action search-btn" aria-label="Search">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+            </svg>
+          </a>
+          <a href="{{ routes.account_login_url }}" class="header-action account-btn" aria-label="Account">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
             </svg>
-          </div>
-          <div class="unified-sidebar__account-text">
-            <span class="unified-sidebar__account-name">{{ customer.name | truncate: 20 }}</span>
-            <span class="unified-sidebar__account-email">{{ customer.email | truncate: 25 }}</span>
-          </div>
-        </a>
-      {% else %}
-        <a href="{{ routes.account_login_url }}" class="unified-sidebar__account">
-          <div class="unified-sidebar__account-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </a>
+          <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
             </svg>
-          </div>
-          <div class="unified-sidebar__account-text">
-            <span class="unified-sidebar__account-name">Sign In</span>
-            <span class="unified-sidebar__account-email">Access your account</span>
-          </div>
-        </a>
-      {% endif %}
-
-      <!-- Cart Summary -->
-      <div class="unified-sidebar__cart">
-        <a href="{{ routes.cart_url }}" class="unified-sidebar__cart-link">
-          <span>View Cart</span>
-          <span class="unified-sidebar__cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
-        </a>
+            <span class="cart-count">{{ cart.item_count }}</span>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-</aside>
+  </header>
 
-<!-- Overlay -->
-<div class="unified-sidebar-overlay" id="unifiedSidebarOverlay"></div>
+  <!-- Unified Sidebar -->
+  <aside class="unified-sidebar" id="unifiedSidebar" aria-hidden="true" role="dialog" aria-label="Main navigation menu">
+    <div class="unified-sidebar__inner">
+      <!-- Header -->
+      <div class="unified-sidebar__header">
+        <a href="{{ routes.root_url }}" class="unified-sidebar__logo">
+          <img 
+            src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
+            alt="{{ shop.name }}"
+            width="140"
+            height="35"
+            loading="eager"
+          >
+        </a>
+        <button class="unified-sidebar__close" id="unifiedSidebarClose" aria-label="Close menu">
+          &times;
+        </button>
+      </div>
 
-<script>
-class UnifiedSidebar {
-  constructor() {
-    this.sidebar = document.getElementById('unifiedSidebar');
-    this.overlay = document.getElementById('unifiedSidebarOverlay');
-    this.toggleBtn = document.getElementById('sidebarToggle');
-    this.closeBtn = document.getElementById('unifiedSidebarClose');
-    this.isOpen = false;
-    this.scrollPosition = 0;
+      <!-- Scrollable Content -->
+      <div class="unified-sidebar__content">
+        <!-- Main Navigation -->
+        <nav class="unified-nav" aria-label="Sidebar navigation">
+          <!-- Shop Section -->
+          <div class="unified-nav__section">
+            <h3 class="unified-nav__title">Shop</h3>
+            <ul class="unified-nav__list">
+              <li class="unified-nav__item">
+                <a href="{{ routes.all_products_collection_url }}" class="unified-nav__link">
+                  All Products
+                  <span class="unified-nav__count">{{ collections.all.products_count | default: 0 }}</span>
+                </a>
+              </li>
 
-    this.init();
-  }
+              <!-- Product Type Dropdown -->
+              <li class="unified-nav__item">
+                <button class="unified-nav__link has-children" data-toggle="submenu" data-target="product-type">
+                  By Product Type
+                </button>
+                <div class="unified-nav__submenu" id="product-type">
+                  {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
+                  {%- for handle in collections_to_show -%}
+                    {%- assign collection = collections[handle] -%}
+                    <div class="unified-nav__subitem">
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="unified-nav__sublink">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </li>
 
-  init() {
-    // Bind events
-    this.bindEvents();
+              <!-- Curl Type Dropdown -->
+              <li class="unified-nav__item">
+                <button class="unified-nav__link has-children" data-toggle="submenu" data-target="curl-type">
+                  By Curl Type
+                </button>
+                <div class="unified-nav__submenu" id="curl-type">
+                  {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
+                  {%- for handle in curl_collections -%}
+                    {%- assign collection = collections[handle] -%}
+                    <div class="unified-nav__subitem">
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="unified-nav__sublink">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Guides & Resources -->
+          <div class="unified-nav__section">
+            <h3 class="unified-nav__title">Guides & Resources</h3>
+            <ul class="unified-nav__list">
+              <li class="unified-nav__item">
+                <a href="#hair-quiz" class="unified-nav__link">Hair Quiz</a>
+              </li>
+              <li class="unified-nav__item">
+                <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="unified-nav__link">
+                  Hair Care Guides
+                </a>
+              </li>
+              <li class="unified-nav__item">
+                <a href="#services-by-concern" class="unified-nav__link">Services by Concern</a>
+              </li>
+              <li class="unified-nav__item">
+                <a href="{{ pages['about'].url | default: '/pages/about' }}" class="unified-nav__link">Our Story</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Information -->
+          <div class="unified-nav__section">
+            <h3 class="unified-nav__title">Information</h3>
+            <ul class="unified-nav__list">
+              <li class="unified-nav__item">
+                <a href="{{ routes.search_url }}" class="unified-nav__link">Search</a>
+              </li>
+              {%- for page in pages limit: 5 -%}
+                {%- unless page.handle contains 'policy' -%}
+                  <li class="unified-nav__item">
+                    <a href="{{ page.url }}" class="unified-nav__link">{{ page.title }}</a>
+                  </li>
+                {%- endunless -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Footer -->
+      <div class="unified-sidebar__footer">
+        {% if customer %}
+          <a href="{{ routes.account_url }}" class="unified-sidebar__account">
+            <div class="unified-sidebar__account-icon">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div>
+              <span style="display: block; font-size: 14px; font-weight: 600;">{{ customer.name | truncate: 20 }}</span>
+              <span style="display: block; font-size: 12px; color: #888;">{{ customer.email | truncate: 25 }}</span>
+            </div>
+          </a>
+        {% else %}
+          <a href="{{ routes.account_login_url }}" class="unified-sidebar__account">
+            <div class="unified-sidebar__account-icon">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div>
+              <span style="display: block; font-size: 14px; font-weight: 600;">Sign In</span>
+              <span style="display: block; font-size: 12px; color: #888;">Access your account</span>
+            </div>
+          </a>
+        {% endif %}
+
+        <!-- Cart Summary -->
+        <div class="unified-sidebar__cart">
+          <a href="{{ routes.cart_url }}" class="unified-sidebar__cart-link">
+            <span>View Cart</span>
+            <span class="unified-sidebar__cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="unified-sidebar-overlay" id="unifiedSidebarOverlay"></div>
+
+  <script>
+  // Simple, robust sidebar functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Header script loaded');
     
-    // Setup submenu toggles
-    this.setupSubmenus();
+    const sidebar = document.getElementById('unifiedSidebar');
+    const overlay = document.getElementById('unifiedSidebarOverlay');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const closeBtn = document.getElementById('unifiedSidebarClose');
     
-    // Close on escape key
-    this.bindEscapeKey();
-    
-    // Close on resize (optional)
-    this.bindResize();
-  }
-
-  bindEvents() {
-    // Toggle button
-    if (this.toggleBtn) {
-      this.toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.toggle();
-      });
+    // Check if elements exist
+    if (!sidebar || !toggleBtn) {
+      console.error('Sidebar elements not found');
+      return;
     }
-
-    // Close button
-    if (this.closeBtn) {
-      this.closeBtn.addEventListener('click', () => this.close());
+    
+    // Check announcement bar
+    const announcementBar = document.querySelector('.announcement-bar');
+    if (announcementBar) {
+      document.body.classList.add('has-announcement');
     }
-
-    // Overlay click
-    if (this.overlay) {
-      this.overlay.addEventListener('click', () => this.close());
+    
+    // Toggle sidebar
+    function toggleSidebar() {
+      console.log('Toggle sidebar called');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.classList.toggle('sidebar-open');
     }
-
-    // Close when clicking links (mobile)
-    this.sidebar.addEventListener('click', (e) => {
-      if (e.target.matches('.unified-nav__link[href], .unified-nav__sublink[href]')) {
-        if (window.innerWidth < 1025) {
-          this.close();
-        }
-      }
-    });
-  }
-
-  setupSubmenus() {
-    const toggleButtons = this.sidebar.querySelectorAll('[data-toggle="submenu"]');
     
-    toggleButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const targetId = button.getAttribute('data-target');
-        const submenu = document.getElementById(targetId);
-        
-        if (submenu) {
-          // Toggle current submenu
-          button.classList.toggle('expanded');
-          submenu.classList.toggle('active');
-          
-          // Close other submenus (optional - comment out if you want multiple open)
-          toggleButtons.forEach(otherBtn => {
-            if (otherBtn !== button) {
-              otherBtn.classList.remove('expanded');
-              const otherTarget = otherBtn.getAttribute('data-target');
-              const otherSubmenu = document.getElementById(otherTarget);
-              if (otherSubmenu) otherSubmenu.classList.remove('active');
-            }
-          });
-        }
-      });
-    });
-  }
-
-  toggle() {
-    if (this.isOpen) {
-      this.close();
-    } else {
-      this.open();
-    }
-  }
-
-  open() {
-    // Save scroll position
-    this.scrollPosition = window.pageYOffset;
-    
-    // Open sidebar
-    this.sidebar.classList.add('active');
-    this.overlay.classList.add('active');
-    document.body.classList.add('unified-sidebar-active');
-    
-    // Prevent body scrolling
-    document.body.style.top = `-${this.scrollPosition}px`;
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    
-    this.isOpen = true;
-    
-    // Dispatch event
-    document.dispatchEvent(new CustomEvent('sidebar:opened'));
-  }
-
-  close() {
     // Close sidebar
-    this.sidebar.classList.remove('active');
-    this.overlay.classList.remove('active');
-    document.body.classList.remove('unified-sidebar-active');
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
+    }
     
-    // Restore body scrolling
-    document.body.style.position = '';
-    document.body.style.top = '';
-    window.scrollTo(0, this.scrollPosition);
+    // Event listeners
+    toggleBtn.addEventListener('click', toggleSidebar);
     
-    this.isOpen = false;
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeSidebar);
+    }
     
-    // Close all submenus
-    const submenus = this.sidebar.querySelectorAll('.unified-nav__submenu');
-    submenus.forEach(menu => menu.classList.remove('active'));
+    if (overlay) {
+      overlay.addEventListener('click', closeSidebar);
+    }
     
-    const toggleButtons = this.sidebar.querySelectorAll('[data-toggle="submenu"]');
-    toggleButtons.forEach(btn => btn.classList.remove('expanded'));
-    
-    // Dispatch event
-    document.dispatchEvent(new CustomEvent('sidebar:closed'));
-  }
-
-  bindEscapeKey() {
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.isOpen) {
-        this.close();
+    // Close with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+        closeSidebar();
       }
     });
-  }
-
-  bindResize() {
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        if (window.innerWidth >= 1025 && this.isOpen) {
-          this.close();
+    
+    // Handle submenu toggles
+    const submenuToggles = document.querySelectorAll('[data-toggle="submenu"]');
+    submenuToggles.forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const submenu = document.getElementById(targetId);
+        if (submenu) {
+          this.classList.toggle('expanded');
+          submenu.classList.toggle('active');
         }
-      }, 250);
+      });
     });
-  }
-}
-
-// Auto-scroll to active link
-function scrollToActiveLink() {
-  const activeLink = document.querySelector('.unified-nav__link.active, .unified-nav__sublink.active');
-  if (activeLink) {
-    const sidebarContent = document.querySelector('.unified-sidebar__content');
-    if (sidebarContent) {
-      const linkPosition = activeLink.offsetTop;
-      const sidebarHeight = sidebarContent.clientHeight;
-      const linkHeight = activeLink.clientHeight;
+    
+    // Mark active link
+    function markActiveLink() {
+      const currentUrl = window.location.pathname;
+      const links = document.querySelectorAll('.unified-nav__link, .unified-nav__sublink');
       
-      sidebarContent.scrollTo({
-        top: linkPosition - (sidebarHeight / 2) + (linkHeight / 2),
-        behavior: 'smooth'
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href !== '#' && currentUrl.includes(href.replace(/^\//, '').split('?')[0])) {
+          link.classList.add('active');
+        }
       });
     }
-  }
-}
-
-// Mark active links based on current URL
-function markActiveLinks() {
-  const currentUrl = window.location.pathname + window.location.search;
-  const allLinks = document.querySelectorAll('.unified-nav__link[href], .unified-nav__sublink[href]');
-  
-  allLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href && (currentUrl.includes(href.replace(/^\//, '').split('?')[0]) || 
-        (href.startsWith('#') && window.location.hash === href))) {
-      link.classList.add('active');
+    
+    markActiveLink();
+    
+    // Update cart count
+    function updateCartCount() {
+      const cartCounts = document.querySelectorAll('.cart-count, .unified-sidebar__cart-count');
+      const itemCount = {{ cart.item_count | default: 0 }};
       
-      // Also expand parent submenu if it's a sublink
-      if (link.classList.contains('unified-nav__sublink')) {
-        const parentItem = link.closest('.unified-nav__item');
-        if (parentItem) {
-          const toggleBtn = parentItem.querySelector('[data-toggle="submenu"]');
-          const submenu = parentItem.querySelector('.unified-nav__submenu');
-          if (toggleBtn && submenu) {
-            toggleBtn.classList.add('expanded');
-            submenu.classList.add('active');
-          }
+      cartCounts.forEach(span => {
+        if (span.classList.contains('cart-count')) {
+          span.textContent = itemCount;
+        } else if (span.classList.contains('unified-sidebar__cart-count')) {
+          span.textContent = itemCount + ' item' + (itemCount !== 1 ? 's' : '');
         }
-      }
+      });
     }
+    
+    updateCartCount();
+    
+    // For demo purposes, log that everything is ready
+    console.log('Sidebar initialized successfully');
   });
-}
+  </script>
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  // Create sidebar instance
-  window.unifiedSidebar = new UnifiedSidebar();
-  
-  // Mark active links
-  markActiveLinks();
-  
-  // Auto-scroll to active link when sidebar opens
-  document.addEventListener('sidebar:opened', () => {
-    setTimeout(scrollToActiveLink, 300);
-  });
-  
-  // Update cart count dynamically
-  function updateCartCount() {
-    const cartCounts = document.querySelectorAll('.unified-sidebar__cart-count');
-    cartCounts.forEach(span => {
-      span.textContent = `${window.cartCount || 0} item${window.cartCount != 1 ? 's' : ''}`;
-    });
-  }
-  
-  // Listen for cart updates (Shopify specific)
-  if (typeof Shopify !== 'undefined') {
-    document.addEventListener('cart:updated', (event) => {
-      window.cartCount = event.detail.item_count;
-      updateCartCount();
-    });
-  }
-  
-  // Initial cart count
-  updateCartCount();
-});
-
-// Expose for theme.js integration
-window.UnifiedSidebar = UnifiedSidebar;
-</script>
+  <main id="MainContent">
+    {{ content_for_layout }}
+  </main>
+</body>
+</html>
