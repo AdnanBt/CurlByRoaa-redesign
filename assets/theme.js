@@ -56,6 +56,64 @@ class Theme {
     });
   }
 }
+// ChatGPT-style Sidebar Controller (append to theme.js)
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.getElementById('chatgptSidebar');
+  const overlay = document.getElementById('chatgptSidebarOverlay');
+  const openBtn = document.getElementById('chatgptSidebarToggle');
+  const closeBtn = document.getElementById('chatgptSidebarClose');
+
+  if (!sidebar) return;
+
+  function openSidebar() {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    sidebar.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    sidebar.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  function toggleSidebar() {
+    if (sidebar.classList.contains('active')) closeSidebar(); else openSidebar();
+  }
+
+  // Bind events
+  if (openBtn) openBtn.addEventListener('click', function (e) { e.preventDefault(); toggleSidebar(); });
+  if (closeBtn) closeBtn.addEventListener('click', function (e) { e.preventDefault(); closeSidebar(); });
+  if (overlay) overlay.addEventListener('click', function () { closeSidebar(); });
+
+  // Accessibility: ESC to close
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && sidebar.classList.contains('active')) closeSidebar();
+  });
+
+  // Auto-show on desktop when user scrolls past viewport height (optional):
+  let initialScroll = window.pageYOffset || document.documentElement.scrollTop;
+  window.addEventListener('scroll', function () {
+    const isDesktop = window.innerWidth > 1024;
+    const current = window.pageYOffset || document.documentElement.scrollTop;
+    if (!isDesktop) return;
+    // Example: show sidebar when user scrolled down 80% of viewport
+    if (current > window.innerHeight * 0.9) {
+      document.body.classList.add('sidebar-desktop-visible'); // adds desktop visible state
+    } else {
+      document.body.classList.remove('sidebar-desktop-visible');
+    }
+  }, { passive: true });
+
+  // Mark current link as active (simple)
+  const links = sidebar.querySelectorAll('.chatgpt-menu__link, .chatgpt-links__link');
+  links.forEach(a => {
+    try {
+      if (a.href && window.location.href.indexOf(a.href) !== -1) a.classList.add('active');
+    } catch(e){}
+  });
+});
+
 
   // Mobile Menu Functionality
   setupMobileMenu() {
