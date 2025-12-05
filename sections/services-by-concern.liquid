@@ -1,6 +1,6 @@
 {%- comment -%}
   services-by-concern.liquid
-  Professional booking with improved design
+  Professional booking with improved design - Mobile & Tablet Fix
 {%- endcomment -%}
 
 <style>
@@ -37,7 +37,7 @@
     font-weight: 400;
   }
   
-  /* Carousel Container - NO ARROW PADDING */
+  /* Carousel Container */
   .concern-carousel-container {
     position: relative;
     max-width: 1400px;
@@ -57,13 +57,12 @@
     }
   }
   
-  /* CAROUSEL FOR ALL DEVICES */
+  /* CAROUSEL FOR ALL DEVICES - UPDATED */
   .concern-carousel {
     display: flex;
     gap: 30px;
     padding: 20px 0;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-x: visible;
   }
   
   /* Desktop: Infinite Animation */
@@ -71,6 +70,7 @@
     .concern-carousel {
       width: max-content;
       animation: concernCarouselScroll 60s linear infinite;
+      overflow-x: visible;
     }
     
     .concern-carousel:hover {
@@ -78,8 +78,8 @@
     }
   }
   
-  /* Mobile & Tablet: Touch Scroll */
-  @media (max-width: 1023px) {
+  /* Tablet: Touch Scroll */
+  @media (max-width: 1023px) and (min-width: 769px) {
     .concern-carousel {
       overflow-x: auto;
       scroll-snap-type: x mandatory;
@@ -88,16 +88,51 @@
       padding-bottom: 30px;
       width: 100%;
       animation: none !important;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-accent) rgba(232, 196, 184, 0.1);
     }
     
     .concern-carousel::-webkit-scrollbar {
-      display: none;
+      height: 6px;
     }
     
-    /* Hide scrollbar for Firefox */
+    .concern-carousel::-webkit-scrollbar-track {
+      background: rgba(232, 196, 184, 0.1);
+      border-radius: 3px;
+    }
+    
+    .concern-carousel::-webkit-scrollbar-thumb {
+      background: var(--color-accent);
+      border-radius: 3px;
+    }
+  }
+  
+  /* Mobile: Touch Scroll */
+  @media (max-width: 768px) {
     .concern-carousel {
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      padding-bottom: 30px;
+      width: 100%;
+      animation: none !important;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-accent) rgba(232, 196, 184, 0.1);
+    }
+    
+    .concern-carousel::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .concern-carousel::-webkit-scrollbar-track {
+      background: rgba(232, 196, 184, 0.1);
+      border-radius: 2px;
+    }
+    
+    .concern-carousel::-webkit-scrollbar-thumb {
+      background: var(--color-accent);
+      border-radius: 2px;
     }
   }
   
@@ -111,30 +146,39 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     border: 1px solid rgba(232, 196, 184, 0.15);
-    scroll-snap-align: start;
   }
   
-  /* Tablet Card Size */
-  @media (max-width: 1023px) and (min-width: 769px) {
+  /* Desktop: No snap scrolling */
+  @media (min-width: 1024px) {
     .concern-card {
-      flex: 0 0 calc(50vw - 60px);
-      min-width: 320px;
+      scroll-snap-align: none;
     }
   }
   
-  /* Mobile Card Size */
+  /* Tablet: Center snap */
+  @media (max-width: 1023px) and (min-width: 769px) {
+    .concern-card {
+      flex: 0 0 calc(50vw - 80px);
+      min-width: 320px;
+      scroll-snap-align: center;
+    }
+  }
+  
+  /* Mobile: Center snap */
   @media (max-width: 768px) {
     .concern-card {
       flex: 0 0 calc(85vw - 40px);
       min-width: 280px;
+      scroll-snap-align: center;
     }
   }
   
-  /* Small Mobile Card Size */
+  /* Small Mobile: Center snap */
   @media (max-width: 480px) {
     .concern-card {
       flex: 0 0 calc(90vw - 30px);
       min-width: 260px;
+      scroll-snap-align: center;
     }
   }
   
@@ -1167,6 +1211,19 @@
   .view-all-btn:hover svg {
     transform: translateX(5px);
   }
+  
+  /* Mobile touch improvements */
+  @media (max-width: 768px) {
+    .book-btn, .products-btn {
+      min-height: 56px;
+      font-size: 1rem;
+    }
+    
+    .service-item {
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+  }
 </style>
 
 <section class="concern-services-section">
@@ -1627,11 +1684,125 @@
   </div>
 </section>
 
-<!-- Booking Modal (same as before) -->
+<!-- Booking Modal -->
 <div class="booking-overlay" id="bookingOverlay"></div>
 <div class="booking-modal" id="bookingModal">
-  <!-- Keep the exact same booking modal HTML from your previous code -->
-  <!-- ... (booking modal HTML remains exactly the same) ... -->
+  <div class="booking-header">
+    <button class="booking-close" id="bookingClose">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+    <h3 id="bookingTitle">Book Appointment</h3>
+    <p id="bookingSubtitle">Select your preferred time and details</p>
+  </div>
+  
+  <div class="booking-content">
+    <div id="bookingForm">
+      <form class="booking-form" id="bookingFormElement">
+        <div class="form-row">
+          <div class="form-group required">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" class="form-input" required>
+            <div class="error-message" id="firstNameError">Please enter your first name</div>
+          </div>
+          
+          <div class="form-group required">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" class="form-input" required>
+            <div class="error-message" id="lastNameError">Please enter your last name</div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group required">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" class="form-input" required>
+            <div class="error-message" id="emailError">Please enter a valid email address</div>
+          </div>
+          
+          <div class="form-group required">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" class="form-input" required>
+            <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+          </div>
+        </div>
+        
+        <div class="form-group required">
+          <label for="bookingDate">Preferred Date</label>
+          <input type="date" id="bookingDate" class="form-input" required>
+          <div class="error-message" id="dateError">Please select a date</div>
+        </div>
+        
+        <div class="form-group required">
+          <label for="bookingTime">Preferred Time</label>
+          <div class="booking-time-slots">
+            <div class="time-slot" data-time="09:00">9:00 AM</div>
+            <div class="time-slot" data-time="10:30">10:30 AM</div>
+            <div class="time-slot" data-time="12:00">12:00 PM</div>
+            <div class="time-slot" data-time="14:00">2:00 PM</div>
+            <div class="time-slot" data-time="15:30">3:30 PM</div>
+            <div class="time-slot" data-time="17:00">5:00 PM</div>
+          </div>
+          <input type="hidden" id="bookingTime">
+          <div class="error-message" id="timeError">Please select a time slot</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="notes">Additional Notes (Optional)</label>
+          <textarea id="notes" class="form-input" rows="3" placeholder="Any specific requirements or concerns..."></textarea>
+        </div>
+        
+        <div class="booking-summary">
+          <div class="summary-item">
+            <span>Service:</span>
+            <span id="summaryService">-</span>
+          </div>
+          <div class="summary-item">
+            <span>For:</span>
+            <span id="summaryConcern">-</span>
+          </div>
+          <div class="summary-item total">
+            <span>Total:</span>
+            <span id="summaryPrice">$0</span>
+          </div>
+        </div>
+        
+        <div class="booking-actions">
+          <button type="button" class="submit-booking" id="submitBooking">
+            <span>Confirm Booking</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          </button>
+          <button type="button" class="cancel-booking" id="cancelBooking">
+            Cancel
+          </button>
+        </div>
+      </form>
+      
+      <input type="hidden" id="selectedConcern">
+      <input type="hidden" id="selectedService">
+      <input type="hidden" id="selectedPrice">
+    </div>
+    
+    <div class="booking-success" id="bookingSuccess">
+      <div class="success-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+      </div>
+      <h3>Booking Confirmed!</h3>
+      <p>Thank you for booking with us. We've sent a confirmation email to:</p>
+      <div class="confirmation-email">
+        <p id="confirmationEmail">your@email.com</p>
+      </div>
+      <p>We'll contact you shortly to confirm your appointment details.</p>
+      <button type="button" class="cancel-booking" id="closeSuccess">
+        Close
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1656,6 +1827,9 @@
       this.selectedConcern = null;
       this.selectedService = null;
       this.selectedPrice = null;
+      this.carousel = null;
+      this.isMobileOrTablet = false;
+      this.isInitialized = false;
       
       this.init();
     }
@@ -1665,6 +1839,7 @@
       this.setupTimeSlots();
       this.setupDatePicker();
       this.initCarousel();
+      this.isInitialized = true;
     }
     
     bindEvents() {
@@ -1710,92 +1885,229 @@
       document.getElementById('bookingDate').addEventListener('change', () => {
         this.validateDate();
       });
+      
+      // Window resize for carousel
+      window.addEventListener('resize', () => {
+        clearTimeout(this.resizeTimeout);
+        this.resizeTimeout = setTimeout(() => {
+          this.handleResize();
+        }, 250);
+      });
     }
     
     initCarousel() {
-      const carousel = document.getElementById('concern-carousel');
-      if (!carousel) return;
+      this.carousel = document.getElementById('concern-carousel');
+      if (!this.carousel) return;
       
-      // Enable infinite animation only for desktop
-      if (window.innerWidth >= 1024) {
+      // Clear any existing animation
+      this.carousel.style.animation = 'none';
+      
+      // Check device type
+      this.isMobileOrTablet = window.innerWidth <= 1023;
+      
+      if (!this.isMobileOrTablet) {
+        // DESKTOP: Enable infinite animation
+        this.carousel.style.animation = 'concernCarouselScroll 60s linear infinite';
+        this.carousel.style.overflowX = 'visible';
+        this.carousel.style.width = 'max-content';
+        
         // Pause animation on hover
-        carousel.addEventListener('mouseenter', () => {
-          carousel.style.animationPlayState = 'paused';
+        this.carousel.addEventListener('mouseenter', () => {
+          this.carousel.style.animationPlayState = 'paused';
         });
         
-        carousel.addEventListener('mouseleave', () => {
-          carousel.style.animationPlayState = 'running';
+        this.carousel.addEventListener('mouseleave', () => {
+          this.carousel.style.animationPlayState = 'running';
         });
         
-        // Add swipe support for touch devices on desktop
-        let startX;
-        let scrollLeft;
+        // Add touch support for touchscreen laptops
+        this.setupTouchSupportForDesktop();
         
-        carousel.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].pageX - carousel.offsetLeft;
-          scrollLeft = carousel.scrollLeft;
-          carousel.style.animationPlayState = 'paused';
-        });
-        
-        carousel.addEventListener('touchmove', (e) => {
-          if (!startX) return;
-          const x = e.touches[0].pageX - carousel.offsetLeft;
-          const walk = (x - startX) * 2;
-          carousel.scrollLeft = scrollLeft - walk;
-        });
-        
-        carousel.addEventListener('touchend', () => {
-          setTimeout(() => {
-            carousel.style.animationPlayState = 'running';
-          }, 1000);
-        });
       } else {
-        // For mobile/tablet: enhance touch scrolling
-        let isDown = false;
-        let startX;
-        let scrollLeft;
+        // MOBILE/TABLET: Enable horizontal scrolling
+        this.carousel.style.animation = 'none';
+        this.carousel.style.overflowX = 'auto';
+        this.carousel.style.width = '100%';
         
-        carousel.addEventListener('mousedown', (e) => {
-          isDown = true;
-          startX = e.pageX - carousel.offsetLeft;
-          scrollLeft = carousel.scrollLeft;
-          carousel.style.cursor = 'grabbing';
-        });
+        // Setup touch/mouse events for mobile/tablet
+        this.setupMobileTouchEvents();
         
-        carousel.addEventListener('mouseleave', () => {
-          isDown = false;
-          carousel.style.cursor = 'grab';
-        });
+        // Initialize scroll position
+        this.carousel.scrollLeft = 0;
+      }
+    }
+    
+    setupTouchSupportForDesktop() {
+      let startX = 0;
+      let scrollLeft = 0;
+      let isDragging = false;
+      
+      this.carousel.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].pageX;
+        scrollLeft = this.carousel.scrollLeft;
+        this.carousel.style.animationPlayState = 'paused';
+      }, { passive: true });
+      
+      this.carousel.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const x = e.touches[0].pageX;
+        const walk = (x - startX) * 2;
+        this.carousel.scrollLeft = scrollLeft - walk;
+      }, { passive: true });
+      
+      this.carousel.addEventListener('touchend', () => {
+        isDragging = false;
+        // Resume animation after a delay
+        setTimeout(() => {
+          this.carousel.style.animationPlayState = 'running';
+        }, 2000);
+      });
+    }
+    
+    setupMobileTouchEvents() {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      let velocity = 0;
+      let lastX = 0;
+      let animationFrame;
+      let lastScrollTime = 0;
+      
+      // Mouse events for tablets with mouse
+      this.carousel.addEventListener('mousedown', (e) => {
+        isDown = true;
+        this.carousel.style.cursor = 'grabbing';
+        startX = e.pageX - this.carousel.offsetLeft;
+        scrollLeft = this.carousel.scrollLeft;
+        velocity = 0;
+        lastX = e.pageX;
+        cancelAnimationFrame(animationFrame);
+        e.preventDefault();
+      });
+      
+      this.carousel.addEventListener('mouseleave', () => {
+        isDown = false;
+        this.carousel.style.cursor = 'grab';
+        this.applyMomentum();
+      });
+      
+      this.carousel.addEventListener('mouseup', () => {
+        isDown = false;
+        this.carousel.style.cursor = 'grab';
+        this.applyMomentum();
+      });
+      
+      this.carousel.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        const x = e.pageX - this.carousel.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        this.carousel.scrollLeft = scrollLeft - walk;
+        velocity = e.pageX - lastX;
+        lastX = e.pageX;
+        lastScrollTime = Date.now();
+      });
+      
+      // Touch events for mobile
+      this.carousel.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - this.carousel.offsetLeft;
+        scrollLeft = this.carousel.scrollLeft;
+        velocity = 0;
+        lastX = e.touches[0].pageX;
+        cancelAnimationFrame(animationFrame);
+      }, { passive: true });
+      
+      this.carousel.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - this.carousel.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        this.carousel.scrollLeft = scrollLeft - walk;
+        velocity = e.touches[0].pageX - lastX;
+        lastX = e.touches[0].pageX;
+        lastScrollTime = Date.now();
+      }, { passive: true });
+      
+      this.carousel.addEventListener('touchend', () => {
+        isDown = false;
+        this.applyMomentum();
+      });
+      
+      // Scroll event for snap-to-center
+      this.carousel.addEventListener('scroll', () => {
+        clearTimeout(this.snapTimeout);
+        this.snapTimeout = setTimeout(() => {
+          if (Date.now() - lastScrollTime > 150) {
+            this.snapToCard();
+          }
+        }, 100);
+      });
+    }
+    
+    applyMomentum() {
+      const apply = () => {
+        if (Math.abs(velocity) > 0.5) {
+          this.carousel.scrollLeft -= velocity;
+          velocity *= 0.92; // Deceleration
+          animationFrame = requestAnimationFrame(apply);
+        }
+      };
+      animationFrame = requestAnimationFrame(apply);
+    }
+    
+    snapToCard() {
+      if (!this.carousel || !this.isMobileOrTablet) return;
+      
+      const cards = this.carousel.querySelectorAll('.concern-card');
+      if (cards.length === 0) return;
+      
+      const cardWidth = cards[0].offsetWidth + 30; // card width + gap
+      const scrollPosition = this.carousel.scrollLeft;
+      const snapIndex = Math.round(scrollPosition / cardWidth);
+      
+      // Ensure we don't go beyond bounds
+      const maxIndex = Math.floor((this.carousel.scrollWidth - this.carousel.clientWidth) / cardWidth);
+      const finalIndex = Math.max(0, Math.min(snapIndex, maxIndex));
+      
+      // Smooth snap to nearest card
+      this.carousel.scrollTo({
+        left: finalIndex * cardWidth,
+        behavior: 'smooth'
+      });
+    }
+    
+    handleResize() {
+      if (!this.carousel) return;
+      
+      const wasMobileOrTablet = this.isMobileOrTablet;
+      this.isMobileOrTablet = window.innerWidth <= 1023;
+      
+      // Only reinitialize if device type changed
+      if (wasMobileOrTablet !== this.isMobileOrTablet) {
+        // Remove all event listeners by cloning and replacing
+        const newCarousel = this.carousel.cloneNode(true);
+        this.carousel.parentNode.replaceChild(newCarousel, this.carousel);
+        this.carousel = newCarousel;
         
-        carousel.addEventListener('mouseup', () => {
-          isDown = false;
-          carousel.style.cursor = 'grab';
-        });
+        // Reinitialize carousel
+        this.initCarousel();
         
-        carousel.addEventListener('mousemove', (e) => {
-          if (!isDown) return;
-          e.preventDefault();
-          const x = e.pageX - carousel.offsetLeft;
-          const walk = (x - startX) * 2;
-          carousel.scrollLeft = scrollLeft - walk;
-        });
-        
-        // Touch events for mobile
-        carousel.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].pageX - carousel.offsetLeft;
-          scrollLeft = carousel.scrollLeft;
-        });
-        
-        carousel.addEventListener('touchmove', (e) => {
-          if (!startX) return;
-          const x = e.touches[0].pageX - carousel.offsetLeft;
-          const walk = (x - startX) * 2;
-          carousel.scrollLeft = scrollLeft - walk;
+        // Re-bind book button events
+        document.querySelectorAll('.book-btn').forEach(button => {
+          button.addEventListener('click', (e) => {
+            if (!e.target.closest('.book-btn')) return;
+            
+            const btn = e.target.closest('.book-btn');
+            const concern = btn.dataset.concern;
+            const service = btn.dataset.service;
+            const price = btn.dataset.price;
+            
+            if (concern && service && price) {
+              this.openBookingModal(concern, service, price);
+            }
+          });
         });
       }
-      
-      // Add smooth scrolling for better mobile experience
-      carousel.style.scrollBehavior = 'smooth';
     }
     
     setupTimeSlots() {
