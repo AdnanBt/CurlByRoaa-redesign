@@ -37,62 +37,24 @@
     font-weight: 400;
   }
   
-  /* Carousel Container */
+  /* Carousel Container - NO ARROW PADDING */
   .concern-carousel-container {
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 60px;
+    padding: 0 20px;
   }
   
   @media (max-width: 768px) {
     .concern-carousel-container {
-      padding: 0 40px;
+      padding: 0 15px;
     }
   }
   
   @media (max-width: 480px) {
     .concern-carousel-container {
-      padding: 0 20px;
+      padding: 0 10px;
     }
-  }
-  
-  /* Carousel Navigation */
-  .carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background: white;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    z-index: 10;
-    color: #2D2D2D;
-  }
-  
-  .carousel-nav:hover {
-    background: var(--color-accent);
-    color: white;
-    transform: translateY(-50%) scale(1.1);
-  }
-  
-  .carousel-nav.prev {
-    left: 0;
-  }
-  
-  .carousel-nav.next {
-    right: 0;
-  }
-  
-  .carousel-nav.hidden {
-    display: none;
   }
   
   /* Carousel */
@@ -927,11 +889,6 @@
     .booking-actions {
       flex-direction: column;
     }
-    
-    /* Hide navigation arrows on mobile */
-    .carousel-nav {
-      display: none;
-    }
   }
   
   @media (max-width: 480px) {
@@ -968,6 +925,11 @@
       transform: none;
     }
   }
+  
+  /* ARROW REMOVAL - SAFE METHOD */
+  .concern-carousel-container .carousel-nav {
+    display: none !important;
+  }
 </style>
 
 <section class="concern-services-section">
@@ -978,9 +940,6 @@
     </div>
     
     <div class="concern-carousel-container">
-      <!-- Navigation Arrows -->
-     
-      
       <div class="concern-carousel" id="concern-carousel">
         <!-- Concern 1: Dry / Frizzy / Dull Hair -->
         <div class="concern-card">
@@ -1516,7 +1475,7 @@
           <span>For Concern:</span>
           <span id="summaryConcern">-</span>
         </div>
-        <div class="summary-item total">
+        <div class="summary-item.total">
           <span>Total:</span>
           <span id="summaryPrice">-</span>
         </div>
@@ -1555,6 +1514,7 @@
 </div>
 
 <script>
+  // Clean, simple JavaScript that WON'T break the carousel
   class ProfessionalBookingSystem {
     constructor() {
       this.modal = document.getElementById('bookingModal');
@@ -1633,10 +1593,7 @@
     
     initCarousel() {
       const carousel = document.getElementById('concern-carousel');
-      const prevBtn = document.querySelector('.carousel-nav.prev');
-      const nextBtn = document.querySelector('.carousel-nav.next');
-      
-      if (!carousel || !prevBtn || !nextBtn) return;
+      if (!carousel) return;
       
       // Original infinite animation for desktop
       if (window.innerWidth >= 1024) {
@@ -1671,48 +1628,6 @@
             carousel.style.animationPlayState = 'running';
           }, 1000);
         });
-        
-        // Hide navigation arrows for desktop infinite scroll
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-      } else {
-        // For mobile/tablet: use scroll-snap with navigation
-        const cards = document.querySelectorAll('.concern-card');
-        if (cards.length === 0) return;
-        
-        let currentSlide = 0;
-        const totalSlides = cards.length;
-        const cardWidth = cards[0].offsetWidth + 30;
-        
-        const updateCarousel = () => {
-          carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
-          prevBtn.classList.toggle('hidden', currentSlide === 0);
-          nextBtn.classList.toggle('hidden', currentSlide >= totalSlides - 1);
-        };
-        
-        // Navigation
-        prevBtn.addEventListener('click', () => {
-          if (currentSlide > 0) {
-            currentSlide--;
-            updateCarousel();
-          }
-        });
-        
-        nextBtn.addEventListener('click', () => {
-          if (currentSlide < totalSlides - 1) {
-            currentSlide++;
-            updateCarousel();
-          }
-        });
-        
-        // Initialize
-        updateCarousel();
-        
-        // Hide arrows on very small screens
-        if (window.innerWidth <= 768) {
-          prevBtn.style.display = 'none';
-          nextBtn.style.display = 'none';
-        }
       }
     }
     
@@ -2039,23 +1954,6 @@
         window.bookingSystem = bookingSystem;
         
         console.log('Professional booking system initialized successfully');
-        
-        // Test button for debugging (optional)
-        if (window.location.search.includes('debug=true')) {
-          const debugDiv = document.createElement('div');
-          debugDiv.style.position = 'fixed';
-          debugDiv.style.bottom = '10px';
-          debugDiv.style.right = '10px';
-          debugDiv.style.zIndex = '10000';
-          debugDiv.style.background = 'white';
-          debugDiv.style.padding = '10px';
-          debugDiv.style.borderRadius = '5px';
-          debugDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-          debugDiv.innerHTML = `
-            <button onclick="window.bookingSystem.openBookingModal('Test Concern', 'Test Service', '99')" style="padding: 5px 10px; background: #E8C4B8; border: none; border-radius: 3px; cursor: pointer;">Test Booking</button>
-          `;
-          document.body.appendChild(debugDiv);
-        }
         
       } catch (error) {
         console.error('Error initializing booking system:', error);
