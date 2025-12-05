@@ -57,14 +57,18 @@
     }
   }
   
-  /* DESKTOP: Carousel Layout */
+  /* CAROUSEL FOR ALL DEVICES */
+  .concern-carousel {
+    display: flex;
+    gap: 30px;
+    padding: 20px 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-x: visible;
+  }
+  
+  /* Desktop: Infinite Animation */
   @media (min-width: 1024px) {
     .concern-carousel {
-      display: flex;
-      gap: 30px;
-      padding: 20px 0;
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow-x: visible;
       width: max-content;
       animation: concernCarouselScroll 60s linear infinite;
     }
@@ -74,39 +78,32 @@
     }
   }
   
-  /* TABLET & MOBILE: Vertical Stack Layout */
+  /* Mobile & Tablet: Touch Scroll */
   @media (max-width: 1023px) {
     .concern-carousel {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
-      padding: 20px 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      padding-bottom: 30px;
       width: 100%;
       animation: none !important;
-    }
-    
-    /* Remove scroll-snap on mobile */
-    .concern-carousel {
-      overflow-x: visible;
-      scroll-snap-type: none;
-      scroll-behavior: auto;
     }
     
     .concern-carousel::-webkit-scrollbar {
       display: none;
     }
-  }
-  
-  /* TABLET: 2 columns layout */
-  @media (min-width: 769px) and (max-width: 1023px) {
+    
+    /* Hide scrollbar for Firefox */
     .concern-carousel {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 25px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
   }
   
-  /* PROFESSIONAL CONCERN CARD DESIGN - FIXED FOR ALL DEVICES */
+  /* PROFESSIONAL CONCERN CARD DESIGN */
   .concern-card {
+    flex: 0 0 380px;
     background: white;
     border-radius: 24px;
     overflow: hidden;
@@ -114,32 +111,30 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     border: 1px solid rgba(232, 196, 184, 0.15);
+    scroll-snap-align: start;
   }
   
-  /* Desktop specific */
-  @media (min-width: 1024px) {
+  /* Tablet Card Size */
+  @media (max-width: 1023px) and (min-width: 769px) {
     .concern-card {
-      flex: 0 0 380px;
+      flex: 0 0 calc(50vw - 60px);
+      min-width: 320px;
     }
   }
   
-  /* Tablet specific */
-  @media (min-width: 769px) and (max-width: 1023px) {
-    .concern-card {
-      width: 100%;
-      margin: 0;
-    }
-  }
-  
-  /* Mobile specific */
+  /* Mobile Card Size */
   @media (max-width: 768px) {
     .concern-card {
-      width: 100%;
-      margin: 0 0 30px 0;
+      flex: 0 0 calc(85vw - 40px);
+      min-width: 280px;
     }
-    
-    .concern-card:last-child {
-      margin-bottom: 0;
+  }
+  
+  /* Small Mobile Card Size */
+  @media (max-width: 480px) {
+    .concern-card {
+      flex: 0 0 calc(90vw - 30px);
+      min-width: 260px;
     }
   }
   
@@ -1112,7 +1107,10 @@
   }
   
   /* ARROW REMOVAL - SAFE METHOD */
-  .concern-carousel-container .carousel-nav {
+  .concern-carousel-container .carousel-nav,
+  .concern-carousel-container button[class*="arrow"],
+  .concern-carousel-container button[class*="prev"],
+  .concern-carousel-container button[class*="next"] {
     display: none !important;
   }
   
@@ -1631,14 +1629,13 @@
 
 <!-- Booking Modal (same as before) -->
 <div class="booking-overlay" id="bookingOverlay"></div>
-
 <div class="booking-modal" id="bookingModal">
   <!-- Keep the exact same booking modal HTML from your previous code -->
   <!-- ... (booking modal HTML remains exactly the same) ... -->
 </div>
 
 <script>
-  // Clean, simple JavaScript that WON'T break the carousel
+  // Enhanced JavaScript for better carousel on all devices
   class ProfessionalBookingSystem {
     constructor() {
       this.modal = document.getElementById('bookingModal');
@@ -1719,7 +1716,7 @@
       const carousel = document.getElementById('concern-carousel');
       if (!carousel) return;
       
-      // Only enable infinite animation for desktop
+      // Enable infinite animation only for desktop
       if (window.innerWidth >= 1024) {
         // Pause animation on hover
         carousel.addEventListener('mouseenter', () => {
@@ -1752,7 +1749,53 @@
             carousel.style.animationPlayState = 'running';
           }, 1000);
         });
+      } else {
+        // For mobile/tablet: enhance touch scrolling
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        carousel.addEventListener('mousedown', (e) => {
+          isDown = true;
+          startX = e.pageX - carousel.offsetLeft;
+          scrollLeft = carousel.scrollLeft;
+          carousel.style.cursor = 'grabbing';
+        });
+        
+        carousel.addEventListener('mouseleave', () => {
+          isDown = false;
+          carousel.style.cursor = 'grab';
+        });
+        
+        carousel.addEventListener('mouseup', () => {
+          isDown = false;
+          carousel.style.cursor = 'grab';
+        });
+        
+        carousel.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - carousel.offsetLeft;
+          const walk = (x - startX) * 2;
+          carousel.scrollLeft = scrollLeft - walk;
+        });
+        
+        // Touch events for mobile
+        carousel.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].pageX - carousel.offsetLeft;
+          scrollLeft = carousel.scrollLeft;
+        });
+        
+        carousel.addEventListener('touchmove', (e) => {
+          if (!startX) return;
+          const x = e.touches[0].pageX - carousel.offsetLeft;
+          const walk = (x - startX) * 2;
+          carousel.scrollLeft = scrollLeft - walk;
+        });
       }
+      
+      // Add smooth scrolling for better mobile experience
+      carousel.style.scrollBehavior = 'smooth';
     }
     
     setupTimeSlots() {
