@@ -17,7 +17,6 @@
       --primary-color: #E8C4B8;
       --text-dark: #2D2D2D;
       --text-light: #666666;
-      --text-black: #000000;
       --white: #FFFFFF;
       --gray-light: #f9f9f9;
       --sidebar-width: 320px;
@@ -36,8 +35,11 @@
       padding: 10px 0;
       text-align: center;
       font-size: 14px;
-      position: relative;
-      z-index: 1002;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1003;
     }
 
     /* Main Header */
@@ -49,7 +51,7 @@
       height: var(--header-height);
       background: var(--white);
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      z-index: 1001;
+      z-index: 1002;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
 
@@ -77,9 +79,6 @@
 
     /* Logo */
     .logo {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
       z-index: 1002;
     }
 
@@ -90,14 +89,14 @@
       object-fit: contain;
     }
 
-    /* Sidebar Toggle Button */
+    /* Sidebar Toggle Button - HIDDEN ON DESKTOP */
     .sidebar-toggle {
+      display: none;
       background: none;
       border: none;
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
@@ -110,6 +109,132 @@
     .sidebar-toggle:hover {
       background: rgba(232, 196, 184, 0.1);
       color: var(--primary-color);
+    }
+
+    /* ==================== */
+    /* DESKTOP NAVIGATION (1025px and up) */
+    /* ==================== */
+    .nav-main {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 8px 0;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .nav-link.has-dropdown::after {
+      content: '›';
+      font-size: 16px;
+      transform: rotate(90deg);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-item:hover .nav-link.has-dropdown::after {
+      transform: rotate(-90deg);
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    /* Desktop Mega Dropdown */
+    .mega-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      width: 800px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 1001;
+      padding: 40px;
+      pointer-events: none;
+    }
+
+    .nav-item:hover .mega-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Left-side dropdown (Shop) */
+    .nav-item:first-child .mega-dropdown {
+      left: 0;
+      transform: translateX(0) translateY(12px);
+    }
+
+    .nav-item:first-child:hover .mega-dropdown {
+      transform: translateX(0) translateY(0);
+    }
+
+    /* Right-side dropdowns */
+    .nav-item:nth-last-child(-n+2) .mega-dropdown {
+      left: auto;
+      right: 0;
+      transform: translateX(0) translateY(12px);
+    }
+
+    .nav-item:nth-last-child(-n+2):hover .mega-dropdown {
+      transform: translateX(0) translateY(0);
+    }
+
+    /* Dropdown Content */
+    .dropdown-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .dropdown-column h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dropdown-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dropdown-link {
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      padding: 8px 0;
+      border-bottom: 1px solid transparent;
+      display: block;
+    }
+
+    .dropdown-link:hover {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+      transform: translateX(8px);
     }
 
     /* Header Actions */
@@ -154,30 +279,59 @@
       right: -2px;
     }
 
-    /* Hide desktop nav on mobile */
-    .nav-main {
-      display: none;
+    /* ==================== */
+    /* TABLET & MOBILE STYLES (1024px and below) */
+    /* ==================== */
+    @media (max-width: 1024px) {
+      /* Hide desktop navigation */
+      .nav-main {
+        display: none !important;
+      }
+      
+      /* Show hamburger menu */
+      .sidebar-toggle {
+        display: flex;
+      }
+      
+      /* Adjust logo position */
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
     }
 
-    @media (min-width: 1025px) {
-      .nav-main {
-        display: flex;
-        gap: 40px;
-        align-items: center;
+    /* Mobile specific */
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 70px;
       }
       
-      .logo {
-        position: static;
-        transform: none;
+      .logo img {
+        height: 35px;
       }
       
-      .header-inner {
-        justify-content: space-between;
+      .header-action {
+        width: 36px;
+        height: 36px;
+      }
+      
+      .announcement-bar {
+        position: relative;
+        top: auto;
+      }
+      
+      body.has-announcement .header {
+        top: 0;
+      }
+      
+      body.has-announcement {
+        padding-top: var(--header-height);
       }
     }
 
     /* ==================== */
-    /* UNIFIED SIDEBAR STYLES */
+    /* SIDEBAR FOR TABLET/MOBILE */
     /* ==================== */
     
     .unified-sidebar {
@@ -468,20 +622,19 @@
       border-radius: 4px;
     }
 
+    /* Hide sidebar on desktop */
+    @media (min-width: 1025px) {
+      .unified-sidebar,
+      .unified-sidebar-overlay {
+        display: none !important;
+      }
+    }
+
     /* Mobile adjustments */
     @media (max-width: 767px) {
       .unified-sidebar {
         width: 85%;
         max-width: 320px;
-      }
-      
-      .logo img {
-        height: 35px;
-      }
-      
-      .header-action {
-        width: 36px;
-        height: 36px;
       }
     }
   </style>
@@ -498,7 +651,7 @@
   <header class="header" id="main-header">
     <div class="header-container">
       <div class="header-inner">
-        <!-- Sidebar Toggle Button -->
+        <!-- Sidebar Toggle Button (Visible only on Tablet/Mobile) -->
         <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open sidebar menu">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
@@ -518,9 +671,140 @@
           </a>
         </div>
 
-        <!-- Desktop Navigation (optional) -->
+        <!-- Desktop Navigation (Visible only on Desktop) -->
         <nav class="nav-main" id="main-nav">
-          <!-- Add desktop navigation items here if needed -->
+          <!-- Shop Dropdown -->
+          <div class="nav-item">
+            <a href="{{ routes.all_products_collection_url }}" class="nav-link has-dropdown">Shop</a>
+            <div class="mega-dropdown">
+              <div class="dropdown-grid">
+                <div class="dropdown-column">
+                  <h4>By Product Type</h4>
+                  <div class="dropdown-links">
+                    {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
+                    {%- for handle in collections_to_show -%}
+                      {%- assign collection = collections[handle] -%}
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="dropdown-link">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    {%- endfor -%}
+                  </div>
+                </div>
+                <div class="dropdown-column">
+                  <h4>By Curl Type</h4>
+                  <div class="dropdown-links">
+                    {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
+                    {%- for handle in curl_collections -%}
+                      {%- assign collection = collections[handle] -%}
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="dropdown-link">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hair Quiz -->
+          <div class="nav-item">
+            <a href="#hair-quiz" class="nav-link has-dropdown">Hair Quiz</a>
+            <div class="mega-dropdown">
+              <div class="dropdown-grid">
+                <div class="dropdown-column">
+                  <h4>Find Your Routine</h4>
+                  <div class="dropdown-links">
+                    <a href="#hair-quiz" class="dropdown-link">Start Hair Quiz</a>
+                    <a href="#curl-pattern" class="dropdown-link">Curl Pattern Analysis</a>
+                    <a href="#hair-concerns" class="dropdown-link">Hair Concerns Assessment</a>
+                    <a href="#routine-builder" class="dropdown-link">Custom Routine Builder</a>
+                  </div>
+                </div>
+                <div class="dropdown-column">
+                  <h4>Quick Guides</h4>
+                  <div class="dropdown-links">
+                    <a href="#curl-type-guide" class="dropdown-link">Curl Type Identification</a>
+                    <a href="#porosity-test" class="dropdown-link">Hair Porosity Test</a>
+                    <a href="#density-guide" class="dropdown-link">Hair Density Guide</a>
+                    <a href="#ingredients-guide" class="dropdown-link">Key Ingredients</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Services by Concern -->
+          <div class="nav-item">
+            <a href="#services-by-concern" class="nav-link">Services by Concern</a>
+          </div>
+
+          <!-- Our Story -->
+          <div class="nav-item">
+            <a href="{{ pages['about'].url | default: '/pages/about' }}" class="nav-link has-dropdown">Our Story</a>
+            <div class="mega-dropdown">
+              <div class="dropdown-grid">
+                <div class="dropdown-column">
+                  <h4>About Us</h4>
+                  <div class="dropdown-links">
+                    <a href="{{ pages['our-mission'].url | default: '/pages/our-mission' }}" class="dropdown-link">Our Mission</a>
+                    <a href="{{ pages['our-story'].url | default: '/pages/our-story' }}" class="dropdown-link">Brand Story</a>
+                    <a href="{{ pages['ingredients'].url | default: '/pages/ingredients' }}" class="dropdown-link">Ingredient Philosophy</a>
+                    <a href="{{ pages['sustainability'].url | default: '/pages/sustainability' }}" class="dropdown-link">Sustainability</a>
+                  </div>
+                </div>
+                <div class="dropdown-column">
+                  <h4>Community</h4>
+                  <div class="dropdown-links">
+                    <a href="{{ pages['curl-community'].url | default: '/pages/curl-community' }}" class="dropdown-link">Curl Community</a>
+                    <a href="{{ pages['education'].url | default: '/pages/education' }}" class="dropdown-link">Hair Education</a>
+                    <a href="{{ pages['events'].url | default: '/pages/events' }}" class="dropdown-link">Events & Workshops</a>
+                    <a href="{{ pages['testimonials'].url | default: '/pages/testimonials' }}" class="dropdown-link">Success Stories</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guides -->
+          <div class="nav-item">
+            <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="nav-link has-dropdown">Guides</a>
+            <div class="mega-dropdown">
+              <div class="dropdown-grid">
+                <div class="dropdown-column">
+                  <h4>Hair Care Guides</h4>
+                  <div class="dropdown-links">
+                    {%- if blogs.guides.articles.size > 0 -%}
+                      {%- for article in blogs.guides.articles limit: 4 -%}
+                        <a href="{{ article.url }}" class="dropdown-link">{{ article.title }}</a>
+                      {%- endfor -%}
+                    {%- else -%}
+                      <a href="{{ routes.blog_url }}" class="dropdown-link">Wash Day Routine</a>
+                      <a href="{{ routes.blog_url }}" class="dropdown-link">Styling Techniques</a>
+                      <a href="{{ routes.blog_url }}" class="dropdown-link">Night Time Routine</a>
+                      <a href="{{ routes.blog_url }}" class="dropdown-link">Seasonal Hair Care</a>
+                    {%- endif -%}
+                  </div>
+                </div>
+                <div class="dropdown-column">
+                  <h4>Expert Advice</h4>
+                  <div class="dropdown-links">
+                    <a href="{{ routes.blog_url }}/tagged/common-mistakes" class="dropdown-link">Common Mistakes</a>
+                    <a href="{{ routes.blog_url }}/tagged/application" class="dropdown-link">Product Application</a>
+                    <a href="{{ routes.blog_url }}/tagged/troubleshooting" class="dropdown-link">Troubleshooting Guide</a>
+                    <a href="{{ routes.blog_url }}/tagged/pro-tips" class="dropdown-link">Professional Tips</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </nav>
 
         <!-- Header Actions -->
@@ -546,7 +830,7 @@
     </div>
   </header>
 
-  <!-- Unified Sidebar -->
+  <!-- Sidebar for Tablet/Mobile -->
   <aside class="unified-sidebar" id="unifiedSidebar" aria-hidden="true" role="dialog" aria-label="Main navigation menu">
     <div class="unified-sidebar__inner">
       <!-- Header -->
@@ -709,20 +993,8 @@
   <div class="unified-sidebar-overlay" id="unifiedSidebarOverlay"></div>
 
   <script>
-  // Simple, robust sidebar functionality
   document.addEventListener('DOMContentLoaded', function() {
     console.log('Header script loaded');
-    
-    const sidebar = document.getElementById('unifiedSidebar');
-    const overlay = document.getElementById('unifiedSidebarOverlay');
-    const toggleBtn = document.getElementById('sidebarToggle');
-    const closeBtn = document.getElementById('unifiedSidebarClose');
-    
-    // Check if elements exist
-    if (!sidebar || !toggleBtn) {
-      console.error('Sidebar elements not found');
-      return;
-    }
     
     // Check announcement bar
     const announcementBar = document.querySelector('.announcement-bar');
@@ -730,53 +1002,114 @@
       document.body.classList.add('has-announcement');
     }
     
-    // Toggle sidebar
-    function toggleSidebar() {
-      console.log('Toggle sidebar called');
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-      document.body.classList.toggle('sidebar-open');
-    }
+    // ====================
+    // TABLET/MOBILE SIDEBAR
+    // ====================
+    const sidebar = document.getElementById('unifiedSidebar');
+    const overlay = document.getElementById('unifiedSidebarOverlay');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const closeBtn = document.getElementById('unifiedSidebarClose');
     
-    // Close sidebar
-    function closeSidebar() {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.classList.remove('sidebar-open');
-    }
-    
-    // Event listeners
-    toggleBtn.addEventListener('click', toggleSidebar);
-    
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeSidebar);
-    }
-    
-    if (overlay) {
-      overlay.addEventListener('click', closeSidebar);
-    }
-    
-    // Close with Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-        closeSidebar();
+    // Only initialize if elements exist (mobile/tablet)
+    if (sidebar && toggleBtn) {
+      // Toggle sidebar
+      function toggleSidebar() {
+        console.log('Toggle sidebar called');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.classList.toggle('sidebar-open');
       }
-    });
-    
-    // Handle submenu toggles
-    const submenuToggles = document.querySelectorAll('[data-toggle="submenu"]');
-    submenuToggles.forEach(toggle => {
-      toggle.addEventListener('click', function() {
-        const targetId = this.getAttribute('data-target');
-        const submenu = document.getElementById(targetId);
-        if (submenu) {
-          this.classList.toggle('expanded');
-          submenu.classList.toggle('active');
+      
+      // Close sidebar
+      function closeSidebar() {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+      }
+      
+      // Event listeners for mobile sidebar
+      toggleBtn.addEventListener('click', toggleSidebar);
+      
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeSidebar);
+      }
+      
+      if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+      }
+      
+      // Close with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+          closeSidebar();
         }
       });
-    });
+      
+      // Handle submenu toggles
+      const submenuToggles = document.querySelectorAll('[data-toggle="submenu"]');
+      submenuToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const submenu = document.getElementById(targetId);
+          if (submenu) {
+            this.classList.toggle('expanded');
+            submenu.classList.toggle('active');
+          }
+        });
+      });
+    }
     
-    // Mark active link
+    // ====================
+    // DESKTOP DROPDOWNS
+    // ====================
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    if (navItems.length > 0) {
+      navItems.forEach(item => {
+        const dropdown = item.querySelector('.mega-dropdown');
+        if (!dropdown) return;
+        
+        item.addEventListener('mouseenter', function() {
+          this.classList.add('hover');
+          dropdown.style.opacity = '1';
+          dropdown.style.visibility = 'visible';
+          dropdown.style.pointerEvents = 'auto';
+          
+          // Position based on which dropdown it is
+          if (item === navItems[0]) {
+            dropdown.style.transform = 'translateX(0) translateY(0)';
+          } else if (item === navItems[navItems.length - 1] || 
+                     item === navItems[navItems.length - 2]) {
+            dropdown.style.transform = 'translateX(0) translateY(0)';
+          } else {
+            dropdown.style.transform = 'translateX(-50%) translateY(0)';
+          }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+          this.classList.remove('hover');
+          dropdown.style.opacity = '0';
+          dropdown.style.pointerEvents = 'none';
+          
+          if (item === navItems[0]) {
+            dropdown.style.transform = 'translateX(0) translateY(12px)';
+          } else if (item === navItems[navItems.length - 1] || 
+                     item === navItems[navItems.length - 2]) {
+            dropdown.style.transform = 'translateX(0) translateY(12px)';
+          } else {
+            dropdown.style.transform = 'translateX(-50%) translateY(12px)';
+          }
+          
+          setTimeout(() => {
+            if (!this.classList.contains('hover')) {
+              dropdown.style.visibility = 'hidden';
+            }
+          }, 300);
+        });
+      });
+    }
+    
+    // Mark active link in sidebar
     function markActiveLink() {
       const currentUrl = window.location.pathname;
       const links = document.querySelectorAll('.unified-nav__link, .unified-nav__sublink');
@@ -807,8 +1140,21 @@
     
     updateCartCount();
     
-    // For demo purposes, log that everything is ready
-    console.log('Sidebar initialized successfully');
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        // Close sidebar if resizing to desktop
+        if (window.innerWidth >= 1025 && sidebar && sidebar.classList.contains('active')) {
+          sidebar.classList.remove('active');
+          if (overlay) overlay.classList.remove('active');
+          document.body.classList.remove('sidebar-open');
+        }
+      }, 250);
+    });
+    
+    console.log('Header initialized successfully');
   });
   </script>
 
