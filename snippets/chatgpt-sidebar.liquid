@@ -73,3 +73,26 @@ Usage: include this in theme.liquid or header.liquid:
 
 <!-- Overlay for mobile -->
 <div id="chatgptSidebarOverlay" class="chatgpt-sidebar-overlay" aria-hidden="true"></div>
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebarPanel");
+  const openBtn = document.getElementById("sidebarToggle");
+  const closeBtn = document.getElementById("sidebarClose");
+
+  openBtn.addEventListener("click", () => {
+    sidebar.classList.remove("-translate-x-full");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    sidebar.classList.add("-translate-x-full");
+  });
+
+  // Mobile dropdowns inside sidebar
+  document.querySelectorAll("[data-sidebar-dropdown]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const submenu = btn.nextElementSibling;
+      submenu.classList.toggle("hidden");
+    });
+  });
+});
+</script>
