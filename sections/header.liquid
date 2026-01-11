@@ -16,8 +16,6 @@
       --text-dark: #2D2D2D;
       --white: #FFFFFF;
       --sidebar-width: 280px;
-      --sidebar-bg: #FFFFFF;
-      --sidebar-border: rgba(0, 0, 0, 0.08);
     }
 
     /* ==================== */
@@ -25,291 +23,39 @@
     /* ==================== */
     body {
       margin: 0;
+      padding-top: var(--header-height);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
 
     /* ==================== */
-    /* DESKTOP SIDEBAR ONLY (1025px and up) - CHATGPT STYLE */
+    /* DESKTOP SIDEBAR ONLY (1025px and up) */
     /* ==================== */
     @media (min-width: 1025px) {
-      /* Hide mobile elements on desktop */
-      .mobile-header,
-      .mobile-sidebar,
-      .mobile-sidebar-overlay {
-        display: none !important;
-      }
-      
-      /* Body adjustment for desktop sidebar */
-      body {
-        margin-left: var(--sidebar-width);
-        padding-top: 0 !important;
-        transition: margin-left 0.3s ease;
-      }
-      
-      /* Desktop sidebar - ChatGPT style */
       .desktop-sidebar {
         position: fixed;
         top: 0;
         left: 0;
         width: var(--sidebar-width);
         height: 100vh;
-        background: var(--sidebar-bg);
+        background: var(--white);
         z-index: 1000;
-        border-right: 1px solid var(--sidebar-border);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+        border-right: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
       }
       
-      /* Sidebar Header */
-      .sidebar-header {
-        padding: 24px 20px;
-        border-bottom: 1px solid var(--sidebar-border);
-        flex-shrink: 0;
+      body {
+        margin-left: var(--sidebar-width);
+        padding-top: 0 !important;
       }
-
-      .sidebar-logo {
-        display: block;
+      
+      .mobile-header {
+        display: none !important;
       }
-
-      .sidebar-logo img {
-        height: 32px;
-        width: auto;
-        max-width: 140px;
-        object-fit: contain;
-      }
-
-      /* Sidebar Content - ChatGPT style */
-      .sidebar-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px 0;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
-      }
-
-      /* Sidebar Navigation */
-      .sidebar-nav {
-        padding: 0;
-      }
-
-      .sidebar-section {
-        margin-bottom: 24px;
-      }
-
-      .sidebar-section-title {
-        padding: 0 20px 8px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #666;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 8px;
-      }
-
-      .sidebar-menu {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .sidebar-menu-item {
-        margin: 0;
-      }
-
-      /* ChatGPT-style links */
-      .sidebar-menu-link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 20px;
-        text-decoration: none;
-        color: var(--text-dark);
-        font-size: 14px;
-        font-weight: 400;
-        transition: all 0.2s ease;
-        cursor: pointer;
-        background: none;
-        border: none;
-        width: 100%;
-        text-align: left;
-        font-family: inherit;
-      }
-
-      .sidebar-menu-link:hover {
-        background: rgba(0, 0, 0, 0.04);
-      }
-
-      .sidebar-menu-link.active {
-        background: rgba(232, 196, 184, 0.1);
-        color: var(--primary-color);
-        font-weight: 500;
-      }
-
-      .sidebar-menu-count {
-        font-size: 11px;
-        color: #666;
-        background: rgba(0, 0, 0, 0.06);
-        padding: 2px 8px;
-        border-radius: 10px;
-        min-width: 20px;
-        text-align: center;
-      }
-
-      /* Submenu - ChatGPT style */
-      .sidebar-submenu {
-        background: rgba(0, 0, 0, 0.02);
-        display: none;
-        padding: 4px 0;
-      }
-
-      .sidebar-submenu.active {
-        display: block;
-        animation: slideDown 0.2s ease;
-      }
-
-      @keyframes slideDown {
-        from {
-          opacity: 0;
-          transform: translateY(-8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .sidebar-sublink {
-        display: block;
-        padding: 8px 20px 8px 36px;
-        text-decoration: none;
-        color: #666;
-        font-size: 13px;
-        transition: all 0.2s ease;
-        position: relative;
-      }
-
-      .sidebar-sublink:hover {
-        color: var(--primary-color);
-        background: rgba(232, 196, 184, 0.05);
-      }
-
-      .sidebar-sublink::before {
-        content: "•";
-        position: absolute;
-        left: 24px;
-        color: #999;
-        font-size: 12px;
-      }
-
-      /* Sidebar Footer */
-      .sidebar-footer {
-        padding: 20px;
-        border-top: 1px solid var(--sidebar-border);
-        flex-shrink: 0;
-        background: rgba(0, 0, 0, 0.02);
-      }
-
-      .sidebar-account {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px;
-        text-decoration: none;
-        color: var(--text-dark);
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        background: var(--white);
-        border: 1px solid var(--sidebar-border);
-      }
-
-      .sidebar-account:hover {
-        background: rgba(232, 196, 184, 0.1);
-        border-color: var(--primary-color);
-      }
-
-      .account-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, var(--primary-color), #D4A59A);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        flex-shrink: 0;
-      }
-
-      .account-info {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .account-name {
-        font-size: 14px;
-        font-weight: 500;
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .account-email {
-        font-size: 12px;
-        color: #666;
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      /* Cart Summary */
-      .cart-summary {
-        margin-top: 12px;
-        padding: 12px;
-        background: var(--white);
-        border-radius: 8px;
-        border: 1px solid var(--sidebar-border);
-      }
-
-      .cart-link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        text-decoration: none;
-        color: var(--text-dark);
-        font-weight: 500;
-      }
-
-      .cart-count {
-        background: var(--primary-color);
-        color: white;
-        border-radius: 12px;
-        padding: 4px 10px;
-        font-size: 12px;
-        font-weight: 600;
-        min-width: 60px;
-        text-align: center;
-      }
-
-      /* Scrollbar */
-      .sidebar-content::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .sidebar-content::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      .sidebar-content::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 3px;
-      }
-
-      .sidebar-content::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.2);
+      
+      .mobile-sidebar,
+      .mobile-sidebar-overlay {
+        display: none !important;
       }
     }
 
@@ -317,18 +63,16 @@
     /* MOBILE/TABLET HEADER (1024px and below) */
     /* ==================== */
     @media (max-width: 1024px) {
-      /* Hide desktop sidebar on mobile */
       .desktop-sidebar {
         display: none !important;
       }
       
-      /* Reset body for mobile */
       body {
         margin-left: 0 !important;
         padding-top: var(--header-height) !important;
       }
       
-      /* Mobile Header */
+      /* Mobile Header - SIMPLE & WORKING */
       .mobile-header {
         position: fixed;
         top: 0;
@@ -338,13 +82,15 @@
         background: var(--white);
         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         z-index: 1000;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
       }
 
       .header-container {
         max-width: 100%;
         margin: 0 auto;
-        padding: 0 16px;
+        padding: 0 20px;
         height: 100%;
       }
 
@@ -364,40 +110,34 @@
       }
 
       .logo img {
-        height: 32px;
+        height: 35px;
         width: auto;
         max-width: 120px;
         object-fit: contain;
       }
 
-      /* Sidebar Toggle Button */
+      /* Hamburger Menu Button - VISIBLE */
       .sidebar-toggle {
         background: none;
         border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
+        width: 44px;
+        height: 44px;
         display: flex !important;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         color: var(--text-dark);
-        transition: all 0.2s ease;
         padding: 0;
-        position: relative;
         z-index: 1002;
-      }
-
-      .sidebar-toggle:hover {
-        background: rgba(232, 196, 184, 0.1);
+        visibility: visible !important;
+        opacity: 1 !important;
       }
 
       /* Header Actions */
       .header-actions {
         display: flex;
         align-items: center;
-        gap: 12px;
-        position: relative;
+        gap: 16px;
         z-index: 1002;
       }
 
@@ -405,17 +145,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
+        width: 44px;
+        height: 44px;
         text-decoration: none;
         color: var(--text-dark);
-        transition: all 0.2s ease;
         position: relative;
-      }
-
-      .header-action:hover {
-        background: rgba(232, 196, 184, 0.1);
       }
 
       .cart-count {
@@ -434,7 +168,7 @@
         right: -2px;
       }
       
-      /* Mobile Sidebar */
+      /* Mobile Sidebar - SIMPLE & WORKING */
       .mobile-sidebar {
         position: fixed;
         top: 0;
@@ -442,13 +176,12 @@
         width: 85%;
         max-width: 320px;
         height: 100vh;
-        background: var(--sidebar-bg);
+        background: var(--white);
         z-index: 9999;
-        transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition: left 0.3s ease;
         overflow-y: auto;
         box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
+        visibility: visible !important;
       }
 
       .mobile-sidebar.active {
@@ -467,7 +200,6 @@
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
-        backdrop-filter: blur(2px);
       }
 
       .mobile-sidebar-overlay.active {
@@ -475,77 +207,141 @@
         visibility: visible;
       }
       
-      /* Body lock when mobile sidebar is open */
+      /* Body lock when sidebar is open */
       body.mobile-sidebar-open {
         overflow: hidden;
       }
-      
-      /* Mobile Sidebar Content */
-      .mobile-sidebar .sidebar-header {
-        padding: 20px;
-        border-bottom: 1px solid var(--sidebar-border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-shrink: 0;
-      }
+    }
 
-      .mobile-sidebar .sidebar-logo img {
-        height: 32px;
-        width: auto;
-        max-width: 140px;
-      }
+    /* ==================== */
+    /* COMMON SIDEBAR STYLES */
+    /* ==================== */
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-      .mobile-sidebar .sidebar-close {
-        background: none;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 24px;
-        color: var(--text-dark);
-        transition: all 0.2s ease;
-        padding: 0;
-      }
+    .sidebar-logo img {
+      height: 35px;
+      width: auto;
+      max-width: 140px;
+    }
 
-      .mobile-sidebar .sidebar-close:hover {
-        background: rgba(232, 196, 184, 0.1);
-      }
+    .sidebar-close {
+      background: none;
+      border: none;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      color: var(--text-dark);
+      padding: 0;
+    }
 
-      .mobile-sidebar .sidebar-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px 0;
-      }
-      
-      /* Mobile responsive adjustments */
-      @media (max-width: 480px) {
-        :root {
-          --header-height: 60px;
-        }
-        
-        .logo img {
-          height: 28px;
-        }
-        
-        .header-action,
-        .sidebar-toggle {
-          width: 36px;
-          height: 36px;
-        }
-        
-        .header-actions {
-          gap: 8px;
-        }
-        
-        .mobile-sidebar {
-          width: 90%;
-        }
-      }
+    .sidebar-content {
+      padding: 20px 0;
+      overflow-y: auto;
+      height: calc(100vh - 140px);
+    }
+
+    .sidebar-section {
+      margin-bottom: 20px;
+    }
+
+    .sidebar-section-title {
+      padding: 0 20px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu-item {
+      margin: 0;
+    }
+
+    .sidebar-menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+
+    .sidebar-menu-link:hover,
+    .sidebar-menu-link.active {
+      background: rgba(232, 196, 184, 0.1);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+    }
+
+    .sidebar-menu-count {
+      font-size: 12px;
+      color: #666;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Submenu */
+    .sidebar-submenu {
+      background: rgba(0, 0, 0, 0.02);
+      border-left: 4px solid rgba(232, 196, 184, 0.3);
+      display: none;
+    }
+
+    .sidebar-submenu.active {
+      display: block;
+    }
+
+    .sidebar-sublink {
+      display: block;
+      padding: 10px 20px 10px 40px;
+      text-decoration: none;
+      color: #666;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-sublink:hover {
+      color: var(--primary-color);
+      background: rgba(232, 196, 184, 0.05);
+    }
+
+    /* Sidebar Footer */
+    .sidebar-footer {
+      padding: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .sidebar-account {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      text-decoration: none;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      background: rgba(0, 0, 0, 0.02);
     }
   </style>
 </head>
@@ -553,298 +349,19 @@
   <!-- DESKTOP SIDEBAR (Visible only on desktop) -->
   <aside class="desktop-sidebar">
     <div class="sidebar-header">
-      <a href="{{ routes.root_url }}" class="sidebar-logo" aria-label="{{ shop.name }}">
+      <a href="{{ routes.root_url }}" class="sidebar-logo">
         <img 
           src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
           alt="{{ shop.name }}"
           width="140"
-          height="32"
+          height="35"
           loading="eager"
         >
       </a>
     </div>
 
     <div class="sidebar-content">
-      <nav class="sidebar-nav" aria-label="Main navigation">
-        <!-- Shop Section -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Shop</div>
-          <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link" aria-label="View all products">
-                All Products
-                <span class="sidebar-menu-count">{{ collections.all.products_count | default: 0 }}</span>
-              </a>
-            </li>
-
-            <!-- Product Type Dropdown -->
-            <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-product-type" aria-expanded="false">
-                By Product Type
-                <span class="sidebar-menu-count">6</span>
-              </button>
-              <div class="sidebar-submenu" id="desktop-product-type" aria-hidden="true">
-                {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
-                {%- for handle in collections_to_show -%}
-                  {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink" aria-label="Browse {{ collection.title | default: handle | replace: '-', ' ' | capitalize }}">
-                    {%- if collection -%}
-                      {{ collection.title }}
-                    {%- else -%}
-                      {{ handle | replace: '-', ' ' | capitalize }}
-                    {%- endif -%}
-                  </a>
-                {%- endfor -%}
-              </div>
-            </li>
-
-            <!-- Curl Type Dropdown -->
-            <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-curl-type" aria-expanded="false">
-                By Curl Type
-                <span class="sidebar-menu-count">6</span>
-              </button>
-              <div class="sidebar-submenu" id="desktop-curl-type" aria-hidden="true">
-                {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
-                {%- for handle in curl_collections -%}
-                  {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink" aria-label="Browse {{ collection.title | default: handle | replace: '-', ' ' | capitalize }}">
-                    {%- if collection -%}
-                      {{ collection.title }}
-                    {%- else -%}
-                      {{ handle | replace: '-', ' ' | capitalize }}
-                    {%- endif -%}
-                  </a>
-                {%- endfor -%}
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- ==================== -->
-        <!-- DYNAMIC SECTIONS BASED ON YOUR ACTUAL FILES -->
-        <!-- ==================== -->
-        
-        <!-- Educational & Content Section -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Education & Content</div>
-          <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="#educational-content" class="sidebar-menu-link" aria-label="Educational Content">
-                Educational Content
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#quiz" class="sidebar-menu-link" aria-label="Hair Quiz">
-                Hair Quiz
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#faq" class="sidebar-menu-link" aria-label="FAQ">
-                FAQ
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#science-technology" class="sidebar-menu-link" aria-label="Science & Technology">
-                Science & Technology
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#ingredients-spotlight" class="sidebar-menu-link" aria-label="Ingredients Spotlight">
-                Ingredients Spotlight
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Products & Collections Section -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Products</div>
-          <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="#featured-products" class="sidebar-menu-link" aria-label="Featured Products">
-                Featured Products
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#featured-collections" class="sidebar-menu-link" aria-label="Featured Collections">
-                Featured Collections
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#product-benefits" class="sidebar-menu-link" aria-label="Product Benefits">
-                Product Benefits
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Services & Expert Section -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Services & Experts</div>
-          <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="#services-by-concern" class="sidebar-menu-link" aria-label="Services by Concern">
-                Services by Concern
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#expert-endorsements" class="sidebar-menu-link" aria-label="Expert Endorsements">
-                Expert Endorsements
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Trust & Community Section -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Trust & Community</div>
-          <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="#trust-indicators" class="sidebar-menu-link" aria-label="Trust Indicators">
-                Trust Indicators
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="#ugc-gallery" class="sidebar-menu-link" aria-label="User Gallery">
-                User Gallery
-              </a>
-            </li>
-            <!-- In both desktop and mobile sidebar, add this: -->
-        <li class="sidebar-menu-item">
-           <a href="#before-after" class="sidebar-menu-link" aria-label="Before & After">
-              Before & After
-              </a>
-                  </li>
-            <li class="sidebar-menu-item">
-              <a href="{{ routes.search_url }}" class="sidebar-menu-link" aria-label="Search">
-                Search
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Hero & About Section -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">About</div>
-          <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="#hero" class="sidebar-menu-link" aria-label="Hero Section">
-                Home Hero
-              </a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="{{ pages['about'].url | default: '#' }}" class="sidebar-menu-link" aria-label="Our Story">
-                Our Story
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-
-    <div class="sidebar-footer">
-      {% if customer %}
-        <a href="{{ routes.account_url }}" class="sidebar-account" aria-label="View your account">
-          <div class="account-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-            </svg>
-          </div>
-          <div class="account-info">
-            <span class="account-name">{{ customer.name | truncate: 20 }}</span>
-            <span class="account-email">{{ customer.email | truncate: 25 }}</span>
-          </div>
-        </a>
-      {% else %}
-        <a href="{{ routes.account_login_url }}" class="sidebar-account" aria-label="Sign in to your account">
-          <div class="account-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-            </svg>
-          </div>
-          <div class="account-info">
-            <span class="account-name">Sign In</span>
-            <span class="account-email">Access your account</span>
-          </div>
-        </a>
-      {% endif %}
-
-      <div class="cart-summary">
-        <a href="{{ routes.cart_url }}" class="cart-link" aria-label="View your cart">
-          <span>View Cart</span>
-          <span class="cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
-        </a>
-      </div>
-    </div>
-  </aside>
-
-  <!-- MOBILE HEADER (Visible only on mobile/tablet) -->
-  <header class="mobile-header">
-    <div class="header-container">
-      <div class="header-inner">
-        <!-- Sidebar Toggle Button -->
-        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-          </svg>
-        </button>
-
-        <!-- Logo -->
-        <div class="logo">
-          <a href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
-            <img 
-              src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
-              alt="{{ shop.name }}"
-              width="120"
-              height="32"
-              loading="eager"
-            >
-          </a>
-        </div>
-
-        <!-- Header Actions -->
-        <div class="header-actions">
-          <a href="{{ routes.search_url }}" class="header-action search-btn" aria-label="Search">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
-            </svg>
-          </a>
-          <a href="{{ routes.account_login_url }}" class="header-action account-btn" aria-label="Account">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-            </svg>
-          </a>
-          <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 a1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
-            </svg>
-            <span class="cart-count">{{ cart.item_count }}</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- MOBILE SIDEBAR (Visible only on mobile/tablet) -->
-  <aside class="mobile-sidebar" id="mobileSidebar" aria-hidden="true" aria-label="Navigation menu">
-    <div class="sidebar-header">
-      <a href="{{ routes.root_url }}" class="sidebar-logo" aria-label="{{ shop.name }}">
-        <img 
-          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
-          alt="{{ shop.name }}"
-          width="140"
-          height="32"
-          loading="eager"
-        >
-      </a>
-      <button class="sidebar-close" id="mobileSidebarClose" aria-label="Close menu" aria-expanded="false">
-        &times;
-      </button>
-    </div>
-
-    <div class="sidebar-content">
-      <nav class="sidebar-nav" aria-label="Mobile navigation">
+      <nav class="sidebar-nav">
         <!-- Shop Section -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Shop</div>
@@ -858,11 +375,11 @@
 
             <!-- Product Type Dropdown -->
             <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-product-type" aria-expanded="false">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-product-type">
                 By Product Type
                 <span class="sidebar-menu-count">6</span>
               </button>
-              <div class="sidebar-submenu" id="mobile-product-type" aria-hidden="true">
+              <div class="sidebar-submenu" id="desktop-product-type">
                 {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
                 {%- for handle in collections_to_show -%}
                   {%- assign collection = collections[handle] -%}
@@ -879,11 +396,11 @@
 
             <!-- Curl Type Dropdown -->
             <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-curl-type" aria-expanded="false">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-curl-type">
                 By Curl Type
                 <span class="sidebar-menu-count">6</span>
               </button>
-              <div class="sidebar-submenu" id="mobile-curl-type" aria-hidden="true">
+              <div class="sidebar-submenu" id="desktop-curl-type">
                 {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
                 {%- for handle in curl_collections -%}
                   {%- assign collection = collections[handle] -%}
@@ -900,10 +417,6 @@
           </ul>
         </div>
 
-        <!-- ==================== -->
-        <!-- SAME DYNAMIC SECTIONS FOR MOBILE -->
-        <!-- ==================== -->
-        
         <!-- Educational & Content Section -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Education & Content</div>
@@ -936,7 +449,7 @@
           </ul>
         </div>
 
-        <!-- Products & Collections Section -->
+        <!-- Products Section -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Products</div>
           <ul class="sidebar-menu">
@@ -957,8 +470,6 @@
             </li>
           </ul>
         </div>
-
-        
 
         <!-- Services & Expert Section -->
         <div class="sidebar-section">
@@ -991,12 +502,12 @@
                 User Gallery
               </a>
             </li>
-            <!-- In both desktop and mobile sidebar, add this: -->
-                <li class="sidebar-menu-item">
-                <a href="#before-after" class="sidebar-menu-link" aria-label="Before & After">
-                  Before & After
+            <!-- BEFORE & AFTER ADDED HERE -->
+            <li class="sidebar-menu-item">
+              <a href="#before-after" class="sidebar-menu-link">
+                Before & After
               </a>
-             </li>
+            </li>
             <li class="sidebar-menu-item">
               <a href="{{ routes.search_url }}" class="sidebar-menu-link">
                 Search
@@ -1027,123 +538,383 @@
     <div class="sidebar-footer">
       {% if customer %}
         <a href="{{ routes.account_url }}" class="sidebar-account">
-          <div class="account-icon">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
             </svg>
           </div>
-          <div class="account-info">
-            <span class="account-name">{{ customer.name | truncate: 20 }}</span>
-            <span class="account-email">{{ customer.email | truncate: 25 }}</span>
+          <div>
+            <span style="display: block; font-size: 14px; font-weight: 600;">{{ customer.name | truncate: 20 }}</span>
+            <span style="display: block; font-size: 12px; color: #666;">{{ customer.email | truncate: 25 }}</span>
           </div>
         </a>
       {% else %}
         <a href="{{ routes.account_login_url }}" class="sidebar-account">
-          <div class="account-icon">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
             </svg>
           </div>
-          <div class="account-info">
-            <span class="account-name">Sign In</span>
-            <span class="account-email">Access your account</span>
+          <div>
+            <span style="display: block; font-size: 14px; font-weight: 600;">Sign In</span>
+            <span style="display: block; font-size: 12px; color: #666;">Access your account</span>
           </div>
         </a>
       {% endif %}
 
-      <div class="cart-summary">
-        <a href="{{ routes.cart_url }}" class="cart-link">
-          <span>View Cart</span>
-          <span class="cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
+      <!-- Cart Summary -->
+      <div style="margin-top: 16px; padding: 16px; background: rgba(232, 196, 184, 0.05); border-radius: 8px;">
+        <a href="{{ routes.cart_url }}" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text-dark);">
+          <span style="font-weight: 500;">View Cart</span>
+          <span style="background: var(--primary-color); color: white; border-radius: 12px; padding: 4px 12px; font-size: 13px; font-weight: 600;">
+            {{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}
+          </span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MOBILE HEADER (Visible only on mobile/tablet) -->
+  <header class="mobile-header">
+    <div class="header-container">
+      <div class="header-inner">
+        <!-- Hamburger Menu Button -->
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+
+        <!-- Logo -->
+        <div class="logo">
+          <a href="{{ routes.root_url }}">
+            <img 
+              src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
+              alt="{{ shop.name }}"
+              width="120"
+              height="40"
+              loading="eager"
+            >
+          </a>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <a href="{{ routes.search_url }}" class="header-action search-btn" aria-label="Search">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+            </svg>
+          </a>
+          <a href="{{ routes.account_login_url }}" class="header-action account-btn" aria-label="Account">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+            </svg>
+          </a>
+          <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 a1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+            </svg>
+            <span class="cart-count">{{ cart.item_count }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE SIDEBAR (Visible only on mobile/tablet) -->
+  <aside class="mobile-sidebar" id="mobileSidebar">
+    <div class="sidebar-header">
+      <a href="{{ routes.root_url }}" class="sidebar-logo">
+        <img 
+          src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
+          alt="{{ shop.name }}"
+          width="140"
+          height="35"
+          loading="eager"
+        >
+      </a>
+      <button class="sidebar-close" id="mobileSidebarClose" aria-label="Close menu">
+        &times;
+      </button>
+    </div>
+
+    <div class="sidebar-content">
+      <!-- SAME CONTENT AS DESKTOP SIDEBAR -->
+      <nav class="sidebar-nav">
+        <!-- Shop Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Shop</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link">
+                All Products
+                <span class="sidebar-menu-count">{{ collections.all.products_count | default: 0 }}</span>
+              </a>
+            </li>
+
+            <!-- Product Type Dropdown -->
+            <li class="sidebar-menu-item">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-product-type">
+                By Product Type
+                <span class="sidebar-menu-count">6</span>
+              </button>
+              <div class="sidebar-submenu" id="mobile-product-type">
+                {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
+                {%- for handle in collections_to_show -%}
+                  {%- assign collection = collections[handle] -%}
+                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
+                    {%- if collection -%}
+                      {{ collection.title }}
+                    {%- else -%}
+                      {{ handle | replace: '-', ' ' | capitalize }}
+                    {%- endif -%}
+                  </a>
+                {%- endfor -%}
+              </div>
+            </li>
+
+            <!-- Curl Type Dropdown -->
+            <li class="sidebar-menu-item">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-curl-type">
+                By Curl Type
+                <span class="sidebar-menu-count">6</span>
+              </button>
+              <div class="sidebar-submenu" id="mobile-curl-type">
+                {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
+                {%- for handle in curl_collections -%}
+                  {%- assign collection = collections[handle] -%}
+                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
+                    {%- if collection -%}
+                      {{ collection.title }}
+                    {%- else -%}
+                      {{ handle | replace: '-', ' ' | capitalize }}
+                    {%- endif -%}
+                  </a>
+                {%- endfor -%}
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Educational & Content Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Education & Content</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#educational-content" class="sidebar-menu-link">
+                Educational Content
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#quiz" class="sidebar-menu-link">
+                Hair Quiz
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#faq" class="sidebar-menu-link">
+                FAQ
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#science-technology" class="sidebar-menu-link">
+                Science & Technology
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#ingredients-spotlight" class="sidebar-menu-link">
+                Ingredients Spotlight
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Products Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Products</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#featured-products" class="sidebar-menu-link">
+                Featured Products
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#featured-collections" class="sidebar-menu-link">
+                Featured Collections
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#product-benefits" class="sidebar-menu-link">
+                Product Benefits
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Services & Expert Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Services & Experts</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#services-by-concern" class="sidebar-menu-link">
+                Services by Concern
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#expert-endorsements" class="sidebar-menu-link">
+                Expert Endorsements
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Trust & Community Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Trust & Community</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#trust-indicators" class="sidebar-menu-link">
+                Trust Indicators
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#ugc-gallery" class="sidebar-menu-link">
+                User Gallery
+              </a>
+            </li>
+            <!-- BEFORE & AFTER ADDED HERE -->
+            <li class="sidebar-menu-item">
+              <a href="#before-after" class="sidebar-menu-link">
+                Before & After
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.search_url }}" class="sidebar-menu-link">
+                Search
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Hero & About Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">About</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#hero" class="sidebar-menu-link">
+                Home Hero
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ pages['about'].url | default: '#' }}" class="sidebar-menu-link">
+                Our Story
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      {% if customer %}
+        <a href="{{ routes.account_url }}" class="sidebar-account">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div>
+            <span style="display: block; font-size: 14px; font-weight: 600;">{{ customer.name | truncate: 20 }}</span>
+            <span style="display: block; font-size: 12px; color: #666;">{{ customer.email | truncate: 25 }}</span>
+          </div>
+        </a>
+      {% else %}
+        <a href="{{ routes.account_login_url }}" class="sidebar-account">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div>
+            <span style="display: block; font-size: 14px; font-weight: 600;">Sign In</span>
+            <span style="display: block; font-size: 12px; color: #666;">Access your account</span>
+          </div>
+        </a>
+      {% endif %}
+
+      <!-- Cart Summary -->
+      <div style="margin-top: 16px; padding: 16px; background: rgba(232, 196, 184, 0.05); border-radius: 8px;">
+        <a href="{{ routes.cart_url }}" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text-dark);">
+          <span style="font-weight: 500;">View Cart</span>
+          <span style="background: var(--primary-color); color: white; border-radius: 12px; padding: 4px 12px; font-size: 13px; font-weight: 600;">
+            {{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}
+          </span>
         </a>
       </div>
     </div>
   </aside>
 
   <!-- Mobile Sidebar Overlay -->
-  <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" aria-hidden="true"></div>
+  <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
 
   <script>
   document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Header script loaded');
+    console.log('✅ Mobile sidebar script loaded');
     
-    const isDesktop = window.innerWidth >= 1025;
+    // Mobile elements
     const sidebarToggle = document.getElementById('sidebarToggle');
     const mobileSidebar = document.getElementById('mobileSidebar');
     const mobileSidebarClose = document.getElementById('mobileSidebarClose');
     const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
     
-    // ====================
-    // FIXED: Mobile Functionality
-    // ====================
-    if (!isDesktop && sidebarToggle && mobileSidebar) {
-      console.log('📱 Setting up mobile sidebar functionality');
+    // Check if we're on mobile/tablet
+    const isMobile = window.innerWidth <= 1024;
+    
+    if (isMobile) {
+      console.log('📱 Setting up mobile sidebar');
+      
+      // Make sure elements exist
+      if (!sidebarToggle || !mobileSidebar) {
+        console.error('❌ Mobile sidebar elements not found');
+        return;
+      }
+      
+      // Open mobile sidebar
+      function openMobileSidebar() {
+        console.log('👉 Opening sidebar');
+        mobileSidebar.classList.add('active');
+        mobileSidebarOverlay.classList.add('active');
+        document.body.classList.add('mobile-sidebar-open');
+        document.body.style.overflow = 'hidden';
+      }
+      
+      // Close mobile sidebar
+      function closeMobileSidebar() {
+        console.log('👈 Closing sidebar');
+        mobileSidebar.classList.remove('active');
+        mobileSidebarOverlay.classList.remove('active');
+        document.body.classList.remove('mobile-sidebar-open');
+        document.body.style.overflow = '';
+      }
       
       // Toggle mobile sidebar
       function toggleMobileSidebar() {
-        console.log('🔄 Toggling mobile sidebar');
-        const isOpen = mobileSidebar.classList.contains('active');
-        
-        if (isOpen) {
+        if (mobileSidebar.classList.contains('active')) {
           closeMobileSidebar();
         } else {
           openMobileSidebar();
         }
       }
       
-      // Open mobile sidebar
-      function openMobileSidebar() {
-        console.log('👉 Opening mobile sidebar');
-        mobileSidebar.classList.add('active');
-        mobileSidebar.setAttribute('aria-hidden', 'false');
-        mobileSidebarOverlay.classList.add('active');
-        mobileSidebarOverlay.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('mobile-sidebar-open');
-        sidebarToggle.setAttribute('aria-expanded', 'true');
-        
-        // Prevent body scrolling
-        document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-      }
-      
-      // Close mobile sidebar
-      function closeMobileSidebar() {
-        console.log('👈 Closing mobile sidebar');
-        mobileSidebar.classList.remove('active');
-        mobileSidebar.setAttribute('aria-hidden', 'true');
-        mobileSidebarOverlay.classList.remove('active');
-        mobileSidebarOverlay.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('mobile-sidebar-open');
-        sidebarToggle.setAttribute('aria-expanded', 'false');
-        
-        // Restore body scrolling
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-      }
-      
       // Event listeners
-      if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function(e) {
-          e.stopPropagation();
-          toggleMobileSidebar();
-        });
-      }
+      sidebarToggle.addEventListener('click', toggleMobileSidebar);
+      mobileSidebarClose.addEventListener('click', closeMobileSidebar);
+      mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
       
-      if (mobileSidebarClose) {
-        mobileSidebarClose.addEventListener('click', closeMobileSidebar);
-      }
-      
-      if (mobileSidebarOverlay) {
-        mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
-      }
-      
-      // Close sidebar when clicking links (optional)
+      // Close sidebar when clicking links
       mobileSidebar.addEventListener('click', function(e) {
         if (e.target.matches('.sidebar-menu-link[href]') || 
             e.target.matches('.sidebar-sublink[href]')) {
-          closeMobileSidebar();
+          setTimeout(closeMobileSidebar, 300);
         }
       });
       
@@ -1155,205 +926,87 @@
       });
     }
     
-    // ====================
-    // FIXED: Submenu Toggles (Works on ALL devices)
-    // ====================
-    const submenuToggles = document.querySelectorAll('[data-toggle="submenu"]');
-    submenuToggles.forEach(toggle => {
-      toggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
+              // Handle submenu toggles
+      const submenuToggles = document.querySelectorAll('[data-toggle="submenu"]');
+      submenuToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const submenu = document.getElementById(targetId);
+          
+          if (submenu) {
+            // Close all other submenus in the same section first
+            const allSubmenus = this.closest('.sidebar-section').querySelectorAll('.sidebar-submenu');
+            allSubmenus.forEach(menu => {
+              if (menu !== submenu && menu.classList.contains('active')) {
+                menu.classList.remove('active');
+              }
+            });
+            
+            // Toggle current submenu
+            submenu.classList.toggle('active');
+            
+            // Update aria-expanded attribute for accessibility
+            const isExpanded = submenu.classList.contains('active');
+            this.setAttribute('aria-expanded', isExpanded);
+          }
+        });
+      });
+      
+      // Handle window resize
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          // Close sidebar if switching from mobile to desktop
+          if (window.innerWidth > 1024 && mobileSidebar.classList.contains('active')) {
+            closeMobileSidebar();
+          }
+        }, 250);
+      });
+    }
+    
+    // Desktop submenu functionality
+    const desktopSubmenuToggles = document.querySelectorAll('.desktop-sidebar [data-toggle="submenu"]');
+    desktopSubmenuToggles.forEach(toggle => {
+      toggle.addEventListener('click', function() {
         const targetId = this.getAttribute('data-target');
         const submenu = document.getElementById(targetId);
         
         if (submenu) {
-          const isExpanded = this.getAttribute('aria-expanded') === 'true';
-          
-          // Toggle submenu visibility
           submenu.classList.toggle('active');
-          submenu.setAttribute('aria-hidden', isExpanded ? 'true' : 'false');
-          this.setAttribute('aria-expanded', !isExpanded);
-          
-          // Optional: Close other open submenus
-          if (!isExpanded) {
-            submenuToggles.forEach(otherToggle => {
-              if (otherToggle !== this) {
-                const otherTarget = otherToggle.getAttribute('data-target');
-                const otherSubmenu = document.getElementById(otherTarget);
-                if (otherSubmenu) {
-                  otherSubmenu.classList.remove('active');
-                  otherSubmenu.setAttribute('aria-hidden', 'true');
-                  otherToggle.setAttribute('aria-expanded', 'false');
-                }
-              }
-            });
-          }
+          const isExpanded = submenu.classList.contains('active');
+          this.setAttribute('aria-expanded', isExpanded);
         }
       });
     });
     
-    // ====================
-    // FIXED: Smooth Scroll to Section IDs
-    // ====================
-    function setupSectionLinks() {
-      const sectionLinks = document.querySelectorAll('a[href^="#"]');
-      
-      sectionLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          const targetId = this.getAttribute('href').substring(1);
-          if (!targetId) return;
-          
-          // Try to find the section by ID first
-          let targetElement = document.getElementById(targetId);
-          
-          // If not found by ID, try to find by data attribute
-          if (!targetElement) {
-            targetElement = document.querySelector(`[data-section="${targetId}"]`);
-          }
-          
-          // If still not found, try to find section by class
-          if (!targetElement) {
-            targetElement = document.querySelector(`.${targetId}-section`);
-          }
-          
-          if (targetElement) {
-            // Calculate position
-            const headerHeight = isDesktop ? 0 : 70;
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-            
-            // Smooth scroll
-            window.scrollTo({
-              top: targetPosition,
-              behavior: 'smooth'
-            });
-            
-            // Highlight active link
-            sectionLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Close mobile sidebar if open
-            if (!isDesktop && mobileSidebar && mobileSidebar.classList.contains('active')) {
-              mobileSidebar.classList.remove('active');
-              mobileSidebarOverlay.classList.remove('active');
-              document.body.classList.remove('mobile-sidebar-open');
-              document.body.style.overflow = '';
-              document.body.style.position = '';
-              document.body.style.width = '';
-            }
-          }
-        });
-      });
-    }
-    
-    setupSectionLinks();
-    
-    // ====================
-    // FIXED: Mark Active Links Based on Current Section
-    // ====================
-    function markActiveLinks() {
-      const sections = [
-        'educational-content',
-        'quiz',
-        'faq',
-        'science-technology',
-        'ingredients-spotlight',
-        'featured-products',
-        'featured-collections',
-        'product-benefits',
-        'services-by-concern',
-        'expert-endorsements',
-        'trust-indicators',
-        'ugc-gallery',
-        'hero'
-      ];
-      
-      const currentScroll = window.pageYOffset;
-      let activeSection = '';
-      
-      // Find which section is currently in view
-      sections.forEach(sectionId => {
-        const element = document.getElementById(sectionId) || 
-                       document.querySelector(`[data-section="${sectionId}"]`) ||
-                       document.querySelector(`.${sectionId}-section`);
-        
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom >= 100) {
-            activeSection = sectionId;
-          }
-        }
-      });
-      
-      // Mark active link
-      const links = document.querySelectorAll('.sidebar-menu-link[href^="#"]');
-      links.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === `#${activeSection}`) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
-    }
-    
-    // Update active links on scroll
-    window.addEventListener('scroll', markActiveLinks);
-    markActiveLinks(); // Initial call
-    
-    // ====================
-    // FIXED: Update Cart Count
-    // ====================
+    // Update cart count dynamically
     function updateCartCount() {
       const cartCounts = document.querySelectorAll('.cart-count');
-      const itemCount = {{ cart.item_count | default: 0 }};
-      
-      cartCounts.forEach(span => {
-        span.textContent = itemCount;
-        if (span.classList.contains('cart-count')) {
-          span.textContent = itemCount;
-        }
-      });
+      fetch('/cart.json')
+        .then(response => response.json())
+        .then(cart => {
+          const count = cart.item_count || 0;
+          cartCounts.forEach(element => {
+            element.textContent = count;
+          });
+          
+          // Update cart text in sidebars
+          const cartTexts = document.querySelectorAll('.sidebar-footer span:last-child');
+          cartTexts.forEach(element => {
+            element.textContent = `${count} item${count !== 1 ? 's' : ''}`;
+          });
+        })
+        .catch(error => {
+          console.log('Error fetching cart:', error);
+        });
     }
     
+    // Initialize cart count
     updateCartCount();
     
-    // ====================
-    // FIXED: Handle Window Resize
-    // ====================
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        const newIsDesktop = window.innerWidth >= 1025;
-        
-        // If switching to desktop, close mobile sidebar
-        if (newIsDesktop && !isDesktop && mobileSidebar) {
-          mobileSidebar.classList.remove('active');
-          if (mobileSidebarOverlay) mobileSidebarOverlay.classList.remove('active');
-          document.body.classList.remove('mobile-sidebar-open');
-          
-          // Restore body scrolling
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-        }
-      }, 250);
-    });
-    
-    console.log('✅ Header initialization complete');
-  });
-  
-  // Handle Shopify cart updates
-  document.addEventListener('cart:updated', function(event) {
-    const cartCounts = document.querySelectorAll('.cart-count');
-    const itemCount = event.detail ? event.detail.item_count : {{ cart.item_count | default: 0 }};
-    
-    cartCounts.forEach(span => {
-      span.textContent = itemCount;
-    });
+    // Optional: Listen for cart updates if using AJAX cart
+    document.addEventListener('cart:updated', updateCartCount);
   });
   </script>
 
