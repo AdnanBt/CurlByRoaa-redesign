@@ -59,7 +59,159 @@
     }
   </style>
 </head>
-
+<script>
+// UNIVERSAL CART HANDLER - WORKS FOR ALL BUTTONS
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Universal cart handler loaded');
+  
+  // Function to handle ALL add-to-cart clicks
+  function handleAddToCart(event) {
+    const element = event.target;
+    
+    // Don't interfere with working buttons
+    if (element.hasAttribute('data-handled')) return;
+    
+    // Check if this is an add-to-cart button
+    const isAddButton = 
+      element.matches('[data-add-to-cart], [href*="/cart/add"], .add-to-cart, .product-form__submit, [name="add"]') ||
+      element.closest('[data-add-to-cart], [href*="/cart/add"], .add-to-cart, .product-form__submit, [name="add"]');
+    
+    if (isAddButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      console.log('Universal handler caught add-to-cart');
+      
+      // Get product data
+      const form = element.closest('form');
+      const variantId = getVariantId(element, form);
+      const quantity = getQuantity(element, form);
+      
+      if (variantId) {
+        addToCartUniversal(variantId, quantity);
+      } else {
+        // Fallback: redirect to product page
+        const productUrl = element.closest('[data-product-url]')?.dataset.productUrl || 
+                          element.closest('a[href*="/products/"]')?.href;
+        if (productUrl) {
+          window.location.href = productUrl;
+        }
+      }
+      
+      return false;
+    }
+  }
+  
+  // Get variant ID from various sources
+  function getVariantId(element, form) {
+    // From data attribute
+    if (element.dataset.variantId) return element.dataset.variantId;
+    if (element.closest('[data-variant-id]')) return element.closest('[data-variant-id]').dataset.variantId;
+    
+    // From form input
+    if (form) {
+      const variantInput = form.querySelector('[name="id"], [name="variantId"], input[value*=""]');
+      if (variantInput) return variantInput.value;
+    }
+    
+    // From URL
+    if (element.href && element.href.includes('variant=')) {
+      const match = element.href.match(/variant=(\d+)/);
+      return match ? match[1] : null;
+    }
+    
+    return null;
+  }
+  
+  // Get quantity
+  function getQuantity(element, form) {
+    if (form) {
+      const qtyInput = form.querySelector('[name="quantity"], .quantity-input, input[type="number"]');
+      if (qtyInput && qtyInput.value) return parseInt(qtyInput.value);
+    }
+    return 1;
+  }
+  
+  // Universal add to cart function
+  function addToCartUniversal(variantId, quantity = 1) {
+    console.log('Adding to cart:', { variantId, quantity });
+    
+    // Use Shopify API if available
+    if (typeof Shopify !== 'undefined' && Shopify.routes && Shopify.routes.cart_add_url) {
+      fetch(Shopify.routes.cart_add_url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: [{ id: variantId, quantity: quantity }] })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Cart add success via Shopify:', data);
+        showCartSuccess();
+        setTimeout(() => window.location.href = '/cart', 1000);
+      })
+      .catch(err => {
+        console.error('Shopify API failed, using direct method:', err);
+        addToCartDirect(variantId, quantity);
+      });
+    } else {
+      addToCartDirect(variantId, quantity);
+    }
+  }
+  
+  // Direct method as fallback
+  function addToCartDirect(variantId, quantity) {
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: variantId, quantity: quantity }] })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log('Direct cart add success:', data);
+      showCartSuccess();
+      setTimeout(() => window.location.href = '/cart', 1000);
+    })
+    .catch(err => {
+      console.error('All cart methods failed:', err);
+      alert('Unable to add to cart. Please try again or contact support.');
+    });
+  }
+  
+  // Show success message
+  function showCartSuccess() {
+    // Create or show success message
+    let message = document.getElementById('universal-cart-message');
+    if (!message) {
+      message = document.createElement('div');
+      message.id = 'universal-cart-message';
+      message.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #E8C4B8;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 5px;
+        z-index: 99999;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      `;
+      document.body.appendChild(message);
+    }
+    message.textContent = '✓ Added to cart!';
+    message.style.display = 'block';
+    
+    setTimeout(() => {
+      message.style.display = 'none';
+    }, 3000);
+  }
+  
+  // Attach to ALL clicks
+  document.addEventListener('click', handleAddToCart, true);
+  
+  console.log('Universal cart handler attached');
+});
+</script>
 <body>
   <!-- Sidebar Overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
