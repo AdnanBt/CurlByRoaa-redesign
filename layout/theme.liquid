@@ -51,6 +51,24 @@
       main, .header-container {
         transition: margin-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
       }
+
+      /* Add these styles to your existing <style> block */
+button[data-add-to-cart],
+.add-to-cart,
+.product-form__submit,
+[name="add"],
+.cart-btn,
+.btn-cart {
+  cursor: pointer !important;
+  position: relative;
+  z-index: 5;
+}
+
+/* Book appointment buttons */
+a[href*="book"],
+button:contains("Book") {
+  cursor: pointer !important;
+}
       
       body.sidebar-desktop-visible main,
       body.sidebar-desktop-visible .header-container {
@@ -59,7 +77,35 @@
     }
   </style>
 </head>
-
+<script>
+// MINIMAL SAFE FIX
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('button, a');
+  if (!el) return;
+  
+  const text = el.textContent.toLowerCase();
+  
+  // Handle Add to Cart
+  if (text.includes('add to cart')) {
+    e.preventDefault();
+    const variantId = el.dataset.variantId || 
+                     el.closest('[data-variant-id]')?.dataset.variantId;
+    if (variantId) {
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({items: [{id: variantId, quantity: 1}]})
+      }).then(() => window.location.href = '/cart');
+    }
+  }
+  
+  // Handle Book Appointment
+  if (text.includes('book appointment')) {
+    e.preventDefault();
+    window.location.href = '/pages/book-now';
+  }
+});
+</script>
 <body>
   <!-- Sidebar Overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
