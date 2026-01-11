@@ -778,6 +778,73 @@ if (typeof Shopify === 'undefined') {
         window.sidebarInstance = sidebar;
       }, 100);
     });
+
+
+    class EmergencyCart {
+  constructor() {
+    this.cartKey = 'emergency_cart_items';
+    this.init();
+  }
+  
+  init() {
+    // Override broken add-to-cart buttons
+    document.addEventListener('click', (e) => {
+      const addBtn = e.target.closest('[data-add-to-cart], [href*="/cart/add"]');
+      if (addBtn) {
+        e.preventDefault();
+        this.addToCart(addBtn);
+      }
+    });
+  }
+  
+  addToCart(button) {
+    // Get product data from button
+    const variantId = button.dataset.variantId || this.extractVariantId(button.href);
+    const quantity = button.dataset.quantity || 1;
+    
+    if (!variantId) {
+      console.error('No variant ID found');
+      return;
+    }
+    
+    // Save to localStorage
+    this.saveToLocalStorage(variantId, quantity);
+    
+    // Show success message
+    alert('Added to cart! Redirecting...');
+    
+    // Redirect to cart
+    setTimeout(() => {
+      window.location.href = '/cart';
+    }, 500);
+  }
+  
+  saveToLocalStorage(variantId, quantity) {
+    let cart = JSON.parse(localStorage.getItem(this.cartKey) || '[]');
+    
+    // Check if item exists
+    const existing = cart.find(item => item.id == variantId);
+    if (existing) {
+      existing.quantity += parseInt(quantity);
+    } else {
+      cart.push({ id: variantId, quantity: parseInt(quantity) });
+    }
+    
+    localStorage.setItem(this.cartKey, JSON.stringify(cart));
+    console.log('Saved to emergency cart:', cart);
+  }
+  
+  extractVariantId(url) {
+    if (!url) return null;
+    const match = url.match(/variant=(\d+)/);
+    return match ? match[1] : null;
+  }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  window.emergencyCart = new EmergencyCart();
+});
   </script>
 </body>
 </html>
