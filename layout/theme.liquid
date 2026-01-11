@@ -10,30 +10,16 @@
   
   <link rel="canonical" href="{{ canonical_url }}">
   
-  {{ content_for_header }}
+  {{ content_for_header }} <!-- ONLY ONE HERE -->
   
-  <!-- Critical Content Security Policy fix for Shopify Cart -->
-{{ content_for_header }}
-
-<!-- Proper CSP for Shopify -->
-<style>
-  /* Your existing styles here */
-</style>
-
-<!-- Allow external fonts and inline styles/scripts -->
-{%- capture csp_meta -%}
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self' https://*.shopify.com https://*.shopifycdn.com;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com;
-    script-src 'self' 'unsafe-inline' https://*.shopify.com;
-    frame-src 'self' https://shop.app https://admin.shopify.com;
-    connect-src 'self' https://*.shopify.com https://*.shopifycdn.com;
-    img-src 'self' https: data: blob:;
-  ">
-{%- endcapture -%}
-{{ csp_meta | replace: '" ', '"' | replace: ' ;', ';' }}  
   {{ 'theme.css' | asset_url | stylesheet_tag }}
+  
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Google Fonts if needed -->
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"> -->
   
   <!-- Theme-check compliant preconnect -->
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
@@ -264,8 +250,6 @@
 
     {% section 'footer' %}
   </div>
-  
-  
   
   <!-- Sidebar CSS -->
   <style>
