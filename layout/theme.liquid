@@ -12,9 +12,10 @@
   
   {{ content_for_header }} <!-- ONLY ONE HERE -->
   
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  <!-- Load Shopify scripts for cart functionality -->
+  <script src="https://cdn.shopify.com/shopifycloud/shopify-common.js" defer></script>
   
- 
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
   
   <!-- Google Fonts if needed -->
   <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"> -->
@@ -56,6 +57,46 @@
       body.sidebar-desktop-visible .header-container {
         margin-left: 350px;
       }
+    }
+    
+    /* UNIVERSAL BUTTON FIXES */
+    [data-add-to-cart],
+    .add-to-cart,
+    .product-form__submit,
+    [name="add"],
+    .cart-btn,
+    .btn-cart,
+    .product-card button:not([type]),
+    .collection-item button:not([type]),
+    .grid-item button:not([type]) {
+      cursor: pointer !important;
+      position: relative;
+      z-index: 5;
+    }
+    
+    /* Book appointment buttons */
+    [href*="book"],
+    [href*="appointment"],
+    [href*="sesami"],
+    button:contains("Book"),
+    a:contains("Book") {
+      cursor: pointer !important;
+    }
+    
+    /* Ensure buttons are visible and clickable */
+    button:not(:disabled),
+    a:not(:disabled) {
+      pointer-events: auto !important;
+    }
+    
+    /* Button handler animations */
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
     }
   </style>
 </head>
@@ -544,11 +585,21 @@
   
   <!-- Sidebar JavaScript -->
   <script>
-    // PROTECT SHOPIFY OBJECT
-if (typeof Shopify === 'undefined') {
-  window.Shopify = {};
-  console.warn('Shopify object missing, created empty one');
-}
+    // CRITICAL: CREATE SHOPIFY OBJECT WITH ALL NECESSARY PROPERTIES
+    window.Shopify = window.Shopify || {
+      shop: '{{ shop.permanent_domain }}',
+      currency: {{ shop.money_format | json }},
+      locale: '{{ request.locale.iso_code }}',
+      routes: {
+        cart: '{{ routes.cart_url }}',
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_clear_url: '{{ routes.cart_clear_url }}',
+        root: '{{ routes.root_url }}'
+      }
+    };
+    console.log('Shopify object initialized:', window.Shopify.shop ? 'SUCCESS' : 'FAILED');
+    
     class SidebarMenu {
       constructor() {
         this.sidebar = document.getElementById('mainSidebar');
@@ -771,80 +822,241 @@ if (typeof Shopify === 'undefined') {
       }
     }
 
-    // Initialize sidebar
+    // UNIVERSAL BUTTON HANDLER FOR ALL ADD-TO-CART AND BOOKING BUTTONS
+    class UniversalButtonHandler {
+      constructor() {
+        this.init();
+      }
+      
+      init() {
+        console.log('UniversalButtonHandler initialized');
+        
+        // Listen to ALL clicks on page
+        document.addEventListener('click', (e) => {
+          this.handleClick(e);
+        }, true); // Use capture phase to catch everything
+        
+        // Also fix buttons that load dynamically
+        this.setupMutationObserver();
+      }
+      
+      handleClick(event) {
+        const target = event.target;
+        const element = target.closest('button, a, [data-add-to-cart], .btn, .button');
+        
+        if (!element) return;
+        
+        const text = (element.textContent || '').toLowerCase().trim();
+        
+        // 1. HANDLE ADD TO CART BUTTONS
+        if (text.includes('add to cart') || 
+            text.includes('add to bag') ||
+            element.hasAttribute('data-add-to-cart') ||
+            (element.href && element.href.includes('/cart/add'))) {
+          
+          event.preventDefault();
+          event.stopPropagation();
+          console.log('Add to cart button detected:', element.textContent.trim());
+          
+          this.handleAddToCart(element);
+          return false;
+        }
+        
+        // 2. HANDLE BOOK APPOINTMENT BUTTONS
+        if (text.includes('book') && 
+            (text.includes('appointment') || text.includes('service') || text.includes('session'))) {
+          
+          event.preventDefault();
+          event.stopPropagation();
+          console.log('Book appointment button detected:', element.textContent.trim());
+          
+          this.handleBookAppointment(element);
+          return false;
+        }
+      }
+      
+      handleAddToCart(element) {
+        // Try multiple methods to get variant ID
+        let variantId = null;
+        let quantity = 1;
+        
+        // Method 1: Data attributes
+        variantId = element.dataset.variantId || 
+                    element.closest('[data-variant-id]')?.dataset.variantId;
+        
+        // Method 2: Form input
+        if (!variantId) {
+          const form = element.closest('form');
+          if (form) {
+            const idInput = form.querySelector('[name="id"], [name="variant"]');
+            if (idInput) variantId = idInput.value;
+          }
+        }
+        
+        // Method 3: URL parameters
+        if (!variantId && element.href) {
+          try {
+            const url = new URL(element.href, window.location.origin);
+            variantId = url.searchParams.get('id') || url.searchParams.get('variant');
+          } catch (e) {
+            console.log('Could not parse URL:', element.href);
+          }
+        }
+        
+        // Method 4: Product card data
+        if (!variantId) {
+          const productCard = element.closest('[data-product-handle]');
+          if (productCard) {
+            const productHandle = productCard.dataset.productHandle;
+            if (productHandle) {
+              // Need to fetch first available variant
+              this.fetchProductVariant(productHandle, element);
+              return;
+            }
+          }
+        }
+        
+        if (variantId) {
+          this.addToCartAPI(variantId, quantity);
+        } else {
+          console.error('Could not find variant ID for:', element);
+          this.showMessage('Unable to add item. Please visit the product page.', 'error');
+          
+          // Try to redirect to product page
+          const productLink = element.closest('a[href*="/products/"]');
+          if (productLink) {
+            window.location.href = productLink.href;
+          }
+        }
+      }
+      
+      fetchProductVariant(productHandle, element) {
+        fetch(`/products/${productHandle}.js`)
+          .then(res => res.json())
+          .then(product => {
+            if (product.variants && product.variants.length > 0) {
+              const variantId = product.variants[0].id;
+              this.addToCartAPI(variantId, 1);
+            } else {
+              this.showMessage('Product not available', 'error');
+            }
+          })
+          .catch(err => {
+            console.error('Failed to fetch product:', err);
+            this.showMessage('Error loading product', 'error');
+          });
+      }
+      
+      addToCartAPI(variantId, quantity) {
+        console.log('Adding to cart:', variantId, quantity);
+        
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: [{ id: variantId, quantity: quantity }]
+          })
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(data => {
+          console.log('✅ Cart add success:', data);
+          
+          // Show success message
+          this.showMessage('Added to cart!', 'success');
+          
+          // Redirect to cart after delay
+          setTimeout(() => {
+            window.location.href = '/cart';
+          }, 1500);
+        })
+        .catch(error => {
+          console.error('❌ Cart add failed:', error);
+          this.showMessage('Failed to add to cart. Please try again.', 'error');
+        });
+      }
+      
+      handleBookAppointment(element) {
+        // Try to find booking URL
+        let bookingUrl = element.href || 
+                        element.dataset.bookingUrl ||
+                        '/pages/book-now';
+        
+        // If it's a Sesami link but Sesami is broken, redirect to booking page
+        if (bookingUrl.includes('sesami') && typeof window.Sesami === 'undefined') {
+          bookingUrl = '/pages/book-now';
+        }
+        
+        console.log('Redirecting to booking:', bookingUrl);
+        window.location.href = bookingUrl;
+      }
+      
+      showMessage(text, type) {
+        // Remove any existing message
+        const existingMsg = document.querySelector('.universal-button-message');
+        if (existingMsg) existingMsg.remove();
+        
+        const message = document.createElement('div');
+        message.className = 'universal-button-message';
+        message.textContent = text;
+        message.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: ${type === 'success' ? '#E8C4B8' : '#ff4444'};
+          color: white;
+          padding: 12px 24px;
+          border-radius: 4px;
+          z-index: 99999;
+          font-weight: bold;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(message);
+        
+        setTimeout(() => {
+          message.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => message.remove(), 300);
+        }, 2000);
+      }
+      
+      setupMutationObserver() {
+        // Watch for dynamically added buttons (AJAX, sliders, etc.)
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.addedNodes.length) {
+              console.log('New elements detected, buttons should work');
+            }
+          });
+        });
+        
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      }
+    }
+
+    // Initialize when page loads
     document.addEventListener('DOMContentLoaded', () => {
+      // Initialize sidebar
       setTimeout(() => {
         const sidebar = new SidebarMenu();
         window.sidebarInstance = sidebar;
       }, 100);
+      
+      // Initialize universal button handler
+      setTimeout(() => {
+        window.universalButtonHandler = new UniversalButtonHandler();
+        console.log('All button handlers loaded');
+      }, 200);
+      
+      // Quick test
+      console.log('Page loaded. Testing Shopify:', typeof Shopify !== 'undefined' ? 'OK' : 'MISSING');
     });
-
-
-    class EmergencyCart {
-  constructor() {
-    this.cartKey = 'emergency_cart_items';
-    this.init();
-  }
-  
-  init() {
-    // Override broken add-to-cart buttons
-    document.addEventListener('click', (e) => {
-      const addBtn = e.target.closest('[data-add-to-cart], [href*="/cart/add"]');
-      if (addBtn) {
-        e.preventDefault();
-        this.addToCart(addBtn);
-      }
-    });
-  }
-  
-  addToCart(button) {
-    // Get product data from button
-    const variantId = button.dataset.variantId || this.extractVariantId(button.href);
-    const quantity = button.dataset.quantity || 1;
-    
-    if (!variantId) {
-      console.error('No variant ID found');
-      return;
-    }
-    
-    // Save to localStorage
-    this.saveToLocalStorage(variantId, quantity);
-    
-    // Show success message
-    alert('Added to cart! Redirecting...');
-    
-    // Redirect to cart
-    setTimeout(() => {
-      window.location.href = '/cart';
-    }, 500);
-  }
-  
-  saveToLocalStorage(variantId, quantity) {
-    let cart = JSON.parse(localStorage.getItem(this.cartKey) || '[]');
-    
-    // Check if item exists
-    const existing = cart.find(item => item.id == variantId);
-    if (existing) {
-      existing.quantity += parseInt(quantity);
-    } else {
-      cart.push({ id: variantId, quantity: parseInt(quantity) });
-    }
-    
-    localStorage.setItem(this.cartKey, JSON.stringify(cart));
-    console.log('Saved to emergency cart:', cart);
-  }
-  
-  extractVariantId(url) {
-    if (!url) return null;
-    const match = url.match(/variant=(\d+)/);
-    return match ? match[1] : null;
-  }
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  window.emergencyCart = new EmergencyCart();
-});
   </script>
 </body>
 </html>
