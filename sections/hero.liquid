@@ -963,25 +963,6 @@ function scrollToNextSection() {
 
 // Make hero booking available globally
 window.heroBooking = handleHeroBooking;
-
-  setupBookingButtons() {
-    const bookingButtons = document.querySelectorAll('.book-appointment-btn');
-    
-    bookingButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const service = button.getAttribute('data-service') || 'Hair Treatment';
-        
-        // Store service for booking page
-        sessionStorage.setItem('selected_service', service);
-        
-        // Redirect to booking page
-        window.location.href = '/pages/book-now';
-      });
-    });
-  }
 </script>
 
 {% schema %}
