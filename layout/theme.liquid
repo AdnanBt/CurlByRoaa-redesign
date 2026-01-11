@@ -545,6 +545,11 @@
   
   <!-- Sidebar JavaScript -->
   <script>
+    // PROTECT SHOPIFY OBJECT
+if (typeof Shopify === 'undefined') {
+  window.Shopify = {};
+  console.warn('Shopify object missing, created empty one');
+}
     class SidebarMenu {
       constructor() {
         this.sidebar = document.getElementById('mainSidebar');
