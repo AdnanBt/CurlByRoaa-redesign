@@ -108,6 +108,11 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-btn-primary {
@@ -479,9 +484,9 @@
               {{ section.settings.hero_description_1 | default: 'Discover our premium smoothing & repair treatments powered by salon-grade formulas. Perfect for sleek, shiny, healthy hair.' }}
             </p>
             <div class="card-actions">
-              <a href="/pages/book-now" class="card-btn card-btn-primary">
+              <button class="card-btn card-btn-primary book-appointment-btn" data-service="Premium Treatment">
                 Book Treatment
-              </a>
+              </button>
               <a href="{{ routes.all_products_collection_url }}" class="card-btn card-btn-secondary">
                 Shop Products
               </a>
@@ -522,15 +527,9 @@
               {% assign absolut_collection = collections['absolut-repair'] %}
               {% assign masks_collection = collections['hair-masks'] %}
               
-              {% if absolut_collection %}
-                <a href="{{ absolut_collection.url }}" class="card-btn card-btn-primary">
-                  Try Absolut Repair
-                </a>
-              {% else %}
-                <a href="{{ routes.all_products_collection_url }}" class="card-btn card-btn-primary">
-                  Try Absolut Repair
-                </a>
-              {% endif %}
+              <button class="card-btn card-btn-primary book-appointment-btn" data-service="Absolut Repair Treatment">
+                Book Treatment
+              </button>
               
               {% if masks_collection %}
                 <a href="{{ masks_collection.url }}" class="card-btn card-btn-secondary">
@@ -565,7 +564,7 @@
         </div>
       </div>
 
-      <!-- PRODUCT CARDS (from collection) -->
+      <!-- PRODUCT CARDS (from collection) - UPDATED: No Add to Cart, Only Book Appointment -->
       {%- assign featured_collection = collections[section.settings.collection] | default: collections.all -%}
       
       {%- if featured_collection.products.size > 0 -%}
@@ -588,13 +587,9 @@
                 <div class="card-price">{{ product.price | money }}</div>
                 
                 <div class="card-actions">
-                  <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
-                    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="card-btn card-btn-primary" name="add">
-                      Add to Cart
-                    </button>
-                  </form>
+                  <button class="card-btn card-btn-primary book-appointment-btn" data-service="{{ product.title }}">
+                    Book Appointment
+                  </button>
                   <a href="{{ product.url }}" class="card-btn card-btn-secondary">
                     Learn More
                   </a>
@@ -625,24 +620,24 @@
           </div>
         {%- endfor -%}
       {%- else -%}
-        <!-- Fallback demo product cards -->
+        <!-- Fallback demo product cards - UPDATED: No Add to Cart -->
         {%- for i in (1..2) -%}
           <div class="hero-card" data-index="{{ i | plus: 1 }}">
             <div class="card-content">
               <div class="card-text">
                 <div class="card-badge">BESTSELLER</div>
                 <h2 class="card-title">
-                  {%- if i == 1 -%}Curl Defining Cream
-                  {%- else -%}Hydrating Shampoo
+                  {%- if i == 1 -%}Curl Defining Treatment
+                  {%- else -%}Hydrating Treatment
                   {%- endif -%}
                 </h2>
                 <p class="card-description">
-                  Professional-grade hair care solution designed for your unique curl pattern.
+                  Professional-grade hair treatment designed for your unique curl pattern. Experience salon-quality results.
                 </p>
-                <div class="card-price">{{ 29.99 | times: i | money }}</div>
                 <div class="card-actions">
-                  <button class="card-btn card-btn-primary" onclick="window.location.href='{{ routes.all_products_collection_url }}'">
-                    Add to Cart
+                  <button class="card-btn card-btn-primary book-appointment-btn" 
+                          data-service="{% if i == 1 %}Curl Defining Treatment{% else %}Hydrating Treatment{% endif %}">
+                    Book Appointment
                   </button>
                   <a href="{{ routes.all_products_collection_url }}" class="card-btn card-btn-secondary">
                     Learn More
@@ -651,8 +646,8 @@
               </div>
               <div class="card-image">
                 <div class="image-placeholder">
-                  {%- if i == 1 -%}Curl Cream
-                  {%- else -%}Shampoo
+                  {%- if i == 1 -%}Curl Treatment
+                  {%- else -%}Hydration Treatment
                   {%- endif -%}
                 </div>
               </div>
@@ -707,6 +702,7 @@ class HeroCarousel {
     this.updateNavigation();
     this.startAutoScroll();
     this.setupImageLoading();
+    this.setupBookingButtons();
   }
 
   setupImageLoading() {
@@ -737,6 +733,76 @@ class HeroCarousel {
     });
   }
 
+  setupBookingButtons() {
+    // Handle all book appointment buttons in the hero section
+    const bookingButtons = document.querySelectorAll('.book-appointment-btn');
+    
+    bookingButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const service = button.getAttribute('data-service') || 'Hair Treatment';
+        console.log('Booking appointment for service:', service);
+        
+        // Show booking modal or redirect
+        this.handleBooking(service);
+      });
+    });
+  }
+
+  handleBooking(service) {
+    // Check if Sesami app is available
+    if (typeof window.Sesami !== 'undefined') {
+      console.log('Using Sesami for booking');
+      // Sesami should handle the booking
+      return;
+    }
+    
+    // Fallback: Redirect to booking page with service parameter
+    const bookingUrl = '/pages/book-now';
+    
+    // Store the selected service in sessionStorage
+    sessionStorage.setItem('selected_service', service);
+    
+    // Show confirmation message
+    this.showBookingMessage(`Redirecting to book: ${service}`, 'info');
+    
+    // Redirect to booking page
+    setTimeout(() => {
+      window.location.href = bookingUrl;
+    }, 1000);
+  }
+
+  showBookingMessage(text, type) {
+    // Remove existing messages
+    document.querySelectorAll('.booking-message').forEach(msg => msg.remove());
+    
+    const message = document.createElement('div');
+    message.className = 'booking-message';
+    message.textContent = text;
+    message.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${type === 'info' ? '#D4A574' : '#ff4444'};
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      z-index: 99999;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+      message.style.animation = 'slideOut 0.3s ease';
+      setTimeout(() => message.remove(), 300);
+    }, 2000);
+  }
+
   bindEvents() {
     // Navigation buttons
     if (this.prevBtn && this.nextBtn) {
@@ -753,14 +819,16 @@ class HeroCarousel {
     }
 
     // Dot navigation
-    this.dotsContainer.addEventListener('click', (e) => {
-      if (e.target.classList.contains('carousel-dot')) {
-        this.stopAutoScroll();
-        const index = Array.from(this.dotsContainer.children).indexOf(e.target);
-        this.goToSlide(index);
-        this.startAutoScroll();
-      }
-    });
+    if (this.dotsContainer) {
+      this.dotsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('carousel-dot')) {
+          this.stopAutoScroll();
+          const index = Array.from(this.dotsContainer.children).indexOf(e.target);
+          this.goToSlide(index);
+          this.startAutoScroll();
+        }
+      });
+    }
 
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
@@ -852,12 +920,47 @@ document.addEventListener('DOMContentLoaded', () => {
   new HeroCarousel();
 });
 
+// Add animation keyframes if not already present
+if (!document.querySelector('#hero-animations')) {
+  const style = document.createElement('style');
+  style.id = 'hero-animations';
+  style.textContent = `
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Global function to handle booking from hero section
+function handleHeroBooking(service) {
+  console.log('Hero booking initiated for:', service);
+  
+  // Use the UniversalButtonHandler if available
+  if (window.universalButtonHandler && typeof window.universalButtonHandler.handleBookAppointment === 'function') {
+    const fakeElement = document.createElement('button');
+    fakeElement.textContent = 'Book Appointment';
+    window.universalButtonHandler.handleBookAppointment(fakeElement);
+  } else {
+    // Fallback to direct redirect
+    window.location.href = '/pages/book-now';
+  }
+}
+
 function scrollToNextSection() {
   window.scrollTo({
     top: window.innerHeight,
     behavior: 'smooth'
   });
 }
+
+// Make hero booking available globally
+window.heroBooking = handleHeroBooking;
 </script>
 
 {% schema %}
