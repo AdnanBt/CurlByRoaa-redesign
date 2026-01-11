@@ -1,0 +1,124 @@
+{% layout 'theme' %}
+
+<div class="container" style="padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
+  <h1 style="margin-bottom: 30px; font-size: 2.5rem;">Your Cart</h1>
+  
+  {% if cart.item_count > 0 %}
+    <form action="/cart" method="post" novalidate>
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 2px solid #e1e1e1;">
+            <th style="text-align: left; padding: 15px 10px;">Product</th>
+            <th style="text-align: left; padding: 15px 10px;">Price</th>
+            <th style="text-align: left; padding: 15px 10px;">Quantity</th>
+            <th style="text-align: left; padding: 15px 10px;">Total</th>
+            <th style="text-align: left; padding: 15px 10px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr style="border-bottom: 1px solid #e1e1e1;">
+              <td style="padding: 20px 10px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                  <a href="{{ item.url }}" style="display: block;">
+                    <img 
+                      src="{{ item.image | image_url: width: 100 }}" 
+                      alt="{{ item.title | escape }}" 
+                      style="width: 80px; height: 80px; object-fit: cover;"
+                      loading="lazy"
+                    >
+                  </a>
+                  <div>
+                    <a href="{{ item.url }}" style="font-weight: bold; text-decoration: none; color: #333;">
+                      {{ item.product.title }}
+                    </a>
+                    {% unless item.product.has_only_default_variant %}
+                      <p style="margin: 5px 0; color: #666; font-size: 0.9rem;">
+                        {{ item.variant.title }}
+                      </p>
+                    {% endunless %}
+                  </div>
+                </div>
+              </td>
+              <td style="padding: 20px 10px;">
+                {{ item.price | money }}
+              </td>
+              <td style="padding: 20px 10px;">
+                <input 
+                  type="number" 
+                  name="updates[]" 
+                  value="{{ item.quantity }}" 
+                  min="0" 
+                  style="width: 60px; padding: 8px; border: 1px solid #ddd;"
+                >
+              </td>
+              <td style="padding: 20px 10px;">
+                {{ item.line_price | money }}
+              </td>
+              <td style="padding: 20px 10px;">
+                <a 
+                  href="/cart/change?line={{ forloop.index }}&quantity=0" 
+                  style="color: #ff4444; text-decoration: none;"
+                >
+                  Remove
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+      <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="flex: 1;">
+          <div style="margin-bottom: 20px;">
+            <h3 style="margin-bottom: 10px;">Cart Summary</h3>
+            <p>Subtotal: <strong>{{ cart.total_price | money }}</strong></p>
+            <p style="font-size: 0.9rem; color: #666;">Shipping & taxes calculated at checkout</p>
+          </div>
+          
+          <div>
+            <label for="cart-notes" style="display: block; margin-bottom: 5px;">Special instructions</label>
+            <textarea 
+              id="cart-notes" 
+              name="note" 
+              style="width: 100%; max-width: 400px; padding: 10px; border: 1px solid #ddd; min-height: 80px;"
+              placeholder="Any special requests or instructions..."
+            >{{ cart.note }}</textarea>
+          </div>
+        </div>
+        
+        <div style="text-align: right;">
+          <button 
+            type="submit" 
+            name="update" 
+            style="background: #666; color: white; border: none; padding: 12px 24px; margin-right: 15px; cursor: pointer;"
+          >
+            Update Cart
+          </button>
+          <button 
+            type="submit" 
+            name="checkout" 
+            style="background: #E8C4B8; color: white; border: none; padding: 12px 30px; font-weight: bold; cursor: pointer;"
+          >
+            Checkout
+          </button>
+          
+          <p style="margin-top: 15px; font-size: 0.9rem;">
+           <a href="{{ routes.all_products_collection_url }}" style="color: #E8C4B8; text-decoration: none;">← Continue shopping</a>
+          </p>
+        </div>
+      </div>
+    </form>
+  {% else %}
+    <div style="text-align: center; padding: 60px 20px;">
+      <h2 style="margin-bottom: 20px;">Your cart is empty</h2>
+      <p style="margin-bottom: 30px; color: #666;">Looks like you haven't added any items yet.</p>
+      <a 
+        href="/collections/all" 
+        style="background: #E8C4B8; color: white; padding: 15px 30px; text-decoration: none; display: inline-block; font-weight: bold;"
+      >
+        Start Shopping
+      </a>
+    </div>
+  {% endif %}
+</div>
