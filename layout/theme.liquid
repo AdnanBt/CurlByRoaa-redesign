@@ -151,7 +151,7 @@
           <a href="#services-by-concern" class="sidebar-link">
             Services by Concern
           </a>
-          <button onclick="testCart()">Test Cart</button>
+          
         </div>
 
         <!-- Our Story -->
@@ -544,23 +544,6 @@
   
   <!-- Sidebar JavaScript -->
   <script>
-    function testCart() {
-  fetch('/cart/add.js', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      items: [{
-        id: 1234567890, // Replace with actual variant ID
-        quantity: 1
-      }]
-    })
-  })
-  .then(res => res.json())
-  .then(data => console.log('Add to cart success:', data))
-  .catch(err => console.error('Add to cart error:', err));
-}
     // PROTECT SHOPIFY OBJECT
 if (typeof Shopify === 'undefined') {
   window.Shopify = {};
