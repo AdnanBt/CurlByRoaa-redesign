@@ -621,41 +621,117 @@
           </ul>
         </div>
 
-        <!-- Guides & Resources -->
+        <!-- ==================== -->
+        <!-- DYNAMIC SECTIONS BASED ON YOUR ACTUAL FILES -->
+        <!-- ==================== -->
+        
+        <!-- Educational & Content Section -->
         <div class="sidebar-section">
-          <div class="sidebar-section-title">Guides & Resources</div>
+          <div class="sidebar-section-title">Education & Content</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="{{ pages['hair-quiz'].url | default: '#' }}" class="sidebar-menu-link" aria-label="Take hair quiz">Hair Quiz</a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="sidebar-menu-link" aria-label="View hair care guides">
-                Hair Care Guides
+              <a href="#educational-content" class="sidebar-menu-link" aria-label="Educational Content">
+                Educational Content
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ pages['services'].url | default: '#' }}" class="sidebar-menu-link" aria-label="View services by concern">Services by Concern</a>
+              <a href="#quiz" class="sidebar-menu-link" aria-label="Hair Quiz">
+                Hair Quiz
+              </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ pages['about'].url | default: '/pages/about' }}" class="sidebar-menu-link" aria-label="Learn our story">Our Story</a>
+              <a href="#faq" class="sidebar-menu-link" aria-label="FAQ">
+                FAQ
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#science-technology" class="sidebar-menu-link" aria-label="Science & Technology">
+                Science & Technology
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#ingredients-spotlight" class="sidebar-menu-link" aria-label="Ingredients Spotlight">
+                Ingredients Spotlight
+              </a>
             </li>
           </ul>
         </div>
 
-        <!-- Information -->
+        <!-- Products & Collections Section -->
         <div class="sidebar-section">
-          <div class="sidebar-section-title">Information</div>
+          <div class="sidebar-section-title">Products</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="{{ routes.search_url }}" class="sidebar-menu-link" aria-label="Search products">Search</a>
+              <a href="#featured-products" class="sidebar-menu-link" aria-label="Featured Products">
+                Featured Products
+              </a>
             </li>
-            {%- for page in pages limit: 5 -%}
-              {%- unless page.handle contains 'policy' -%}
-                <li class="sidebar-menu-item">
-                  <a href="{{ page.url }}" class="sidebar-menu-link" aria-label="View {{ page.title }}">{{ page.title }}</a>
-                </li>
-              {%- endunless -%}
-            {%- endfor -%}
+            <li class="sidebar-menu-item">
+              <a href="#featured-collections" class="sidebar-menu-link" aria-label="Featured Collections">
+                Featured Collections
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#product-benefits" class="sidebar-menu-link" aria-label="Product Benefits">
+                Product Benefits
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Services & Expert Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Services & Experts</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#services-by-concern" class="sidebar-menu-link" aria-label="Services by Concern">
+                Services by Concern
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#expert-endorsements" class="sidebar-menu-link" aria-label="Expert Endorsements">
+                Expert Endorsements
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Trust & Community Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Trust & Community</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#trust-indicators" class="sidebar-menu-link" aria-label="Trust Indicators">
+                Trust Indicators
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#ugc-gallery" class="sidebar-menu-link" aria-label="User Gallery">
+                User Gallery
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.search_url }}" class="sidebar-menu-link" aria-label="Search">
+                Search
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Hero & About Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">About</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#hero" class="sidebar-menu-link" aria-label="Hero Section">
+                Home Hero
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ pages['about'].url | default: '#' }}" class="sidebar-menu-link" aria-label="Our Story">
+                Our Story
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -735,7 +811,7 @@
           </a>
           <a href="{{ routes.cart_url }}" class="header-action cart-btn" aria-label="Cart">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 a1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
             </svg>
             <span class="cart-count">{{ cart.item_count }}</span>
           </a>
@@ -818,41 +894,117 @@
           </ul>
         </div>
 
-        <!-- Guides & Resources -->
+        <!-- ==================== -->
+        <!-- SAME DYNAMIC SECTIONS FOR MOBILE -->
+        <!-- ==================== -->
+        
+        <!-- Educational & Content Section -->
         <div class="sidebar-section">
-          <div class="sidebar-section-title">Guides & Resources</div>
+          <div class="sidebar-section-title">Education & Content</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="{{ pages['hair-quiz'].url | default: '#' }}" class="sidebar-menu-link">Hair Quiz</a>
-            </li>
-            <li class="sidebar-menu-item">
-              <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="sidebar-menu-link">
-                Hair Care Guides
+              <a href="#educational-content" class="sidebar-menu-link">
+                Educational Content
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ pages['services'].url | default: '#' }}" class="sidebar-menu-link">Services by Concern</a>
+              <a href="#quiz" class="sidebar-menu-link">
+                Hair Quiz
+              </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ pages['about'].url | default: '/pages/about' }}" class="sidebar-menu-link">Our Story</a>
+              <a href="#faq" class="sidebar-menu-link">
+                FAQ
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#science-technology" class="sidebar-menu-link">
+                Science & Technology
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#ingredients-spotlight" class="sidebar-menu-link">
+                Ingredients Spotlight
+              </a>
             </li>
           </ul>
         </div>
 
-        <!-- Information -->
+        <!-- Products & Collections Section -->
         <div class="sidebar-section">
-          <div class="sidebar-section-title">Information</div>
+          <div class="sidebar-section-title">Products</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="{{ routes.search_url }}" class="sidebar-menu-link">Search</a>
+              <a href="#featured-products" class="sidebar-menu-link">
+                Featured Products
+              </a>
             </li>
-            {%- for page in pages limit: 5 -%}
-              {%- unless page.handle contains 'policy' -%}
-                <li class="sidebar-menu-item">
-                  <a href="{{ page.url }}" class="sidebar-menu-link">{{ page.title }}</a>
-                </li>
-              {%- endunless -%}
-            {%- endfor -%}
+            <li class="sidebar-menu-item">
+              <a href="#featured-collections" class="sidebar-menu-link">
+                Featured Collections
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#product-benefits" class="sidebar-menu-link">
+                Product Benefits
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Services & Expert Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Services & Experts</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#services-by-concern" class="sidebar-menu-link">
+                Services by Concern
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#expert-endorsements" class="sidebar-menu-link">
+                Expert Endorsements
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Trust & Community Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Trust & Community</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#trust-indicators" class="sidebar-menu-link">
+                Trust Indicators
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="#ugc-gallery" class="sidebar-menu-link">
+                User Gallery
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.search_url }}" class="sidebar-menu-link">
+                Search
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Hero & About Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">About</div>
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              <a href="#hero" class="sidebar-menu-link">
+                Home Hero
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ pages['about'].url | default: '#' }}" class="sidebar-menu-link">
+                Our Story
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -1028,45 +1180,114 @@
     });
     
     // ====================
-    // FIXED: Mark Active Links
+    // FIXED: Smooth Scroll to Section IDs
+    // ====================
+    function setupSectionLinks() {
+      const sectionLinks = document.querySelectorAll('a[href^="#"]');
+      
+      sectionLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href').substring(1);
+          if (!targetId) return;
+          
+          // Try to find the section by ID first
+          let targetElement = document.getElementById(targetId);
+          
+          // If not found by ID, try to find by data attribute
+          if (!targetElement) {
+            targetElement = document.querySelector(`[data-section="${targetId}"]`);
+          }
+          
+          // If still not found, try to find section by class
+          if (!targetElement) {
+            targetElement = document.querySelector(`.${targetId}-section`);
+          }
+          
+          if (targetElement) {
+            // Calculate position
+            const headerHeight = isDesktop ? 0 : 70;
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+            
+            // Smooth scroll
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            });
+            
+            // Highlight active link
+            sectionLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Close mobile sidebar if open
+            if (!isDesktop && mobileSidebar && mobileSidebar.classList.contains('active')) {
+              mobileSidebar.classList.remove('active');
+              mobileSidebarOverlay.classList.remove('active');
+              document.body.classList.remove('mobile-sidebar-open');
+              document.body.style.overflow = '';
+              document.body.style.position = '';
+              document.body.style.width = '';
+            }
+          }
+        });
+      });
+    }
+    
+    setupSectionLinks();
+    
+    // ====================
+    // FIXED: Mark Active Links Based on Current Section
     // ====================
     function markActiveLinks() {
-      const currentUrl = window.location.pathname + window.location.hash;
-      const links = document.querySelectorAll('.sidebar-menu-link[href], .sidebar-sublink[href]');
+      const sections = [
+        'educational-content',
+        'quiz',
+        'faq',
+        'science-technology',
+        'ingredients-spotlight',
+        'featured-products',
+        'featured-collections',
+        'product-benefits',
+        'services-by-concern',
+        'expert-endorsements',
+        'trust-indicators',
+        'ugc-gallery',
+        'hero'
+      ];
       
+      const currentScroll = window.pageYOffset;
+      let activeSection = '';
+      
+      // Find which section is currently in view
+      sections.forEach(sectionId => {
+        const element = document.getElementById(sectionId) || 
+                       document.querySelector(`[data-section="${sectionId}"]`) ||
+                       document.querySelector(`.${sectionId}-section`);
+        
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            activeSection = sectionId;
+          }
+        }
+      });
+      
+      // Mark active link
+      const links = document.querySelectorAll('.sidebar-menu-link[href^="#"]');
       links.forEach(link => {
         const href = link.getAttribute('href');
-        if (href && href !== '#') {
-          // Remove query parameters and hash for comparison
-          const cleanHref = href.split('?')[0].split('#')[0];
-          const cleanCurrentUrl = currentUrl.split('?')[0].split('#')[0];
-          
-          if (cleanCurrentUrl.includes(cleanHref.replace(/^\//, '')) || 
-              cleanHref === cleanCurrentUrl) {
-            link.classList.add('active');
-            
-            // Also expand parent submenu if it's a sublink
-            if (link.classList.contains('sidebar-sublink')) {
-              const parentItem = link.closest('.sidebar-menu-item');
-              if (parentItem) {
-                const toggleBtn = parentItem.querySelector('[data-toggle="submenu"]');
-                const submenu = parentItem.querySelector('.sidebar-submenu');
-                if (toggleBtn && submenu) {
-                  toggleBtn.classList.add('active');
-                  toggleBtn.setAttribute('aria-expanded', 'true');
-                  submenu.classList.add('active');
-                  submenu.setAttribute('aria-hidden', 'false');
-                }
-              }
-            }
-          } else {
-            link.classList.remove('active');
-          }
+        if (href === `#${activeSection}`) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
         }
       });
     }
     
-    markActiveLinks();
+    // Update active links on scroll
+    window.addEventListener('scroll', markActiveLinks);
+    markActiveLinks(); // Initial call
     
     // ====================
     // FIXED: Update Cart Count
