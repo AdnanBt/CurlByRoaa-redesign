@@ -795,24 +795,7 @@ class HeroCarousel {
       animation: slideIn 0.3s ease;
     `;
 
-      setupBookingButtons() {
-    const bookingButtons = document.querySelectorAll('.book-appointment-btn');
     
-    bookingButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const service = button.getAttribute('data-service') || 'Hair Treatment';
-        
-        // Store service for booking page
-        sessionStorage.setItem('selected_service', service);
-        
-        // Redirect to booking page
-        window.location.href = '/pages/book-now';
-      });
-    });
-  }
     
     document.body.appendChild(message);
     
