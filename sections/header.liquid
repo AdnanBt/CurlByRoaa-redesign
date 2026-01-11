@@ -16,6 +16,8 @@
       --text-dark: #2D2D2D;
       --white: #FFFFFF;
       --sidebar-width: 280px;
+      --sidebar-bg: #FFFFFF;
+      --sidebar-border: rgba(0, 0, 0, 0.08);
     }
 
     /* ==================== */
@@ -24,10 +26,12 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* ==================== */
-    /* DESKTOP SIDEBAR ONLY (1025px and up) */
+    /* DESKTOP SIDEBAR ONLY (1025px and up) - CHATGPT STYLE */
     /* ==================== */
     @media (min-width: 1025px) {
       /* Hide mobile elements on desktop */
@@ -37,47 +41,53 @@
         display: none !important;
       }
       
-      /* Desktop sidebar - always visible */
+      /* Body adjustment for desktop sidebar */
+      body {
+        margin-left: var(--sidebar-width);
+        padding-top: 0 !important;
+        transition: margin-left 0.3s ease;
+      }
+      
+      /* Desktop sidebar - ChatGPT style */
       .desktop-sidebar {
         position: fixed;
         top: 0;
         left: 0;
         width: var(--sidebar-width);
         height: 100vh;
-        background: var(--white);
+        background: var(--sidebar-bg);
         z-index: 1000;
-        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.08);
-        border-right: 1px solid rgba(0, 0, 0, 0.08);
+        border-right: 1px solid var(--sidebar-border);
         display: flex;
         flex-direction: column;
         overflow: hidden;
       }
       
-      /* Shift main content for sidebar */
-      body {
-        margin-left: var(--sidebar-width);
-        padding-top: 0 !important;
-      }
-      
       /* Sidebar Header */
       .sidebar-header {
-        padding: 25px 20px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        padding: 24px 20px;
+        border-bottom: 1px solid var(--sidebar-border);
         flex-shrink: 0;
       }
 
+      .sidebar-logo {
+        display: block;
+      }
+
       .sidebar-logo img {
-        height: 35px;
+        height: 32px;
         width: auto;
         max-width: 140px;
         object-fit: contain;
       }
 
-      /* Sidebar Content */
+      /* Sidebar Content - ChatGPT style */
       .sidebar-content {
         flex: 1;
         overflow-y: auto;
         padding: 20px 0;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
       }
 
       /* Sidebar Navigation */
@@ -86,18 +96,17 @@
       }
 
       .sidebar-section {
-        margin-bottom: 25px;
+        margin-bottom: 24px;
       }
 
       .sidebar-section-title {
-        padding: 0 20px 12px;
-        font-size: 13px;
+        padding: 0 20px 8px;
+        font-size: 12px;
         font-weight: 600;
         color: #666;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        margin-bottom: 12px;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
       }
 
       .sidebar-menu {
@@ -110,53 +119,76 @@
         margin: 0;
       }
 
+      /* ChatGPT-style links */
       .sidebar-menu-link {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 20px;
+        padding: 10px 20px;
         text-decoration: none;
         color: var(--text-dark);
         font-size: 14px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        position: relative;
-        border-left: 3px solid transparent;
+        font-weight: 400;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-family: inherit;
       }
 
-      .sidebar-menu-link:hover,
+      .sidebar-menu-link:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+
       .sidebar-menu-link.active {
-        background: rgba(232, 196, 184, 0.08);
+        background: rgba(232, 196, 184, 0.1);
         color: var(--primary-color);
-        border-left-color: var(--primary-color);
+        font-weight: 500;
       }
 
       .sidebar-menu-count {
         font-size: 11px;
         color: #666;
-        background: rgba(0, 0, 0, 0.05);
+        background: rgba(0, 0, 0, 0.06);
         padding: 2px 8px;
         border-radius: 10px;
+        min-width: 20px;
+        text-align: center;
       }
 
-      /* Submenu */
+      /* Submenu - ChatGPT style */
       .sidebar-submenu {
         background: rgba(0, 0, 0, 0.02);
-        border-left: 3px solid rgba(232, 196, 184, 0.3);
         display: none;
+        padding: 4px 0;
       }
 
       .sidebar-submenu.active {
         display: block;
+        animation: slideDown 0.2s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .sidebar-sublink {
         display: block;
-        padding: 10px 20px 10px 40px;
+        padding: 8px 20px 8px 36px;
         text-decoration: none;
         color: #666;
         font-size: 13px;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
+        position: relative;
       }
 
       .sidebar-sublink:hover {
@@ -164,11 +196,20 @@
         background: rgba(232, 196, 184, 0.05);
       }
 
+      .sidebar-sublink::before {
+        content: "•";
+        position: absolute;
+        left: 24px;
+        color: #999;
+        font-size: 12px;
+      }
+
       /* Sidebar Footer */
       .sidebar-footer {
         padding: 20px;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        border-top: 1px solid var(--sidebar-border);
         flex-shrink: 0;
+        background: rgba(0, 0, 0, 0.02);
       }
 
       .sidebar-account {
@@ -179,23 +220,96 @@
         text-decoration: none;
         color: var(--text-dark);
         border-radius: 8px;
-        transition: all 0.3s ease;
-        background: rgba(0, 0, 0, 0.02);
+        transition: all 0.2s ease;
+        background: var(--white);
+        border: 1px solid var(--sidebar-border);
       }
 
       .sidebar-account:hover {
         background: rgba(232, 196, 184, 0.1);
-        color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+
+      .account-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--primary-color), #D4A59A);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      .account-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .account-name {
+        font-size: 14px;
+        font-weight: 500;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .account-email {
+        font-size: 12px;
+        color: #666;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Cart Summary */
+      .cart-summary {
+        margin-top: 12px;
+        padding: 12px;
+        background: var(--white);
+        border-radius: 8px;
+        border: 1px solid var(--sidebar-border);
+      }
+
+      .cart-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 500;
+      }
+
+      .cart-count {
+        background: var(--primary-color);
+        color: white;
+        border-radius: 12px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        min-width: 60px;
+        text-align: center;
       }
 
       /* Scrollbar */
       .sidebar-content::-webkit-scrollbar {
-        width: 4px;
+        width: 6px;
+      }
+
+      .sidebar-content::-webkit-scrollbar-track {
+        background: transparent;
       }
 
       .sidebar-content::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.1);
-        border-radius: 4px;
+        border-radius: 3px;
+      }
+
+      .sidebar-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.2);
       }
     }
 
@@ -208,7 +322,7 @@
         display: none !important;
       }
       
-      /* Reset body margin for mobile */
+      /* Reset body for mobile */
       body {
         margin-left: 0 !important;
         padding-top: var(--header-height) !important;
@@ -224,13 +338,13 @@
         background: var(--white);
         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         z-index: 1000;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
       .header-container {
-        max-width: 1400px;
+        max-width: 100%;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 0 16px;
         height: 100%;
       }
 
@@ -239,29 +353,36 @@
         align-items: center;
         justify-content: space-between;
         height: 100%;
+        position: relative;
       }
 
       /* Logo */
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
       .logo img {
-        height: 35px;
+        height: 32px;
         width: auto;
         max-width: 120px;
         object-fit: contain;
       }
 
-      /* Sidebar Toggle Button - MAKE SURE IT'S VISIBLE */
+      /* Sidebar Toggle Button */
       .sidebar-toggle {
         background: none;
         border: none;
         width: 40px;
         height: 40px;
-        border-radius: 50%;
+        border-radius: 8px;
         display: flex !important;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         color: var(--text-dark);
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         padding: 0;
         position: relative;
         z-index: 1002;
@@ -269,14 +390,13 @@
 
       .sidebar-toggle:hover {
         background: rgba(232, 196, 184, 0.1);
-        color: var(--primary-color);
       }
 
       /* Header Actions */
       .header-actions {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
         position: relative;
         z-index: 1002;
       }
@@ -287,16 +407,15 @@
         justify-content: center;
         width: 40px;
         height: 40px;
-        border-radius: 50%;
+        border-radius: 8px;
         text-decoration: none;
         color: var(--text-dark);
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         position: relative;
       }
 
       .header-action:hover {
         background: rgba(232, 196, 184, 0.1);
-        color: var(--primary-color);
       }
 
       .cart-count {
@@ -315,13 +434,6 @@
         right: -2px;
       }
       
-      /* Center logo on mobile */
-      .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      
       /* Mobile Sidebar */
       .mobile-sidebar {
         position: fixed;
@@ -330,11 +442,13 @@
         width: 85%;
         max-width: 320px;
         height: 100vh;
-        background: var(--white);
+        background: var(--sidebar-bg);
         z-index: 9999;
-        transition: left 0.3s ease;
+        transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         overflow-y: auto;
         box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
       }
 
       .mobile-sidebar.active {
@@ -353,6 +467,7 @@
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
+        backdrop-filter: blur(2px);
       }
 
       .mobile-sidebar-overlay.active {
@@ -364,48 +479,73 @@
       body.mobile-sidebar-open {
         overflow: hidden;
       }
-    }
+      
+      /* Mobile Sidebar Content */
+      .mobile-sidebar .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--sidebar-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+      }
 
-    /* MOBILE SIDEBAR CONTENT STYLES */
-    .mobile-sidebar .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+      .mobile-sidebar .sidebar-logo img {
+        height: 32px;
+        width: auto;
+        max-width: 140px;
+      }
 
-    .mobile-sidebar .sidebar-logo img {
-      height: 35px;
-      width: auto;
-      max-width: 140px;
-    }
+      .mobile-sidebar .sidebar-close {
+        background: none;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--text-dark);
+        transition: all 0.2s ease;
+        padding: 0;
+      }
 
-    .mobile-sidebar .sidebar-close {
-      background: none;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 24px;
-      color: var(--text-dark);
-      transition: all 0.3s ease;
-      padding: 0;
-    }
+      .mobile-sidebar .sidebar-close:hover {
+        background: rgba(232, 196, 184, 0.1);
+      }
 
-    .mobile-sidebar .sidebar-close:hover {
-      background: rgba(232, 196, 184, 0.1);
-      color: var(--primary-color);
-    }
-
-    .mobile-sidebar .sidebar-content {
-      padding: 20px 0;
-      overflow-y: auto;
-      height: calc(100vh - 140px);
+      .mobile-sidebar .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 0;
+      }
+      
+      /* Mobile responsive adjustments */
+      @media (max-width: 480px) {
+        :root {
+          --header-height: 60px;
+        }
+        
+        .logo img {
+          height: 28px;
+        }
+        
+        .header-action,
+        .sidebar-toggle {
+          width: 36px;
+          height: 36px;
+        }
+        
+        .header-actions {
+          gap: 8px;
+        }
+        
+        .mobile-sidebar {
+          width: 90%;
+        }
+      }
     }
   </style>
 </head>
@@ -413,25 +553,25 @@
   <!-- DESKTOP SIDEBAR (Visible only on desktop) -->
   <aside class="desktop-sidebar">
     <div class="sidebar-header">
-      <a href="{{ routes.root_url }}" class="sidebar-logo">
+      <a href="{{ routes.root_url }}" class="sidebar-logo" aria-label="{{ shop.name }}">
         <img 
           src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
           alt="{{ shop.name }}"
           width="140"
-          height="35"
+          height="32"
           loading="eager"
         >
       </a>
     </div>
 
     <div class="sidebar-content">
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" aria-label="Main navigation">
         <!-- Shop Section -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Shop</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link">
+              <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link" aria-label="View all products">
                 All Products
                 <span class="sidebar-menu-count">{{ collections.all.products_count | default: 0 }}</span>
               </a>
@@ -439,15 +579,15 @@
 
             <!-- Product Type Dropdown -->
             <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-product-type">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-product-type" aria-expanded="false">
                 By Product Type
                 <span class="sidebar-menu-count">6</span>
               </button>
-              <div class="sidebar-submenu" id="desktop-product-type">
+              <div class="sidebar-submenu" id="desktop-product-type" aria-hidden="true">
                 {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
                 {%- for handle in collections_to_show -%}
                   {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
+                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink" aria-label="Browse {{ collection.title | default: handle | replace: '-', ' ' | capitalize }}">
                     {%- if collection -%}
                       {{ collection.title }}
                     {%- else -%}
@@ -460,15 +600,15 @@
 
             <!-- Curl Type Dropdown -->
             <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-curl-type">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-curl-type" aria-expanded="false">
                 By Curl Type
                 <span class="sidebar-menu-count">6</span>
               </button>
-              <div class="sidebar-submenu" id="desktop-curl-type">
+              <div class="sidebar-submenu" id="desktop-curl-type" aria-hidden="true">
                 {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
                 {%- for handle in curl_collections -%}
                   {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
+                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink" aria-label="Browse {{ collection.title | default: handle | replace: '-', ' ' | capitalize }}">
                     {%- if collection -%}
                       {{ collection.title }}
                     {%- else -%}
@@ -486,18 +626,18 @@
           <div class="sidebar-section-title">Guides & Resources</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="#hair-quiz" class="sidebar-menu-link">Hair Quiz</a>
+              <a href="{{ pages['hair-quiz'].url | default: '#' }}" class="sidebar-menu-link" aria-label="Take hair quiz">Hair Quiz</a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="sidebar-menu-link">
+              <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="sidebar-menu-link" aria-label="View hair care guides">
                 Hair Care Guides
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#services-by-concern" class="sidebar-menu-link">Services by Concern</a>
+              <a href="{{ pages['services'].url | default: '#' }}" class="sidebar-menu-link" aria-label="View services by concern">Services by Concern</a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ pages['about'].url | default: '/pages/about' }}" class="sidebar-menu-link">Our Story</a>
+              <a href="{{ pages['about'].url | default: '/pages/about' }}" class="sidebar-menu-link" aria-label="Learn our story">Our Story</a>
             </li>
           </ul>
         </div>
@@ -507,12 +647,12 @@
           <div class="sidebar-section-title">Information</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="{{ routes.search_url }}" class="sidebar-menu-link">Search</a>
+              <a href="{{ routes.search_url }}" class="sidebar-menu-link" aria-label="Search products">Search</a>
             </li>
             {%- for page in pages limit: 5 -%}
               {%- unless page.handle contains 'policy' -%}
                 <li class="sidebar-menu-item">
-                  <a href="{{ page.url }}" class="sidebar-menu-link">{{ page.title }}</a>
+                  <a href="{{ page.url }}" class="sidebar-menu-link" aria-label="View {{ page.title }}">{{ page.title }}</a>
                 </li>
               {%- endunless -%}
             {%- endfor -%}
@@ -523,38 +663,35 @@
 
     <div class="sidebar-footer">
       {% if customer %}
-        <a href="{{ routes.account_url }}" class="sidebar-account">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
+        <a href="{{ routes.account_url }}" class="sidebar-account" aria-label="View your account">
+          <div class="account-icon">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
             </svg>
           </div>
-          <div>
-            <span style="display: block; font-size: 14px; font-weight: 600;">{{ customer.name | truncate: 20 }}</span>
-            <span style="display: block; font-size: 12px; color: #666;">{{ customer.email | truncate: 25 }}</span>
+          <div class="account-info">
+            <span class="account-name">{{ customer.name | truncate: 20 }}</span>
+            <span class="account-email">{{ customer.email | truncate: 25 }}</span>
           </div>
         </a>
       {% else %}
-        <a href="{{ routes.account_login_url }}" class="sidebar-account">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
+        <a href="{{ routes.account_login_url }}" class="sidebar-account" aria-label="Sign in to your account">
+          <div class="account-icon">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
             </svg>
           </div>
-          <div>
-            <span style="display: block; font-size: 14px; font-weight: 600;">Sign In</span>
-            <span style="display: block; font-size: 12px; color: #666;">Access your account</span>
+          <div class="account-info">
+            <span class="account-name">Sign In</span>
+            <span class="account-email">Access your account</span>
           </div>
         </a>
       {% endif %}
 
-      <!-- Cart Summary -->
-      <div style="margin-top: 16px; padding: 16px; background: rgba(232, 196, 184, 0.05); border-radius: 8px;">
-        <a href="{{ routes.cart_url }}" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text-dark);">
-          <span style="font-weight: 500;">View Cart</span>
-          <span style="background: var(--primary-color); color: white; border-radius: 12px; padding: 4px 12px; font-size: 13px; font-weight: 600;">
-            {{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}
-          </span>
+      <div class="cart-summary">
+        <a href="{{ routes.cart_url }}" class="cart-link" aria-label="View your cart">
+          <span>View Cart</span>
+          <span class="cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
         </a>
       </div>
     </div>
@@ -565,7 +702,7 @@
     <div class="header-container">
       <div class="header-inner">
         <!-- Sidebar Toggle Button -->
-        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
           </svg>
@@ -573,12 +710,12 @@
 
         <!-- Logo -->
         <div class="logo">
-          <a href="{{ routes.root_url }}">
+          <a href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
             <img 
               src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
               alt="{{ shop.name }}"
               width="120"
-              height="40"
+              height="32"
               loading="eager"
             >
           </a>
@@ -608,24 +745,24 @@
   </header>
 
   <!-- MOBILE SIDEBAR (Visible only on mobile/tablet) -->
-  <aside class="mobile-sidebar" id="mobileSidebar">
+  <aside class="mobile-sidebar" id="mobileSidebar" aria-hidden="true" aria-label="Navigation menu">
     <div class="sidebar-header">
-      <a href="{{ routes.root_url }}" class="sidebar-logo">
+      <a href="{{ routes.root_url }}" class="sidebar-logo" aria-label="{{ shop.name }}">
         <img 
           src="https://cdn.shopify.com/s/files/1/0567/4172/4316/files/logo.jpg?v=1764436849" 
           alt="{{ shop.name }}"
           width="140"
-          height="35"
+          height="32"
           loading="eager"
         >
       </a>
-      <button class="sidebar-close" id="mobileSidebarClose" aria-label="Close menu">
+      <button class="sidebar-close" id="mobileSidebarClose" aria-label="Close menu" aria-expanded="false">
         &times;
       </button>
     </div>
 
     <div class="sidebar-content">
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" aria-label="Mobile navigation">
         <!-- Shop Section -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Shop</div>
@@ -639,11 +776,11 @@
 
             <!-- Product Type Dropdown -->
             <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-product-type">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-product-type" aria-expanded="false">
                 By Product Type
                 <span class="sidebar-menu-count">6</span>
               </button>
-              <div class="sidebar-submenu" id="mobile-product-type">
+              <div class="sidebar-submenu" id="mobile-product-type" aria-hidden="true">
                 {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
                 {%- for handle in collections_to_show -%}
                   {%- assign collection = collections[handle] -%}
@@ -660,11 +797,11 @@
 
             <!-- Curl Type Dropdown -->
             <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-curl-type">
+              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-curl-type" aria-expanded="false">
                 By Curl Type
                 <span class="sidebar-menu-count">6</span>
               </button>
-              <div class="sidebar-submenu" id="mobile-curl-type">
+              <div class="sidebar-submenu" id="mobile-curl-type" aria-hidden="true">
                 {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
                 {%- for handle in curl_collections -%}
                   {%- assign collection = collections[handle] -%}
@@ -686,7 +823,7 @@
           <div class="sidebar-section-title">Guides & Resources</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="#hair-quiz" class="sidebar-menu-link">Hair Quiz</a>
+              <a href="{{ pages['hair-quiz'].url | default: '#' }}" class="sidebar-menu-link">Hair Quiz</a>
             </li>
             <li class="sidebar-menu-item">
               <a href="{{ blogs['guides'].url | default: '/blogs/guides' }}" class="sidebar-menu-link">
@@ -694,7 +831,7 @@
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#services-by-concern" class="sidebar-menu-link">Services by Concern</a>
+              <a href="{{ pages['services'].url | default: '#' }}" class="sidebar-menu-link">Services by Concern</a>
             </li>
             <li class="sidebar-menu-item">
               <a href="{{ pages['about'].url | default: '/pages/about' }}" class="sidebar-menu-link">Our Story</a>
@@ -724,48 +861,45 @@
     <div class="sidebar-footer">
       {% if customer %}
         <a href="{{ routes.account_url }}" class="sidebar-account">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
+          <div class="account-icon">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
             </svg>
           </div>
-          <div>
-            <span style="display: block; font-size: 14px; font-weight: 600;">{{ customer.name | truncate: 20 }}</span>
-            <span style="display: block; font-size: 12px; color: #666;">{{ customer.email | truncate: 25 }}</span>
+          <div class="account-info">
+            <span class="account-name">{{ customer.name | truncate: 20 }}</span>
+            <span class="account-email">{{ customer.email | truncate: 25 }}</span>
           </div>
         </a>
       {% else %}
         <a href="{{ routes.account_login_url }}" class="sidebar-account">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
+          <div class="account-icon">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
             </svg>
           </div>
-          <div>
-            <span style="display: block; font-size: 14px; font-weight: 600;">Sign In</span>
-            <span style="display: block; font-size: 12px; color: #666;">Access your account</span>
+          <div class="account-info">
+            <span class="account-name">Sign In</span>
+            <span class="account-email">Access your account</span>
           </div>
         </a>
       {% endif %}
 
-      <!-- Cart Summary -->
-      <div style="margin-top: 16px; padding: 16px; background: rgba(232, 196, 184, 0.05); border-radius: 8px;">
-        <a href="{{ routes.cart_url }}" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text-dark);">
-          <span style="font-weight: 500;">View Cart</span>
-          <span style="background: var(--primary-color); color: white; border-radius: 12px; padding: 4px 12px; font-size: 13px; font-weight: 600;">
-            {{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}
-          </span>
+      <div class="cart-summary">
+        <a href="{{ routes.cart_url }}" class="cart-link">
+          <span>View Cart</span>
+          <span class="cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
         </a>
       </div>
     </div>
   </aside>
 
   <!-- Mobile Sidebar Overlay -->
-  <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
+  <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" aria-hidden="true"></div>
 
   <script>
   document.addEventListener('DOMContentLoaded', function() {
-    console.log('Header script loaded - checking mobile functionality');
+    console.log('✅ Header script loaded');
     
     const isDesktop = window.innerWidth >= 1025;
     const sidebarToggle = document.getElementById('sidebarToggle');
@@ -773,36 +907,62 @@
     const mobileSidebarClose = document.getElementById('mobileSidebarClose');
     const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
     
-    console.log('isDesktop:', isDesktop);
-    console.log('sidebarToggle:', sidebarToggle);
-    console.log('mobileSidebar:', mobileSidebar);
-    
-    // Only setup mobile functionality if not on desktop
-    if (!isDesktop) {
-      console.log('Setting up mobile sidebar functionality');
+    // ====================
+    // FIXED: Mobile Functionality
+    // ====================
+    if (!isDesktop && sidebarToggle && mobileSidebar) {
+      console.log('📱 Setting up mobile sidebar functionality');
       
       // Toggle mobile sidebar
       function toggleMobileSidebar() {
-        console.log('Toggle mobile sidebar clicked');
-        mobileSidebar.classList.toggle('active');
-        mobileSidebarOverlay.classList.toggle('active');
-        document.body.classList.toggle('mobile-sidebar-open');
+        console.log('🔄 Toggling mobile sidebar');
+        const isOpen = mobileSidebar.classList.contains('active');
+        
+        if (isOpen) {
+          closeMobileSidebar();
+        } else {
+          openMobileSidebar();
+        }
+      }
+      
+      // Open mobile sidebar
+      function openMobileSidebar() {
+        console.log('👉 Opening mobile sidebar');
+        mobileSidebar.classList.add('active');
+        mobileSidebar.setAttribute('aria-hidden', 'false');
+        mobileSidebarOverlay.classList.add('active');
+        mobileSidebarOverlay.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('mobile-sidebar-open');
+        sidebarToggle.setAttribute('aria-expanded', 'true');
+        
+        // Prevent body scrolling
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
       }
       
       // Close mobile sidebar
       function closeMobileSidebar() {
-        console.log('Close mobile sidebar');
+        console.log('👈 Closing mobile sidebar');
         mobileSidebar.classList.remove('active');
+        mobileSidebar.setAttribute('aria-hidden', 'true');
         mobileSidebarOverlay.classList.remove('active');
+        mobileSidebarOverlay.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('mobile-sidebar-open');
+        sidebarToggle.setAttribute('aria-expanded', 'false');
+        
+        // Restore body scrolling
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
       }
       
-      // Event listeners - MAKE SURE THEY'RE ADDED
+      // Event listeners
       if (sidebarToggle) {
-        console.log('Adding click listener to sidebar toggle');
-        sidebarToggle.addEventListener('click', toggleMobileSidebar);
-      } else {
-        console.error('Sidebar toggle button not found!');
+        sidebarToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          toggleMobileSidebar();
+        });
       }
       
       if (mobileSidebarClose) {
@@ -813,6 +973,14 @@
         mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
       }
       
+      // Close sidebar when clicking links (optional)
+      mobileSidebar.addEventListener('click', function(e) {
+        if (e.target.matches('.sidebar-menu-link[href]') || 
+            e.target.matches('.sidebar-sublink[href]')) {
+          closeMobileSidebar();
+        }
+      });
+      
       // Escape key to close
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && mobileSidebar.classList.contains('active')) {
@@ -821,56 +989,136 @@
       });
     }
     
-    // Handle submenu toggles for both desktop and mobile
+    // ====================
+    // FIXED: Submenu Toggles (Works on ALL devices)
+    // ====================
     const submenuToggles = document.querySelectorAll('[data-toggle="submenu"]');
     submenuToggles.forEach(toggle => {
-      toggle.addEventListener('click', function() {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const targetId = this.getAttribute('data-target');
         const submenu = document.getElementById(targetId);
+        
         if (submenu) {
+          const isExpanded = this.getAttribute('aria-expanded') === 'true';
+          
+          // Toggle submenu visibility
           submenu.classList.toggle('active');
+          submenu.setAttribute('aria-hidden', isExpanded ? 'true' : 'false');
+          this.setAttribute('aria-expanded', !isExpanded);
+          
+          // Optional: Close other open submenus
+          if (!isExpanded) {
+            submenuToggles.forEach(otherToggle => {
+              if (otherToggle !== this) {
+                const otherTarget = otherToggle.getAttribute('data-target');
+                const otherSubmenu = document.getElementById(otherTarget);
+                if (otherSubmenu) {
+                  otherSubmenu.classList.remove('active');
+                  otherSubmenu.setAttribute('aria-hidden', 'true');
+                  otherToggle.setAttribute('aria-expanded', 'false');
+                }
+              }
+            });
+          }
         }
       });
     });
     
-    // Mark active links
+    // ====================
+    // FIXED: Mark Active Links
+    // ====================
     function markActiveLinks() {
-      const currentUrl = window.location.pathname;
-      const links = document.querySelectorAll('.sidebar-menu-link, .sidebar-sublink');
+      const currentUrl = window.location.pathname + window.location.hash;
+      const links = document.querySelectorAll('.sidebar-menu-link[href], .sidebar-sublink[href]');
       
       links.forEach(link => {
         const href = link.getAttribute('href');
-        if (href && href !== '#' && currentUrl.includes(href.replace(/^\//, '').split('?')[0])) {
-          link.classList.add('active');
+        if (href && href !== '#') {
+          // Remove query parameters and hash for comparison
+          const cleanHref = href.split('?')[0].split('#')[0];
+          const cleanCurrentUrl = currentUrl.split('?')[0].split('#')[0];
+          
+          if (cleanCurrentUrl.includes(cleanHref.replace(/^\//, '')) || 
+              cleanHref === cleanCurrentUrl) {
+            link.classList.add('active');
+            
+            // Also expand parent submenu if it's a sublink
+            if (link.classList.contains('sidebar-sublink')) {
+              const parentItem = link.closest('.sidebar-menu-item');
+              if (parentItem) {
+                const toggleBtn = parentItem.querySelector('[data-toggle="submenu"]');
+                const submenu = parentItem.querySelector('.sidebar-submenu');
+                if (toggleBtn && submenu) {
+                  toggleBtn.classList.add('active');
+                  toggleBtn.setAttribute('aria-expanded', 'true');
+                  submenu.classList.add('active');
+                  submenu.setAttribute('aria-hidden', 'false');
+                }
+              }
+            }
+          } else {
+            link.classList.remove('active');
+          }
         }
       });
     }
     
     markActiveLinks();
     
-    // Update cart count
+    // ====================
+    // FIXED: Update Cart Count
+    // ====================
     function updateCartCount() {
       const cartCounts = document.querySelectorAll('.cart-count');
       const itemCount = {{ cart.item_count | default: 0 }};
       
       cartCounts.forEach(span => {
         span.textContent = itemCount;
+        if (span.classList.contains('cart-count')) {
+          span.textContent = itemCount;
+        }
       });
     }
     
     updateCartCount();
     
-    // Handle window resize
+    // ====================
+    // FIXED: Handle Window Resize
+    // ====================
+    let resizeTimer;
     window.addEventListener('resize', function() {
-      const newIsDesktop = window.innerWidth >= 1025;
-      
-      if (newIsDesktop && !isDesktop) {
-        // Switching from mobile to desktop
-        window.location.reload();
-      }
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        const newIsDesktop = window.innerWidth >= 1025;
+        
+        // If switching to desktop, close mobile sidebar
+        if (newIsDesktop && !isDesktop && mobileSidebar) {
+          mobileSidebar.classList.remove('active');
+          if (mobileSidebarOverlay) mobileSidebarOverlay.classList.remove('active');
+          document.body.classList.remove('mobile-sidebar-open');
+          
+          // Restore body scrolling
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+        }
+      }, 250);
     });
     
-    console.log('Header initialization complete');
+    console.log('✅ Header initialization complete');
+  });
+  
+  // Handle Shopify cart updates
+  document.addEventListener('cart:updated', function(event) {
+    const cartCounts = document.querySelectorAll('.cart-count');
+    const itemCount = event.detail ? event.detail.item_count : {{ cart.item_count | default: 0 }};
+    
+    cartCounts.forEach(span => {
+      span.textContent = itemCount;
+    });
   });
   </script>
 
