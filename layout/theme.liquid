@@ -822,37 +822,44 @@
       }
     }
 
-    // UNIVERSAL BUTTON HANDLER FOR ALL ADD-TO-CART AND BOOKING BUTTONS
+      // ENHANCED UNIVERSAL BUTTON HANDLER WITH VARIANT DETECTION
     class UniversalButtonHandler {
       constructor() {
+        this.productCache = {}; // Cache product data
         this.init();
       }
       
       init() {
-        console.log('UniversalButtonHandler initialized');
+        console.log('Enhanced UniversalButtonHandler initialized');
         
         // Listen to ALL clicks on page
         document.addEventListener('click', (e) => {
           this.handleClick(e);
-        }, true); // Use capture phase to catch everything
+        }, true);
         
-        // Also fix buttons that load dynamically
+        // Fix buttons that load dynamically
         this.setupMutationObserver();
+        
+        // Pre-fetch product data for current page
+        this.prefetchProductData();
       }
       
       handleClick(event) {
         const target = event.target;
-        const element = target.closest('button, a, [data-add-to-cart], .btn, .button');
+        const element = target.closest('button, a, [data-add-to-cart], .btn, .button, .add-to-cart-btn');
         
         if (!element) return;
         
         const text = (element.textContent || '').toLowerCase().trim();
+        const id = element.id || '';
         
         // 1. HANDLE ADD TO CART BUTTONS
         if (text.includes('add to cart') || 
             text.includes('add to bag') ||
             element.hasAttribute('data-add-to-cart') ||
-            (element.href && element.href.includes('/cart/add'))) {
+            (element.href && element.href.includes('/cart/add')) ||
+            id.includes('add-to-cart') ||
+            element.classList.contains('add-to-cart-btn')) {
           
           event.preventDefault();
           event.stopPropagation();
@@ -868,7 +875,7 @@
           
           event.preventDefault();
           event.stopPropagation();
-          console.log('Book appointment button detected:', element.textContent.trim());
+          console.log('Book appointment button detected');
           
           this.handleBookAppointment(element);
           return false;
@@ -876,96 +883,237 @@
       }
       
       handleAddToCart(element) {
-        // Try multiple methods to get variant ID
+        console.log('Processing add to cart for element:', element);
+        
+        // Try ALL methods to get variant ID
         let variantId = null;
         let quantity = 1;
         
-        // Method 1: Data attributes
+        // Method 1: Direct data attributes
         variantId = element.dataset.variantId || 
-                    element.closest('[data-variant-id]')?.dataset.variantId;
+                    element.dataset.productId ||
+                    element.closest('[data-variant-id]')?.dataset.variantId ||
+                    element.closest('[data-product-id]')?.dataset.productId;
         
-        // Method 2: Form input
+        // Method 2: Form inputs
         if (!variantId) {
           const form = element.closest('form');
           if (form) {
-            const idInput = form.querySelector('[name="id"], [name="variant"]');
+            const idInput = form.querySelector('[name="id"], [name="variant"], input[name*="id"]');
             if (idInput) variantId = idInput.value;
           }
         }
         
-        // Method 3: URL parameters
+        // Method 3: URL parameters from href
         if (!variantId && element.href) {
           try {
             const url = new URL(element.href, window.location.origin);
-            variantId = url.searchParams.get('id') || url.searchParams.get('variant');
+            variantId = url.searchParams.get('id') || 
+                       url.searchParams.get('variant') || 
+                       url.searchParams.get('product');
           } catch (e) {
-            console.log('Could not parse URL:', element.href);
+            console.log('Could not parse URL');
           }
         }
         
-        // Method 4: Product card data
+        // Method 4: Product card/container data
         if (!variantId) {
-          const productCard = element.closest('[data-product-handle]');
-          if (productCard) {
-            const productHandle = productCard.dataset.productHandle;
-            if (productHandle) {
-              // Need to fetch first available variant
-              this.fetchProductVariant(productHandle, element);
+          const container = element.closest('[data-product-handle], [data-product], .product-card, .product-item');
+          if (container) {
+            // Check data attributes on container
+            variantId = container.dataset.variantId || 
+                       container.dataset.productId ||
+                       container.dataset.id;
+            
+            // If still no ID but we have handle, fetch it
+            if (!variantId && container.dataset.productHandle) {
+              this.fetchProductByHandle(container.dataset.productHandle, element);
               return;
             }
           }
         }
         
+        // Method 5: Look for hidden inputs near the button
+        if (!variantId) {
+          const siblingInput = element.previousElementSibling || element.nextElementSibling;
+          if (siblingInput && siblingInput.tagName === 'INPUT' && siblingInput.type === 'hidden') {
+            variantId = siblingInput.value;
+          }
+        }
+        
+        // Method 6: Scan the entire product card for any ID
+        if (!variantId) {
+          const card = element.closest('.product-card, .card, .grid-item, .collection-item');
+          if (card) {
+            // Look for any element with variant/product ID
+            const idElements = card.querySelectorAll('[data-variant-id], [data-product-id], [data-id]');
+            for (const el of idElements) {
+              variantId = el.dataset.variantId || el.dataset.productId || el.dataset.id;
+              if (variantId) break;
+            }
+          }
+        }
+        
         if (variantId) {
+          console.log('Found variant ID:', variantId);
           this.addToCartAPI(variantId, quantity);
         } else {
-          console.error('Could not find variant ID for:', element);
-          this.showMessage('Unable to add item. Please visit the product page.', 'error');
+          console.warn('Could not find variant ID, trying product handle detection');
           
-          // Try to redirect to product page
-          const productLink = element.closest('a[href*="/products/"]');
-          if (productLink) {
-            window.location.href = productLink.href;
+          // Last resort: Try to extract product handle from page
+          const productHandle = this.extractProductHandleFromPage(element);
+          if (productHandle) {
+            this.fetchProductByHandle(productHandle, element);
+          } else {
+            this.showMessage('Unable to add item. Please visit the product page.', 'error');
+            
+            // Try to find and go to product page
+            this.redirectToProductPage(element);
           }
         }
       }
       
-      fetchProductVariant(productHandle, element) {
+      extractProductHandleFromPage(element) {
+        // Try to find product handle from URL
+        const path = window.location.pathname;
+        if (path.includes('/products/')) {
+          return path.split('/products/')[1].split('/')[0];
+        }
+        
+        // Try to find from data attributes
+        const container = element.closest('[data-product-handle], [data-product]');
+        if (container && container.dataset.productHandle) {
+          return container.dataset.productHandle;
+        }
+        
+        // Try to find from link
+        const productLink = element.closest('a[href*="/products/"]');
+        if (productLink && productLink.href) {
+          const match = productLink.href.match(/products\/([^\/]+)/);
+          return match ? match[1] : null;
+        }
+        
+        return null;
+      }
+      
+      fetchProductByHandle(productHandle, element) {
+        console.log('Fetching product by handle:', productHandle);
+        
+        // Check cache first
+        if (this.productCache[productHandle]) {
+          console.log('Using cached product data');
+          const variantId = this.productCache[productHandle].variants[0]?.id;
+          if (variantId) {
+            this.addToCartAPI(variantId, 1);
+          } else {
+            this.showMessage('Product not available', 'error');
+          }
+          return;
+        }
+        
+        // Show loading message
+        this.showMessage('Loading product...', 'info');
+        
         fetch(`/products/${productHandle}.js`)
-          .then(res => res.json())
+          .then(res => {
+            if (!res.ok) throw new Error('Product not found');
+            return res.json();
+          })
           .then(product => {
+            // Cache the product data
+            this.productCache[productHandle] = product;
+            
             if (product.variants && product.variants.length > 0) {
               const variantId = product.variants[0].id;
+              console.log('Fetched variant ID:', variantId);
               this.addToCartAPI(variantId, 1);
             } else {
-              this.showMessage('Product not available', 'error');
+              this.showMessage('Product has no available variants', 'error');
             }
           })
           .catch(err => {
             console.error('Failed to fetch product:', err);
-            this.showMessage('Error loading product', 'error');
+            this.showMessage('Error loading product. Please visit the product page.', 'error');
+            this.redirectToProductPage(element);
           });
       }
       
+      prefetchProductData() {
+        // Pre-fetch product data for current page
+        if (window.location.pathname.includes('/collections/') || 
+            window.location.pathname.includes('/products/')) {
+          
+          // Find all product handles on page
+          const productElements = document.querySelectorAll('[data-product-handle], a[href*="/products/"]');
+          const handles = new Set();
+          
+          productElements.forEach(el => {
+            const handle = el.dataset?.productHandle || 
+                          el.href?.match(/products\/([^\/]+)/)?.[1];
+            if (handle) handles.add(handle);
+          });
+          
+          // Pre-fetch first few products
+          Array.from(handles).slice(0, 5).forEach(handle => {
+            if (!this.productCache[handle]) {
+              fetch(`/products/${handle}.js`)
+                .then(res => res.json())
+                .then(product => {
+                  this.productCache[handle] = product;
+                })
+                .catch(err => console.log('Prefetch failed for:', handle));
+            }
+          });
+        }
+      }
+      
+      redirectToProductPage(element) {
+        // Try to find product page link
+        const productLink = element.closest('a[href*="/products/"]') || 
+                           element.closest('[data-product-url]') ||
+                           document.querySelector('a[href*="/products/"]');
+        
+        if (productLink) {
+          const url = productLink.href || productLink.dataset.productUrl;
+          if (url) {
+            setTimeout(() => {
+              window.location.href = url;
+            }, 1000);
+          }
+        }
+      }
+      
       addToCartAPI(variantId, quantity) {
-        console.log('Adding to cart:', variantId, quantity);
+        console.log('Adding to cart - Variant:', variantId, 'Qty:', quantity);
+        
+        // Validate variant ID
+        if (!variantId || isNaN(variantId)) {
+          this.showMessage('Invalid product selection', 'error');
+          return;
+        }
+        
+        this.showMessage('Adding to cart...', 'info');
         
         fetch('/cart/add.js', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
           body: JSON.stringify({
-            items: [{ id: variantId, quantity: quantity }]
+            items: [{ id: variantId.toString(), quantity: quantity }]
           })
         })
         .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
           return response.json();
         })
         .then(data => {
           console.log('✅ Cart add success:', data);
-          
-          // Show success message
           this.showMessage('Added to cart!', 'success');
+          
+          // Update cart count in header
+          this.updateCartCount(data.item_count);
           
           // Redirect to cart after delay
           setTimeout(() => {
@@ -974,29 +1122,71 @@
         })
         .catch(error => {
           console.error('❌ Cart add failed:', error);
-          this.showMessage('Failed to add to cart. Please try again.', 'error');
+          
+          // Try alternative method
+          this.tryAlternativeCartMethod(variantId, quantity, error);
+        });
+      }
+      
+      tryAlternativeCartMethod(variantId, quantity, originalError) {
+        console.log('Trying alternative cart method...');
+        
+        // Method 2: Use form submission
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/cart/add';
+        form.style.display = 'none';
+        
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id';
+        idInput.value = variantId;
+        
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'hidden';
+        qtyInput.name = 'quantity';
+        qtyInput.value = quantity;
+        
+        form.appendChild(idInput);
+        form.appendChild(qtyInput);
+        document.body.appendChild(form);
+        
+        // Try to submit form
+        setTimeout(() => {
+          form.submit();
+        }, 500);
+        
+        // If form doesn't work, show error
+        setTimeout(() => {
+          this.showMessage('Failed to add to cart. Please try again or contact support.', 'error');
+          console.error('All cart methods failed:', originalError);
+        }, 2000);
+      }
+      
+      updateCartCount(count) {
+        // Update any cart count elements
+        const countElements = document.querySelectorAll('.cart-count, [data-cart-count], .header__cart-count');
+        countElements.forEach(el => {
+          if (el.tagName === 'SPAN' || el.tagName === 'DIV') {
+            el.textContent = count;
+          } else if (el.tagName === 'INPUT') {
+            el.value = count;
+          }
         });
       }
       
       handleBookAppointment(element) {
-        // Try to find booking URL
         let bookingUrl = element.href || 
                         element.dataset.bookingUrl ||
                         '/pages/book-now';
-        
-        // If it's a Sesami link but Sesami is broken, redirect to booking page
-        if (bookingUrl.includes('sesami') && typeof window.Sesami === 'undefined') {
-          bookingUrl = '/pages/book-now';
-        }
         
         console.log('Redirecting to booking:', bookingUrl);
         window.location.href = bookingUrl;
       }
       
       showMessage(text, type) {
-        // Remove any existing message
-        const existingMsg = document.querySelector('.universal-button-message');
-        if (existingMsg) existingMsg.remove();
+        // Remove existing messages
+        document.querySelectorAll('.universal-button-message').forEach(msg => msg.remove());
         
         const message = document.createElement('div');
         message.className = 'universal-button-message';
@@ -1005,7 +1195,7 @@
           position: fixed;
           top: 20px;
           right: 20px;
-          background: ${type === 'success' ? '#E8C4B8' : '#ff4444'};
+          background: ${type === 'success' ? '#E8C4B8' : type === 'error' ? '#ff4444' : '#666'};
           color: white;
           padding: 12px 24px;
           border-radius: 4px;
@@ -1020,15 +1210,16 @@
         setTimeout(() => {
           message.style.animation = 'slideOut 0.3s ease';
           setTimeout(() => message.remove(), 300);
-        }, 2000);
+        }, 3000);
       }
       
       setupMutationObserver() {
-        // Watch for dynamically added buttons (AJAX, sliders, etc.)
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             if (mutation.addedNodes.length) {
-              console.log('New elements detected, buttons should work');
+              console.log('New elements added to DOM');
+              // Re-check for product data
+              this.prefetchProductData();
             }
           });
         });
