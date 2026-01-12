@@ -12,10 +12,27 @@
     margin: 0 auto;
     padding: 0 var(--spacing-sm);
   }
+  .announcement-bar p {
+    margin: 0;
+  }
 </style>
 
 <div class="announcement-bar">
   <div class="announcement-content">
-    <p>🎉 Free shipping on orders over $50! • 30-day money-back guarantee</p>
+    <p>{{ section.settings.announcement_text }}</p>
   </div>
 </div>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "🎉 Free shipping on orders over $50! • 30-day money-back guarantee"
+    }
+  ]
+}
+{% endschema %}
