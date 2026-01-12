@@ -286,9 +286,13 @@
           <div class="testimonial-card" {{ block.shopify_attributes }}>
             <div class="testimonial-image">
               {% if block.settings.customer_image %}
-                <img src="{{ block.settings.customer_image | image_url: '200x200', crop: 'center' }}" 
-                     alt="{{ block.settings.customer_name }}" 
-                     loading="lazy">
+                 <img 
+    src="{{ img | image_url: width: 200, height: 200, crop: 'center' }}" 
+    alt="{{ block.settings.customer_name | escape }}" 
+    width="200" 
+    height="200"
+    loading="lazy"
+  >
               {% else %}
                 {{ block.settings.emoji_icon | default: '👩🏽' }}
               {% endif %}
