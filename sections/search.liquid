@@ -33,7 +33,7 @@
   <div class="container">
     <h1 style="text-align: center; margin-bottom: 2rem;">Search Products</h1>
     
-    <form action="/search" method="get" class="search-form">
+    <form action="{{ routes.search_url }}" method="get" class="search-form">
       <input type="hidden" name="type" value="product">
       <input type="search" name="q" placeholder="Search for products..." class="search-input">
       <button type="submit" class="search-button">🔍</button>
