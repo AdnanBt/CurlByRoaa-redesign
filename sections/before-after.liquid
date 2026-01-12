@@ -1,11 +1,12 @@
 <style>
 .before-after {
-  padding: 100px 0;
-  background: linear-gradient(135deg, #2D2D2D 0%, #1a1a1a 100%);
+  padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  background: {{ section.settings.background_gradient | default: 'linear-gradient(135deg, #2D2D2D 0%, #1a1a1a 100%)' }};
   color: white;
   position: relative;
 }
 
+{% if section.settings.background_pattern %}
 .before-after::before {
   content: '';
   position: absolute;
@@ -13,34 +14,37 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('https://cdn.shopify.com/s/files/1/0567/4172/4316/files/pattern.png?v=1763925101');
-  opacity: 0.05;
+  background: url('{{ section.settings.background_pattern | img_url: 'master' }}');
+  opacity: {{ section.settings.pattern_opacity | divided_by: 100.0 }};
+  background-size: {{ section.settings.pattern_size }};
 }
+{% endif %}
 
 .before-after-header {
-  text-align: center;
-  margin-bottom: 60px;
+  text-align: {{ section.settings.header_alignment }};
+  margin-bottom: {{ section.settings.header_spacing }}px;
   position: relative;
   z-index: 2;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .before-after-header h2 {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: {{ section.settings.heading_size }}px;
+  font-weight: {{ section.settings.heading_weight }};
   margin-bottom: 16px;
-  color: white;
+  color: {{ section.settings.heading_color }};
 }
 
 .before-after-header p {
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 600px;
-  margin: 0 auto;
+  font-size: {{ section.settings.subheading_size }}px;
+  color: {{ section.settings.subheading_color }};
   line-height: 1.6;
 }
 
 .comparison-container {
-  max-width: 1000px;
+  max-width: {{ section.settings.slider_width }}px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
@@ -48,14 +52,14 @@
 
 .comparison-slider {
   position: relative;
-  border-radius: 20px;
+  border-radius: {{ section.settings.slider_border_radius }}px;
   overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: {{ section.settings.slider_shadow }};
 }
 
 .comparison-image {
   width: 100%;
-  height: 500px;
+  height: {{ section.settings.slider_height }}px;
   position: relative;
 }
 
@@ -70,22 +74,30 @@
 }
 
 .before-image {
-  background: linear-gradient(135deg, #8B7355, #A08D75);
+  {% if section.settings.before_image %}
+    background-image: url('{{ section.settings.before_image | img_url: '2000x' }}');
+  {% else %}
+    background: {{ section.settings.before_fallback_color | default: 'linear-gradient(135deg, #8B7355, #A08D75)' }};
+  {% endif %}
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.5rem;
+  font-size: {{ section.settings.image_text_size }}px;
   font-weight: 600;
 }
 
 .after-image {
-  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  {% if section.settings.after_image %}
+    background-image: url('{{ section.settings.after_image | img_url: '2000x' }}');
+  {% else %}
+    background: {{ section.settings.after_fallback_color | default: 'linear-gradient(135deg, #E8C4B8, #D4A59A)' }};
+  {% endif %}
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.5rem;
+  font-size: {{ section.settings.image_text_size }}px;
   font-weight: 600;
   width: 50%;
 }
@@ -94,9 +106,9 @@
   position: absolute;
   top: 0;
   left: 50%;
-  width: 4px;
+  width: {{ section.settings.handle_thickness }}px;
   height: 100%;
-  background: white;
+  background: {{ section.settings.handle_color }};
   cursor: ew-resize;
   z-index: 10;
   transform: translateX(-50%);
@@ -107,84 +119,102 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 50px;
-  height: 50px;
-  background: white;
+  width: {{ section.settings.handle_size }}px;
+  height: {{ section.settings.handle_size }}px;
+  background: {{ section.settings.handle_color }};
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .slider-handle::after {
-  content: '↔';
+  content: '{{ section.settings.handle_icon }}';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #E8C4B8;
+  color: {{ section.settings.handle_icon_color }};
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: {{ section.settings.handle_icon_size }}px;
 }
 
 .labels {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: {{ section.settings.label_color }};
+  font-weight: {{ section.settings.label_weight }};
+  text-transform: {{ section.settings.label_transform }};
+  letter-spacing: {{ section.settings.label_spacing }}px;
+}
+
+.labels span:first-child {
+  text-align: left;
+}
+
+.labels span:last-child {
+  text-align: right;
 }
 
 .testimonial-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-top: 80px;
+  grid-template-columns: repeat({{ section.settings.testimonials_per_row }}, 1fr);
+  gap: {{ section.settings.testimonial_gap }}px;
+  margin-top: {{ section.settings.testimonial_spacing }}px;
   position: relative;
   z-index: 2;
 }
 
 .testimonial-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 40px 30px;
-  border-radius: 16px;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: {{ section.settings.testimonial_bg }};
+  backdrop-filter: blur({{ section.settings.testimonial_blur }}px);
+  padding: {{ section.settings.testimonial_padding }}px;
+  border-radius: {{ section.settings.testimonial_radius }}px;
+  text-align: {{ section.settings.testimonial_alignment }};
+  border: {{ section.settings.testimonial_border }};
 }
 
 .testimonial-image {
-  width: 80px;
-  height: 80px;
+  width: {{ section.settings.testimonial_image_size }}px;
+  height: {{ section.settings.testimonial_image_size }}px;
   border-radius: 50%;
-  margin: 0 auto 20px;
-  background: linear-gradient(135deg, #E8C4B8, #D4A59A);
+  margin: 0 auto {{ section.settings.testimonial_image_spacing }}px;
+  background: {{ section.settings.testimonial_image_bg }};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.5rem;
+  color: {{ section.settings.testimonial_image_color }};
+  font-size: {{ section.settings.testimonial_image_icon_size }}px;
+  overflow: hidden;
+}
+
+.testimonial-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .testimonial-text {
-  font-style: italic;
-  margin-bottom: 20px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  font-style: {{ section.settings.testimonial_text_style }};
+  margin-bottom: {{ section.settings.testimonial_text_spacing }}px;
+  line-height: {{ section.settings.testimonial_text_line_height }};
+  color: {{ section.settings.testimonial_text_color }};
+  font-size: {{ section.settings.testimonial_text_size }}px;
 }
 
 .testimonial-author {
-  font-weight: 600;
-  color: white;
+  font-weight: {{ section.settings.testimonial_author_weight }};
+  color: {{ section.settings.testimonial_author_color }};
+  font-size: {{ section.settings.testimonial_author_size }}px;
 }
 
 .testimonial-time {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 4px;
+  font-size: {{ section.settings.testimonial_time_size }}px;
+  color: {{ section.settings.testimonial_time_color }};
+  margin-top: {{ section.settings.testimonial_time_spacing }}px;
 }
 
+/* Responsive */
 @media (max-width: 968px) {
   .testimonial-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -193,70 +223,84 @@
 
 @media (max-width: 768px) {
   .before-after {
-    padding: 80px 0;
+    padding: {{ section.settings.mobile_padding_top }}px 15px {{ section.settings.mobile_padding_bottom }}px;
   }
   
   .before-after-header h2 {
-    font-size: 2.5rem;
+    font-size: {{ section.settings.mobile_heading_size }}px;
   }
   
   .comparison-image {
-    height: 400px;
+    height: {{ section.settings.mobile_slider_height }}px;
   }
   
   .testimonial-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
-    margin-top: 60px;
+    gap: {{ section.settings.mobile_testimonial_gap }}px;
+    margin-top: {{ section.settings.mobile_testimonial_spacing }}px;
   }
   
   .testimonial-card {
-    padding: 30px 25px;
+    padding: {{ section.settings.mobile_testimonial_padding }}px;
+  }
+  
+  .slider-handle::before {
+    width: {{ section.settings.mobile_handle_size }}px;
+    height: {{ section.settings.mobile_handle_size }}px;
   }
 }
 </style>
 
 <section class="before-after">
   <div class="before-after-header">
-    <h2>Real Transformations</h2>
-    <p>See the incredible results our customers have achieved with our curl care system</p>
+    <h2>{{ section.settings.heading | default: 'Real Transformations' }}</h2>
+    <p>{{ section.settings.subheading | default: 'See the incredible results our customers have achieved with our curl care system' }}</p>
   </div>
   
   <div class="comparison-container">
     <div class="comparison-slider">
       <div class="comparison-image">
-        <div class="before-image">Before: Dry, Frizzy Curls</div>
-        <div class="after-image">After: Defined, Hydrated Curls</div>
+        <div class="before-image">
+          {% unless section.settings.before_image %}
+            {{ section.settings.before_text | default: 'Before: Dry, Frizzy Curls' }}
+          {% endunless %}
+        </div>
+        <div class="after-image">
+          {% unless section.settings.after_image %}
+            {{ section.settings.after_text | default: 'After: Defined, Hydrated Curls' }}
+          {% endunless %}
+        </div>
         <div class="slider-handle"></div>
       </div>
     </div>
     <div class="labels">
-      <span>Before</span>
-      <span>After 4 Weeks</span>
+      <span>{{ section.settings.before_label | default: 'Before' }}</span>
+      <span>{{ section.settings.after_label | default: 'After 4 Weeks' }}</span>
     </div>
   </div>
   
   <div class="testimonial-grid">
-    <div class="testimonial-card">
-      <div class="testimonial-image">👩🏽</div>
-      <p class="testimonial-text">"I've struggled with frizz my entire life. After 2 weeks, my curls are defined and so soft!"</p>
-      <div class="testimonial-author">Maria S.</div>
-      <div class="testimonial-time">After 2 weeks</div>
-    </div>
-    
-    <div class="testimonial-card">
-      <div class="testimonial-image">👩🏼</div>
-      <p class="testimonial-text">"The moisture retention is unbelievable. My curls used to get dry by day 2, now they last 4 days!"</p>
-      <div class="testimonial-author">Jessica T.</div>
-      <div class="testimonial-time">After 1 month</div>
-    </div>
-    
-    <div class="testimonial-card">
-      <div class="testimonial-image">👩🏻</div>
-      <p class="testimonial-text">"Finally found products that don't weigh down my fine curls. The volume and definition are perfect!"</p>
-      <div class="testimonial-author">Sarah M.</div>
-      <div class="testimonial-time">After 3 weeks</div>
-    </div>
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'testimonial' %}
+          <div class="testimonial-card" {{ block.shopify_attributes }}>
+            <div class="testimonial-image">
+              {% if block.settings.customer_image %}
+                <img src="{{ block.settings.customer_image | img_url: '200x200', crop: 'center' }}" 
+                     alt="{{ block.settings.customer_name }}" 
+                     loading="lazy">
+              {% else %}
+                {{ block.settings.emoji_icon | default: '👩🏽' }}
+              {% endif %}
+            </div>
+            <p class="testimonial-text">"{{ block.settings.testimonial_text }}"</p>
+            <div class="testimonial-author">{{ block.settings.customer_name }}</div>
+            {% if block.settings.time_period %}
+              <div class="testimonial-time">{{ block.settings.time_period }}</div>
+            {% endif %}
+          </div>
+      {% endcase %}
+    {% endfor %}
   </div>
 </section>
 
@@ -265,6 +309,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const slider = document.querySelector('.comparison-slider');
   const handle = document.querySelector('.slider-handle');
   const afterImage = document.querySelector('.after-image');
+  
+  if (!slider || !handle || !afterImage) return;
+  
   let isDragging = false;
   
   function updateSlider(x) {
@@ -304,5 +351,767 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('touchend', function() {
     isDragging = false;
   });
+  
+  // Click on slider to move handle
+  slider.addEventListener('click', function(e) {
+    updateSlider(e.clientX);
+  });
 });
 </script>
+
+{% schema %}
+{
+  "name": "Before & After Gallery",
+  "tag": "section",
+  "class": "before-after-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 100
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background Gradient",
+      "default": "linear-gradient(135deg, #2D2D2D 0%, #1a1a1a 100%)"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_pattern",
+      "label": "Background Pattern (Optional)"
+    },
+    {
+      "type": "range",
+      "id": "pattern_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Pattern Opacity",
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "pattern_size",
+      "label": "Pattern Size",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "repeat", "label": "Repeat" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real Transformations"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "See the incredible results our customers have achieved with our curl care system"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Header Spacing",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Heading Style"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Heading Size",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Subheading Style"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "rgba(255, 255, 255, 0.8)"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading Size",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "range",
+      "id": "slider_width",
+      "min": 600,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Slider Width",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "slider_height",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Slider Height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "mobile_slider_height",
+      "min": 200,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "label": "Mobile Slider Height",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "slider_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Slider Border Radius",
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "slider_shadow",
+      "label": "Slider Shadow",
+      "default": "0 25px 60px rgba(0, 0, 0, 0.3)"
+    },
+    {
+      "type": "header",
+      "content": "Before Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before Image"
+    },
+    {
+      "type": "text",
+      "id": "before_text",
+      "label": "Before Text (if no image)",
+      "default": "Before: Dry, Frizzy Curls"
+    },
+    {
+      "type": "color_background",
+      "id": "before_fallback_color",
+      "label": "Fallback Color (if no image)",
+      "default": "linear-gradient(135deg, #8B7355, #A08D75)"
+    },
+    {
+      "type": "header",
+      "content": "After Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After Image"
+    },
+    {
+      "type": "text",
+      "id": "after_text",
+      "label": "After Text (if no image)",
+      "default": "After: Defined, Hydrated Curls"
+    },
+    {
+      "type": "color_background",
+      "id": "after_fallback_color",
+      "label": "Fallback Color (if no image)",
+      "default": "linear-gradient(135deg, #E8C4B8, #D4A59A)"
+    },
+    {
+      "type": "range",
+      "id": "image_text_size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Image Text Size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Slider Handle"
+    },
+    {
+      "type": "color",
+      "id": "handle_color",
+      "label": "Handle Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "handle_thickness",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Handle Thickness",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "handle_size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Handle Circle Size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mobile_handle_size",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Handle Size",
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "handle_icon",
+      "label": "Handle Icon",
+      "default": "↔"
+    },
+    {
+      "type": "color",
+      "id": "handle_icon_color",
+      "label": "Handle Icon Color",
+      "default": "#E8C4B8"
+    },
+    {
+      "type": "range",
+      "id": "handle_icon_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Handle Icon Size",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before Label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After Label",
+      "default": "After 4 Weeks"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label Color",
+      "default": "rgba(255, 255, 255, 0.8)"
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "select",
+      "id": "label_transform",
+      "label": "Label Text Transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "label_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Label Letter Spacing",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Testimonials Layout"
+    },
+    {
+      "type": "range",
+      "id": "testimonials_per_row",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Testimonials Per Row",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "testimonial_spacing",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Testimonials Top Spacing",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_testimonial_spacing",
+      "min": 30,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile Top Spacing",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "testimonial_gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Testimonial Gap",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_testimonial_gap",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Testimonial Gap",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Testimonial Card Style"
+    },
+    {
+      "type": "color",
+      "id": "testimonial_bg",
+      "label": "Card Background",
+      "default": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "type": "range",
+      "id": "testimonial_blur",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Background Blur",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "testimonial_padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Card Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_testimonial_padding",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Card Padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "testimonial_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "testimonial_alignment",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "text",
+      "id": "testimonial_border",
+      "label": "Card Border",
+      "default": "1px solid rgba(255, 255, 255, 0.2)"
+    },
+    {
+      "type": "header",
+      "content": "Testimonial Image"
+    },
+    {
+      "type": "range",
+      "id": "testimonial_image_size",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Image Size",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "testimonial_image_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Image Bottom Spacing",
+      "default": 20
+    },
+    {
+      "type": "color_background",
+      "id": "testimonial_image_bg",
+      "label": "Image Background",
+      "default": "linear-gradient(135deg, #E8C4B8, #D4A59A)"
+    },
+    {
+      "type": "color",
+      "id": "testimonial_image_color",
+      "label": "Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "testimonial_image_icon_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Testimonial Text"
+    },
+    {
+      "type": "select",
+      "id": "testimonial_text_style",
+      "label": "Text Style",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "italic", "label": "Italic" }
+      ],
+      "default": "italic"
+    },
+    {
+      "type": "color",
+      "id": "testimonial_text_color",
+      "label": "Text Color",
+      "default": "rgba(255, 255, 255, 0.9)"
+    },
+    {
+      "type": "range",
+      "id": "testimonial_text_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "testimonial_text_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Text Bottom Spacing",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "testimonial_text_line_height",
+      "min": 1.2,
+      "max": 2.0,
+      "step": 0.1,
+      "label": "Text Line Height",
+      "default": 1.6
+    },
+    {
+      "type": "header",
+      "content": "Customer Name"
+    },
+    {
+      "type": "color",
+      "id": "testimonial_author_color",
+      "label": "Name Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "testimonial_author_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Name Size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "testimonial_author_weight",
+      "label": "Name Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Time Period"
+    },
+    {
+      "type": "color",
+      "id": "testimonial_time_color",
+      "label": "Time Color",
+      "default": "rgba(255, 255, 255, 0.7)"
+    },
+    {
+      "type": "range",
+      "id": "testimonial_time_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Time Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "testimonial_time_spacing",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Time Top Spacing",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile Top Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile Bottom Padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "customer_image",
+          "label": "Customer Photo (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "emoji_icon",
+          "label": "Emoji Icon (if no photo)",
+          "default": "👩🏽"
+        },
+        {
+          "type": "textarea",
+          "id": "testimonial_text",
+          "label": "Testimonial Text",
+          "default": "I've struggled with frizz my entire life. After 2 weeks, my curls are defined and so soft!"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer Name",
+          "default": "Maria S."
+        },
+        {
+          "type": "text",
+          "id": "time_period",
+          "label": "Time Period",
+          "default": "After 2 weeks"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Before & After Gallery",
+      "category": "Homepage",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "emoji_icon": "👩🏽",
+            "testimonial_text": "I've struggled with frizz my entire life. After 2 weeks, my curls are defined and so soft!",
+            "customer_name": "Maria S.",
+            "time_period": "After 2 weeks"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "emoji_icon": "👩🏼",
+            "testimonial_text": "The moisture retention is unbelievable. My curls used to get dry by day 2, now they last 4 days!",
+            "customer_name": "Jessica T.",
+            "time_period": "After 1 month"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "emoji_icon": "👩🏻",
+            "testimonial_text": "Finally found products that don't weigh down my fine curls. The volume and definition are perfect!",
+            "customer_name": "Sarah M.",
+            "time_period": "After 3 weeks"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
