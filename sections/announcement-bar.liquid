@@ -1,28 +1,17 @@
 <style>
   .announcement-bar {
-    background: #808080;
-    color: white;
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
     padding: 0.5rem 0;
     text-align: center;
     font-size: 0.9rem;
-    position: fixed; /* Changed to fixed */
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
+    position: relative;
   }
-  
-  /* Add padding to body so content isn't hidden behind fixed bar */
-  body {
-    padding-top: 2.5rem; /* Adjust based on your announcement bar height */
-  }
-  
   .announcement-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--spacing-sm);
   }
-  
   .announcement-bar p {
     margin: 0;
   }
@@ -39,10 +28,28 @@
   "name": "Announcement Bar",
   "settings": [
     {
-      "type": "text",
+      "type": "richtext",
       "id": "announcement_text",
       "label": "Announcement Text",
-      "default": "🎉 Free shipping on orders over $50! • 30-day money-back guarantee"
+      "default": "<p>🎉 Free shipping on orders over $50! • 30-day money-back guarantee</p>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar",
+      "category": "Header"
     }
   ]
 }
