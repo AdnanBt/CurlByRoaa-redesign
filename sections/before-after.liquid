@@ -286,7 +286,7 @@
           <div class="testimonial-card" {{ block.shopify_attributes }}>
             <div class="testimonial-image">
               {% if block.settings.customer_image %}
-                <img src="{{ block.settings.customer_image | img_url: '200x200', crop: 'center' }}" 
+                <img src="{{ block.settings.customer_image | image_url: '200x200', crop: 'center' }}" 
                      alt="{{ block.settings.customer_name }}" 
                      loading="lazy">
               {% else %}
