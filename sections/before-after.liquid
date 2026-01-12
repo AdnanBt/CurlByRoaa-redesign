@@ -72,10 +72,9 @@
   background-size: cover;
   background-position: center;
 }
-
 .before-image {
   {% if section.settings.before_image %}
-    background-image: url('{{ section.settings.before_image | image_url: '2000x' }}');
+    background-image: url('{{ section.settings.before_image | image_url: width: 2000 }}');
   {% else %}
     background: {{ section.settings.before_fallback_color | default: 'linear-gradient(135deg, #8B7355, #A08D75)' }};
   {% endif %}
@@ -89,7 +88,7 @@
 
 .after-image {
   {% if section.settings.after_image %}
-    background-image: url('{{ section.settings.after_image | image_url: '2000x' }}');
+    background-image: url('{{ section.settings.after_image | image_url: width: 2000 }}');
   {% else %}
     background: {{ section.settings.after_fallback_color | default: 'linear-gradient(135deg, #E8C4B8, #D4A59A)' }};
   {% endif %}
