@@ -326,13 +326,14 @@
     }
 
     .categories-dropdown.active {
-      max-height: 400px;
+      max-height: 500px;
     }
 
     .categories-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      padding: 10px 0;
+      grid-template-columns: 1fr 1fr;
+      padding: 15px 0;
+      gap: 20px;
     }
 
     .category-column {
@@ -340,29 +341,41 @@
     }
 
     .category-column-title {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       color: #666;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin: 15px 0 10px 0;
-      padding-bottom: 5px;
+      margin: 0 0 12px 0;
+      padding-bottom: 6px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .category-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .category-item {
+      margin-bottom: 8px;
     }
 
     .category-link {
       display: block;
       padding: 8px 0;
       text-decoration: none;
-      color: #666;
+      color: #444;
       font-size: 14px;
       transition: all 0.3s ease;
       position: relative;
       padding-left: 20px;
+      font-weight: 500;
     }
 
     .category-link:hover {
       color: var(--primary-color);
+      transform: translateX(5px);
     }
 
     .category-link::before {
@@ -373,12 +386,21 @@
       transform: translateY(-50%);
       width: 6px;
       height: 6px;
-      background: rgba(232, 196, 184, 0.5);
+      background: var(--primary-color);
       border-radius: 50%;
+      opacity: 0.6;
     }
 
     .category-link:hover::before {
+      opacity: 1;
       background: var(--primary-color);
+    }
+
+    .no-products-message {
+      padding: 15px 20px;
+      color: #888;
+      font-size: 14px;
+      font-style: italic;
     }
 
     /* Sidebar Footer */
@@ -402,17 +424,28 @@
     /* Desktop hover effects */
     @media (min-width: 1025px) {
       .sidebar-menu-item.has-dropdown:hover .categories-dropdown {
-        max-height: 400px;
+        max-height: 500px;
       }
     }
     
     /* Mobile submenu arrow */
     .mobile-arrow {
       transition: transform 0.3s ease;
+      margin-left: 8px;
     }
     
     .sidebar-menu-item.active .mobile-arrow {
       transform: rotate(90deg);
+    }
+    
+    /* Product count badge */
+    .product-count {
+      font-size: 11px;
+      color: #888;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 2px 6px;
+      border-radius: 8px;
+      margin-left: 8px;
     }
   </style>
 </head>
@@ -456,37 +489,110 @@
                 <div class="categories-grid">
                   <!-- Product Type Column -->
                   <div class="category-column">
-                    <div class="category-column-title">Product Type</div>
-                    {%- assign product_types = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
-                    {%- for handle in product_types -%}
-                      {%- assign collection = collections[handle] -%}
-                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
-                        {%- if collection -%}
-                          {{ collection.title }}
-                        {%- else -%}
-                          {{ handle | replace: '-', ' ' | capitalize }}
-                        {%- endif -%}
-                      </a>
-                    {%- endfor -%}
+                    <div class="category-column-title">Shop by Category</div>
+                    <ul class="category-list">
+                      <!-- Get all collections (or featured collections) -->
+                      {% assign main_collections = collections %}
+                      
+                      {% if main_collections.size > 0 %}
+                        {% for collection in main_collections limit: 8 %}
+                          {% unless collection.handle == 'all' or collection.handle == 'frontpage' %}
+                            <li class="category-item">
+                              <a href="{{ collection.url }}" class="category-link">
+                                {{ collection.title }}
+                                {% if collection.products_count > 0 %}
+                                  <span class="product-count">{{ collection.products_count }}</span>
+                                {% endif %}
+                              </a>
+                            </li>
+                          {% endunless %}
+                        {% endfor %}
+                      {% else %}
+                        <!-- Fallback: Show hardcoded product categories -->
+                        {% assign product_categories = "Shampoos,Conditioners,Curl Creams,Hair Oils,Styling Products,Hair Treatments,Accessories,Travel Kits" | split: ',' %}
+                        {% for category in product_categories %}
+                          <li class="category-item">
+                            <a href="{{ routes.collections_url }}" class="category-link">
+                              {{ category }}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      {% endif %}
+                      
+                      <!-- View All Collections Link -->
+                      <li class="category-item">
+                        <a href="{{ routes.collections_url }}" class="category-link" style="font-weight: 600; color: var(--primary-color);">
+                          View All Collections →
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                   
-                  <!-- Curl Type Column -->
+                  <!-- Featured/Best Sellers Column -->
                   <div class="category-column">
-                    <div class="category-column-title">Curl Type</div>
-                    {%- assign curl_types = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
-                    {%- for handle in curl_types -%}
-                      {%- assign collection = collections[handle] -%}
-                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
-                        {%- if collection -%}
-                          {{ collection.title }}
-                        {%- else -%}
-                          {{ handle | replace: '-', ' ' | capitalize }}
-                        {%- endif -%}
-                      </a>
-                    {%- endfor -%}
+                    <div class="category-column-title">Popular Products</div>
+                    <ul class="category-list">
+                      <!-- Get featured products -->
+                      {% assign featured_products = collections.all.products | limit: 6 %}
+                      
+                      {% if featured_products.size > 0 %}
+                        {% for product in featured_products %}
+                          <li class="category-item">
+                            <a href="{{ product.url }}" class="category-link">
+                              {{ product.title }}
+                              <span class="product-count">${{ product.price | money_without_currency }}</span>
+                            </a>
+                          </li>
+                        {% endfor %}
+                      {% else %}
+                        <!-- Fallback: Show popular product names -->
+                        {% assign popular_products = "Hydrating Curl Cream,Defining Gel,Leave-In Conditioner,Moisture Mask,Shine Serum,Volume Spray" | split: ',' %}
+                        {% for product_name in popular_products %}
+                          <li class="category-item">
+                            <a href="{{ routes.all_products_collection_url }}" class="category-link">
+                              {{ product_name }}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      {% endif %}
+                      
+                      <!-- View All Products Link -->
+                      <li class="category-item">
+                        <a href="{{ routes.all_products_collection_url }}" class="category-link" style="font-weight: 600; color: var(--primary-color);">
+                          View All Products →
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
+            </li>
+            
+            <!-- Quick Links -->
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link">
+                <span style="display: flex; align-items: center;">
+                  <span class="all-products-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                    </svg>
+                  </span>
+                  New Arrivals
+                </span>
+              </a>
+            </li>
+            
+            <li class="sidebar-menu-item">
+              <a href="{{ routes.search_url }}?sort_by=best-selling" class="sidebar-menu-link">
+                <span style="display: flex; align-items: center;">
+                  <span class="all-products-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11.5 9.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM9 15.27l-1.45.66.35-1.6-1.2-1.15 1.6-.23L9 11.23l.7 1.52 1.6.23-1.2 1.15.35 1.6L9 15.27z"/>
+                    </svg>
+                  </span>
+                  Best Sellers
+                </span>
+              </a>
             </li>
           </ul>
         </div>
@@ -737,34 +843,75 @@
                 <div class="categories-grid">
                   <!-- Product Type Column -->
                   <div class="category-column">
-                    <div class="category-column-title">Product Type</div>
-                    {%- assign product_types = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
-                    {%- for handle in product_types -%}
-                      {%- assign collection = collections[handle] -%}
-                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
-                        {%- if collection -%}
-                          {{ collection.title }}
-                        {%- else -%}
-                          {{ handle | replace: '-', ' ' | capitalize }}
-                        {%- endif -%}
-                      </a>
-                    {%- endfor -%}
+                    <div class="category-column-title">Shop by Category</div>
+                    <ul class="category-list">
+                      <!-- Get all collections (or featured collections) -->
+                      {% assign main_collections = collections %}
+                      
+                      {% if main_collections.size > 0 %}
+                        {% for collection in main_collections limit: 6 %}
+                          {% unless collection.handle == 'all' or collection.handle == 'frontpage' %}
+                            <li class="category-item">
+                              <a href="{{ collection.url }}" class="category-link" onclick="closeMobileSidebar()">
+                                {{ collection.title }}
+                                {% if collection.products_count > 0 %}
+                                  <span class="product-count">{{ collection.products_count }}</span>
+                                {% endif %}
+                              </a>
+                            </li>
+                          {% endunless %}
+                        {% endfor %}
+                      {% else %}
+                        <!-- Fallback: Show hardcoded product categories -->
+                        {% assign product_categories = "Shampoos,Conditioners,Curl Creams,Hair Oils,Styling Products,Treatments" | split: ',' %}
+                        {% for category in product_categories %}
+                          <li class="category-item">
+                            <a href="{{ routes.collections_url }}" class="category-link" onclick="closeMobileSidebar()">
+                              {{ category }}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      {% endif %}
+                      
+                      <!-- View All Collections Link -->
+                      <li class="category-item">
+                        <a href="{{ routes.collections_url }}" class="category-link" style="font-weight: 600; color: var(--primary-color);" onclick="closeMobileSidebar()">
+                          View All Collections →
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                   
-                  <!-- Curl Type Column -->
+                  <!-- Quick Links Column -->
                   <div class="category-column">
-                    <div class="category-column-title">Curl Type</div>
-                    {%- assign curl_types = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
-                    {%- for handle in curl_types -%}
-                      {%- assign collection = collections[handle] -%}
-                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
-                        {%- if collection -%}
-                          {{ collection.title }}
-                        {%- else -%}
-                          {{ handle | replace: '-', ' ' | capitalize }}
-                        {%- endif -%}
-                      </a>
-                    {%- endfor -%}
+                    <div class="category-column-title">Quick Links</div>
+                    <ul class="category-list">
+                      <li class="category-item">
+                        <a href="{{ routes.all_products_collection_url }}" class="category-link" onclick="closeMobileSidebar()">
+                          All Products
+                        </a>
+                      </li>
+                      <li class="category-item">
+                        <a href="{{ routes.search_url }}?sort_by=best-selling" class="category-link" onclick="closeMobileSidebar()">
+                          Best Sellers
+                        </a>
+                      </li>
+                      <li class="category-item">
+                        <a href="{{ routes.search_url }}?sort_by=created-descending" class="category-link" onclick="closeMobileSidebar()">
+                          New Arrivals
+                        </a>
+                      </li>
+                      <li class="category-item">
+                        <a href="{{ routes.search_url }}?q=sale&options%5Bprefix%5D=last" class="category-link" onclick="closeMobileSidebar()">
+                          On Sale
+                        </a>
+                      </li>
+                      <li class="category-item">
+                        <a href="{{ routes.search_url }}" class="category-link" onclick="closeMobileSidebar()">
+                          Search Products
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -778,27 +925,27 @@
           <div class="sidebar-section-title">Education & Content</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="#educational-content" class="sidebar-menu-link">
+              <a href="#educational-content" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Educational Content
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#quiz" class="sidebar-menu-link">
+              <a href="#quiz" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Hair Quiz
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#faq" class="sidebar-menu-link">
+              <a href="#faq" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 FAQ
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#science-technology" class="sidebar-menu-link">
+              <a href="#science-technology" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Science & Technology
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#ingredients-spotlight" class="sidebar-menu-link">
+              <a href="#ingredients-spotlight" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Ingredients Spotlight
               </a>
             </li>
@@ -810,17 +957,17 @@
           <div class="sidebar-section-title">Products</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="#featured-products" class="sidebar-menu-link">
+              <a href="#featured-products" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Featured Products
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#featured-collections" class="sidebar-menu-link">
+              <a href="#featured-collections" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Featured Collections
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#product-benefits" class="sidebar-menu-link">
+              <a href="#product-benefits" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Product Benefits
               </a>
             </li>
@@ -832,12 +979,12 @@
           <div class="sidebar-section-title">Services & Experts</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="#services-by-concern" class="sidebar-menu-link">
+              <a href="#services-by-concern" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Services by Concern
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#expert-endorsements" class="sidebar-menu-link">
+              <a href="#expert-endorsements" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Expert Endorsements
               </a>
             </li>
@@ -849,22 +996,22 @@
           <div class="sidebar-section-title">Trust & Community</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="#trust-indicators" class="sidebar-menu-link">
+              <a href="#trust-indicators" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Trust Indicators
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#ugc-gallery" class="sidebar-menu-link">
+              <a href="#ugc-gallery" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 User Gallery
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="#before-after" class="sidebar-menu-link">
+              <a href="#before-after" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Before & After
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ routes.search_url }}" class="sidebar-menu-link">
+              <a href="{{ routes.search_url }}" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Search
               </a>
             </li>
@@ -876,12 +1023,12 @@
           <div class="sidebar-section-title">About</div>
           <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-              <a href="#hero" class="sidebar-menu-link">
+              <a href="#hero" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Home Hero
               </a>
             </li>
             <li class="sidebar-menu-item">
-              <a href="{{ pages['about'].url | default: '#' }}" class="sidebar-menu-link">
+              <a href="{{ pages['about'].url | default: '#' }}" class="sidebar-menu-link" onclick="closeMobileSidebar()">
                 Our Story
               </a>
             </li>
@@ -892,7 +1039,7 @@
 
     <div class="sidebar-footer">
       {% if customer %}
-        <a href="{{ routes.account_url }}" class="sidebar-account">
+        <a href="{{ routes.account_url }}" class="sidebar-account" onclick="closeMobileSidebar()">
           <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
@@ -904,7 +1051,7 @@
           </div>
         </a>
       {% else %}
-        <a href="{{ routes.account_login_url }}" class="sidebar-account">
+        <a href="{{ routes.account_login_url }}" class="sidebar-account" onclick="closeMobileSidebar()">
           <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), #D4A59A); display: flex; align-items: center; justify-content: center; color: white;">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
@@ -919,7 +1066,7 @@
 
       <!-- Cart Summary -->
       <div style="margin-top: 16px; padding: 16px; background: rgba(232, 196, 184, 0.05); border-radius: 8px;">
-        <a href="{{ routes.cart_url }}" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text-dark);">
+        <a href="{{ routes.cart_url }}" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text-dark);" onclick="closeMobileSidebar()">
           <span style="font-weight: 500;">View Cart</span>
           <span style="background: var(--primary-color); color: white; border-radius: 12px; padding: 4px 12px; font-size: 13px; font-weight: 600;">
             {{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}
@@ -948,6 +1095,23 @@
     // Check if we're on mobile/tablet
     const isMobile = window.innerWidth <= 1024;
     
+    // Make closeMobileSidebar function globally accessible
+    window.closeMobileSidebar = function() {
+      console.log('👈 Closing sidebar');
+      mobileSidebar.classList.remove('active');
+      mobileSidebarOverlay.classList.remove('active');
+      document.body.classList.remove('mobile-sidebar-open');
+      document.body.style.overflow = '';
+      
+      // Close any open dropdowns
+      const openDropdowns = document.querySelectorAll('.mobile-category-item.active');
+      openDropdowns.forEach(item => {
+        item.classList.remove('active');
+        const dropdown = item.querySelector('.mobile-categories-dropdown');
+        if (dropdown) dropdown.classList.remove('active');
+      });
+    };
+    
     if (isMobile) {
       console.log('📱 Setting up mobile sidebar');
       
@@ -966,19 +1130,10 @@
         document.body.style.overflow = 'hidden';
       }
       
-      // Close mobile sidebar
-      function closeMobileSidebar() {
-        console.log('👈 Closing sidebar');
-        mobileSidebar.classList.remove('active');
-        mobileSidebarOverlay.classList.remove('active');
-        document.body.classList.remove('mobile-sidebar-open');
-        document.body.style.overflow = '';
-      }
-      
       // Toggle mobile sidebar
       function toggleMobileSidebar() {
         if (mobileSidebar.classList.contains('active')) {
-          closeMobileSidebar();
+          window.closeMobileSidebar();
         } else {
           openMobileSidebar();
         }
@@ -986,8 +1141,8 @@
       
       // Event listeners
       sidebarToggle.addEventListener('click', toggleMobileSidebar);
-      mobileSidebarClose.addEventListener('click', closeMobileSidebar);
-      mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
+      mobileSidebarClose.addEventListener('click', window.closeMobileSidebar);
+      mobileSidebarOverlay.addEventListener('click', window.closeMobileSidebar);
       
       // Mobile: Toggle "All Products" categories
       if (mobileAllProductsBtn) {
@@ -1001,18 +1156,10 @@
         });
       }
       
-      // Close sidebar when clicking category links
-      mobileSidebar.addEventListener('click', function(e) {
-        if (e.target.matches('.category-link[href]') || 
-            e.target.matches('.sidebar-menu-link[href]')) {
-          setTimeout(closeMobileSidebar, 300);
-        }
-      });
-      
       // Escape key to close
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && mobileSidebar.classList.contains('active')) {
-          closeMobileSidebar();
+          window.closeMobileSidebar();
         }
       });
     }
@@ -1057,10 +1204,7 @@
       resizeTimer = setTimeout(function() {
         // Close sidebar if switching from mobile to desktop
         if (window.innerWidth > 1024 && mobileSidebar.classList.contains('active')) {
-          mobileSidebar.classList.remove('active');
-          mobileSidebarOverlay.classList.remove('active');
-          document.body.classList.remove('mobile-sidebar-open');
-          document.body.style.overflow = '';
+          window.closeMobileSidebar();
         }
       }, 250);
     });
@@ -1098,5 +1242,4 @@
   <main id="MainContent">
     {{ content_for_layout }}
   </main>
-</body>
 </html>
