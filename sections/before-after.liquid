@@ -89,7 +89,7 @@
 
 .after-image {
   {% if section.settings.after_image %}
-    background-image: url('{{ section.settings.after_image | img_url: '2000x' }}');
+    background-image: url('{{ section.settings.after_image | image_url: '2000x' }}');
   {% else %}
     background: {{ section.settings.after_fallback_color | default: 'linear-gradient(135deg, #E8C4B8, #D4A59A)' }};
   {% endif %}
