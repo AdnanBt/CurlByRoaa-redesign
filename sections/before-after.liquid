@@ -14,7 +14,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('{{ section.settings.background_pattern | img_url: 'master' }}');
+  background: url('{{ section.settings.background_pattern | image_url: 'master' }}');
   opacity: {{ section.settings.pattern_opacity | divided_by: 100.0 }};
   background-size: {{ section.settings.pattern_size }};
 }
