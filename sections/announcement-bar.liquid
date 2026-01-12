@@ -1,17 +1,28 @@
 <style>
   .announcement-bar {
-    background:light-grey;
+    background: #808080;
     color: white;
     padding: 0.5rem 0;
     text-align: center;
     font-size: 0.9rem;
-    position: relative;
+    position: fixed; /* Changed to fixed */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
   }
+  
+  /* Add padding to body so content isn't hidden behind fixed bar */
+  body {
+    padding-top: 2.5rem; /* Adjust based on your announcement bar height */
+  }
+  
   .announcement-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--spacing-sm);
   }
+  
   .announcement-bar p {
     margin: 0;
   }
