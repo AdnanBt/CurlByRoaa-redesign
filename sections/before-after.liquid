@@ -14,7 +14,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('{{ section.settings.background_pattern | image_url: 'master' }}');
+  background: url('{{ section.settings.background_pattern | image_url }}');
   opacity: {{ section.settings.pattern_opacity | divided_by: 100.0 }};
   background-size: {{ section.settings.pattern_size }};
 }
@@ -285,13 +285,13 @@
           <div class="testimonial-card" {{ block.shopify_attributes }}>
             <div class="testimonial-image">
               {% if block.settings.customer_image %}
-                 <img 
-    src="{{ img | image_url: width: 200, height: 200, crop: 'center' }}" 
-    alt="{{ block.settings.customer_name | escape }}" 
-    width="200" 
-    height="200"
-    loading="lazy"
-  >
+                <img 
+                  src="{{ block.settings.customer_image | image_url: width: section.settings.testimonial_image_size, height: section.settings.testimonial_image_size, crop: 'center' }}" 
+                  alt="{{ block.settings.customer_name | escape }}" 
+                  width="{{ section.settings.testimonial_image_size }}"
+                  height="{{ section.settings.testimonial_image_size }}"
+                  loading="lazy"
+                >
               {% else %}
                 {{ block.settings.emoji_icon | default: '👩🏽' }}
               {% endif %}
