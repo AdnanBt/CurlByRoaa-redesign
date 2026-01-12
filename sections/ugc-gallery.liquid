@@ -105,11 +105,37 @@
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
 }
 
 .btn:hover {
   background: #D4A59A;
   transform: translateY(-2px);
+}
+
+.upload-form {
+  display: none;
+  margin-top: 20px;
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 12px;
+  margin: 20px auto;
+  display: none;
+}
+
+.upload-success {
+  color: #4CAF50;
+  margin-top: 10px;
+  display: none;
 }
 
 /* Mobile Styles */
@@ -193,21 +219,37 @@
 
   <div class="gallery-cta">
     <div class="gallery-hashtag">{{ section.settings.hashtag | default: '#CurlsByRoaa' }}</div>
-    {% if section.settings.button_url and section.settings.button_text %}
-      <a href="{{ section.settings.button_url }}" class="btn" target="_blank" rel="noopener noreferrer">
-        {{ section.settings.button_text }}
-      </a>
-    {% else %}
-      <a href="https://instagram.com" class="btn" target="_blank" rel="noopener noreferrer">
-        Share Your Transformation
-      </a>
-    {% endif %}
+    
+    <!-- Upload Button -->
+    <button type="button" class="btn" id="upload-trigger">
+      {{ section.settings.button_text | default: 'Share Your Transformation' }}
+    </button>
+    
+    <!-- Hidden File Input -->
+    <input type="file" 
+           id="image-upload" 
+           accept="image/*" 
+           capture="environment" 
+           class="upload-input">
+    
+    <!-- Preview Area -->
+    <img id="upload-preview" class="upload-preview" alt="Upload preview">
+    
+    <!-- Success Message -->
+    <div id="upload-success" class="upload-success">
+      ✅ Photo uploaded successfully! Use #CurlsByRoaa when sharing
+    </div>
   </div>
 </section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Click on gallery items
   const galleryItems = document.querySelectorAll('.gallery-item');
+  const uploadTrigger = document.getElementById('upload-trigger');
+  const fileInput = document.getElementById('image-upload');
+  const preview = document.getElementById('upload-preview');
+  const successMsg = document.getElementById('upload-success');
   
   galleryItems.forEach(item => {
     item.addEventListener('click', function() {
@@ -219,6 +261,103 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+  
+  // Upload functionality
+  uploadTrigger.addEventListener('click', function() {
+    fileInput.click();
+  });
+  
+  fileInput.addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      
+      // Validate file type
+      if (!file.type.match('image.*')) {
+        alert('Please select an image file');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
+        return;
+      }
+      
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        successMsg.style.display = 'block';
+        
+        // Reset file input
+        fileInput.value = '';
+        
+        // Show success message for 5 seconds
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+          preview.style.display = 'none';
+        }, 5000);
+      };
+      reader.readAsDataURL(file);
+      
+      // Here you would typically upload to your server
+      // For Shopify, you might want to use their file upload API
+      console.log('Photo selected:', file.name);
+      
+      // Example of how to send to server (you'll need to implement backend):
+      // uploadToServer(file);
+    }
+  });
+  
+  // Function to simulate server upload (replace with actual API call)
+  function uploadToServer(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    // Replace with your actual upload endpoint
+    fetch('/your-upload-endpoint', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Upload successful:', data);
+    })
+    .catch(error => {
+      console.error('Upload error:', error);
+    });
+  }
+  
+  // Add Instagram sharing option
+  function shareToInstagram() {
+    const hashtag = "{{ section.settings.hashtag | default: '#CurlsByRoaa' }}";
+    const text = `Check out my transformation! ${hashtag}`;
+    
+    // For mobile devices
+    if (navigator.share) {
+      navigator.share({
+        title: 'My Curl Transformation',
+        text: text,
+        url: window.location.href
+      })
+      .then(() => console.log('Shared successfully'))
+      .catch(error => console.log('Share failed:', error));
+    } else {
+      // Fallback: open Instagram in new tab
+      window.open('https://www.instagram.com/', '_blank');
+    }
+  }
+  
+  // Optional: Add Instagram share button
+  const instagramBtn = document.createElement('button');
+  instagramBtn.className = 'btn';
+  instagramBtn.textContent = 'Share on Instagram';
+  instagramBtn.style.marginLeft = '10px';
+  instagramBtn.style.background = '#E4405F';
+  instagramBtn.addEventListener('click', shareToInstagram);
+  
+  document.querySelector('.gallery-cta').appendChild(instagramBtn);
 });
 </script>
 
@@ -248,13 +387,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "text",
       "id": "button_text",
       "label": "Button Text",
-      "default": "Share Your Transformation"
-    },
-    {
-      "type": "url",
-      "id": "button_url",
-      "label": "Button Link",
-      "default": "/"
+      "default": "Upload Your Photo"
     }
   ],
   "blocks": [
