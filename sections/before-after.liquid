@@ -75,7 +75,7 @@
 
 .before-image {
   {% if section.settings.before_image %}
-    background-image: url('{{ section.settings.before_image | img_url: '2000x' }}');
+    background-image: url('{{ section.settings.before_image | image_url: '2000x' }}');
   {% else %}
     background: {{ section.settings.before_fallback_color | default: 'linear-gradient(135deg, #8B7355, #A08D75)' }};
   {% endif %}
