@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="preconnect" href="https://cdn.shopify.com">
- 
   
   <style>
     /* ==================== */
@@ -271,6 +270,7 @@
 
     .sidebar-menu-item {
       margin: 0;
+      position: relative;
     }
 
     .sidebar-menu-link {
@@ -284,6 +284,11 @@
       font-weight: 500;
       transition: all 0.3s ease;
       border-left: 4px solid transparent;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      background: none;
+      font-family: inherit;
     }
 
     .sidebar-menu-link:hover,
@@ -301,29 +306,79 @@
       border-radius: 10px;
     }
 
-    /* Submenu */
-    .sidebar-submenu {
+    /* All Products Icon */
+    .all-products-icon {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Categories Dropdown */
+    .categories-dropdown {
       background: rgba(0, 0, 0, 0.02);
       border-left: 4px solid rgba(232, 196, 184, 0.3);
-      display: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
     }
 
-    .sidebar-submenu.active {
-      display: block;
+    .categories-dropdown.active {
+      max-height: 400px;
     }
 
-    .sidebar-sublink {
+    .categories-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 10px 0;
+    }
+
+    .category-column {
+      padding: 0 20px;
+    }
+
+    .category-column-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 15px 0 10px 0;
+      padding-bottom: 5px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .category-link {
       display: block;
-      padding: 10px 20px 10px 40px;
+      padding: 8px 0;
       text-decoration: none;
       color: #666;
       font-size: 14px;
       transition: all 0.3s ease;
+      position: relative;
+      padding-left: 20px;
     }
 
-    .sidebar-sublink:hover {
+    .category-link:hover {
       color: var(--primary-color);
-      background: rgba(232, 196, 184, 0.05);
+    }
+
+    .category-link::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: rgba(232, 196, 184, 0.5);
+      border-radius: 50%;
+    }
+
+    .category-link:hover::before {
+      background: var(--primary-color);
     }
 
     /* Sidebar Footer */
@@ -342,6 +397,22 @@
       border-radius: 8px;
       transition: all 0.3s ease;
       background: rgba(0, 0, 0, 0.02);
+    }
+    
+    /* Desktop hover effects */
+    @media (min-width: 1025px) {
+      .sidebar-menu-item.has-dropdown:hover .categories-dropdown {
+        max-height: 400px;
+      }
+    }
+    
+    /* Mobile submenu arrow */
+    .mobile-arrow {
+      transition: transform 0.3s ease;
+    }
+    
+    .sidebar-menu-item.active .mobile-arrow {
+      transform: rotate(90deg);
     }
   </style>
 </head>
@@ -366,52 +437,55 @@
         <div class="sidebar-section">
           <div class="sidebar-section-title">Shop</div>
           <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link">
-                All Products
+            <!-- Single "All Products" with Categories Dropdown -->
+            <li class="sidebar-menu-item has-dropdown">
+              <button class="sidebar-menu-link all-products-btn">
+                <span style="display: flex; align-items: center;">
+                  <span class="all-products-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M10 3H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm10 0h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM10 13H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1zm10 0h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1z"/>
+                    </svg>
+                  </span>
+                  All Products
+                </span>
                 <span class="sidebar-menu-count">{{ collections.all.products_count | default: 0 }}</span>
-              </a>
-            </li>
-
-            <!-- Product Type Dropdown -->
-            <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-product-type">
-                By Product Type
-                <span class="sidebar-menu-count">6</span>
               </button>
-              <div class="sidebar-submenu" id="desktop-product-type">
-                {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
-                {%- for handle in collections_to_show -%}
-                  {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
-                    {%- if collection -%}
-                      {{ collection.title }}
-                    {%- else -%}
-                      {{ handle | replace: '-', ' ' | capitalize }}
-                    {%- endif -%}
-                  </a>
-                {%- endfor -%}
-              </div>
-            </li>
-
-            <!-- Curl Type Dropdown -->
-            <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="desktop-curl-type">
-                By Curl Type
-                <span class="sidebar-menu-count">6</span>
-              </button>
-              <div class="sidebar-submenu" id="desktop-curl-type">
-                {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
-                {%- for handle in curl_collections -%}
-                  {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
-                    {%- if collection -%}
-                      {{ collection.title }}
-                    {%- else -%}
-                      {{ handle | replace: '-', ' ' | capitalize }}
-                    {%- endif -%}
-                  </a>
-                {%- endfor -%}
+              
+              <!-- Categories Dropdown -->
+              <div class="categories-dropdown">
+                <div class="categories-grid">
+                  <!-- Product Type Column -->
+                  <div class="category-column">
+                    <div class="category-column-title">Product Type</div>
+                    {%- assign product_types = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
+                    {%- for handle in product_types -%}
+                      {%- assign collection = collections[handle] -%}
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    {%- endfor -%}
+                  </div>
+                  
+                  <!-- Curl Type Column -->
+                  <div class="category-column">
+                    <div class="category-column-title">Curl Type</div>
+                    {%- assign curl_types = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
+                    {%- for handle in curl_types -%}
+                      {%- assign collection = collections[handle] -%}
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    {%- endfor -%}
+                  </div>
+                </div>
               </div>
             </li>
           </ul>
@@ -502,7 +576,6 @@
                 User Gallery
               </a>
             </li>
-            <!-- BEFORE & AFTER ADDED HERE -->
             <li class="sidebar-menu-item">
               <a href="#before-after" class="sidebar-menu-link">
                 Before & After
@@ -639,63 +712,67 @@
     </div>
 
     <div class="sidebar-content">
-      <!-- SAME CONTENT AS DESKTOP SIDEBAR -->
       <nav class="sidebar-nav">
-        <!-- Shop Section -->
+        <!-- Shop Section - MOBILE VERSION -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Shop</div>
           <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-              <a href="{{ routes.all_products_collection_url }}" class="sidebar-menu-link">
-                All Products
+            <!-- Single "All Products" with Categories Dropdown (Mobile) -->
+            <li class="sidebar-menu-item mobile-category-item">
+              <button class="sidebar-menu-link mobile-all-products-btn">
+                <span style="display: flex; align-items: center;">
+                  <span class="all-products-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M10 3H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm10 0h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM10 13H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1zm10 0h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1z"/>
+                    </svg>
+                  </span>
+                  All Products
+                </span>
                 <span class="sidebar-menu-count">{{ collections.all.products_count | default: 0 }}</span>
-              </a>
-            </li>
-
-            <!-- Product Type Dropdown -->
-            <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-product-type">
-                By Product Type
-                <span class="sidebar-menu-count">6</span>
+                <span class="mobile-arrow">›</span>
               </button>
-              <div class="sidebar-submenu" id="mobile-product-type">
-                {%- assign collections_to_show = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
-                {%- for handle in collections_to_show -%}
-                  {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
-                    {%- if collection -%}
-                      {{ collection.title }}
-                    {%- else -%}
-                      {{ handle | replace: '-', ' ' | capitalize }}
-                    {%- endif -%}
-                  </a>
-                {%- endfor -%}
-              </div>
-            </li>
-
-            <!-- Curl Type Dropdown -->
-            <li class="sidebar-menu-item">
-              <button class="sidebar-menu-link" data-toggle="submenu" data-target="mobile-curl-type">
-                By Curl Type
-                <span class="sidebar-menu-count">6</span>
-              </button>
-              <div class="sidebar-submenu" id="mobile-curl-type">
-                {%- assign curl_collections = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
-                {%- for handle in curl_collections -%}
-                  {%- assign collection = collections[handle] -%}
-                  <a href="{{ collection.url | default: routes.collections_url }}" class="sidebar-sublink">
-                    {%- if collection -%}
-                      {{ collection.title }}
-                    {%- else -%}
-                      {{ handle | replace: '-', ' ' | capitalize }}
-                    {%- endif -%}
-                  </a>
-                {%- endfor -%}
+              
+              <!-- Mobile Categories Dropdown -->
+              <div class="categories-dropdown mobile-categories-dropdown">
+                <div class="categories-grid">
+                  <!-- Product Type Column -->
+                  <div class="category-column">
+                    <div class="category-column-title">Product Type</div>
+                    {%- assign product_types = 'shampoo,conditioner,curl-cream,hair-oil,styling,treatments' | split: ',' -%}
+                    {%- for handle in product_types -%}
+                      {%- assign collection = collections[handle] -%}
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    {%- endfor -%}
+                  </div>
+                  
+                  <!-- Curl Type Column -->
+                  <div class="category-column">
+                    <div class="category-column-title">Curl Type</div>
+                    {%- assign curl_types = 'wavy-hair,curly-hair,coily-hair,fine-hair,thick-hair,damaged-hair' | split: ',' -%}
+                    {%- for handle in curl_types -%}
+                      {%- assign collection = collections[handle] -%}
+                      <a href="{{ collection.url | default: routes.collections_url }}" class="category-link">
+                        {%- if collection -%}
+                          {{ collection.title }}
+                        {%- else -%}
+                          {{ handle | replace: '-', ' ' | capitalize }}
+                        {%- endif -%}
+                      </a>
+                    {%- endfor -%}
+                  </div>
+                </div>
               </div>
             </li>
           </ul>
         </div>
 
+        <!-- Continue with other sections... -->
         <!-- Educational & Content Section -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Education & Content</div>
@@ -781,7 +858,6 @@
                 User Gallery
               </a>
             </li>
-            <!-- BEFORE & AFTER ADDED HERE -->
             <li class="sidebar-menu-item">
               <a href="#before-after" class="sidebar-menu-link">
                 Before & After
@@ -866,6 +942,9 @@
     const mobileSidebarClose = document.getElementById('mobileSidebarClose');
     const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
     
+    // Mobile "All Products" toggle
+    const mobileAllProductsBtn = document.querySelector('.mobile-all-products-btn');
+    
     // Check if we're on mobile/tablet
     const isMobile = window.innerWidth <= 1024;
     
@@ -910,10 +989,22 @@
       mobileSidebarClose.addEventListener('click', closeMobileSidebar);
       mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
       
-      // Close sidebar when clicking links
+      // Mobile: Toggle "All Products" categories
+      if (mobileAllProductsBtn) {
+        mobileAllProductsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const parentItem = this.closest('.mobile-category-item');
+          const dropdown = parentItem.querySelector('.mobile-categories-dropdown');
+          
+          parentItem.classList.toggle('active');
+          dropdown.classList.toggle('active');
+        });
+      }
+      
+      // Close sidebar when clicking category links
       mobileSidebar.addEventListener('click', function(e) {
-        if (e.target.matches('.sidebar-menu-link[href]') || 
-            e.target.matches('.sidebar-sublink[href]')) {
+        if (e.target.matches('.category-link[href]') || 
+            e.target.matches('.sidebar-menu-link[href]')) {
           setTimeout(closeMobileSidebar, 300);
         }
       });
@@ -926,31 +1017,38 @@
       });
     }
     
-    // Handle submenu toggles (for both mobile and desktop)
-    const submenuToggles = document.querySelectorAll('[data-toggle="submenu"]');
-    submenuToggles.forEach(toggle => {
-      toggle.addEventListener('click', function() {
-        const targetId = this.getAttribute('data-target');
-        const submenu = document.getElementById(targetId);
+    // Desktop: Handle "All Products" hover
+    if (!isMobile) {
+      const desktopAllProductsItems = document.querySelectorAll('.has-dropdown');
+      
+      desktopAllProductsItems.forEach(item => {
+        const dropdown = item.querySelector('.categories-dropdown');
         
-        if (submenu) {
-          // Close all other submenus in the same section first
-          const allSubmenus = this.closest('.sidebar-section').querySelectorAll('.sidebar-submenu');
-          allSubmenus.forEach(menu => {
-            if (menu !== submenu && menu.classList.contains('active')) {
-              menu.classList.remove('active');
-            }
-          });
-          
-          // Toggle current submenu
-          submenu.classList.toggle('active');
-          
-          // Update aria-expanded attribute for accessibility
-          const isExpanded = submenu.classList.contains('active');
-          this.setAttribute('aria-expanded', isExpanded);
-        }
+        // Show on hover
+        item.addEventListener('mouseenter', function() {
+          dropdown.classList.add('active');
+        });
+        
+        // Hide when mouse leaves both button and dropdown
+        item.addEventListener('mouseleave', function(e) {
+          // Check if mouse is leaving to outside the entire item
+          if (!this.contains(e.relatedTarget)) {
+            dropdown.classList.remove('active');
+          }
+        });
+        
+        // Keep dropdown open when hovering over it
+        dropdown.addEventListener('mouseenter', function() {
+          dropdown.classList.add('active');
+        });
+        
+        dropdown.addEventListener('mouseleave', function(e) {
+          if (!this.contains(e.relatedTarget)) {
+            dropdown.classList.remove('active');
+          }
+        });
       });
-    });
+    }
     
     // Handle window resize
     let resizeTimer;
@@ -1000,5 +1098,4 @@
   <main id="MainContent">
     {{ content_for_layout }}
   </main>
-</body>
 </html>
