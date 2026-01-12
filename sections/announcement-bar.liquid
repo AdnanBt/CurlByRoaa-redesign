@@ -1,7 +1,7 @@
 <style>
   .announcement-bar {
-    background: {{ section.settings.background_color }};
-    color: {{ section.settings.text_color }};
+    background: var(--color-primary);
+    color: white;
     padding: 0.5rem 0;
     text-align: center;
     font-size: 0.9rem;
@@ -12,45 +12,10 @@
     margin: 0 auto;
     padding: 0 var(--spacing-sm);
   }
-  .announcement-bar p {
-    margin: 0;
-  }
 </style>
 
 <div class="announcement-bar">
   <div class="announcement-content">
-    <p>{{ section.settings.announcement_text }}</p>
+    <p>🎉 Free shipping on orders over $50! • 30-day money-back guarantee</p>
   </div>
 </div>
-
-{% schema %}
-{
-  "name": "Announcement Bar",
-  "settings": [
-    {
-      "type": "richtext",
-      "id": "announcement_text",
-      "label": "Announcement Text",
-      "default": "<p>🎉 Free shipping on orders over $50! • 30-day money-back guarantee</p>"
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background Color",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#FFFFFF"
-    }
-  ],
-  "presets": [
-    {
-      "name": "Announcement Bar",
-      "category": "Header"
-    }
-  ]
-}
-{% endschema %}
