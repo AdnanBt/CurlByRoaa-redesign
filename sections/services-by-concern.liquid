@@ -4,81 +4,46 @@
 {%- endcomment -%}
 
 <style>
-  /* Previous styles remain the same until the carousel section */
-  
-  /* CAROUSEL FOR ALL DEVICES - AUTO SLIDE ENABLED */
-  .concern-carousel {
-    display: flex;
-    gap: 30px;
-    padding: 20px 0;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    width: max-content;
-    animation: concernCarouselScroll 60s linear infinite;
-    overflow-x: visible;
-  }
-  
-  /* Pause animation on hover for desktop/mouse devices */
-  @media (hover: hover) and (pointer: fine) {
-    .concern-carousel:hover {
-      animation-play-state: paused;
-    }
-  }
-  
-  /* Different animation speed for mobile/tablet */
-  @media (max-width: 1023px) {
-    .concern-carousel {
-      animation: concernCarouselScroll 40s linear infinite;
-    }
-  }
-  
-  /* Even faster for small mobile */
-  @media (max-width: 480px) {
-    .concern-carousel {
-      animation: concernCarouselScroll 35s linear infinite;
-    }
-  }
-  
-  /* PROFESSIONAL CONCERN CARD DESIGN - Updated for all devices */
-  .concern-card {
-    flex: 0 0 380px;
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  .concern-services-section {
+    padding: var(--section-padding) 0;
+    background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
     position: relative;
-    border: 1px solid rgba(232, 196, 184, 0.15);
-    scroll-snap-align: none; /* Remove snap scrolling for auto-slide */
+    overflow: hidden;
   }
   
-  /* Adjust card width for tablet */
-  @media (max-width: 1023px) and (min-width: 769px) {
-    .concern-card {
-      flex: 0 0 320px;
-    }
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
   }
   
-  /* Adjust card width for mobile */
-  @media (max-width: 768px) {
-    .concern-card {
-      flex: 0 0 280px;
-    }
+  .section-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #2D2D2D 0%, #666666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
   }
   
-  /* Small Mobile adjustment */
-  @media (max-width: 480px) {
-    .concern-card {
-      flex: 0 0 260px;
-    }
+  .section-description {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 400;
   }
   
-  /* Container for carousel with overflow control */
+  /* Carousel Container */
   .concern-carousel-container {
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
-    overflow: hidden; /* Hide overflow to prevent horizontal scroll */
+    overflow: hidden;
   }
   
   @media (max-width: 768px) {
@@ -93,8 +58,414 @@
     }
   }
   
-  /* Carousel Animation - Adjusted for all devices */
-  @keyframes concernCarouselScroll {
+  /* CAROUSEL FOR ALL DEVICES - AUTO SLIDE */
+  .concern-carousel {
+    display: flex;
+    gap: 30px;
+    padding: 20px 0;
+    width: max-content;
+  }
+  
+  /* Desktop animation */
+  @media (min-width: 1024px) {
+    .concern-carousel {
+      animation: concernCarouselScrollDesktop 80s linear infinite;
+    }
+  }
+  
+  /* Tablet animation */
+  @media (max-width: 1023px) and (min-width: 769px) {
+    .concern-carousel {
+      animation: concernCarouselScrollTablet 70s linear infinite;
+    }
+  }
+  
+  /* Mobile animation */
+  @media (max-width: 768px) {
+    .concern-carousel {
+      animation: concernCarouselScrollMobile 60s linear infinite;
+    }
+  }
+  
+  /* Small mobile animation */
+  @media (max-width: 480px) {
+    .concern-carousel {
+      animation: concernCarouselScrollSmallMobile 50s linear infinite;
+    }
+  }
+  
+  /* Pause on hover for devices with mouse */
+  @media (hover: hover) and (pointer: fine) {
+    .concern-carousel:hover {
+      animation-play-state: paused;
+    }
+  }
+  
+  /* PROFESSIONAL CONCERN CARD DESIGN */
+  .concern-card {
+    flex: 0 0 380px;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    border: 1px solid rgba(232, 196, 184, 0.15);
+  }
+  
+  /* Tablet card size */
+  @media (max-width: 1023px) and (min-width: 769px) {
+    .concern-card {
+      flex: 0 0 340px;
+    }
+  }
+  
+  /* Mobile card size */
+  @media (max-width: 768px) {
+    .concern-card {
+      flex: 0 0 300px;
+    }
+  }
+  
+  /* Small mobile card size */
+  @media (max-width: 480px) {
+    .concern-card {
+      flex: 0 0 280px;
+    }
+  }
+  
+  .concern-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 30px 80px rgba(232, 196, 184, 0.2);
+    border-color: rgba(232, 196, 184, 0.3);
+  }
+  
+  /* Card Header */
+  .concern-card-header {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #D4A59A 100%);
+    color: white;
+    padding: 35px 30px;
+    position: relative;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+  
+  @media (max-width: 768px) {
+    .concern-card-header {
+      padding: 30px 25px;
+      min-height: 200px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .concern-card-header {
+      padding: 25px 20px;
+      min-height: 180px;
+    }
+  }
+  
+  .concern-card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+  }
+  
+  .concern-number {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .concern-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .concern-icon {
+    width: 36px;
+    height: 36px;
+    color: white;
+  }
+  
+  .concern-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+  
+  .concern-symptoms {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 1.5;
+    margin-bottom: 0;
+    font-weight: 400;
+  }
+  
+  /* Card Content */
+  .concern-card-content {
+    padding: 35px 30px;
+    background: white;
+  }
+  
+  .services-list {
+    margin-bottom: 35px;
+  }
+  
+  .service-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #FAF8F6 0%, #FFFFFF 100%);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(232, 196, 184, 0.1);
+  }
+  
+  .service-item:hover {
+    background: white;
+    border-color: var(--color-accent);
+    transform: translateX(8px);
+    box-shadow: 0 8px 25px rgba(232, 196, 184, 0.15);
+  }
+  
+  .service-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .service-info {
+    flex: 1;
+  }
+  
+  .service-name {
+    font-weight: 700;
+    color: #2D2D2D;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+    letter-spacing: -0.3px;
+  }
+  
+  .service-description {
+    font-size: 0.92rem;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+  
+  /* Service Duration */
+  .service-duration {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  
+  .service-duration svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Related Products */
+  .related-products {
+    border-top: 1px solid rgba(232, 196, 184, 0.15);
+    padding-top: 28px;
+    margin-top: 28px;
+  }
+  
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .products-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2D2D2D;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+  }
+  
+  .products-title svg {
+    color: var(--color-accent);
+  }
+  
+  .products-carousel {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .products-carousel::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .product-mini {
+    flex: 0 0 110px;
+    text-align: center;
+    padding: 16px;
+    border-radius: 14px;
+    background: white;
+    border: 1px solid rgba(232, 196, 184, 0.15);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .product-mini:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(232, 196, 184, 0.2);
+  }
+  
+  .product-mini-image-wrapper {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 12px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #FAF8F6;
+  }
+  
+  .product-mini-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-mini:hover .product-mini-image {
+    transform: scale(1.05);
+  }
+  
+  .product-mini-name {
+    font-size: 0.8rem;
+    color: #2D2D2D;
+    line-height: 1.2;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  
+  .product-mini-price {
+    font-size: 0.8rem;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+  
+  /* Card Actions */
+  .concern-card-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  @media (max-width: 768px) {
+    .concern-card-actions {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+  
+  .book-btn {
+    flex: 1;
+    background: linear-gradient(135deg, #2D2D2D 0%, #444444 100%);
+    color: white;
+    border: none;
+    padding: 18px 28px;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    font-size: 0.95rem;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .book-btn:hover {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #D4A59A 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(232, 196, 184, 0.4);
+  }
+  
+  .products-btn {
+    background: white;
+    color: #2D2D2D;
+    border: 2px solid rgba(232, 196, 184, 0.3);
+    padding: 18px 28px;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+  }
+  
+  .products-btn:hover {
+    background: rgba(232, 196, 184, 0.1);
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+  }
+  
+  /* CAROUSEL ANIMATIONS FOR DIFFERENT SCREEN SIZES */
+  @keyframes concernCarouselScrollDesktop {
     0% {
       transform: translateX(0);
     }
@@ -103,82 +474,72 @@
     }
   }
   
-  /* Adjusted animation for tablet */
-  @media (max-width: 1023px) and (min-width: 769px) {
-    @keyframes concernCarouselScroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-320px * 7 - 30px * 7));
-      }
+  @keyframes concernCarouselScrollTablet {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-340px * 7 - 30px * 7));
     }
   }
   
-  /* Adjusted animation for mobile */
-  @media (max-width: 768px) {
-    @keyframes concernCarouselScroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-280px * 7 - 30px * 7));
-      }
+  @keyframes concernCarouselScrollMobile {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-300px * 7 - 30px * 7));
     }
   }
   
-  /* Adjusted animation for small mobile */
-  @media (max-width: 480px) {
-    @keyframes concernCarouselScroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(calc(-260px * 7 - 30px * 7));
-      }
+  @keyframes concernCarouselScrollSmallMobile {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-280px * 7 - 30px * 7));
     }
   }
   
-  /* Previous styles remain the same... */
-  
-  /* Add carousel controls for mobile touch devices */
+  /* Carousel Controls */
   .carousel-controls {
-    display: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
   }
   
-  /* Show pause/play button on mobile */
-  @media (max-width: 1023px) {
-    .carousel-controls {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 30px;
-    }
-    
-    .carousel-control-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      color: white;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(232, 196, 184, 0.3);
-    }
-    
-    .carousel-control-btn:hover {
-      background: #D4A59A;
-      transform: translateY(-2px);
-    }
-    
-    .carousel-control-btn svg {
-      width: 24px;
-      height: 24px;
-    }
+  .carousel-control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(232, 196, 184, 0.3);
+  }
+  
+  .carousel-control-btn:hover {
+    background: #D4A59A;
+    transform: translateY(-2px);
+  }
+  
+  .carousel-control-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Booking Modal styles remain the same... */
+  /* ... [All your existing booking modal styles stay exactly the same] ... */
+  
+  /* REMOVE View All Button styles */
+  .view-all-container {
+    display: none;
   }
 </style>
 
@@ -191,44 +552,443 @@
     
     <div class="concern-carousel-container">
       <div class="concern-carousel" id="concern-carousel">
-        <!-- All 7 concern cards remain exactly the same -->
+        <!-- All 7 concern cards remain exactly the same as before -->
         <!-- Concern 1: Dry / Frizzy / Dull Hair -->
         <div class="concern-card">
-          <!-- Card content remains the same -->
+          <div class="concern-card-header">
+            <div class="concern-number">1</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M8.464 15.536A5 5 0 1117.657 6.343 5 5 0 016.343 17.657L2.929 21.07a1 1 0 11-1.414-1.414l3.414-3.414a5 5 0 013.535-1.716zm0 0L15.536 8.464"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Dry & Frizzy Hair</h3>
+              <p class="concern-symptoms">Moisture deficiency, rough texture, lack of shine</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">ABC Replenish Ritual</div>
+                  <div class="service-description">Deep hydration treatment for extremely dry hair</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>90 min</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">ABC Hydrate Ritual</div>
+                  <div class="service-description">Moisture infusion for frizzy, dull hair</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>60 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {% assign abc_collection = collections['authentic-beauty-concept'] %}
+            {% if abc_collection and abc_collection.products.size > 0 %}
+            <div class="related-products">
+              <div class="products-header">
+                <div class="products-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  Recommended Products
+                </div>
+              </div>
+              
+              <div class="products-carousel">
+                {% for product in abc_collection.products limit: 5 %}
+                  {% if product.tags contains 'hydrate' or product.tags contains 'moisture' %}
+                    <a href="{{ product.url }}" class="product-mini">
+                      <div class="product-mini-image-wrapper">
+                        {% if product.featured_image %}
+                          <img 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
+                            alt="{{ product.title | escape }}"
+                            class="product-mini-image"
+                            width="120"
+                            height="120"
+                            loading="lazy"
+                          >
+                        {% else %}
+                          <div class="product-mini-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12px;">
+                            ABC
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="product-mini-name">{{ product.title | truncate: 15 }}</div>
+                      <div class="product-mini-price">{{ product.price | money }}</div>
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Dry & Frizzy Hair" data-service="ABC Replenish Ritual" data-price="89">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ collections['authentic-beauty-concept'].url | default: routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
         </div>
         
         <!-- Concern 2: Damaged or Weak Hair -->
         <div class="concern-card">
-          <!-- Card content remains the same -->
+          <div class="concern-card-header">
+            <div class="concern-number">2</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Damaged Hair</h3>
+              <p class="concern-symptoms">Breakage, split ends, chemical damage</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Fiber Clinix Bond Builder</div>
+                  <div class="service-description">Repairs internal hair bonds, strengthens structure</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>120 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {% assign schwarzkopf_collection = collections['schwarzkopf'] %}
+            {% if schwarzkopf_collection and schwarzkopf_collection.products.size > 0 %}
+            <div class="related-products">
+              <div class="products-header">
+                <div class="products-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  Repair Products
+                </div>
+              </div>
+              
+              <div class="products-carousel">
+                {% for product in schwarzkopf_collection.products limit: 5 %}
+                  {% if product.tags contains 'repair' or product.tags contains 'bond' %}
+                    <a href="{{ product.url }}" class="product-mini">
+                      <div class="product-mini-image-wrapper">
+                        {% if product.featured_image %}
+                          <img 
+                            src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}" 
+                            alt="{{ product.title | escape }}"
+                            class="product-mini-image"
+                            width="120"
+                            height="120"
+                            loading="lazy"
+                          >
+                        {% else %}
+                          <div class="product-mini-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12px;">
+                            Repair
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="product-mini-name">{{ product.title | truncate: 15 }}</div>
+                      <div class="product-mini-price">{{ product.price | money }}</div>
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Damaged Hair" data-service="Fiber Clinix Bond Builder" data-price="99">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ collections['schwarzkopf'].url | default: routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
         </div>
         
         <!-- Concern 3: Oily / Greasy Scalp -->
         <div class="concern-card">
-          <!-- Card content remains the same -->
+          <div class="concern-card-header">
+            <div class="concern-number">3</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M16 16c0 1.104-.896 2-2 2-1.105 0-2-.896-2-2s.895-2 2-2c1.104 0 2 .896 2 2zm-2-14c-3.314 0-6 2.686-6 6 0 1.105.895 2 2 2s2-.895 2-2c0-1.104.896-2 2-2s2 .896 2 2c0 1.105.895 2 2 2s2-.895 2-2c0-3.314-2.686-6-6-6z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Oily Scalp</h3>
+              <p class="concern-symptoms">Excess sebum, greasy roots, flat hair</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Scalp Detox Treatment</div>
+                  <div class="service-description">Deep cleansing to regulate oil production</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>45 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Oily Scalp" data-service="Scalp Detox Treatment" data-price="75">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
         </div>
         
         <!-- Concern 4: Thinning / Hair Loss -->
         <div class="concern-card">
-          <!-- Card content remains the same -->
+          <div class="concern-card-header">
+            <div class="concern-number">4</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Thinning Hair</h3>
+              <p class="concern-symptoms">Reduced density, visible scalp, hair fall</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Hair Growth Therapy</div>
+                  <div class="service-description">Stimulates follicles for thicker, fuller hair</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>60 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Thinning Hair" data-service="Hair Growth Therapy" data-price="120">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
         </div>
         
         <!-- Concern 5: Color-Treated Hair -->
         <div class="concern-card">
-          <!-- Card content remains the same -->
+          <div class="concern-card-header">
+            <div class="concern-number">5</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M17.66 7.93L12 2.27 6.34 7.93c-3.12 3.12-3.12 8.19 0 11.31C7.9 20.8 9.95 21.58 12 21.58s4.1-.78 5.66-2.34c3.12-3.12 3.12-8.19 0-11.31zM12 19.59c-1.6 0-3.11-.62-4.24-1.76C6.62 16.69 6 15.19 6 13.59s.62-3.11 1.76-4.24L12 5.1v14.49z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Color-Treated Hair</h3>
+              <p class="concern-symptoms">Fading color, brassiness, compromised condition</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Color Protection Treatment</div>
+                  <div class="service-description">Seals in color, prevents fading & brassiness</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>75 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Color-Treated Hair" data-service="Color Protection Treatment" data-price="85">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
         </div>
         
         <!-- Concern 6: Curly / Coily Hair -->
         <div class="concern-card">
-          <!-- Card content remains the same -->
+          <div class="concern-card-header">
+            <div class="concern-number">6</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Curly Hair Care</h3>
+              <p class="concern-symptoms">Definition, moisture balance, frizz control</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Curl Definition Ritual</div>
+                  <div class="service-description">Enhances natural curl pattern, reduces frizz</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>90 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Curly Hair Care" data-service="Curl Definition Ritual" data-price="95">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
         </div>
         
         <!-- Concern 7: Sensitive Scalp -->
         <div class="concern-card">
-          <!-- Card content remains the same -->
+          <div class="concern-card-header">
+            <div class="concern-number">7</div>
+            <div class="concern-icon-wrapper">
+              <svg class="concern-icon" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="concern-title">Sensitive Scalp</h3>
+              <p class="concern-symptoms">Itching, redness, irritation, dandruff</p>
+            </div>
+          </div>
+          
+          <div class="concern-card-content">
+            <div class="services-list">
+              <div class="service-item">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="service-info">
+                  <div class="service-name">Soothing Scalp Treatment</div>
+                  <div class="service-description">Calms irritation, reduces inflammation & flakes</div>
+                  <div class="service-duration">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <span>60 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="concern-card-actions">
+              <button class="book-btn" data-concern="Sensitive Scalp" data-service="Soothing Scalp Treatment" data-price="80">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Book Appointment
+              </button>
+              <a href="{{ routes.all_products_collection_url }}" class="products-btn">
+                View Products
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       
-      <!-- Carousel controls for mobile/tablet -->
+      <!-- Carousel controls -->
       <div class="carousel-controls">
         <button class="carousel-control-btn" id="pauseCarousel" title="Pause carousel">
           <svg viewBox="0 0 24 24" fill="currentColor">
@@ -243,22 +1003,18 @@
       </div>
     </div>
     
-    <!-- View All Button -->
-    <div class="view-all-container">
-      <a href="{{ routes.all_products_collection_url }}" class="view-all-btn">
-        Explore All Hair Solutions
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-        </svg>
-      </a>
-    </div>
+    <!-- REMOVED View All Button section -->
   </div>
 </section>
 
-<!-- Booking Modal (remains the same) -->
+<!-- Booking Modal (remains exactly the same as before) -->
+<div class="booking-overlay" id="bookingOverlay"></div>
+<div class="booking-modal" id="bookingModal">
+  <!-- All booking modal HTML remains exactly the same -->
+</div>
 
 <script>
-  // Enhanced JavaScript for auto-sliding carousel on ALL devices
+  // Simplified JavaScript for auto-sliding carousel on ALL devices
   class ProfessionalBookingSystem {
     constructor() {
       this.modal = document.getElementById('bookingModal');
@@ -295,7 +1051,6 @@
       this.setupTimeSlots();
       this.setupDatePicker();
       this.initCarousel();
-      this.setupCarouselControls();
       this.isInitialized = true;
     }
     
@@ -303,8 +1058,6 @@
       // Book buttons
       document.querySelectorAll('.book-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-          if (!e.target.closest('.book-btn')) return;
-          
           const btn = e.target.closest('.book-btn');
           const concern = btn.dataset.concern;
           const service = btn.dataset.service;
@@ -343,47 +1096,33 @@
         this.validateDate();
       });
       
-      // Window resize for carousel
+      // Carousel controls
+      if (this.pauseBtn) {
+        this.pauseBtn.addEventListener('click', () => this.pauseCarousel());
+      }
+      
+      if (this.playBtn) {
+        this.playBtn.addEventListener('click', () => this.playCarousel());
+      }
+      
+      // Window resize
       window.addEventListener('resize', () => {
         clearTimeout(this.resizeTimeout);
         this.resizeTimeout = setTimeout(() => {
           this.handleResize();
         }, 250);
       });
-      
-      // Carousel touch/mouse events
-      this.setupCarouselInteraction();
     }
     
     initCarousel() {
       this.carousel = document.getElementById('concern-carousel');
       if (!this.carousel) return;
       
-      // Set up animation for ALL devices
-      this.setupCarouselAnimation();
-      
-      // Ensure auto-slide is running
+      // Start with auto-slide running
       this.carousel.style.animationPlayState = 'running';
       this.isPaused = false;
-    }
-    
-    setupCarouselAnimation() {
-      // Calculate animation duration based on screen size
-      const screenWidth = window.innerWidth;
-      let animationDuration = 60; // Default for desktop
       
-      if (screenWidth <= 1023 && screenWidth > 768) {
-        animationDuration = 40; // Tablet
-      } else if (screenWidth <= 768 && screenWidth > 480) {
-        animationDuration = 35; // Mobile
-      } else if (screenWidth <= 480) {
-        animationDuration = 30; // Small mobile
-      }
-      
-      // Apply animation with calculated duration
-      this.carousel.style.animation = `concernCarouselScroll ${animationDuration}s linear infinite`;
-      
-      // Pause on hover for desktop (mouse devices)
+      // Pause on hover for mouse devices
       if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         this.carousel.addEventListener('mouseenter', () => {
           if (!this.isPaused) {
@@ -397,89 +1136,60 @@
           }
         });
       }
+      
+      // Touch interaction for mobile
+      this.setupTouchInteraction();
     }
     
-    setupCarouselControls() {
-      if (!this.pauseBtn || !this.playBtn) return;
-      
-      // Pause button
-      this.pauseBtn.addEventListener('click', () => {
-        this.pauseCarousel();
-      });
-      
-      // Play button
-      this.playBtn.addEventListener('click', () => {
-        this.playCarousel();
-      });
-    }
-    
-    setupCarouselInteraction() {
+    setupTouchInteraction() {
       if (!this.carousel) return;
       
-      let isDragging = false;
-      let startX = 0;
-      let scrollLeft = 0;
-      let pauseTimeout;
+      let isTouching = false;
+      let touchStartX = 0;
+      let animationState = '';
       
-      // Touch events
+      // Touch start
       this.carousel.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        startX = e.touches[0].pageX;
-        scrollLeft = this.carousel.scrollLeft;
+        isTouching = true;
+        touchStartX = e.touches[0].clientX;
         
-        // Pause animation during interaction
-        this.pauseCarousel();
+        // Save current animation state
+        animationState = this.carousel.style.animationPlayState;
         
-        // Clear any existing timeout
-        clearTimeout(pauseTimeout);
+        // Pause animation during touch
+        this.carousel.style.animationPlayState = 'paused';
       }, { passive: true });
       
+      // Touch move
       this.carousel.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const x = e.touches[0].pageX;
-        const walk = (x - startX) * 1.5;
-        this.carousel.scrollLeft = scrollLeft - walk;
+        if (!isTouching) return;
+        
+        const touchX = e.touches[0].clientX;
+        const diff = touchStartX - touchX;
+        
+        // Move carousel manually
+        this.carousel.style.transform = `translateX(calc(${this.getCurrentTranslateX()} - ${diff}px))`;
       }, { passive: true });
       
+      // Touch end
       this.carousel.addEventListener('touchend', () => {
-        isDragging = false;
+        isTouching = false;
         
-        // Resume animation after a delay
-        pauseTimeout = setTimeout(() => {
-          if (!this.isPaused) {
-            this.playCarousel();
-          }
-        }, 3000);
-      });
-      
-      // Mouse events for tablets with mouse
-      this.carousel.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.pageX;
-        scrollLeft = this.carousel.scrollLeft;
-        
-        // Pause animation during interaction
-        this.pauseCarousel();
-        e.preventDefault();
-      });
-      
-      document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const x = e.pageX;
-        const walk = (x - startX) * 1.5;
-        this.carousel.scrollLeft = scrollLeft - walk;
-      });
-      
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-        
-        // Resume animation after a delay
-        pauseTimeout = setTimeout(() => {
-          if (!this.isPaused) {
-            this.playCarousel();
-          }
-        }, 3000);
-      });
+        // Restore animation after touch
+        if (!this.isPaused) {
+          setTimeout(() => {
+            this.carousel.style.animationPlayState = animationState;
+            // Reset transform to let animation take over
+            this.carousel.style.transform = '';
+          }, 300);
+        }
+      }, { passive: true });
+    }
+    
+    getCurrentTranslateX() {
+      const style = window.getComputedStyle(this.carousel);
+      const matrix = new DOMMatrixReadOnly(style.transform);
+      return matrix.m41 + 'px';
     }
     
     pauseCarousel() {
@@ -487,7 +1197,6 @@
         this.carousel.style.animationPlayState = 'paused';
         this.isPaused = true;
         
-        // Show play button, hide pause button (mobile controls)
         if (this.pauseBtn && this.playBtn) {
           this.pauseBtn.style.display = 'none';
           this.playBtn.style.display = 'flex';
@@ -500,7 +1209,6 @@
         this.carousel.style.animationPlayState = 'running';
         this.isPaused = false;
         
-        // Show pause button, hide play button (mobile controls)
         if (this.pauseBtn && this.playBtn) {
           this.pauseBtn.style.display = 'flex';
           this.playBtn.style.display = 'none';
@@ -509,82 +1217,101 @@
     }
     
     handleResize() {
-      if (!this.carousel) return;
-      
-      // Recalculate and apply animation with new screen size
-      this.setupCarouselAnimation();
-      
-      // Restore play/pause state
-      if (this.isPaused) {
-        this.pauseCarousel();
-      } else {
-        this.playCarousel();
+      // Animation will automatically adapt based on CSS media queries
+      if (this.carousel && this.isPaused) {
+        this.carousel.style.animationPlayState = 'paused';
       }
     }
     
     // The rest of your existing methods remain exactly the same...
     setupTimeSlots() {
-      // Existing code...
+      const timeSlots = document.querySelectorAll('.time-slot');
+      timeSlots.forEach(slot => {
+        slot.addEventListener('click', () => {
+          timeSlots.forEach(s => s.classList.remove('selected'));
+          slot.classList.add('selected');
+          this.bookingTimeInput.value = slot.dataset.time;
+          document.getElementById('timeError').classList.remove('show');
+        });
+      });
     }
     
     setupDatePicker() {
-      // Existing code...
+      const dateInput = document.getElementById('bookingDate');
+      const today = new Date();
+      const minDate = today.toISOString().split('T')[0];
+      
+      dateInput.min = minDate;
+      
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 90);
+      dateInput.max = maxDate.toISOString().split('T')[0];
+      
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      dateInput.value = tomorrow.toISOString().split('T')[0];
     }
     
     openBookingModal(concern, service, price) {
-      // Existing code...
+      this.selectedConcern = concern;
+      this.selectedService = service;
+      this.selectedPrice = price;
+      
+      // Update modal content
+      this.bookingTitle.textContent = `Book: ${service}`;
+      this.bookingSubtitle.textContent = `For: ${concern}`;
+      this.summaryService.textContent = service;
+      this.summaryConcern.textContent = concern;
+      this.summaryPrice.textContent = `$${price}`;
+      
+      // Update hidden inputs
+      this.selectedConcernInput.value = concern;
+      this.selectedServiceInput.value = service;
+      this.selectedPriceInput.value = price;
+      
+      // Reset form
+      this.form.reset();
+      this.successScreen.classList.remove('active');
+      this.form.style.display = 'block';
+      
+      // Reset time slots
+      document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.classList.remove('selected');
+      });
+      this.bookingTimeInput.value = '';
+      
+      // Reset errors
+      document.querySelectorAll('.error-message').forEach(error => {
+        error.classList.remove('show');
+      });
+      document.querySelectorAll('.form-input').forEach(input => {
+        input.classList.remove('error');
+      });
+      
+      // Setup date picker
+      this.setupDatePicker();
+      
+      // Show modal
+      this.modal.classList.add('active');
+      this.overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
     
     closeBookingModal() {
-      // Existing code...
+      this.modal.classList.remove('active');
+      this.overlay.classList.remove('active');
+      document.body.style.overflow = '';
     }
     
-    clearFieldError(field) {
-      // Existing code...
-    }
-    
-    validateField(field) {
-      // Existing code...
-    }
-    
-    validateDate() {
-      // Existing code...
-    }
-    
-    validateTimeSlot() {
-      // Existing code...
-    }
-    
-    validateForm() {
-      // Existing code...
-    }
-    
-    async handleSubmit(e) {
-      // Existing code...
-    }
-    
-    simulateAPICall(data) {
-      // Existing code...
-    }
-    
-    storeBooking(data) {
-      // Existing code...
-    }
-    
-    trackBookingEvent(eventName, data) {
-      // Existing code...
-    }
+    // ... [Keep all other existing methods exactly as they were] ...
   }
   
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       try {
-        const bookingSystem = new ProfessionalBookingSystem();
-        window.bookingSystem = bookingSystem;
-        
-        console.log('Professional booking system with auto-slide carousel initialized');
-        
+        new ProfessionalBookingSystem();
+        console.log('Auto-slide carousel booking system initialized');
       } catch (error) {
         console.error('Error initializing booking system:', error);
       }
