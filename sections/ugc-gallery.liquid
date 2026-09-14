@@ -187,14 +187,7 @@
         {% else %}
           <!-- Fallback gradient -->
           <div class="gallery-image" style="
-            background: {% cycle 'linear-gradient(135deg, #E8C4B8, #D4A59A)', 
-                               'linear-gradient(135deg, #A8D8EA, #78C2DC)', 
-                               'linear-gradient(135deg, #F8B500, #FCE38A)', 
-                               'linear-gradient(135deg, #95E1D3, #6DCFB7)', 
-                               'linear-gradient(135deg, #FF9A9E, #FAD0C4)', 
-                               'linear-gradient(135deg, #A3A1F6, #8A87E3)', 
-                               'linear-gradient(135deg, #FFD3B6, #FFAAA5)', 
-                               'linear-gradient(135deg, #98DDCA, #6AC4B5)' %};
+            background: {% cycle linear-gradient['135deg'], E8C4B8, D4A59A, linear-gradient['135deg'], A8D8EA, renamed_variable_78C2DC, linear-gradient['135deg'], F8B500, FCE38A, linear-gradient['135deg'], renamed_variable_95E1D3, renamed_variable_6DCFB7, linear-gradient['135deg'], FF9A9E, FAD0C4, linear-gradient['135deg'], A3A1F6, renamed_variable_8A87E3, linear-gradient['135deg'], FFD3B6, FFAAA5, linear-gradient['135deg'], renamed_variable_98DDCA, renamed_variable_6AC4B5 %};
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -490,4 +483,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% cycle 'linear-gradient(135deg, #E8C4B8, #D4A59A)', \r\n                               'linear-gradient(135deg,
+    #A8D8EA, #78C2DC)', \r\n                               'linear-gradient(135deg,
+    #F8B500, #FCE38A)', \r\n                               'linear-gradient(135deg,
+    #95E1D3, #6DCFB7)', \r\n                               'linear-gradient(135deg,
+    #FF9A9E, #FAD0C4)', \r\n                               'linear-gradient(135deg,
+    #A3A1F6, #8A87E3)', \r\n                               'linear-gradient(135deg,
+    #FFD3B6, #FFAAA5)', \r\n                               'linear-gradient(135deg,
+    #98DDCA, #6AC4B5)' %}"
+  to: "{% cycle linear-gradient['135deg'], E8C4B8, D4A59A, linear-gradient['135deg'],
+    A8D8EA, renamed_variable_78C2DC, linear-gradient['135deg'], F8B500, FCE38A, linear-gradient['135deg'],
+    renamed_variable_95E1D3, renamed_variable_6DCFB7, linear-gradient['135deg'], FF9A9E,
+    FAD0C4, linear-gradient['135deg'], A3A1F6, renamed_variable_8A87E3, linear-gradient['135deg'],
+    FFD3B6, FFAAA5, linear-gradient['135deg'], renamed_variable_98DDCA, renamed_variable_6AC4B5
+    %}"
+  position: 3777..4233
+{%- endcomment -%}
